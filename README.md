@@ -48,7 +48,7 @@ replace with an approved operator voice and review distribution rights before pu
 
 ## Design
 Approved operator: original earpiece pose, white shirt, dark tie, calm office atmosphere.
-Home currently uses a concept illustration. Final art layers and expressions are a later pass.
+Home uses separate transparent operator and office layers. Additional expressions are a later pass.
 SwiftUI renders text/buttons; the UI is not a stretched screenshot.
 
 ## Data
@@ -56,4 +56,3 @@ Saves are local, with atomic writes and a previous valid snapshot.
 Mock sessions cannot grant real rewards. Exact raw coordinates are not saved.
 Save import replaces progress and requires confirmation in the UI.
 Do not place personal saves, signing credentials, or tokens in this repository.
-

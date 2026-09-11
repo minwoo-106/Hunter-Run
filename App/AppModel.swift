@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import CoreLocation
+import UIKit
 
 @MainActor final class AppModel: ObservableObject {
     @Published var save = SaveState()

@@ -41,10 +41,15 @@ struct HomeView: View {
         GeometryReader { geo in
             ZStack {
                 Theme.ink.ignoresSafeArea()
-                Image("Operator").resizable().scaledToFill()
+                Image("AssociationOffice").resizable().scaledToFill()
                     .frame(width: geo.size.width, height: geo.size.height).clipped()
-                    .overlay(LinearGradient(colors: [.black.opacity(0.55), .clear, Theme.ink], startPoint: .top, endPoint: .bottom))
                     .ignoresSafeArea(edges: .top)
+                Image("OperatorCutout").resizable().scaledToFit()
+                    .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
+                    .offset(y: -geo.size.height * 0.015)
+                    .accessibilityHidden(true)
+                LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
