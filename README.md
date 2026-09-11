@@ -4,6 +4,13 @@ iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
+## Verified build
+Codemagic build 3 completed on 2026-09-11 from commit `05427c7` on Mac mini M2.
+All 14 core tests passed; the iPhone app compiled and `HunterRun-unsigned.ipa` was produced.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa353b068916f7168331c7d).
+Personal signing, installation and field behavior still require device testing.
+[한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
 ## Included now
 - Native association home based on the approved earpiece operator concept.
 - One assignment with discovery, maintain, optional pursuit, and gate stabilization.
