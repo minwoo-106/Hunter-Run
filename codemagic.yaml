@@ -12,12 +12,14 @@ workflows:
             brew install xcodegen
           fi
           xcodegen generate
-      - name: Check home layout in iPhone simulator
-        script: bash scripts/check-ios-layout.sh
+      - name: Diagnose lobby startup
+        script: bash scripts/diagnose-lobby.sh
     artifacts:
       - build/Home-layout.png
       - build/layout-log.txt
       - build/Layout.xcresult
+      - build/lobby-*.txt
+      - build/lobby-*.png
   ios-demo:
     name: Hunter Run - free personal demo
     instance_type: mac_mini_m2
