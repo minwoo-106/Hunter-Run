@@ -4,15 +4,14 @@ iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.7.0)
-Codemagic demo build 17 completed on 2026-09-12 KST from commit `53e28a9` on Mac mini M2 in 9m 51s.
-All 68 core tests and 8 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-install.zip` (43.69 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa432a01c8c285ff0061c1a).
-UI checks cover the five bottom entries and central activity emphasis, home bounds/settings gear, settings/story replay, equipment, goals, progression locks, audio initialization, boss simulation and activity preparation.
-[한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+## Verified build (0.8.0)
+Codemagic demo build 18 completed on 2026-09-12 KST from commit `05a54ce` on Mac mini M2 in 8m 21s.
+All 77 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
+`HunterRun-0.8.0-build9-install.zip` (44.67 MB) contains `HunterRun-0.8.0-build9-unsigned.ipa`.
+Packaging verified the outer ZIP, inner IPA, executable, version/build and all 19 designed voice hashes.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa43fff31f87700ac95bea8). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
 
-## Added in 0.8 (Apple build pending)
+## Added in 0.8
 - Approved original operator voice: 19 local WAVs, including three pairs of alternating equivalent lines.
 - Large-eyed young adult operator with navy hair streaks and true transparent cutout.
 - 400m endurance battles and 25-second ambush responses; short goals use a brief hold.
@@ -94,7 +93,7 @@ This is a playable progression milestone, not content-complete v1. See [remainin
 1. Place this folder's contents at the ROOT of the linked repository.
 2. Run the `ios-demo` workflow in `codemagic.yaml`.
 3. It validates resources, runs Swift tests, generates the Xcode project, compiles
-   the actual iPhone target, and packages `HunterRun-unsigned.ipa`.
+   the actual iPhone target, and packages a versioned `HunterRun-0.8.0-build9-unsigned.ipa`.
 4. The IPA is UNSIGNED and cannot be installed by tapping a download link.
    Use personal signing via AltStore Classic / AltServer on Windows.
 5. No Apple developer credentials are needed by this build workflow.

@@ -48,3 +48,11 @@
 
 ## 최종 선택 · 0.8.0
 사용자가 8.16초 참조 기반 실제 활동 시작/발견 대사를 승인했습니다. 0.8.0에 같은 참조로 제작한 기본14 + 장기전/기습/발견변형/성공변형/부분확보변형 5개를 적용합니다. 이전 어린 음색 팩은 제거했습니다. 재현 참조는 docs/voice-audition/adult-approved에 보존합니다.
+
+## 배포 팩 재현
+- 참조 설계: Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign, revision 5ecdb67327fd37bb2e042aab12ff7391903235d3.
+- 대사 제작: Qwen/Qwen3-TTS-12Hz-1.7B-Base, revision fd4b254389122332181a7c3db7f27e918eec64e3. 두 고정 모델의 README frontmatter는 apache-2.0으로 명시합니다.
+- 공식 저장소: https://github.com/QwenLM/Qwen3-TTS
+- Base 모델: https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base
+- generate-operator-pack.py에 자체 생성 참조/manifest를 인자로 전달합니다. 샘플 온도0.55, 문장별 고정 seed, 24kHz mono PCM16. Resources/operator-voice.json에 대사·재생 길이·SHA256을 기록합니다.
+- 모델 가중치/가상환경은 앱에 넣지 않습니다. 앱에는 19개 WAV와 매핑만 포함합니다. 기존 voice-model-LICENSE.txt는 사용하지 않은 Supertonic 비교본의 기록이며 이 배포 팩의 모델 표기가 아닙니다.
