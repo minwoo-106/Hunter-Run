@@ -13,7 +13,7 @@ import UniformTypeIdentifiers
         }
     }
 }
-private enum Theme {
+enum Theme {
     static let ink = Color(red: 0.035, green: 0.065, blue: 0.09)
     static let teal = Color(red: 0.23, green: 0.86, blue: 0.83)
     static let muted = Color(red: 0.64, green: 0.71, blue: 0.76)
@@ -37,18 +37,19 @@ struct RootView: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model: AppModel
+    @State private var association = false
     var body: some View {
         GeometryReader { geo in
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("HUNTER RUN").font(.system(.title2, design: .rounded, weight: .black)).italic()
-                            Text("헌터 협회  /  임시 지부").font(.caption).foregroundStyle(.white.opacity(0.75))
+                            Button { association = true } label: { Label("헌터 협회 · 지부 관리", systemImage: "building.2") }.font(.caption).foregroundStyle(.white.opacity(0.8)).accessibilityIdentifier("home.association")
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
-                            Text(model.save.profile.name).font(.headline).accessibilityIdentifier("home.profile")
-                            Text("E급 · Lv.\(model.save.profile.level)").font(.caption).foregroundStyle(Theme.muted)
+                            Text(model.save.profile.name).font(.headline).lineLimit(1).minimumScaleFactor(0.8).accessibilityIdentifier("home.profile")
+                            Text("\(model.save.profile.growth.rank)급 · Lv.\(model.save.profile.level)").font(.caption).foregroundStyle(Theme.muted)
                         }
                     }
                     Spacer(minLength: 60)
@@ -75,7 +76,7 @@ struct HomeView: View {
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
                     }.accessibilityLabel("러닝 준비 화면 열기").accessibilityIdentifier("home.run")
-                    Text("TECHNICAL DEMO · 0.1.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
+                    Text("PROGRESSION DEMO · 0.2.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
                 }.padding(20)
                 .frame(width: geo.size.width, height: geo.size.height)
                 .background {
@@ -96,6 +97,7 @@ struct HomeView: View {
                     .accessibilityHidden(true)
                 }
         }
+        .sheet(isPresented: $association) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { association = false } } } }.presentationDragIndicator(.visible) }
     }
 }
 struct SetupView: View {
@@ -107,13 +109,23 @@ struct SetupView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     eyebrow("TODAY'S ASSIGNMENT")
-                    Text("폐쇄 구역의\n마력 신호").font(.largeTitle.bold())
+                    Text(model.missions?.content(for: model.selectedMode, extended: false).missionTitle ?? "현장 의뢰").font(.largeTitle.bold())
+                    ForEach(RunMode.allCases, id: \.rawValue) { mode in
+                        Button { model.selectedMode = mode } label: {
+                            HStack {
+                                Image(systemName: model.selectedMode == mode ? "checkmark.circle.fill" : model.modeAllowed(mode) ? "circle" : "lock.fill")
+                                VStack(alignment: .leading, spacing: 5) { Text(mode.title).font(.headline); Text(mode.detail).font(.caption) }
+                                Spacer()
+                            }.foregroundStyle(model.modeAllowed(mode) ? Theme.teal : Theme.muted).card()
+                        }.buttonStyle(.plain).disabled(!model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
+                    }
+                    if !model.modeAllowed(.gate) { Text("고위험 게이트: 관측부 Lv.2와 D급 평가 통과 필요").font(.caption).foregroundStyle(Theme.muted) }
                     Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
-                    HStack { Image(systemName: "waveform.path"); Text("헌터 의뢰 · 음성 안내") }.foregroundStyle(Theme.teal)
+                    HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
                     VStack(alignment: .leading, spacing: 14) {
                         Text("활동 목표").font(.headline)
                         Picker("목표 시간", selection: $minutes) {
-                            Text("5분 · 점검").tag(5); Text("20분").tag(20); Text("30분").tag(30)
+                            Text("5분 · 점검").tag(5); Text("20분").tag(20); Text("30분").tag(30); if model.unlocked("extended-contract") { Text("45분").tag(45) }
                         }.pickerStyle(.segmented)
                         Toggle("선택적 추격 허용", isOn: $pursuit)
                         Text("가속하지 않으면 흔적 조사로 전환합니다. 첫 테스트는 추격을 꺼두는 것을 권합니다.").font(.caption).foregroundStyle(Theme.muted)
@@ -210,6 +222,8 @@ struct ActiveRunView: View {
                     Text("모의 러닝입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
                 } else if let summary = model.lastSummary {
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
+                    Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
+                    Text("장비 보관함과 지부 관리에서 획득한 자원을 사용할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }
                 if let notice = model.notice {
                     Text(notice).foregroundStyle(.orange)
@@ -253,15 +267,20 @@ struct HunterView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     eyebrow("HUNTER PROFILE")
                     Text(model.save.profile.name).font(.largeTitle.bold())
-                    Text("E급 · Lv.\(model.save.profile.level)").foregroundStyle(Theme.teal)
+                    Text("\(model.save.profile.growth.rank)급 · Lv.\(model.save.profile.level)").foregroundStyle(Theme.teal)
                     ProgressView(value: Double(model.save.profile.xp % 300), total: 300).tint(Theme.teal)
                     Text("다음 레벨까지 \(300 - model.save.profile.xp % 300) EXP").font(.caption).foregroundStyle(Theme.muted)
                     HStack { metric("마정석", "\(model.save.profile.crystals)"); Spacer(); metric("조사 데이터", "\(model.save.profile.research)") }.card()
+                    ResourceStrip()
+                    NavigationLink { EquipmentView() } label: { Label("장비 보관함", systemImage: "shield.lefthalf.filled").frame(maxWidth: .infinity, alignment: .leading).card() }
+                    NavigationLink { RankView() } label: { Label("협회 평가 · 승급", systemImage: "checkmark.seal").frame(maxWidth: .infinity, alignment: .leading).card() }
+                    NavigationLink { AssociationView() } label: { Label("협회 부서 관리", systemImage: "building.2").frame(maxWidth: .infinity, alignment: .leading).card() }
                     Text("활동 기록").font(.title2.bold())
                     if model.save.profile.runs.isEmpty { Text("첫 의뢰를 마치면 기록이 남습니다.").foregroundStyle(Theme.muted) }
                     ForEach(model.save.profile.runs) { run in
                         VStack(alignment: .leading, spacing: 8) {
                             Text(run.date, style: .date)
+                            Text(run.mode?.title ?? "헌터 의뢰").font(.caption).foregroundStyle(Theme.teal)
                             Text(String(format: "%.2f km", run.distance / 1000) + " · " + clock(run.seconds)).font(.title3)
                             Text("EXP +\(run.xp)").foregroundStyle(Theme.teal)
                         }.card()
@@ -273,21 +292,31 @@ struct HunterView: View {
 }
 struct CodexView: View {
     @EnvironmentObject var model: AppModel
+    private var events: [MissionTemplate] {
+        var all = model.missions?.modes.values.flatMap(\.events) ?? model.content?.events ?? []
+        if let extra = model.missions?.extendedContract { all.append(extra) }
+        return Array(Dictionary(all.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first }).values).sorted { $0.id < $1.id }
+    }
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     eyebrow("FIELD ARCHIVE")
                     Text("현장 조사 기록").font(.largeTitle.bold())
-                    ForEach(model.content?.events ?? []) { event in
+                    ForEach(events) { event in
                         let known = model.save.profile.runs.contains { $0.records.contains { $0.id == event.id } }
                         VStack(alignment: .leading, spacing: 8) {
                             Image(systemName: known ? "sparkle.magnifyingglass" : "questionmark.diamond").font(.title).foregroundStyle(Theme.teal)
                             Text(known ? event.title : "미발견 신호").font(.headline)
                             Text(known ? "활동 중 확인한 현상입니다." : "의뢰를 진행하면 조사 기록이 열립니다.").font(.caption).foregroundStyle(Theme.muted)
+                            if known && model.unlocked("analysis") {
+                                let records = model.save.profile.runs.flatMap(\.records).filter { $0.id == event.id }
+                                Text("기준 HP \(Int(event.hp)) · 토벌 \(records.filter { $0.defeated == true }.count)회").font(.caption).foregroundStyle(Theme.teal)
+                                Text("누적 피해 \(Int(records.reduce(0) { $0 + $1.damage }))").font(.caption)
+                            }
                         }.card()
                     }
-                    Text("첫 데모에는 현장 기록만 포함됩니다. 장비·몬스터 일러스트 도감은 다음 단계에서 확장합니다.").font(.caption).foregroundStyle(Theme.muted)
+                    Text("연구부를 확장하면 발견한 현상의 분석 정보가 열립니다. 몬스터 일러스트는 후속 버전에 추가됩니다.").font(.caption).foregroundStyle(Theme.muted)
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }
@@ -322,8 +351,8 @@ struct SettingsView: View {
                     Text("진단 파일에는 원시 GPS 좌표와 헌터명을 넣지 않습니다.").font(.caption)
                 }
                 Section("개발 상태") {
-                    Text("0.1.1 · 설치 및 러닝 검증 데모")
-                    Text("장비·협회 부서 성장·주요 보스 누적은 후속 단계입니다.").font(.caption)
+                    Text("0.2.0 · 러닝과 성장 연결 데모")
+                    Text("장비 12종 · 협회 4부서 · 3개 모드. 주요 보스 누적과 정식 음성은 후속 단계입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")
         }
@@ -339,15 +368,15 @@ struct SettingsView: View {
         }
     }
 }
-private extension View {
+extension View {
     func card() -> some View {
         self.padding(18).frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 18))
             .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.white.opacity(0.08)))
     }
 }
-private func eyebrow(_ text: String) -> some View { Text(text).font(.caption.monospaced().weight(.semibold)).tracking(2).foregroundStyle(Theme.teal) }
-private func metric(_ label: String, _ value: String) -> some View {
+func eyebrow(_ text: String) -> some View { Text(text).font(.caption.monospaced().weight(.semibold)).tracking(2).foregroundStyle(Theme.teal) }
+func metric(_ label: String, _ value: String) -> some View {
     VStack(alignment: .leading, spacing: 6) { Text(label).font(.caption).foregroundStyle(Theme.muted); Text(value).font(.title3.monospacedDigit().bold()) }
 }
 private func clock(_ seconds: Double) -> String { let value = max(0, Int(seconds)); return String(format: "%02d:%02d", value / 60, value % 60) }

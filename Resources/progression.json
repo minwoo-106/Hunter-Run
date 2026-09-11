@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "equipment": [
+    {"id":"field-blade","name":"협회 지급검","slot":"weapon","detail":"공격 보정 +0.12","crystals":4,"research":0,"cores":0,"supportLevel":1,"hp":0,"attack":0.12,"defense":0,"eventBonus":0,"researchBonus":0},
+    {"id":"resonance-blade","name":"공명 단검","slot":"weapon","detail":"공격 보정 +0.25","crystals":20,"research":4,"cores":0,"supportLevel":2,"hp":0,"attack":0.25,"defense":0,"eventBonus":0,"researchBonus":0},
+    {"id":"core-spear","name":"잔향의 창","slot":"weapon","detail":"공격 보정 +0.40","crystals":40,"research":8,"cores":1,"supportLevel":2,"hp":0,"attack":0.4,"defense":0,"eventBonus":0,"researchBonus":0},
+    {"id":"field-vest","name":"현장 방호복","slot":"armor","detail":"HP +12 · 받는 게임 피해 -8%","crystals":4,"research":0,"cores":0,"supportLevel":1,"hp":12,"attack":0,"defense":0.08,"eventBonus":0,"researchBonus":0},
+    {"id":"barrier-coat","name":"결계 코트","slot":"armor","detail":"HP +24 · 받는 게임 피해 -15%","crystals":20,"research":4,"cores":0,"supportLevel":2,"hp":24,"attack":0,"defense":0.15,"eventBonus":0,"researchBonus":0},
+    {"id":"core-armor","name":"수호자 장갑복","slot":"armor","detail":"HP +40 · 받는 게임 피해 -22%","crystals":40,"research":8,"cores":1,"supportLevel":2,"hp":40,"attack":0,"defense":0.22,"eventBonus":0,"researchBonus":0},
+    {"id":"field-shoes","name":"현장 기동화","slot":"shoes","detail":"유지·추격 이벤트 피해 +4%","crystals":4,"research":0,"cores":0,"supportLevel":1,"hp":0,"attack":0,"defense":0,"eventBonus":0.04,"researchBonus":0},
+    {"id":"trace-shoes","name":"흔적 추적화","slot":"shoes","detail":"유지·추격 이벤트 피해 +8%","crystals":18,"research":4,"cores":0,"supportLevel":2,"hp":0,"attack":0,"defense":0,"eventBonus":0.08,"researchBonus":0},
+    {"id":"core-shoes","name":"잔향 보행자","slot":"shoes","detail":"유지·추격 이벤트 피해 +12%","crystals":35,"research":6,"cores":1,"supportLevel":2,"hp":0,"attack":0,"defense":0,"eventBonus":0.12,"researchBonus":0},
+    {"id":"field-compass","name":"조사 나침반","slot":"relic","detail":"발견 사건 완료 시 조사 데이터 +1","crystals":6,"research":1,"cores":0,"supportLevel":1,"hp":0,"attack":0,"defense":0,"eventBonus":0,"researchBonus":1},
+    {"id":"archive-lens","name":"기록자의 렌즈","slot":"relic","detail":"발견 사건 완료 시 조사 데이터 +2","crystals":24,"research":6,"cores":0,"supportLevel":2,"hp":0,"attack":0,"defense":0,"eventBonus":0,"researchBonus":2},
+    {"id":"core-orbit","name":"경계의 궤도","slot":"relic","detail":"발견 사건 완료 시 조사 데이터 +3 · HP +10","crystals":40,"research":8,"cores":1,"supportLevel":2,"hp":10,"attack":0,"defense":0,"eventBonus":0,"researchBonus":3}
+  ],
+  "upgrades": [
+    {"id":"observation-2","department":"observation","level":2,"crystals":8,"research":3,"playerHint":"더 깊은 신호를 포착하는 관측 기능이 추가됩니다.","reveal":"고위험 게이트 관측이 열렸습니다. D급 평가를 통과하면 출입할 수 있습니다.","unlockActions":["gate"]},
+    {"id":"research-2","department":"research","level":2,"crystals":8,"research":4,"playerHint":"현장 기록에서 개체의 특성을 분석할 수 있습니다.","reveal":"도감의 개체 HP·누적 피해·토벌 기록 분석이 열렸습니다.","unlockActions":["analysis"]},
+    {"id":"equipment-2","department":"equipment","level":2,"crystals":10,"research":3,"playerHint":"새로운 장비 제작 설비를 가동합니다.","reveal":"고급 장비와 게이트 코어 장비 제작이 열렸습니다.","unlockActions":["advanced-equipment"]},
+    {"id":"contracts-2","department":"contracts","level":2,"crystals":8,"research":3,"playerHint":"더 긴 의뢰와 후속 조사 임무가 추가됩니다.","reveal":"45분 목표와 20분 이상 헌터 의뢰의 추가 조사 사건이 열렸습니다.","unlockActions":["extended-contract"]}
+  ]
+}

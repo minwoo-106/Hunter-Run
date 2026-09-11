@@ -35,11 +35,19 @@ public final class SaveRepository {
     public func validate(_ save: SaveState) throws {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
+        let growth = save.profile.growth
+        guard save.profile.xp <= 100_000_000, save.profile.crystals <= 100_000_000, save.profile.research <= 100_000_000,
+              Progression.ranks.contains(growth.rank), (0...1_000_000).contains(growth.cores),
+              growth.departments.allSatisfy({ Department(rawValue: $0.key) != nil && (1...2).contains($0.value) }),
+              growth.equipped.allSatisfy({ EquipmentSlot(rawValue: $0.key) != nil && growth.owned.contains($0.value) }) else { throw Failure.invalid }
         if let run = save.active {
             guard run.targetSeconds.isFinite, run.targetSeconds >= 60, run.activeSeconds.isFinite,
                   run.activeSeconds >= 0, run.activeSeconds <= run.targetSeconds,
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }
+            if let stats = run.loadout {
+                guard stats.hp.isFinite, (100...600).contains(stats.hp), stats.attack.isFinite, (0.5...3).contains(stats.attack), stats.defense.isFinite, (0...0.65).contains(stats.defense), stats.eventBonus.isFinite, (0...0.2).contains(stats.eventBonus), (0...5).contains(stats.researchBonus) else { throw Failure.invalid }
+            }
+            try run.missionSnapshot?.validate()
         }
     }
 }
-

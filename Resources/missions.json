@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "modes": {
+    "exploration": {
+      "schema": 1,
+      "missionTitle": "도시 경계의 잔향",
+      "events": [
+        {
+          "id": "exp-trace",
+          "title": "골목의 마력 흔적",
+          "kind": "discovery",
+          "startFraction": 0.13,
+          "duration": 30,
+          "hp": 0,
+          "audio": "discovery"
+        },
+        {
+          "id": "exp-cache",
+          "title": "버려진 관측 장치",
+          "kind": "discovery",
+          "startFraction": 0.35,
+          "duration": 40,
+          "hp": 0,
+          "audio": "investigate"
+        },
+        {
+          "id": "exp-echo",
+          "title": "경계의 잔향 채집",
+          "kind": "discovery",
+          "startFraction": 0.65,
+          "duration": 45,
+          "hp": 0,
+          "audio": "discovery"
+        }
+      ]
+    },
+    "contract": {
+      "schema": 1,
+      "missionTitle": "폐쇄 구역의 마력 신호",
+      "events": [
+        {
+          "id": "trace",
+          "title": "첫 번째 마력 흔적",
+          "kind": "discovery",
+          "startFraction": 0.13,
+          "duration": 30,
+          "hp": 0,
+          "audio": "discovery"
+        },
+        {
+          "id": "beast",
+          "title": "잔향 늑대와 조우",
+          "kind": "maintain",
+          "startFraction": 0.3,
+          "duration": 40,
+          "hp": 70,
+          "audio": "maintain"
+        },
+        {
+          "id": "trail",
+          "title": "도주 개체 추적",
+          "kind": "pursuit",
+          "startFraction": 0.5,
+          "duration": 25,
+          "hp": 60,
+          "audio": "pursuit"
+        },
+        {
+          "id": "gate",
+          "title": "신호원 안정화",
+          "kind": "boss",
+          "startFraction": 0.72,
+          "duration": 45,
+          "hp": 100,
+          "audio": "boss"
+        }
+      ]
+    },
+    "gate": {
+      "schema": 1,
+      "missionTitle": "균열 너머의 감시자",
+      "events": [
+        {
+          "id": "gate-entry",
+          "title": "균열 입구 조사",
+          "kind": "discovery",
+          "startFraction": 0.13,
+          "duration": 30,
+          "hp": 0,
+          "audio": "discovery"
+        },
+        {
+          "id": "gate-guard",
+          "title": "철각 파수병",
+          "kind": "maintain",
+          "startFraction": 0.28,
+          "duration": 40,
+          "hp": 75,
+          "audio": "maintain"
+        },
+        {
+          "id": "gate-trail",
+          "title": "도주하는 잔향",
+          "kind": "pursuit",
+          "startFraction": 0.44,
+          "duration": 25,
+          "hp": 65,
+          "audio": "pursuit"
+        },
+        {
+          "id": "gate-core",
+          "title": "균열 감시자",
+          "kind": "boss",
+          "startFraction": 0.64,
+          "duration": 45,
+          "hp": 85,
+          "audio": "boss"
+        },
+        {
+          "id": "gate-salvage",
+          "title": "흩어진 잔향 회수",
+          "kind": "discovery",
+          "startFraction": 0.8,
+          "duration": 20,
+          "hp": 0,
+          "audio": "investigate"
+        }
+      ]
+    }
+  },
+  "extendedContract": {
+    "id": "contract-cache",
+    "title": "후속 보급품 조사",
+    "kind": "discovery",
+    "startFraction": 0.6,
+    "duration": 35,
+    "hp": 0,
+    "audio": "discovery"
+  }
+}

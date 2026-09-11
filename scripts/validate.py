@@ -30,3 +30,15 @@ assert icon[:8] == b"\x89PNG\r\n\x1a\n"
 assert struct.unpack(">II", icon[16:24]) == (1024, 1024), "App icon must be 1024 square"
 assert icon[25] == 2, "App icon must use opaque RGB"
 print(f"Validated {len(ids)} events, {len(keys)} audio clips, permissions, artwork and app icon.")
+progression = json.loads((root / "Resources/progression.json").read_text(encoding="utf-8"))
+missions = json.loads((root / "Resources/missions.json").read_text(encoding="utf-8"))
+assert progression['schema'] == missions['schema'] == 1
+assert len(progression['equipment']) == len({e['id'] for e in progression['equipment']}) == 12
+assert {u['department'] for u in progression['upgrades']} == {'observation', 'research', 'equipment', 'contracts'}
+assert set(missions['modes']) == {'exploration', 'contract', 'gate'}
+for mission in missions['modes'].values():
+    events = mission['events']
+    assert len(events) == len({e['id'] for e in events})
+    assert all(0 < e['startFraction'] < .9 and e['duration'] > 0 and e['hp'] >= 0 for e in events)
+    assert all((root / 'Resources/Audio' / (e['audio'] + '.wav')).is_file() for e in events)
+print('Validated 12 equipment items, four department upgrades, and three mission modes.')

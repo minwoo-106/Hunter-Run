@@ -10,6 +10,7 @@ import UIKit
     @Published var recoverable = false
     @Published var selectedTab = 0
     @Published var showRun = false
+    @Published var selectedMode: RunMode = .contract
     @Published var mockMovement: Movement = .running
     @Published var mockSignal: Signal = .good
     @Published var mockSpeed = 2.6
@@ -27,6 +28,15 @@ import UIKit
     let audio = AudioDirector()
     let repository: SaveRepository
     let content: GameContent?
+    let progressionCatalog: ProgressionCatalog?
+    let missions: MissionCatalog?
+    var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
+    var growthLocked: Bool { engine != nil || save.active != nil || recoverable || !isReady }
+    func unlocked(_ action: String) -> Bool { progressionCatalog?.unlocked(action, profile: save.profile) ?? false }
+    func modeAllowed(_ mode: RunMode) -> Bool {
+        guard let progressionCatalog else { return false }
+        return Progression.allows(mode, profile: save.profile, catalog: progressionCatalog)
+    }
     private var timer: Timer?
     private var lastSaveAt = Date.distantPast
     private var mockTime: Double = 0
@@ -39,10 +49,16 @@ import UIKit
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(GameContent.self, from: data),
            (try? decoded.validate()) != nil { content = decoded }
         else { content = nil }
+        if let url = Bundle.main.url(forResource: "progression", withExtension: "json"),
+           let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(ProgressionCatalog.self, from: data),
+           (try? decoded.validate()) != nil { progressionCatalog = decoded } else { progressionCatalog = nil }
+        if let url = Bundle.main.url(forResource: "missions", withExtension: "json"),
+           let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(MissionCatalog.self, from: data),
+           (try? decoded.validate()) != nil { missions = decoded } else { missions = nil }
         do { save = try repository.load(); recoverable = save.active != nil }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
-        if content == nil { notice = "의뢰 데이터를 읽지 못했습니다." }
-        isReady = content != nil && !saveBlocked
+        if content == nil || progressionCatalog == nil || missions == nil { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = content != nil && progressionCatalog != nil && missions != nil && !saveBlocked
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -72,8 +88,11 @@ import UIKit
         if !simulated && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
         }
-        let session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit)
-        engine = RunEngine(session: session, content: content, attack: save.profile.attack)
+        guard modeAllowed(selectedMode), seconds <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
+        let mission = missions?.content(for: selectedMode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
+        var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: selectedMode, loadout: stats)
+        session.missionSnapshot = mission
+        engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
         lastSummary = nil; lastDemo = nil; resultSaved = true; notice = nil; showRun = true
         if !simulated { sensor.start() }
@@ -150,7 +169,7 @@ import UIKit
     func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop() }
     func recover() {
         guard let run = save.active, let content else { return }
-        engine = RunEngine(session: run, content: content, attack: save.profile.attack)
+        engine = RunEngine(session: run, content: run.missionSnapshot ?? content, attack: save.profile.attack)
         if run.phase == .finished { finish(); showRun = true; return }
         engine?.restorePaused(); recoverable = false; showRun = true
         mockTime = Date().timeIntervalSince1970
@@ -170,10 +189,19 @@ import UIKit
         catch { notice = "저장하지 못했습니다. 저장 공간을 확인해주세요." }
     }
     func nameChanged(_ name: String) { save.profile.name = String(name.prefix(16)); persist() }
-    func upgrade() {
-        guard save.profile.observationLevel == 1, save.profile.research >= 3 else { return }
-        save.profile.research -= 3; save.profile.observationLevel = 2; persist()
+    func changeGrowth(_ operation: (inout SaveState, ProgressionCatalog) throws -> String?) {
+        guard !growthLocked, let progressionCatalog else { notice = "진행 중인 활동을 마친 뒤 변경해주세요."; return }
+        var candidate = save
+        do {
+            let message = try operation(&candidate, progressionCatalog)
+            try repository.write(candidate)
+            save = candidate; notice = message
+        } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다." }
     }
+    func buy(_ id: String) { changeGrowth { save, catalog in try Progression.buy(id, save: &save, catalog: catalog); return "장비를 확보했습니다. 장착하면 다음 활동부터 적용됩니다." } }
+    func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }
+    func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
+    func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
     func audioTest() { audio.ducking = ducking; audio.volume = Float(voiceVolume); audio.play("audio_test") }
     func applyAudio() { audio.ducking = ducking; audio.volume = Float(voiceVolume) }
     func exportSave() -> URL? {
@@ -191,13 +219,13 @@ import UIKit
             let imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
             try repository.write(imported); save = imported
-            saveBlocked = false; isReady = content != nil; recoverable = save.active != nil
+            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil; recoverable = save.active != nil
         } catch { notice = "호환되는 Hunter Run 백업 파일이 아닙니다." }
     }
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.1 technical demo
+        Hunter Run 0.2.0 progression demo
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

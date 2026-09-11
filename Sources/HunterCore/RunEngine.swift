@@ -5,7 +5,7 @@ public struct RunEngine {
     public let content: GameContent
     public var attack: Double
     public init(session: RunSession, content: GameContent, attack: Double = 1) {
-        self.session = session; self.content = content; self.attack = min(3, max(0.5, attack))
+        self.session = session; self.content = content; self.attack = min(3, max(0.5, session.loadout?.attack ?? attack))
     }
     public mutating func restorePaused() {
         session.lastTimestamp = nil; session.manualPause = true; session.interruption = false
@@ -111,10 +111,13 @@ public struct RunEngine {
                 let ratio = event.qualified / max(1, event.evaluatedSeconds)
                 let outcome: Outcome = ratio >= 0.9 ? .perfect : ratio >= 0.7 ? .success : ratio >= 0.4 ? .partial : .fail
                 let multiplier: Double = [.perfect: 1.2, .success: 1.0, .partial: 0.55, .fail: 0.15][outcome] ?? 0
-                let damage = min(event.hp, 60 * attack * multiplier)
+                let bonus = event.template.kind == .maintain || event.template.kind == .pursuit ? session.loadout?.eventBonus ?? 0 : 0
+                let damage = event.template.kind == .discovery ? 0 : min(event.hp, 60 * attack * multiplier * (1 + bonus))
                 session.event?.hp = max(0, event.hp - damage)
-                if outcome == .partial { session.hp = max(0, session.hp - 12) }
-                if outcome == .fail { session.hp = max(0, session.hp - 25) }
+                let defense = min(0.65, max(0, session.loadout?.defense ?? 0))
+                let incoming = (session.mode == .gate ? 1.3 : 1) * (1 - defense)
+                if outcome == .partial { session.hp = max(0, session.hp - 12 * incoming) }
+                if outcome == .fail { session.hp = max(0, session.hp - 25 * incoming) }
                 if session.hp == 0 { session.withdrawn = true; session.recoveryUntil = session.activeSeconds + 120 }
                 if event.template.kind == .pursuit { session.lastIntensityAt = session.activeSeconds }
                 closeEvent(outcome)
@@ -141,7 +144,7 @@ public struct RunEngine {
     }
     private mutating func closeEvent(_ outcome: Outcome) {
         guard let event = session.event else { return }
-        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp)))
+        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind))
         session.event = nil
     }
 }
@@ -150,11 +153,14 @@ public enum Settlement {
         guard session.phase == .finished, !session.simulated, !profile.settled.contains(session.id) else { return nil }
         let completed = session.records.filter { $0.outcome != .neutral }.count
         let xp = Int(session.activeSeconds / 10) + completed * 20
-        let crystals = Int(session.activeSeconds / 120) + completed * 2
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, completedGoal: session.activeSeconds >= session.targetSeconds)
-        profile.xp += xp; profile.crystals += crystals; profile.research += completed
+        let crystals = Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2)
+        let discoveries = session.records.filter { $0.kind == .discovery && $0.outcome != .neutral }.count
+        let research = completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)
+        let cores = session.mode == .gate && session.records.contains { $0.id == "gate-core" && $0.defeated == true } ? 1 : 0
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, completedGoal: session.activeSeconds >= session.targetSeconds, mode: session.mode, research: research, cores: cores)
+        profile.xp += xp; profile.crystals += crystals; profile.research += research
+        if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)
         return summary
     }
 }
-

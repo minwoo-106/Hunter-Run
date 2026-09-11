@@ -51,6 +51,8 @@ public struct EventRecord: Codable, Identifiable {
     public var title: String
     public var outcome: Outcome
     public var damage: Double
+    public var defeated: Bool? = nil
+    public var kind: EventKind? = nil
 }
 public struct RunSession: Codable, Identifiable {
     public var id = UUID()
@@ -77,9 +79,13 @@ public struct RunSession: Codable, Identifiable {
     public var lastTimestamp: Double?
     public var movingStreak: Double = 0
     public var stationarySeconds: Double = 0
+    public var mode: RunMode? = nil
+    public var loadout: CombatStats? = nil
+    public var missionSnapshot: GameContent? = nil
     public var calibrationSeconds: Double { min(180, targetSeconds * 0.1) }
-    public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool) {
+    public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
+        self.mode = mode; self.loadout = loadout; self.hp = loadout?.hp ?? 100
     }
 }
 public struct RunSummary: Codable, Identifiable {
@@ -91,6 +97,9 @@ public struct RunSummary: Codable, Identifiable {
     public var crystals: Int
     public var records: [EventRecord]
     public var completedGoal: Bool
+    public var mode: RunMode? = nil
+    public var research: Int? = nil
+    public var cores: Int? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"
@@ -100,6 +109,11 @@ public struct Profile: Codable {
     public var observationLevel = 1
     public var settled: Set<UUID> = []
     public var runs: [RunSummary] = []
+    public var progression: GrowthState? = nil
+    public var growth: GrowthState {
+        get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
+        set { progression = newValue }
+    }
     public var level: Int { 1 + xp / 300 }
     public var attack: Double { 1 + Double(level - 1) * 0.08 }
     public init() {}
@@ -115,4 +129,3 @@ public enum GameCue: Equatable {
     case checkpoint
     case goalReached
 }
-
