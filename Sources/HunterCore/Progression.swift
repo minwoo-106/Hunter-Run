@@ -102,7 +102,7 @@ public enum ProgressionError: LocalizedError {
 public enum Progression {
     public static let ranks = ["E", "D", "C", "B", "A", "S"]
     public static func gateClears(_ profile: Profile) -> Int {
-        profile.runs.filter { $0.mode == .gate && $0.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } }.count
+        profile.runs.filter { run in run.mode == .gate && (run.majorBoss?.cleared == true || run.records.contains { $0.catalogID == "gate-core" && $0.defeated == true }) }.count
     }
     public static func nextRank(_ profile: Profile) -> String? {
         guard let index = ranks.firstIndex(of: profile.growth.rank), index + 1 < ranks.count else { return nil }

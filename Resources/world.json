@@ -1,0 +1,368 @@
+{
+  "schema": 1,
+  "monsters": [
+    {
+      "id": "echo-wolf",
+      "name": "잔향 늑대",
+      "family": "잔향수",
+      "description": "소리를 따라 움직이는 잔향수. 일정한 움직임으로 마력의 흐름을 끊을 수 있습니다.",
+      "eventIDs": [
+        "beast"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "rift-runner",
+      "name": "균열 살쾡이",
+      "family": "추적 개체",
+      "description": "불안정한 균열 사이로 도주하는 개체. 추격을 선택하지 않아도 흔적을 조사할 수 있습니다.",
+      "eventIDs": [
+        "trail",
+        "gate-trail"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "iron-guard",
+      "name": "철각 파수병",
+      "family": "구조체",
+      "description": "게이트 입구를 지키는 오래된 철과 암석의 파수병입니다.",
+      "eventIDs": [
+        "gate-guard"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "rift-watcher",
+      "name": "균열 감시자",
+      "family": "일반 보스",
+      "description": "중앙 핵을 둘러싼 외피로 게이트를 유지합니다. 한 활동 안에서 토벌하는 일반 보스입니다.",
+      "eventIDs": [
+        "gate-core"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "signal-heart",
+      "name": "신호의 심장",
+      "family": "마력 구조체",
+      "description": "폐쇄 구역의 마력 신호를 증폭하는 결정체. 움직임을 유지하며 안정화합니다.",
+      "eventIDs": [
+        "gate"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "boundary-lord",
+      "name": "경계의 군주",
+      "family": "주요 보스",
+      "description": "균열 깊은 곳에 남겨진 왕좌의 주인. 여러 활동에 걸쳐 외피를 약화시키는 장기 토벌 대상입니다.",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "boundary-lord"
+    },
+    {
+      "id": "void-librarian",
+      "name": "공허의 사서",
+      "family": "주요 보스",
+      "description": "사라진 지부의 기록을 지키는 존재. 강력한 결계를 단계별로 해체해야 합니다.",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "void-librarian"
+    }
+  ],
+  "bosses": [
+    {
+      "id": "boundary-lord",
+      "name": "경계의 군주",
+      "description": "여러 활동에 걸쳐 HP를 낮춥니다. 목표 종료 시 남은 HP가 저장됩니다.",
+      "requiredRank": "D",
+      "maximumHP": 300,
+      "phases": [
+        {
+          "schema": 1,
+          "missionTitle": "경계의 군주 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.3,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "경계의 군주 · 외피 약화",
+              "kind": "boss",
+              "startFraction": 0.55,
+              "duration": 45,
+              "hp": 300,
+              "audio": "boss"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "경계의 군주 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "경계의 군주 · 균열 공략",
+              "kind": "boss",
+              "startFraction": 0.3,
+              "duration": 45,
+              "hp": 300,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.58,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "경계의 군주 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "경계의 군주 · 핵심 안정화",
+              "kind": "boss",
+              "startFraction": 0.3,
+              "duration": 45,
+              "hp": 300,
+              "audio": "boss"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.54,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "경계의 군주 · 최종 공략",
+              "kind": "boss",
+              "startFraction": 0.68,
+              "duration": 35,
+              "hp": 300,
+              "audio": "boss"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "void-librarian",
+      "name": "공허의 사서",
+      "description": "여러 활동에 걸쳐 HP를 낮춥니다. 목표 종료 시 남은 HP가 저장됩니다.",
+      "requiredRank": "C",
+      "maximumHP": 540,
+      "phases": [
+        {
+          "schema": 1,
+          "missionTitle": "공허의 사서 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.3,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "공허의 사서 · 외피 약화",
+              "kind": "boss",
+              "startFraction": 0.55,
+              "duration": 45,
+              "hp": 540,
+              "audio": "boss"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "공허의 사서 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "공허의 사서 · 균열 공략",
+              "kind": "boss",
+              "startFraction": 0.3,
+              "duration": 45,
+              "hp": 540,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.58,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "공허의 사서 장기 토벌",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "토벌 경로 조사",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "공허의 사서 · 핵심 안정화",
+              "kind": "boss",
+              "startFraction": 0.3,
+              "duration": 45,
+              "hp": 540,
+              "audio": "boss"
+            },
+            {
+              "id": "major-guard",
+              "title": "결계 잔향 억제",
+              "kind": "maintain",
+              "startFraction": 0.54,
+              "duration": 35,
+              "hp": 65,
+              "audio": "maintain"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "공허의 사서 · 최종 공략",
+              "kind": "boss",
+              "startFraction": 0.68,
+              "duration": 35,
+              "hp": 540,
+              "audio": "boss"
+            },
+            {
+              "id": "major-recovery",
+              "title": "안정화 파편 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

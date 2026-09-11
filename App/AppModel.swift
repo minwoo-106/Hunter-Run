@@ -10,6 +10,8 @@ import UIKit
     @Published var recoverable = false
     @Published var selectedTab = 0
     @Published var showRun = false
+    @Published var showAssociation = false
+    @Published var selectedBoss: String?
     @Published var selectedMode: RunMode = .contract
     @Published var mockMovement: Movement = .running
     @Published var mockSignal: Signal = .good
@@ -24,12 +26,39 @@ import UIKit
     @Published var lastDemo: RunSession?
     @Published var voiceVolume = 0.85
     @Published var ducking = true
+    @Published var homeMusicEnabled = UserDefaults.standard.object(forKey: "homeMusicEnabled") as? Bool ?? true
+    @Published var homeMusicVolume = UserDefaults.standard.object(forKey: "homeMusicVolume") as? Double ?? 0.45
+    let lobbyMusic = LobbyMusicPlayer()
+    private var sceneActive = true
+    private var testingAudio = false
+    var canStartReal: Bool {
+        guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
+        guard selectedMode == .gate, let id = selectedBoss else { return true }
+        guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog else { return false }
+        return boss.available(to: save.profile, catalog: catalog) && BossCampaign.state(boss, profile: save.profile).remainingHP > 0
+    }
+    func refreshLobbyMusic() {
+        if sceneActive && homeMusicEnabled && !testingAudio && !showRun && engine == nil && (selectedTab == 0 || showAssociation) {
+            lobbyMusic.play(volume: Float(homeMusicVolume))
+        } else { lobbyMusic.stop() }
+    }
+    func sceneChanged(active: Bool) {
+        sceneActive = active
+        if active { lobbyMusic.allowPlayback() }
+        refreshLobbyMusic()
+    }
+    func applyHomeMusic() {
+        UserDefaults.standard.set(homeMusicEnabled, forKey: "homeMusicEnabled")
+        UserDefaults.standard.set(homeMusicVolume, forKey: "homeMusicVolume")
+        lobbyMusic.allowPlayback(); refreshLobbyMusic()
+    }
     let sensor = SensorProbe()
     let audio = AudioDirector()
     let repository: SaveRepository
     let content: GameContent?
     let progressionCatalog: ProgressionCatalog?
     let missions: MissionCatalog?
+    let world: WorldContent?
     var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
     var growthLocked: Bool { engine != nil || save.active != nil || recoverable || !isReady }
     func unlocked(_ action: String) -> Bool { progressionCatalog?.unlocked(action, profile: save.profile) ?? false }
@@ -55,10 +84,13 @@ import UIKit
         if let url = Bundle.main.url(forResource: "missions", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(MissionCatalog.self, from: data),
            (try? decoded.validate()) != nil { missions = decoded } else { missions = nil }
+        if let url = Bundle.main.url(forResource: "world", withExtension: "json"),
+           let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(WorldContent.self, from: data),
+           (try? decoded.validate()) != nil { world = decoded } else { world = nil }
         do { save = try repository.load(); recoverable = save.active != nil }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
-        if content == nil || progressionCatalog == nil || missions == nil { notice = "게임 콘텐츠를 읽지 못했습니다." }
-        isReady = content != nil && progressionCatalog != nil && missions != nil && !saveBlocked
+        if content == nil || progressionCatalog == nil || missions == nil || world == nil { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && !saveBlocked
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -70,7 +102,7 @@ import UIKit
         audio.onFailure = { [weak self] message in
             DispatchQueue.main.async {
                 guard let self else { return }
-                self.notice = message
+                self.notice = message; self.testingAudio = false
                 if self.engine != nil { self.engine?.pause(true); self.persist() }
             }
         }
@@ -90,9 +122,18 @@ import UIKit
         }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
         guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
-        guard modeAllowed(selectedMode), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
-        let mission = missions?.content(for: selectedMode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
+        guard (simulated || modeAllowed(selectedMode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
+        var mission = missions?.content(for: selectedMode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: selectedMode, loadout: stats)
+        if selectedMode == .gate, let id = selectedBoss {
+            guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog,
+                  (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "주요 보스 토벌 조건을 확인해주세요."; return }
+            let state = simulated ? BossState(maximumHP: boss.maximumHP) : BossCampaign.state(boss, profile: save.profile)
+            guard state.remainingHP > 0 else { notice = "토벌을 완료했습니다. 토벌 게시판에서 새로운 회차를 열 수 있습니다."; return }
+            let encounter = BossEncounter(definition: boss, state: state)
+            session.boss = encounter; mission = encounter.content
+        }
+        lobbyMusic.stop(); testingAudio = false
         session.goal = requested
         session.missionSnapshot = mission
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
@@ -153,6 +194,7 @@ import UIKit
         persist()
     }
     func interruption() {
+        testingAudio = false
         guard engine != nil else { return }
         engine?.interrupt(true); engine?.interrupt(false)
         notice = "통화 또는 이어폰 변경으로 일시정지했습니다. 안전한 곳에서 재개해주세요."
@@ -169,9 +211,10 @@ import UIKit
         catch { resultSaved = false; notice = "결과 저장에 실패했습니다. 앱을 종료하지 말고 다시 저장해주세요."; return }
         recoverable = false
     }
-    func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop() }
+    func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
     func recover() {
         guard let run = save.active, let content else { return }
+        lobbyMusic.stop(); testingAudio = false
         engine = RunEngine(session: run, content: run.missionSnapshot ?? content, attack: save.profile.attack)
         if run.phase == .finished { finish(); showRun = true; return }
         engine?.restorePaused(); recoverable = false; showRun = true
@@ -201,11 +244,25 @@ import UIKit
             save = candidate; notice = message
         } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다." }
     }
+    func prepareBoss(_ boss: BossDefinition, simulated: Bool = false) {
+        guard let catalog = progressionCatalog, (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "필요한 등급과 관측부 레벨을 먼저 달성해주세요."; return }
+        selectedBoss = boss.id; selectedMode = .gate; showAssociation = false; selectedTab = 2
+    }
+    func restartBoss(_ boss: BossDefinition) {
+        changeGrowth { save, catalog in try BossCampaign.restart(boss, save: &save, catalog: catalog); return "새 토벌 회차를 열었습니다." }
+    }
     func buy(_ id: String) { changeGrowth { save, catalog in try Progression.buy(id, save: &save, catalog: catalog); return "장비를 확보했습니다. 장착하면 다음 활동부터 적용됩니다." } }
     func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
     func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
-    func audioTest() { audio.ducking = ducking; audio.volume = Float(voiceVolume); audio.play("audio_test") }
+    func audioTest() {
+        guard engine == nil else { return }
+        lobbyMusic.stop(); testingAudio = true
+        audio.ducking = ducking; audio.volume = Float(voiceVolume)
+        audio.play("audio_test") { [weak self] in
+            DispatchQueue.main.async { self?.testingAudio = false; self?.refreshLobbyMusic() }
+        }
+    }
     func applyAudio() { audio.ducking = ducking; audio.volume = Float(voiceVolume) }
     func exportSave() -> URL? {
         do {
@@ -222,13 +279,13 @@ import UIKit
             let imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
             try repository.write(imported); save = imported
-            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil; recoverable = save.active != nil
+            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil; recoverable = save.active != nil
         } catch { notice = "호환되는 Hunter Run 백업 파일이 아닙니다." }
     }
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.3.0 field and equipment demo
+        Hunter Run 0.4.0 world and boss demo
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

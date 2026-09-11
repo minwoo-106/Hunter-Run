@@ -8,6 +8,7 @@ import UniformTypeIdentifiers
         WindowGroup {
             RootView().environmentObject(model).preferredColorScheme(.dark)
                 .onChange(of: scenePhase) { _, phase in
+                    model.sceneChanged(active: phase == .active)
                     if phase != .active { model.persist() }
                 }
         }
@@ -34,6 +35,11 @@ struct RootView: View {
         }
         .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
+        .onAppear { model.refreshLobbyMusic() }
+        .onChange(of: model.selectedTab) { _, _ in model.refreshLobbyMusic() }
+        .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
+        .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic() }
+        .sheet(isPresented: $model.showAssociation) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showAssociation = false } } } } }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             Button("확인") { model.notice = nil }
@@ -42,7 +48,6 @@ struct RootView: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model: AppModel
-    @State private var association = false
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -50,7 +55,7 @@ struct HomeView: View {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("HUNTER RUN").font(.system(.title2, design: .rounded, weight: .black)).italic()
-                            Text("헌터 협회 · 임시 지부").font(.caption).foregroundStyle(.white.opacity(0.8))
+                            Text("헌터 협회 · " + AssociationStage.name(model.save.profile)).font(.caption).foregroundStyle(.white.opacity(0.8))
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
@@ -72,18 +77,18 @@ struct HomeView: View {
                             }
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
-                    Button { association = true } label: {
+                    Button { model.selectedTab = 2 } label: {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("협회 관리").font(.system(size: 29, weight: .bold, design: .rounded))
-                                Text("시설 확장 · 새로운 의뢰 해금").font(.subheadline)
+                                Text("RUN").font(.system(size: 35, weight: .black, design: .rounded)).italic()
+                                Text("활동 시작 · 오늘의 의뢰").font(.subheadline)
                             }
                             Spacer(); Image(systemName: "arrow.up.right").font(.title2)
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
-                    }.accessibilityLabel("협회 관리").accessibilityIdentifier("home.association")
+                    }.accessibilityLabel("활동 시작 RUN").accessibilityIdentifier("home.run")
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("WORLD DEMO · 0.4.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -91,7 +96,7 @@ struct HomeView: View {
                     // Artwork can extend beyond its canvas without enlarging the controls.
                     ZStack {
                         Theme.ink.ignoresSafeArea()
-                        Image("AssociationOffice").resizable().scaledToFill()
+                        Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill()
                             .frame(width: geo.size.width, height: geo.size.height).clipped()
                             .ignoresSafeArea(edges: .top)
                         Image("OperatorCutout").resizable().scaledToFit()
@@ -105,7 +110,6 @@ struct HomeView: View {
                     .accessibilityHidden(true)
                 }
         }
-        .sheet(isPresented: $association) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { association = false } } } }.presentationDragIndicator(.visible) }
     }
 }
 struct SetupView: View {
@@ -130,6 +134,7 @@ struct SetupView: View {
                         }.buttonStyle(.plain).disabled(!model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
                     }
                     if !model.modeAllowed(.gate) { Text("고위험 게이트: 관측부 Lv.2와 D급 평가 통과 필요").font(.caption).foregroundStyle(Theme.muted) }
+                    if model.selectedMode == .gate { BossSelectionView() }
                     Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
                     HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
                     VStack(alignment: .leading, spacing: 14) {
@@ -163,7 +168,7 @@ struct SetupView: View {
                         let goal = ActivityGoal(kind: goalKind, value: goalKind == .time ? Double(minutes * 60) : goalKind == .distance ? Double(kilometers * 1000) : 0)
                         model.start(simulated: false, seconds: goalKind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal)
                     } label: { Label("START RUN", systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
-                        .buttonStyle(.borderedProminent).disabled(!model.isReady || model.recoverable)
+                        .buttonStyle(.borderedProminent).disabled(!model.canStartReal)
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
                     Divider()
                     Text("실내에서 먼저 확인").font(.headline)
@@ -201,6 +206,7 @@ struct ActiveRunView: View {
                             }
                             if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
+                            if let boss = run.boss { BossHPView(name: boss.definition.name, remaining: boss.remainingHP, maximum: boss.maximumHP, phase: boss.phaseName) }
                             VStack(alignment: .leading, spacing: 12) {
                                 eyebrow("OPERATOR")
                                 Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있습니다" : "주변을 탐색하고 있습니다")).font(.title2.bold())
@@ -248,6 +254,7 @@ struct ActiveRunView: View {
                 } else if let summary = model.lastSummary {
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
                     Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
+                    if let boss = summary.majorBoss { BossReportView(report: boss) }
                     Text("장비 보관함과 지부 관리에서 획득한 자원을 사용할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }
                 if let notice = model.notice {
@@ -317,7 +324,7 @@ struct HunterView: View {
         }
     }
 }
-struct CodexView: View {
+struct FieldArchiveView: View {
     @EnvironmentObject var model: AppModel
     private var events: [MissionTemplate] {
         var all = model.missions?.modes.values.flatMap(\.events) ?? model.content?.events ?? []
@@ -361,6 +368,11 @@ struct SettingsView: View {
                 Section("헌터 등록") {
                     TextField("헌터명", text: Binding(get: { model.save.profile.name }, set: { model.nameChanged($0) }))
                 }
+                Section("협회 BGM") {
+                    Toggle("협회 배경음악", isOn: $model.homeMusicEnabled).onChange(of: model.homeMusicEnabled) { _, _ in model.applyHomeMusic() }
+                    Slider(value: $model.homeMusicVolume, in: 0...1).accessibilityLabel("협회 BGM 음량").onChange(of: model.homeMusicVolume) { _, _ in model.applyHomeMusic() }
+                    Text("홈과 협회 관리에서만 재생되는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
+                }
                 Section("오디오") {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
@@ -381,8 +393,8 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.3.0 · 현장 활동과 장비 데모")
-                    Text("장비 일러스트 12종 · 시간/거리/자유 목표 · 활동 상세 기록. 주요 보스 누적과 정식 음성은 후속 단계입니다.").font(.caption)
+                    Text("0.4.0 · 주요 보스와 협회 성장")
+                    Text("누적 보스 2종 · 개체 일러스트 7종 · 협회 외형 3단계. 정식 오퍼레이터 음성은 아직 준비 중입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")
         }

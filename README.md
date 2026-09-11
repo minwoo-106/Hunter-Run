@@ -1,17 +1,27 @@
-# Hunter Run — 0.3.0 field and equipment demo
+# Hunter Run — 0.4.0 world and boss demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build
+## Previous verified build (0.3.0)
 Codemagic demo build 8 completed on 2026-09-11 from commit `51c061f` on Mac mini M2 in 6m 33s.
 All 31 core tests and 4 iPhone UI tests passed. The iPhone app compiled and packaged successfully.
 `HunterRun-install.zip` (23.50 MB) contains the unsigned IPA; archive integrity and the inner app executable/Info.plist were verified during the build.
 [Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3af69107aa975edb5028c).
 On the 402 × 874 point iPhone simulator, the association CTA stays within 20-point horizontal margins and the home version label ends at y=742 above the central RUN at y=768. UI tests also cover equipment artwork/details, goal selection, guide access and progression locks.
-Earlier device installation, corrected home layout, and voice playback through speaker and AirPods were confirmed by the user. 0.3.0 installation and field behavior still require device testing.
+Earlier device installation, corrected home layout, and voice playback through speaker and AirPods were confirmed by the user. The user confirmed 0.3.0 installation and equipment artwork; further field behavior remains subject to testing.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.4
+- Large home RUN CTA and a slightly larger central association-management control.
+- Two persistent bosses with three HP phases, per-run settlement and manually opened new rounds.
+- Seven monster illustrations, discovery-gated archive and research-based combat analysis.
+- Three association backgrounds based on 0/2/4 upgraded departments.
+- Original 32-second synthesized lobby BGM sketch; foreground home/association only, with saved controls.
+- Boss mock preparation before unlock; real HP and rewards remain unchanged in simulation.
+Core tests: 41 passed locally. Current iOS build/UI validation pending.
+[한국어 0.4 테스트](docs/0.4-토벌-테스트.md).
 
 ## Added in 0.3
 - Association management home CTA and an emphasized central RUN control.
@@ -42,8 +52,8 @@ Earlier device installation, corrected home layout, and voice playback through s
 [한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
 
 ## Not yet implemented
-Persistent major bosses, onboarding, long-term pace learning,
-monster art/content, association visual stages, final voice/BGM and production balancing.
+Onboarding, long-term pace learning, expanded story/content, final operator voice,
+polished audio production and production balancing.
 This is a playable progression milestone, not content-complete v1.
 
 ## Build (macOS / Codemagic)

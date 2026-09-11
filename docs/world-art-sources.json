@@ -1,0 +1,50 @@
+{
+  "tool": "builtin imagegen",
+  "entries": [
+    {
+      "id": "echo-wolf",
+      "source": "exec-3611e5e4-4942-4b9e-bca3-ec23a567e052.png",
+      "asset": "Monster-echo-wolf"
+    },
+    {
+      "id": "rift-runner",
+      "source": "exec-cb22f8c7-7209-4331-bae1-917032be6ea7.png",
+      "asset": "Monster-rift-runner"
+    },
+    {
+      "id": "iron-guard",
+      "source": "exec-b39f7559-ab9f-44ef-a9f3-5aa418a2aabf.png",
+      "asset": "Monster-iron-guard"
+    },
+    {
+      "id": "rift-watcher",
+      "source": "exec-9caa4d68-4767-421b-8a38-cf8613974cc4.png",
+      "asset": "Monster-rift-watcher"
+    },
+    {
+      "id": "signal-heart",
+      "source": "exec-3d5a7257-0a2e-48e3-9815-38b7747f405b.png",
+      "asset": "Monster-signal-heart"
+    },
+    {
+      "id": "boundary-lord",
+      "source": "exec-849cf576-2bac-4ecb-ae30-149d5cfba7b6.png",
+      "asset": "Monster-boundary-lord"
+    },
+    {
+      "id": "void-librarian",
+      "source": "exec-ee12e289-4e43-4b71-b1af-237672576177.png",
+      "asset": "Monster-void-librarian"
+    },
+    {
+      "id": "AssociationOperational",
+      "source": "exec-17ca181a-dfe4-4d70-a519-74b69b588947.png",
+      "asset": "AssociationOperational"
+    },
+    {
+      "id": "AssociationAdvanced",
+      "source": "exec-d27e22a9-ad9b-47b5-9f16-618f97e8fa73.png",
+      "asset": "AssociationAdvanced"
+    }
+  ]
+}

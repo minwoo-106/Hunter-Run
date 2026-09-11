@@ -51,3 +51,17 @@ for item in progression['equipment']:
     width, height = struct.unpack('>II', data[16:24])
     assert width == height and width >= 512, item['id']
 print('Validated twelve individual equipment illustrations.')
+
+world = json.loads((root / 'Resources/world.json').read_text(encoding='utf-8'))
+assert world['schema'] == 1 and len(world['bosses']) == 2 and len(world['monsters']) == 7
+for boss in world['bosses']:
+    assert len(boss['phases']) == 3 and 100 <= boss['maximumHP'] <= 100000
+    for phase in boss['phases']:
+        assert any(e['id'].startswith('major-strike') and e['kind'] == 'boss' for e in phase['events'])
+        assert all((root / 'Resources/Audio' / (e['audio'] + '.wav')).is_file() for e in phase['events'])
+for asset in ['Monster-' + m['id'] for m in world['monsters']] + ['AssociationOffice', 'AssociationOperational', 'AssociationAdvanced']:
+    assert (catalog / (asset + '.imageset') / 'Contents.json').is_file(), asset
+with wave.open(str(root / 'Resources/Music/association-theme.wav')) as music:
+    assert music.getnchannels() == 2 and music.getsampwidth() == 2 and music.getframerate() == 44100
+    assert music.getnframes() == 32 * 44100
+print('Validated two major bosses, seven monster illustrations, three association stages and lobby music.')

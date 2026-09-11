@@ -11,7 +11,7 @@ final class HomeLayoutTests: XCTestCase {
         screenshot.lifetime = .keepAlways
         add(screenshot)
         let screen = app.windows.firstMatch.frame
-        for id in ["home.profile", "home.greeting", "home.association"] {
+        for id in ["home.profile", "home.greeting", "home.run"] {
             let element = app.descendants(matching: .any).matching(identifier: id).firstMatch
             XCTAssertTrue(element.exists, id)
             let frame = element.frame
@@ -25,22 +25,23 @@ final class HomeLayoutTests: XCTestCase {
         let version = app.staticTexts["home.version"]
         XCTAssertTrue(version.exists)
         print("LAYOUT home.version frame=\(version.frame) nav=\(run.frame)")
-        XCTAssertLessThanOrEqual(version.frame.maxY, run.frame.minY, "Home content overlaps central RUN")
-        XCTAssertLessThanOrEqual(app.buttons["home.association"].frame.maxY, run.frame.minY, "Association button overlaps central RUN")
+        XCTAssertLessThanOrEqual(version.frame.maxY, run.frame.minY, "Home content overlaps central association")
+        XCTAssertLessThanOrEqual(app.buttons["home.run"].frame.maxY, run.frame.minY, "Association button overlaps central association")
         XCTAssertTrue(run.isHittable)
-        run.tap()
+        app.buttons["home.run"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
     }
     @MainActor func testGrowthNavigationAndModeLocks() {
         let app = XCUIApplication(); app.launch()
-        let association = app.buttons["home.association"]
+        let association = app.buttons["nav.2"]
         XCTAssertTrue(association.waitForExistence(timeout: 10)); association.tap()
-        XCTAssertTrue(app.staticTexts["관측부"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
         app.buttons["nav.1"].tap()
         app.buttons["장비 보관함"].tap()
         XCTAssertTrue(app.staticTexts["협회 지급검"].waitForExistence(timeout: 5))
-        app.buttons["nav.2"].tap()
+        app.buttons["nav.0"].tap()
+        app.buttons["home.run"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
         app.buttons["mode.exploration"].tap()
         XCTAssertTrue(app.staticTexts["도시 경계의 잔향"].exists)
@@ -51,7 +52,8 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.tabBars.firstMatch.exists)
         XCTAssertGreaterThan(app.buttons["nav.2"].frame.height, app.buttons["nav.1"].frame.height)
-        app.buttons["nav.2"].tap()
+        app.buttons["nav.0"].tap()
+        app.buttons["home.run"].tap()
         let goals = app.segmentedControls["goal.kind"]
         for _ in 0..<5 { if goals.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(goals.isHittable)
@@ -64,6 +66,31 @@ final class HomeLayoutTests: XCTestCase {
         goals.buttons["시간"].tap()
         XCTAssertFalse(app.staticTexts["goal.free.help"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Activity goals"; shot.lifetime = .keepAlways; add(shot)
+    }
+    @MainActor func testBossPreparationAndUndiscoveredArchive() {
+        let app = XCUIApplication(); app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        app.buttons["association.bosses"].tap()
+        let demo = app.buttons["boss.demo.boundary-lord"]
+        for _ in 0..<7 { if demo.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(demo.isHittable)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Major boss board"; shot.lifetime = .keepAlways; add(shot)
+        demo.tap()
+        XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
+        let mock = app.buttons["3분 모의 러닝"]
+        for _ in 0..<10 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertFalse(app.buttons["START RUN"].isEnabled)
+        XCTAssertTrue(mock.isHittable); mock.tap()
+        XCTAssertTrue(app.staticTexts["경계의 군주"].waitForExistence(timeout: 5))
+        let end = app.buttons["활동 종료"]
+        for _ in 0..<6 { if end.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(end.isHittable); end.tap()
+        app.buttons["저장하고 종료"].tap()
+        XCTAssertTrue(app.buttons["협회로 돌아가기"].waitForExistence(timeout: 5)); app.buttons["협회로 돌아가기"].tap()
+        app.buttons["nav.3"].tap()
+        let monster = app.buttons["monster.echo-wolf"]
+        XCTAssertTrue(monster.waitForExistence(timeout: 5)); monster.tap()
+        XCTAssertTrue(app.staticTexts["아직 발견하지 못했습니다"].waitForExistence(timeout: 5))
     }
     @MainActor func testEquipmentArtworkDetailsAndHistory() {
         let app = XCUIApplication(); app.launch()

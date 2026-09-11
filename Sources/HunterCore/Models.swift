@@ -83,6 +83,7 @@ public struct RunSession: Codable, Identifiable {
     public var loadout: CombatStats? = nil
     public var missionSnapshot: GameContent? = nil
     public var goal: ActivityGoal? = nil
+    public var boss: BossEncounter? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -103,6 +104,7 @@ public struct RunSummary: Codable, Identifiable {
     public var mode: RunMode? = nil
     public var research: Int? = nil
     public var cores: Int? = nil
+    public var majorBoss: BossReport? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"
@@ -113,6 +115,7 @@ public struct Profile: Codable {
     public var settled: Set<UUID> = []
     public var runs: [RunSummary] = []
     public var progression: GrowthState? = nil
+    public var bosses: [String: BossState]? = nil
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
         set { progression = newValue }
