@@ -21,6 +21,7 @@ enum Theme {
 struct RootView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
+        VStack(spacing: 0) {
         TabView(selection: $model.selectedTab) {
             HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("협회", systemImage: "building.2") }
             HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
@@ -29,7 +30,9 @@ struct RootView: View {
             SettingsView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("메뉴", systemImage: "ellipsis") }
         }
         .toolbar(.hidden, for: .tabBar)
-        .safeAreaInset(edge: .bottom, spacing: 0) { HunterTabBar() }
+        HunterTabBar()
+        }
+        .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
@@ -80,7 +83,7 @@ struct HomeView: View {
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
                     }.accessibilityLabel("협회 관리").accessibilityIdentifier("home.association")
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
+                    Text("FIELD DEMO · 0.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)

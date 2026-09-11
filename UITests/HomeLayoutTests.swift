@@ -22,6 +22,11 @@ final class HomeLayoutTests: XCTestCase {
             XCTAssertGreaterThanOrEqual(frame.minY, screen.minY, id + " top overflow")
             XCTAssertLessThanOrEqual(frame.maxY, screen.maxY, id + " bottom overflow")
         }
+        let version = app.staticTexts["home.version"]
+        XCTAssertTrue(version.exists)
+        print("LAYOUT home.version frame=\(version.frame) nav=\(run.frame)")
+        XCTAssertLessThanOrEqual(version.frame.maxY, run.frame.minY, "Home content overlaps central RUN")
+        XCTAssertLessThanOrEqual(app.buttons["home.association"].frame.maxY, run.frame.minY, "Association button overlaps central RUN")
         XCTAssertTrue(run.isHittable)
         run.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
