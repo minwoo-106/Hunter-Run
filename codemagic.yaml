@@ -41,6 +41,8 @@ workflows:
           xcodebuild -project HunterRun.xcodeproj -scheme HunterRun \
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 || { cat build-log.txt; exit 1; }
+      - name: Check home layout in iPhone simulator
+        script: bash scripts/check-ios-layout.sh
       - name: Package unsigned IPA for personal signing
         script: |
           set -euo pipefail
@@ -66,3 +68,6 @@ workflows:
       - build/HunterRun-install.zip
       - build/HunterRun-unsigned.ipa
       - build-log.txt
+      - build/Home-layout.png
+      - build/layout-log.txt
+      - build/Layout.xcresult

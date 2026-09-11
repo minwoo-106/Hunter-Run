@@ -39,17 +39,6 @@ struct HomeView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
         GeometryReader { geo in
-            ZStack {
-                Theme.ink.ignoresSafeArea()
-                Image("AssociationOffice").resizable().scaledToFill()
-                    .frame(width: geo.size.width, height: geo.size.height).clipped()
-                    .ignoresSafeArea(edges: .top)
-                Image("OperatorCutout").resizable().scaledToFit()
-                    .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
-                    .offset(y: -geo.size.height * 0.015)
-                    .accessibilityHidden(true)
-                LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
@@ -86,9 +75,26 @@ struct HomeView: View {
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
                     }.accessibilityLabel("러닝 준비 화면 열기").accessibilityIdentifier("home.run")
-                    Text("TECHNICAL DEMO · 0.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
+                    Text("TECHNICAL DEMO · 0.1.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
                 }.padding(20)
-            }
+                .frame(width: geo.size.width, height: geo.size.height)
+                .background {
+                    // Artwork can extend beyond its canvas without enlarging the controls.
+                    ZStack {
+                        Theme.ink.ignoresSafeArea()
+                        Image("AssociationOffice").resizable().scaledToFill()
+                            .frame(width: geo.size.width, height: geo.size.height).clipped()
+                            .ignoresSafeArea(edges: .top)
+                        Image("OperatorCutout").resizable().scaledToFit()
+                            .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
+                            .offset(y: -geo.size.height * 0.015)
+                        LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
+                            .ignoresSafeArea()
+                    }
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+                }
         }
     }
 }
@@ -316,7 +322,7 @@ struct SettingsView: View {
                     Text("진단 파일에는 원시 GPS 좌표와 헌터명을 넣지 않습니다.").font(.caption)
                 }
                 Section("개발 상태") {
-                    Text("0.1 · 설치 및 러닝 검증 데모")
+                    Text("0.1.1 · 설치 및 러닝 검증 데모")
                     Text("장비·협회 부서 성장·주요 보스 누적은 후속 단계입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")

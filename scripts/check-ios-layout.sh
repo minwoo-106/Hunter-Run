@@ -16,8 +16,7 @@ status=0
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
-  CODE_SIGNING_ALLOWED=NO test > build/layout-log.txt 2>&1 || status=$?
-cat build/layout-log.txt
+  CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
 # Keep a directly downloadable screenshot even when the assertion fails.
 xcrun simctl terminate "$DEVICE_ID" com.hunterrun.demo || true
 xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo || true
