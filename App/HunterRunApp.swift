@@ -22,12 +22,14 @@ struct RootView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
         TabView(selection: $model.selectedTab) {
-            HomeView().tag(0).tabItem { Label("협회", systemImage: "building.2") }
-            HunterView().tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
-            SetupView().tag(2).tabItem { Label("RUN", systemImage: "figure.run") }
-            CodexView().tag(3).tabItem { Label("도감", systemImage: "book") }
-            SettingsView().tag(4).tabItem { Label("메뉴", systemImage: "ellipsis") }
+            HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("협회", systemImage: "building.2") }
+            HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
+            SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("RUN", systemImage: "figure.run") }
+            CodexView().toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("도감", systemImage: "book") }
+            SettingsView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("메뉴", systemImage: "ellipsis") }
         }
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom, spacing: 0) { HunterTabBar() }
         .tint(Theme.teal)
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
@@ -40,11 +42,12 @@ struct HomeView: View {
     @State private var association = false
     var body: some View {
         GeometryReader { geo in
+            ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("HUNTER RUN").font(.system(.title2, design: .rounded, weight: .black)).italic()
-                            Button { association = true } label: { Label("헌터 협회 · 지부 관리", systemImage: "building.2") }.font(.caption).foregroundStyle(.white.opacity(0.8)).accessibilityIdentifier("home.association")
+                            Text("헌터 협회 · 임시 지부").font(.caption).foregroundStyle(.white.opacity(0.8))
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
@@ -66,19 +69,21 @@ struct HomeView: View {
                             }
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
-                    Button { model.selectedTab = 2 } label: {
+                    Button { association = true } label: {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("RUN").font(.system(size: 35, weight: .black, design: .rounded)).italic()
-                                Text("활동 시작").font(.subheadline)
+                                Text("협회 관리").font(.system(size: 29, weight: .bold, design: .rounded))
+                                Text("시설 확장 · 새로운 의뢰 해금").font(.subheadline)
                             }
                             Spacer(); Image(systemName: "arrow.up.right").font(.title2)
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
-                    }.accessibilityLabel("러닝 준비 화면 열기").accessibilityIdentifier("home.run")
-                    Text("PROGRESSION DEMO · 0.2.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
+                    }.accessibilityLabel("협회 관리").accessibilityIdentifier("home.association")
+                    ResourceStrip()
+                    Text("FIELD DEMO · 0.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
                 }.padding(20)
-                .frame(width: geo.size.width, height: geo.size.height)
+                .frame(width: geo.size.width).frame(minHeight: geo.size.height)
+            }.scrollIndicators(.hidden)
                 .background {
                     // Artwork can extend beyond its canvas without enlarging the controls.
                     ZStack {
@@ -103,6 +108,8 @@ struct HomeView: View {
 struct SetupView: View {
     @EnvironmentObject var model: AppModel
     @State private var minutes = 20
+    @State private var goalKind: GoalKind = .time
+    @State private var kilometers = 3
     @State private var pursuit = false
     var body: some View {
         NavigationStack {
@@ -124,9 +131,22 @@ struct SetupView: View {
                     HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
                     VStack(alignment: .leading, spacing: 14) {
                         Text("활동 목표").font(.headline)
-                        Picker("목표 시간", selection: $minutes) {
-                            Text("5분 · 점검").tag(5); Text("20분").tag(20); Text("30분").tag(30); if model.unlocked("extended-contract") { Text("45분").tag(45) }
-                        }.pickerStyle(.segmented)
+                        Picker("목표 종류", selection: $goalKind) {
+                            ForEach(GoalKind.allCases, id: \.rawValue) { Text($0.title).tag($0) }
+                        }.pickerStyle(.segmented).accessibilityIdentifier("goal.kind")
+                        if goalKind == .time {
+                            Picker("목표 시간", selection: $minutes) {
+                                Text("5분").tag(5); Text("20분").tag(20); Text("30분").tag(30)
+                                if model.unlocked("extended-contract") { Text("45분").tag(45) }
+                            }.pickerStyle(.segmented)
+                        } else if goalKind == .distance {
+                            Picker("목표 거리", selection: $kilometers) {
+                                Text("1 km").tag(1); Text("3 km").tag(3); Text("5 km").tag(5); Text("10 km").tag(10)
+                            }.pickerStyle(.segmented).accessibilityIdentifier("goal.distance")
+                            Text("기록된 이동 거리가 목표에 도달하면 자동으로 마칩니다. GPS 상태에 따라 실제 거리와 차이가 날 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
+                        } else {
+                            Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동은 승급의 목표 완료 횟수에는 포함되지 않습니다.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
+                        }
                         Toggle("선택적 추격 허용", isOn: $pursuit)
                         Text("가속하지 않으면 흔적 조사로 전환합니다. 첫 테스트는 추격을 꺼두는 것을 권합니다.").font(.caption).foregroundStyle(Theme.muted)
                     }.card()
@@ -137,7 +157,8 @@ struct SetupView: View {
                         Button("음성 · 음악 혼합 테스트") { model.audioTest() }.buttonStyle(.bordered)
                     }.card()
                     Button {
-                        model.start(simulated: false, seconds: Double(minutes * 60), pursuit: pursuit)
+                        let goal = ActivityGoal(kind: goalKind, value: goalKind == .time ? Double(minutes * 60) : goalKind == .distance ? Double(kilometers * 1000) : 0)
+                        model.start(simulated: false, seconds: goalKind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal)
                     } label: { Label("START RUN", systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
                         .buttonStyle(.borderedProminent).disabled(!model.isReady || model.recoverable)
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
@@ -173,9 +194,10 @@ struct ActiveRunView: View {
                                 Spacer()
                                 metric("현재 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—")
                                 Spacer()
-                                metric("목표", "\(Int(run.targetSeconds / 60))분")
+                                metric("목표", run.activityGoal.label)
                             }
-                            ProgressView(value: run.activeSeconds, total: run.targetSeconds).tint(Theme.teal)
+                            if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
+                            else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
                             VStack(alignment: .leading, spacing: 12) {
                                 eyebrow("OPERATOR")
                                 Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있습니다" : "주변을 탐색하고 있습니다")).font(.title2.bold())
@@ -214,7 +236,7 @@ struct ActiveRunView: View {
                 eyebrow(run.simulated ? "SIMULATION COMPLETE" : "MISSION REPORT")
                 Text("활동 보고").font(.largeTitle.bold())
                 HStack { metric("거리", String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
-                Text(run.activeSeconds >= run.targetSeconds ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.").foregroundStyle(Theme.muted)
+                Text(run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.").foregroundStyle(Theme.muted)
                 ForEach(run.records) { record in
                     HStack { Text(record.title); Spacer(); Text(outcomeName(record.outcome)).foregroundStyle(Theme.teal) }.card()
                 }
@@ -275,15 +297,17 @@ struct HunterView: View {
                     NavigationLink { EquipmentView() } label: { Label("장비 보관함", systemImage: "shield.lefthalf.filled").frame(maxWidth: .infinity, alignment: .leading).card() }
                     NavigationLink { RankView() } label: { Label("협회 평가 · 승급", systemImage: "checkmark.seal").frame(maxWidth: .infinity, alignment: .leading).card() }
                     NavigationLink { AssociationView() } label: { Label("협회 부서 관리", systemImage: "building.2").frame(maxWidth: .infinity, alignment: .leading).card() }
-                    Text("활동 기록").font(.title2.bold())
+                    LoadoutStrip()
+                    NavigationLink { HistoryView() } label: { Label("활동 기록 전체 보기", systemImage: "clock.arrow.circlepath").frame(maxWidth: .infinity, alignment: .leading).card() }
+                    Text("최근 활동").font(.title2.bold())
                     if model.save.profile.runs.isEmpty { Text("첫 의뢰를 마치면 기록이 남습니다.").foregroundStyle(Theme.muted) }
-                    ForEach(model.save.profile.runs) { run in
-                        VStack(alignment: .leading, spacing: 8) {
+                    ForEach(Array(model.save.profile.runs.prefix(3))) { run in
+                        NavigationLink { RunDetailView(run: run) } label: { VStack(alignment: .leading, spacing: 8) {
                             Text(run.date, style: .date)
                             Text(run.mode?.title ?? "헌터 의뢰").font(.caption).foregroundStyle(Theme.teal)
                             Text(String(format: "%.2f km", run.distance / 1000) + " · " + clock(run.seconds)).font(.title3)
                             Text("EXP +\(run.xp)").foregroundStyle(Theme.teal)
-                        }.card()
+                        }.card() }.buttonStyle(.plain)
                     }
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("헌터").navigationBarTitleDisplayMode(.inline)
@@ -304,13 +328,13 @@ struct CodexView: View {
                     eyebrow("FIELD ARCHIVE")
                     Text("현장 조사 기록").font(.largeTitle.bold())
                     ForEach(events) { event in
-                        let known = model.save.profile.runs.contains { $0.records.contains { $0.id == event.id } }
+                        let known = model.save.profile.runs.contains { $0.records.contains { $0.catalogID == event.id } }
                         VStack(alignment: .leading, spacing: 8) {
                             Image(systemName: known ? "sparkle.magnifyingglass" : "questionmark.diamond").font(.title).foregroundStyle(Theme.teal)
                             Text(known ? event.title : "미발견 신호").font(.headline)
                             Text(known ? "활동 중 확인한 현상입니다." : "의뢰를 진행하면 조사 기록이 열립니다.").font(.caption).foregroundStyle(Theme.muted)
                             if known && model.unlocked("analysis") {
-                                let records = model.save.profile.runs.flatMap(\.records).filter { $0.id == event.id }
+                                let records = model.save.profile.runs.flatMap(\.records).filter { $0.catalogID == event.id }
                                 Text("기준 HP \(Int(event.hp)) · 토벌 \(records.filter { $0.defeated == true }.count)회").font(.caption).foregroundStyle(Theme.teal)
                                 Text("누적 피해 \(Int(records.reduce(0) { $0 + $1.damage }))").font(.caption)
                             }
@@ -350,9 +374,12 @@ struct SettingsView: View {
                     if let url = model.diagnostics() { ShareLink("진단 정보 내보내기", item: url) }
                     Text("진단 파일에는 원시 GPS 좌표와 헌터명을 넣지 않습니다.").font(.caption)
                 }
+                Section("이용 안내") {
+                    NavigationLink("활동과 성장 가이드") { FieldGuideView() }
+                }
                 Section("개발 상태") {
-                    Text("0.2.0 · 러닝과 성장 연결 데모")
-                    Text("장비 12종 · 협회 4부서 · 3개 모드. 주요 보스 누적과 정식 음성은 후속 단계입니다.").font(.caption)
+                    Text("0.3.0 · 현장 활동과 장비 데모")
+                    Text("장비 일러스트 12종 · 시간/거리/자유 목표 · 활동 상세 기록. 주요 보스 누적과 정식 음성은 후속 단계입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")
         }
@@ -379,7 +406,7 @@ func eyebrow(_ text: String) -> some View { Text(text).font(.caption.monospaced(
 func metric(_ label: String, _ value: String) -> some View {
     VStack(alignment: .leading, spacing: 6) { Text(label).font(.caption).foregroundStyle(Theme.muted); Text(value).font(.title3.monospacedDigit().bold()) }
 }
-private func clock(_ seconds: Double) -> String { let value = max(0, Int(seconds)); return String(format: "%02d:%02d", value / 60, value % 60) }
+func clock(_ seconds: Double) -> String { let value = max(0, Int(seconds)); return String(format: "%02d:%02d", value / 60, value % 60) }
 private func pace(_ speed: Double) -> String { let value = Int(1000 / speed); return String(format: "%d′%02d″", value / 60, value % 60) }
 private func signalName(_ signal: Signal) -> String { switch signal { case .good: return "GPS 양호"; case .degraded: return "GPS 약함"; case .unavailable: return "GPS 대기 / 보조 측정" } }
-private func outcomeName(_ outcome: Outcome) -> String { switch outcome { case .perfect: return "완벽"; case .success: return "성공"; case .partial: return "부분 확보"; case .fail: return "철수"; case .neutral: return "중립 종료" } }
+func outcomeName(_ outcome: Outcome) -> String { switch outcome { case .perfect: return "완벽"; case .success: return "성공"; case .partial: return "부분 확보"; case .fail: return "철수"; case .neutral: return "중립 종료" } }

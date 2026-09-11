@@ -1,0 +1,62 @@
+[
+  {
+    "id": "field-blade",
+    "source": "exec-ad92fea7-78ac-4c8e-b422-c30bbfcb9646.png",
+    "asset": "Resources/Assets.xcassets/Gear-field-blade.imageset/art.png"
+  },
+  {
+    "id": "resonance-blade",
+    "source": "exec-fa7f7f01-3ec4-474d-8a41-6160b9e34bfc.png",
+    "asset": "Resources/Assets.xcassets/Gear-resonance-blade.imageset/art.png"
+  },
+  {
+    "id": "core-spear",
+    "source": "exec-89cec433-9812-4113-923a-792caf92612d.png",
+    "asset": "Resources/Assets.xcassets/Gear-core-spear.imageset/art.png"
+  },
+  {
+    "id": "field-vest",
+    "source": "exec-fecbebb5-e808-46c9-aa8d-a64f4f45c938.png",
+    "asset": "Resources/Assets.xcassets/Gear-field-vest.imageset/art.png"
+  },
+  {
+    "id": "barrier-coat",
+    "source": "exec-303b4abd-63dd-4b2b-af94-da908c25326e.png",
+    "asset": "Resources/Assets.xcassets/Gear-barrier-coat.imageset/art.png"
+  },
+  {
+    "id": "core-armor",
+    "source": "exec-29fa56ff-a486-4c79-acd6-5e2d84733466.png",
+    "asset": "Resources/Assets.xcassets/Gear-core-armor.imageset/art.png"
+  },
+  {
+    "id": "field-shoes",
+    "source": "exec-8fd25b6c-b02f-4256-8126-0170782e1757.png",
+    "asset": "Resources/Assets.xcassets/Gear-field-shoes.imageset/art.png"
+  },
+  {
+    "id": "trace-shoes",
+    "source": "exec-aeb076fe-a105-4737-9767-3a6e65a95d0f.png",
+    "asset": "Resources/Assets.xcassets/Gear-trace-shoes.imageset/art.png"
+  },
+  {
+    "id": "core-shoes",
+    "source": "exec-b10d66cd-da1a-47c3-92e0-4806fe05b644.png",
+    "asset": "Resources/Assets.xcassets/Gear-core-shoes.imageset/art.png"
+  },
+  {
+    "id": "field-compass",
+    "source": "exec-17a3bcd9-102f-4fdc-b0f0-dee5bcaeee62.png",
+    "asset": "Resources/Assets.xcassets/Gear-field-compass.imageset/art.png"
+  },
+  {
+    "id": "archive-lens",
+    "source": "exec-f2a53391-c5a4-4b03-a9ee-86ce1404cf3a.png",
+    "asset": "Resources/Assets.xcassets/Gear-archive-lens.imageset/art.png"
+  },
+  {
+    "id": "core-orbit",
+    "source": "exec-ce71333d-8e80-4ae4-a46b-d36fad2d76fa.png",
+    "asset": "Resources/Assets.xcassets/Gear-core-orbit.imageset/art.png"
+  }
+]

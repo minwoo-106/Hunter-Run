@@ -82,7 +82,8 @@ public struct RunSession: Codable, Identifiable {
     public var mode: RunMode? = nil
     public var loadout: CombatStats? = nil
     public var missionSnapshot: GameContent? = nil
-    public var calibrationSeconds: Double { min(180, targetSeconds * 0.1) }
+    public var goal: ActivityGoal? = nil
+    public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
         self.mode = mode; self.loadout = loadout; self.hp = loadout?.hp ?? 100
@@ -96,6 +97,8 @@ public struct RunSummary: Codable, Identifiable {
     public var xp: Int
     public var crystals: Int
     public var records: [EventRecord]
+    public var goal: ActivityGoal? = nil
+    public var runningSeconds: Double? = nil
     public var completedGoal: Bool
     public var mode: RunMode? = nil
     public var research: Int? = nil

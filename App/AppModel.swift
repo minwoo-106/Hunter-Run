@@ -83,14 +83,17 @@ import UIKit
         }
     }
     func authorize() { sensor.requestPermission() }
-    func start(simulated: Bool, seconds: Double, pursuit: Bool) {
+    func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil) {
         guard isReady, let content, engine == nil, save.active == nil else { return }
         if !simulated && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
         }
-        guard modeAllowed(selectedMode), seconds <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
+        let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
+        guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
+        guard modeAllowed(selectedMode), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
         let mission = missions?.content(for: selectedMode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: selectedMode, loadout: stats)
+        session.goal = requested
         session.missionSnapshot = mission
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
@@ -225,7 +228,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.2.0 progression demo
+        Hunter Run 0.3.0 field and equipment demo
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

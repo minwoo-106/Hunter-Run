@@ -42,7 +42,8 @@ public final class SaveRepository {
               growth.equipped.allSatisfy({ EquipmentSlot(rawValue: $0.key) != nil && growth.owned.contains($0.value) }) else { throw Failure.invalid }
         if let run = save.active {
             guard run.targetSeconds.isFinite, run.targetSeconds >= 60, run.activeSeconds.isFinite,
-                  run.activeSeconds >= 0, run.activeSeconds <= run.targetSeconds,
+                  run.activeSeconds >= 0, run.activityGoal.isValid,
+                  (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }
             if let stats = run.loadout {
                 guard stats.hp.isFinite, (100...600).contains(stats.hp), stats.attack.isFinite, (0.5...3).contains(stats.attack), stats.defense.isFinite, (0...0.65).contains(stats.defense), stats.eventBonus.isFinite, (0...0.2).contains(stats.eventBonus), (0...5).contains(stats.researchBonus) else { throw Failure.invalid }

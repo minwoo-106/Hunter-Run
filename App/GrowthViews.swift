@@ -49,6 +49,7 @@ struct AssociationView: View {
 struct EquipmentView: View {
     @EnvironmentObject var model: AppModel
     @State private var slot: EquipmentSlot = .weapon
+    @State private var ownedOnly = false
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
@@ -61,19 +62,23 @@ struct EquipmentView: View {
                 Picker("장비 슬롯", selection: $slot) {
                     ForEach(EquipmentSlot.allCases, id: \.rawValue) { Text($0.title).tag($0) }
                 }.pickerStyle(.segmented)
-                ForEach(model.progressionCatalog?.equipment.filter { $0.slot == slot } ?? []) { item in
+                Toggle("보유 장비만 보기", isOn: $ownedOnly).font(.callout)
+                if ownedOnly && !(model.progressionCatalog?.equipment.contains { $0.slot == slot && model.save.profile.growth.owned.contains($0.id) } ?? false) { Text("이 종류의 보유 장비가 없습니다.").foregroundStyle(Theme.muted) }
+                ForEach(model.progressionCatalog?.equipment.filter { $0.slot == slot && (!ownedOnly || model.save.profile.growth.owned.contains($0.id)) } ?? []) { item in
                     let owned = model.save.profile.growth.owned.contains(item.id)
                     let equipped = model.save.profile.growth.equipped[item.slot.rawValue] == item.id
                     let unlocked = model.save.profile.growth.level(.equipment) >= item.supportLevel
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: item.slot.symbol).font(.largeTitle).foregroundStyle(Theme.teal)
-                                .frame(width: 58, height: 58).background(Theme.teal.opacity(0.1), in: RoundedRectangle(cornerRadius: 14))
+                        NavigationLink { EquipmentDetailView(item: item) } label: { HStack(spacing: 14) {
+                            GearArtwork(item: item)
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(item.name).font(.headline)
                                 Text(item.detail).font(.caption).foregroundStyle(Theme.muted)
+                                Text(item.cores > 0 ? "코어 장비" : item.supportLevel > 1 ? "고급 장비" : "기본 장비").font(.caption2).foregroundStyle(Theme.teal)
                             }
-                        }
+                            Spacer(minLength: 0)
+                            Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.muted)
+                        } }.buttonStyle(.plain).accessibilityIdentifier("gear." + item.id)
                         if owned {
                             Button(equipped ? "장착 해제" : "장착") { model.equip(item.id) }
                                 .buttonStyle(.borderedProminent).disabled(model.growthLocked)

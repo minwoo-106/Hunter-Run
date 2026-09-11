@@ -42,3 +42,12 @@ for mission in missions['modes'].values():
     assert all(0 < e['startFraction'] < .9 and e['duration'] > 0 and e['hp'] >= 0 for e in events)
     assert all((root / 'Resources/Audio' / (e['audio'] + '.wav')).is_file() for e in events)
 print('Validated 12 equipment items, four department upgrades, and three mission modes.')
+
+for item in progression['equipment']:
+    folder = catalog / ('Gear-' + item['id'] + '.imageset')
+    manifest = json.loads((folder / 'Contents.json').read_text(encoding='utf-8'))
+    data = (folder / manifest['images'][0]['filename']).read_bytes()
+    assert data[:8] == b"\x89PNG\r\n\x1a\n", item['id']
+    width, height = struct.unpack('>II', data[16:24])
+    assert width == height and width >= 512, item['id']
+print('Validated twelve individual equipment illustrations.')

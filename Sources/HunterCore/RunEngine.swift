@@ -61,10 +61,15 @@ public struct RunEngine {
             session.phase = .moving
             return [.voice("resume"), .checkpoint]
         }
-        let dt = min(rawDT, session.targetSeconds - session.activeSeconds)
+        var dt = session.activityGoal.kind == .time ? min(rawDT, max(0, session.activityGoal.value - session.activeSeconds)) : rawDT
+        var distance = max(0, min(frame.distance, 8 * dt))
+        if session.activityGoal.kind == .distance {
+            let remaining = max(0, session.activityGoal.value - session.distance)
+            if distance > remaining { dt *= remaining / distance; distance = remaining }
+        }
         session.activeSeconds += dt
         if frame.movement == .running { session.runningSeconds += dt }
-        session.distance += max(0, min(frame.distance, 8 * dt))
+        session.distance += distance
         let stable = frame.movement == .running && frame.signal == .good && frame.speed >= 1 && frame.speed <= 6
         if stable && session.event == nil && session.activeSeconds < session.calibrationSeconds {
             session.baselineSamples.append(frame.speed)
@@ -74,7 +79,7 @@ public struct RunEngine {
         }
         session.phase = session.activeSeconds < session.calibrationSeconds ? .calibrating : .moving
         var cues: [GameCue] = []
-        if session.activeSeconds >= session.targetSeconds {
+        if session.reachedGoal {
             end(); return [.voice("run_end"), .checkpoint, .goalReached]
         }
         if session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
@@ -126,9 +131,16 @@ public struct RunEngine {
             return cues
         }
         guard session.phase != .calibrating, session.movingStreak >= 10 else { return cues }
-        if var next = content.events.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= session.targetSeconds * $0.startFraction }) {
+        let cycle = session.patrolCycle
+        let offset = Double(cycle) * session.patrolDuration
+        let candidates = content.events.map { template -> MissionTemplate in
+            var item = template
+            if cycle > 0 { item.id += "#\(cycle)" }
+            return item
+        }
+        if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
             session.consumed.insert(next.id)
-            let remaining = session.targetSeconds - session.activeSeconds
+            let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
             if remaining < next.duration + 30 { return [.checkpoint] }
             if next.kind == .pursuit && (!session.allowPursuit || session.baselineSamples.count < 30 || session.intensityCount >= 2 || session.activeSeconds - session.lastIntensityAt < 180 || frame.signal != .good || session.withdrawn) {
                 next.kind = .discovery; next.title = "마력 흔적 조사"; next.audio = "investigate"
@@ -156,8 +168,8 @@ public enum Settlement {
         let crystals = Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2)
         let discoveries = session.records.filter { $0.kind == .discovery && $0.outcome != .neutral }.count
         let research = completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)
-        let cores = session.mode == .gate && session.records.contains { $0.id == "gate-core" && $0.defeated == true } ? 1 : 0
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, completedGoal: session.activeSeconds >= session.targetSeconds, mode: session.mode, research: research, cores: cores)
+        let cores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)
