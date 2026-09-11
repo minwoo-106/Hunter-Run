@@ -29,3 +29,7 @@ Rank evaluation is offline progression; competitive rankings remain out of scope
 User confirmed installation, the 0.1.1 layout correction, and speaker/AirPods voice playback.
 Background field reliability and broad iPhone support still require real-device testing.
 
+
+## 0.3 field and visual expansion
+The user asked for larger batches and approved association management as the home CTA with a slightly larger central RUN tab. Twelve equipment illustrations, item detail/loadout views, distance/free goals, activity details and a field guide are included in this milestone.
+Time/distance goals count toward completed-goal rank requirements; free activities grant resources/XP but have no completed target. Non-time patrols repeat existing content every 20 active minutes. A run awards at most one gate core and gate-clear record.

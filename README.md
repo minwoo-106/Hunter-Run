@@ -1,18 +1,26 @@
-# Hunter Run — 0.2.0 progression demo
+# Hunter Run — 0.3.0 field and equipment demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
 ## Verified build
-Codemagic demo build 6 completed on 2026-09-11 from commit `d503224` on Mac mini M2 in 4m 30s.
-All 23 core tests and 2 iPhone UI tests passed. The iPhone app compiled and packaged successfully.
-`HunterRun-install.zip` (7.10 MB) contains the unsigned IPA; archive integrity and the inner app executable/Info.plist were verified during the build.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa38c51d8c577d2313b50c1).
-UI tests used an iPhone 17 Pro simulator on iOS 26.5. [Earlier overflow regression](docs/layout-regression.md).
-The user confirmed 0.1.1 installation, corrected home layout, and voice playback through speaker and AirPods.
-0.2.0 installation and field behavior still require device testing.
+Codemagic demo build 8 completed on 2026-09-11 from commit `51c061f` on Mac mini M2 in 6m 33s.
+All 31 core tests and 4 iPhone UI tests passed. The iPhone app compiled and packaged successfully.
+`HunterRun-install.zip` (23.50 MB) contains the unsigned IPA; archive integrity and the inner app executable/Info.plist were verified during the build.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3af69107aa975edb5028c).
+On the 402 × 874 point iPhone simulator, the association CTA stays within 20-point horizontal margins and the home version label ends at y=742 above the central RUN at y=768. UI tests also cover equipment artwork/details, goal selection, guide access and progression locks.
+Earlier device installation, corrected home layout, and voice playback through speaker and AirPods were confirmed by the user. 0.3.0 installation and field behavior still require device testing.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.3
+- Association management home CTA and an emphasized central RUN control.
+- Twelve individually generated equipment illustrations, details, owned filter and loadout view.
+- Time, distance (1/3/5/10 km), and manually ended free activities.
+- Recurring 20-active-minute patrols for distance/free goals, stable archive identities and per-run core caps.
+- Activity journal with filters, total distance/count and per-run goal/event/reward details.
+- In-app field guide and old-save goal fallback.
+[한국어 0.3 테스트](docs/0.3-현장-테스트.md), [goal rules](docs/activity-goals.md), [art direction](docs/equipment-art-direction.md).
 
 ## Included now
 - Native association home based on the approved earpiece operator concept.
@@ -34,8 +42,8 @@ The user confirmed 0.1.1 installation, corrected home layout, and voice playback
 [한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
 
 ## Not yet implemented
-Persistent major bosses, onboarding, long-term pace learning, distance/free goals,
-full monster/equipment art, association visual stages, final voice/BGM and production balancing.
+Persistent major bosses, onboarding, long-term pace learning,
+monster art/content, association visual stages, final voice/BGM and production balancing.
 This is a playable progression milestone, not content-complete v1.
 
 ## Build (macOS / Codemagic)
