@@ -1,18 +1,26 @@
-# Hunter Run — 0.4.0 world and boss demo
+# Hunter Run — 0.5.0 association stories demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.4.0)
-Codemagic demo build 13 completed on 2026-09-11 from commit `1c60bf5` on Mac mini M2 in 9m 41s.
-All 43 core tests and 6 iPhone UI tests passed. The iPhone Release app compiled and packaged successfully.
-`HunterRun-install.zip` (43.57 MB) contains the unsigned IPA; the packaging step verified the complete inner IPA.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3cf199047bd205fe62fe5).
-On the 402 × 874 point iPhone simulator, the home RUN occupies x=20…382, y=586.67…689. The version label ends at y=742 above the central association control at y=768…832.
-UI coverage includes actual audio initialization with responsive navigation, boss mock preparation, discovery locks, equipment details, goals, progression locks and home layout.
-Earlier device installation, 0.3 artwork, and voice playback through speaker and AirPods were confirmed by the user. The refactored audio and new 0.4 field behavior still need device testing.
+## Verified build (0.5.0)
+Codemagic demo build 15 completed on 2026-09-11 from commit `74662e7` on Mac mini M2 in 9m 4s.
+All 51 core tests and 7 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
+`HunterRun-install.zip` (43.64 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3f2b105d4cecd5b0308ad).
+UI coverage includes real-audio initialization and navigation, home bounds, equipment, goals, progression locks, boss simulation, story reading/locked content, all welcome pages and persisted completion after relaunch.
+The user confirmed 0.4.0 installation and testing complete. Audible continuity across screens in 0.5 still needs physical-device confirmation.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.5
+- Continuous lobby BGM across home, hunter/equipment, archive, menu and association. RUN setup and active/result screens stay silent for BGM.
+- Four skippable welcome pages with optional permission/audio actions; existing saves are not forced through onboarding.
+- Six readable operator dispatches unlocked in order by real activities, facilities and the boundary boss.
+- Saved read markers, unread count on home, and the next story requirement in the archive.
+- No reading rewards; simulations cannot unlock real story progress. Original operator/room artwork reused.
+Validation: all 51 core tests and seven UI tests passed in the verified Apple build.
+[한국어 0.5 테스트](docs/0.5-통신-테스트.md), [BGM regression](docs/bgm-navigation-regression.md).
 
 ## Added in 0.4
 - Large home RUN CTA and a slightly larger central association-management control.
@@ -53,9 +61,9 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 [한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
 
 ## Not yet implemented
-Onboarding, long-term pace learning, expanded story/content, final operator voice,
+Long-term pace learning, expanded voiced story/content, final operator voice,
 polished audio production and production balancing.
-This is a playable progression milestone, not content-complete v1.
+This is a playable progression milestone, not content-complete v1. See [remaining work](docs/v1-remaining.md).
 
 ## Build (macOS / Codemagic)
 1. Place this folder's contents at the ROOT of the linked repository.
