@@ -1,0 +1,17 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "status": "user-preferred-character-direction-pending",
+  "clips": [
+    {
+      "file": "operator-bright-gentle.wav",
+      "label": "밝고 다정한 조정",
+      "seed": 741,
+      "instruct": "A young adult Korean woman in her mid twenties, a friendly fantasy game operator. A clear, delicate, slightly high-pitched feminine voice with a bright warm smile and a naturally cute charm. Calm yet cheerful and confident conversational delivery, with a little more spirited energy and a smile audible in her voice. Soft precise Korean pronunciation, gentle melodic intonation, measured comfortable pace, relaxed sentence endings. Studio clean voice. Keep subtle natural breaths between phrases. Clear supported sentence endings, friendly and ready to help.",
+      "text": "오셨네요. 오늘도 함께하겠습니다. 마력 흔적을 발견했어요. 천천히 이동하면서 조사해 볼까요? 제가 곁에서 안내할게요.",
+      "sample_rate": 24000,
+      "duration": 13.67,
+      "sha256": "cecefa786261d6bb74991f3fd1baebac0124752bc847576ddba1db5e1ff814a4"
+    }
+  ]
+}

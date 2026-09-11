@@ -1,17 +1,23 @@
-# Hunter Run — 0.6.0 hunter activity and pace demo
+# Hunter Run — 0.7.0 activity navigation demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.6.0)
-Codemagic demo build 16 completed on 2026-09-12 KST from commit `5de81db` on Mac mini M2 in 9m 23s.
+## Verified build (0.7.0)
+Codemagic demo build 17 completed on 2026-09-12 KST from commit `53e28a9` on Mac mini M2 in 9m 51s.
 All 68 core tests and 8 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-install.zip` (43.68 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa42995c9802c8916e0405b).
-UI coverage includes the new activity naming/pace reference screen, real-audio initialization and navigation, home bounds, equipment, goals, progression locks, boss simulation, story reading/locked content, all welcome pages and persisted completion after relaunch.
-The user confirmed 0.5.0 installation and testing. Follow-up changes require a new device check.
+`HunterRun-install.zip` (43.69 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa432a01c8c285ff0061c1a).
+UI checks cover the five bottom entries and central activity emphasis, home bounds/settings gear, settings/story replay, equipment, goals, progression locks, audio initialization, boss simulation and activity preparation.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.7
+- Bottom navigation: home / hunter / large central hunter activity / association / codex.
+- Removed the large activity card on home; settings are a 44pt gear below the profile/rank.
+- Disable automatic screen lock only during foreground unfinished activities, including pause; normal locking resumes on results/home/background. Physical-device lock behavior still needs testing.
+- Existing temporary voice remains in the app. Rejected stock presets A–E were excluded. Original VoiceDesign auditions were generated locally; the user prefers the brighter gentle revision and is discussing character presentation.
+[0.7 테스트](docs/0.7-음성과-메뉴.md), [오퍼레이터 방향](docs/operator-voice-direction.md).
 
 ## Added in 0.6
 - Lobby BGM continues through activity preparation and stops on actual/mock activity start.

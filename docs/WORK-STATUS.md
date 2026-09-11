@@ -1,35 +1,32 @@
-# 0.7.0 진행 중 · 2026-09-12
+# 0.7.0 UI 배포 준비 완료 · 오퍼레이터 음색 조율 중
 
-- 미커밋: 하단 홈/헌터/중앙 헌터 활동/협회 관리/도감, 홈 큰 활동 버튼 제거, 이름·등급 아래 설정 톱니바퀴.
-- 진행 중 활동에서만 자동 잠금 방지. 설정 닫기/첫 안내 재표시 경로 수정. iOS 빌드 검증 전.
-- 사용자는 Supertonic3 기본 F1~F5(A~E)를 모두 거절했습니다. 앱에 후보를 넣지 않고 기존 임시 음성을 유지합니다.
-- 거절된 샘플은 outputs/voice-audition-round1 및 round2에 보존. 정식 음성 미확정.
-- Qwen3-TTS VoiceDesign 로컬 환경 설치 중. 모델 다운로드 완료, revision 5ecdb67327fd37bb2e042aab12ff7391903235d3. RTX3070 8GB.
-- Python env: work/qwen-voice-env, model: work/qwen-voice-design. 새 성인 여성의 귀엽고 차분한 음색을 설명으로 설계한 후 사용자에게 청취본 제공 예정.
-- 0.7 빌드는 아직 시작하지 않았습니다. 실제 배포된 마지막 버전은 아래 0.6입니다.
+## 빌드
+- 소스 53e28a9, Codemagic 17번 무료 개인 M2, 9분 51초 완료.
+- 로직 68개 / iPhone UI 8개 모두 통과, Release 컴파일 및 ZIP 내부 IPA 무결성 검증 완료.
+- HunterRun-install.zip 43.69 MB. https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa432a01c8c285ff0061c1a
+- 추가 빌드 진행 없음. 자동 잠금과 오디오 실기기 후속 확인 필요.
 
----
+## 구현 완료
+- 하단 홈/헌터/중앙 큰 헌터 활동/협회 관리/도감.
+- 홈 큰 활동 카드 제거, 이름·등급 아래 설정 톱니바퀴.
+- 활동 중(일시정지 포함)에만 자동 잠금 방지, 결과/홈/앱 비활성에서는 정상 동작.
+- 설정 닫기와 첫 이용 안내 재표시 경로 수정.
 
-# 0.6.0 작업 완료 · 2026-09-12
+## 음성 피드백과 다음 작업
+- Supertonic3 기본 F1~F5(A~E) 모두 거절. WAV는 outputs/voice-audition-round1, round2에 보존하며 앱에서 제외.
+- Qwen3-TTS VoiceDesign 새 음색은 훨씬 좋다는 피드백. clear의 자연스러운 숨소리 선호, velvet은 힘없어 제외.
+- clear 기반 밝은 조정 1번 bright_gentle을 매우 선호. 파일: outputs/voice-designed-brighter/operator_bright_gentle.wav (13.67초).
+- 사용자 최신 질문: 목소리를 더 성숙하게 vs 캐릭터 외형을 더 귀엽게. 답변/제안: 1번 목소리 유지, 기존 성인 캐릭터 복장·정체성을 유지하고 눈매·미소를 조금 밝게. 아직 이미지 편집 요청 확정/실행 없음.
+- 앱에는 기존 임시 음성 14개 유지. 새 음색으로 핵심 안내팩 생성과 적용은 아직 미완료.
+- 다음: 디자인 방향 합의 후 선호 자체 생성 참조 음색을 Base 모델로 일관되게 14문장에 적용, 실제 청취/문장 길이 확인, 이후 v1 대사 확장.
 
-## 배포 준비 완료
-- 소스 5de81db를 Codemagic 16번 무료 개인 M2 빌드로 검증했습니다.
-- 9분 23초, 로직 검사 68개·아이폰 화면 검사 8개·iPhone Release 컴파일·설치 ZIP 무결성 모두 통과.
-- HunterRun-install.zip 43.68 MB. 내부 HunterRun-unsigned.ipa 검증 완료.
-- 빌드: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa42995c9802c8916e0405b
+## 재현 환경
+- Python work/qwen-voice-env (torch2.11+cu128, qwen-tts0.1.1), RTX3070 8GB.
+- VoiceDesign work/qwen-voice-design revision 5ecdb67327fd37bb2e042aab12ff7391903235d3.
+- Base work/qwen-voice-base revision fd4b254389122332181a7c3db7f27e918eec64e3 다운로드 완료.
+- scripts/design-operator-voice.py --round initial / brighter. 출력 manifest에 지시문·시드·대사·체크섬.
+- 생성은 GPU 오프라인, 유료 API/결제 없음. 파일 PCM 검사와 청취 평가는 구분.
+- 상세 방향: docs/operator-voice-direction.md.
 
-## 포함된 변경
-- 활동 준비까지 BGM, 실제/모의 활동 시작 시 중단.
-- 헌터 활동과 탐험/의뢰/게이트 조사/보스 토벌 이름.
-- 최근 12초 페이스 표시 안정화와 정지·신호 불안정·재개 처리. 기존 화면 경로에서 267.857초/km 흔들림 재현 → 회귀 검사 통과.
-- 적격 실제 활동만 개인 기준 학습, 기준 화면/초기화/현장 관측 보고. 기존 저장과 모의 활동 격리 유지.
-- 정식 음성은 미제작이며 기존 임시 음성 14개를 유지합니다.
-
-## 다음 작업
-- 사용자의 0.6 실기기 피드백: 일정 이동의 최근 페이스, 정지·재출발, 활동 준비 BGM, 충분한 적격 구간 후 학습.
-- docs/v1-remaining.md의 사건 구성 확장, 정식 음성 샘플, 음악과 성장 밸런스 작업.
-- 기존 앱 삭제 없이 같은 Apple 계정으로 AltStore 업데이트합니다.
-- 현재 추가 진행 중인 빌드는 없습니다. 동일 버전 중복 빌드를 시작하지 않습니다.
-
-## 브라우저 참고
-Codemagic 버튼 오류 시 Applications 목록의 실제 AX Start new build 경로로 main과 ios-demo를 선택하면 작동했습니다. 사용자가 추가 가입/승인할 사항은 현재 없습니다.
+## 브라우저
+Codemagic 버튼 오류 시 Applications 목록 AX Start new build → main → ios-demo를 선택합니다. 동일 버전을 중복 빌드하지 않습니다.
