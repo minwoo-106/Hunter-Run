@@ -29,6 +29,21 @@ workflows:
           cp -R build/Build/Products/Release-iphoneos/HunterRun.app build/package/Payload/
           cd build/package
           zip -qr ../HunterRun-unsigned.ipa Payload
+          cd ..
+          zip -q HunterRun-install.zip HunterRun-unsigned.ipa
+          python3 - <<'PY'
+          import io
+          import zipfile
+          with zipfile.ZipFile('HunterRun-install.zip') as package:
+              assert package.namelist() == ['HunterRun-unsigned.ipa']
+              assert package.testzip() is None
+              with zipfile.ZipFile(io.BytesIO(package.read('HunterRun-unsigned.ipa'))) as ipa:
+                  assert ipa.testzip() is None
+                  assert 'Payload/HunterRun.app/Info.plist' in ipa.namelist()
+                  assert 'Payload/HunterRun.app/HunterRun' in ipa.namelist()
+          print('Verified HunterRun-install.zip contains a complete HunterRun-unsigned.ipa')
+          PY
     artifacts:
+      - build/HunterRun-install.zip
       - build/HunterRun-unsigned.ipa
       - build-log.txt
