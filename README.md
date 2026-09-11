@@ -1,22 +1,23 @@
-# Hunter Run — 0.1.1 technical demo
+# Hunter Run — 0.2.0 progression demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
 ## Verified build
-Codemagic demo build 5 completed on 2026-09-11 from commit `b0a6322` on Mac mini M2.
-The core tests passed; the iPhone app compiled and `HunterRun-unsigned.ipa` was produced.
-`HunterRun-install.zip` (6.96 MB) contains that IPA for file transfer to iPhone; archive integrity and the inner app executable/Info.plist were verified during the build.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa375c0882a10b960c25ca0).
-The home overflow regression was reproduced before the fix and passed after it on an iPhone 17 Pro simulator (iOS 26.5). Profile and RUN now end at x=382 within a 402-point window, preserving 20-point margins. RUN navigation also passed. [Reproduction and fix](docs/layout-regression.md).
-Personal signing, installation and field behavior still require device testing.
+Codemagic demo build 6 completed on 2026-09-11 from commit `d503224` on Mac mini M2 in 4m 30s.
+All 23 core tests and 2 iPhone UI tests passed. The iPhone app compiled and packaged successfully.
+`HunterRun-install.zip` (7.10 MB) contains the unsigned IPA; archive integrity and the inner app executable/Info.plist were verified during the build.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa38c51d8c577d2313b50c1).
+UI tests used an iPhone 17 Pro simulator on iOS 26.5. [Earlier overflow regression](docs/layout-regression.md).
+The user confirmed 0.1.1 installation, corrected home layout, and voice playback through speaker and AirPods.
+0.2.0 installation and field behavior still require device testing.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
 
 ## Included now
 - Native association home based on the approved earpiece operator concept.
-- One assignment with discovery, maintain, optional pursuit, and gate stabilization.
-- 5/20/30-minute real runs and a 3-minute simulated run.
+- Exploration, contract and progression-gated high-risk gate mission profiles.
+- 5/20/30-minute real runs, unlockable 45-minute goals, and a 3-minute simulated run.
 - GPS + motion + pedometer inputs; uncertainty suspends precision scoring.
 - Foreground-started background location session; intermittent local voice playback.
 - Fourteen pre-generated temporary Korean WAV clips; no runtime TTS or server.
@@ -24,10 +25,18 @@ Personal signing, installation and field behavior still require device testing.
 - Mock speed/movement/GPS controls and a non-destructive recovery drill.
 - Pure Swift engine tests including stop protection, replay, gap, and settlement invariants.
 
+## Progression in 0.2
+- Twelve equipment items across weapon, armor, shoes and relic slots; purchases and loadouts.
+- Four departments with one functional upgrade each: gate access, analysis, advanced equipment, extended contracts.
+- Rank evaluation using level, completed goals and boss records; no XP-only automatic promotion.
+- Mode-specific research/crystal rewards and boss cores; simulation cannot award progression.
+- Legacy save decoding and saved run loadout/mission snapshots.
+[한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
+
 ## Not yet implemented
-Full v1 equipment, four association departments, three modes, persistent major bosses,
-long-term pace learning, distance/free goals, full art/audio library and production balancing.
-The 5-minute real run is for technical checks, not a completed v1 experience.
+Persistent major bosses, onboarding, long-term pace learning, distance/free goals,
+full monster/equipment art, association visual stages, final voice/BGM and production balancing.
+This is a playable progression milestone, not content-complete v1.
 
 ## Build (macOS / Codemagic)
 1. Place this folder's contents at the ROOT of the linked repository.

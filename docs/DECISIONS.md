@@ -24,6 +24,8 @@ Reopening restores a paused session and replays the instruction before evaluatio
 ## Scope distinctions
 This first milestone is a technical/demo vertical slice, not the full content-complete v1.
 Gate stabilization uses a single maintain segment; persistent major-boss HP is not yet exposed.
-Association growth, equipment and rankings require a later iteration after sensor validation.
-No field reliability or broad iPhone support claim is made before real-device testing.
+0.2 adds equipment, four department upgrades and rank evaluation with three mission modes.
+Rank evaluation is offline progression; competitive rankings remain out of scope.
+User confirmed installation, the 0.1.1 layout correction, and speaker/AirPods voice playback.
+Background field reliability and broad iPhone support still require real-device testing.
 
