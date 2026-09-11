@@ -1,0 +1,5 @@
+Generated with the built-in image generation tool on 2026-09-11.
+Source preserved at outputs/hunter-run-app-icon-source.png; packaged as opaque RGB 1024 x 1024 PNG for iOS.
+
+Prompt:
+Create a production iPhone app icon for HUNTER RUN, an original Korean modern-fantasy running RPG. Square 1024 x 1024 PNG. Full-bleed opaque midnight navy background all the way to the four square corners, no transparency and no rounded outer corners (iOS will mask it). One bold centered metallic hunter association emblem: a sharp geometric H subtly shaped as two forward-moving blades enclosing a tiny luminous teal mana crystal. Premium illustrated game-art finish, restrained brushed dark silver facets and cyan/teal edge glow, strong small-size silhouette, clean broad shapes. Emblem occupies the central 65% of the square. No letters or words other than the implied abstract H, no text, no border, no device mockup, no characters, no extra objects, no checkerboard. The palette matches a sophisticated dark navy and teal iPhone game interface. Deliver a single finished flat icon image.

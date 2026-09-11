@@ -1,5 +1,5 @@
 """Validate project inputs without requiring Apple SDKs."""
-import json, pathlib, plistlib, wave
+import json, pathlib, plistlib, struct, wave
 root = pathlib.Path(__file__).resolve().parents[1]
 mission = json.loads((root / "Resources/mission.json").read_text(encoding="utf-8"))
 assert mission["schema"] == 1
@@ -18,6 +18,15 @@ with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
 assert "NSMicrophoneUsageDescription" not in info
-assert (root / "Resources/Assets.xcassets/Operator.imageset/operator.png").is_file()
-print(f"Validated {len(ids)} events, {len(keys)} audio clips, permissions and operator asset.")
-
+catalog = root / "Resources/Assets.xcassets"
+for manifest in catalog.rglob("Contents.json"):
+    for image in json.loads(manifest.read_text(encoding="utf-8")).get("images", []):
+        if "filename" in image:
+            assert (manifest.parent / image["filename"]).is_file(), manifest
+icon_set = catalog / "AppIcon.appiconset"
+icon_manifest = json.loads((icon_set / "Contents.json").read_text(encoding="utf-8"))
+icon = (icon_set / icon_manifest["images"][0]["filename"]).read_bytes()
+assert icon[:8] == b"\x89PNG\r\n\x1a\n"
+assert struct.unpack(">II", icon[16:24]) == (1024, 1024), "App icon must be 1024 square"
+assert icon[25] == 2, "App icon must use opaque RGB"
+print(f"Validated {len(ids)} events, {len(keys)} audio clips, permissions, artwork and app icon.")
