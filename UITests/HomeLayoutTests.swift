@@ -34,6 +34,9 @@ final class HomeLayoutTests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["story.signal"].tap()
         XCTAssertTrue(app.staticTexts["story.locked"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["닫기"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
         app.buttons["nav.4"].tap()
         let welcome = app.buttons["settings.welcome"]
@@ -49,7 +52,7 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Welcome permissions"; shot.lifetime = .keepAlways; add(shot)
         app.buttons["welcome.skip"].tap()
         XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 5)); app.buttons["nav.0"].tap()
-        app.terminate(); app.launch()
+        app.terminate(); app.launchArguments.removeAll { $0 == "--ui-testing-skip-welcome" }; app.launch()
         XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["welcome.skip"].exists)
     }
