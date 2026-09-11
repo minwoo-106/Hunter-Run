@@ -14,7 +14,7 @@ final class AudioWorker {
             let keepAlive = Timer(timeInterval: 3600, repeats: true) { _ in }
             RunLoop.current.add(keepAlive, forMode: .default)
             lock.lock(); let tasks = pending; pending = []
-            for task in tasks { CFRunLoopPerformBlock(current, kCFRunLoopDefaultMode!, task) }
+            for task in tasks { schedule(on: current, task) }
             loop = current; lock.unlock()
             while true {
                 #if canImport(ObjectiveC)
@@ -30,7 +30,14 @@ final class AudioWorker {
         lock.lock()
         guard let loop else { pending.append(task); lock.unlock(); return }
         lock.unlock()
-        CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode!, task); CFRunLoopWakeUp(loop)
+        schedule(on: loop, task); CFRunLoopWakeUp(loop)
+    }
+    private func schedule(on loop: CFRunLoop, _ task: @escaping () -> Void) {
+        #if canImport(ObjectiveC)
+        CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode!.rawValue, task)
+        #else
+        CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode!, task)
+        #endif
     }
 }
 
