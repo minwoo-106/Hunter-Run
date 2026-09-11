@@ -1,14 +1,15 @@
-# Hunter Run — 0.1 technical demo
+# Hunter Run — 0.1.1 technical demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
 ## Verified build
-Codemagic build 4 completed on 2026-09-11 from commit `e344b62` on Mac mini M2.
+Codemagic demo build 5 completed on 2026-09-11 from commit `b0a6322` on Mac mini M2.
 The core tests passed; the iPhone app compiled and `HunterRun-unsigned.ipa` was produced.
 `HunterRun-install.zip` (6.96 MB) contains that IPA for file transfer to iPhone; archive integrity and the inner app executable/Info.plist were verified during the build.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa370d5b39d3bf87aa4c6f2).
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa375c0882a10b960c25ca0).
+The home overflow regression was reproduced before the fix and passed after it on an iPhone 17 Pro simulator (iOS 26.5). Profile and RUN now end at x=382 within a 402-point window, preserving 20-point margins. RUN navigation also passed. [Reproduction and fix](docs/layout-regression.md).
 Personal signing, installation and field behavior still require device testing.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
 
