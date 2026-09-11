@@ -3,7 +3,7 @@ import Foundation
 public enum Movement: String, Codable, CaseIterable { case unknown, stationary, walking, running, vehicle }
 public enum Signal: String, Codable { case good, degraded, unavailable }
 public enum RunPhase: String, Codable { case calibrating, moving, paused, interrupted, finished }
-public enum EventKind: String, Codable { case discovery, maintain, pursuit, boss }
+public enum EventKind: String, Codable { case discovery, maintain, pursuit, endurance, ambush, boss }
 public enum EventStage: String, Codable { case briefing, armed, active }
 public enum Outcome: String, Codable { case perfect, success, partial, fail, neutral }
 public struct SensorFrame {
@@ -24,6 +24,7 @@ public struct MissionTemplate: Codable, Identifiable {
     public var duration: Double
     public var hp: Double
     public var audio: String
+    public var targetDistance: Double? = nil
 }
 public struct GameContent: Codable {
     public var schema: Int
@@ -31,7 +32,7 @@ public struct GameContent: Codable {
     public var events: [MissionTemplate]
     public func validate() throws {
         guard schema == 1, !events.isEmpty, Set(events.map(\.id)).count == events.count,
-              events.allSatisfy({ !$0.id.isEmpty && $0.duration > 0 && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 }) else { throw ContentError.invalid }
+              events.allSatisfy({ !$0.id.isEmpty && $0.duration.isFinite && $0.duration > 0 && $0.hp.isFinite && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 && ($0.kind != .endurance || ($0.targetDistance.map { $0.isFinite && (400...800).contains($0) } ?? false)) }) else { throw ContentError.invalid }
     }
     public enum ContentError: Error { case invalid }
 }
@@ -45,6 +46,11 @@ public struct RunEvent: Codable {
     public var startingHP: Double
     public var baseline: Double
     public var evaluatedSeconds: Double = 0
+    public var traveledDistance: Double? = nil
+    public var progress: Double {
+        if template.kind == .endurance { return min(1, (traveledDistance ?? 0) / max(1, template.targetDistance ?? 400)) }
+        return min(1, elapsed / max(1, template.duration))
+    }
 }
 public struct EventRecord: Codable, Identifiable {
     public var id: String
@@ -87,6 +93,7 @@ public struct RunSession: Codable, Identifiable {
     public var paceObservation: PaceObservation? = nil
     public var learnedReference: Double? = nil
     public var paceCooldownUntil: Double? = nil
+    public var directorVersion: Int? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit

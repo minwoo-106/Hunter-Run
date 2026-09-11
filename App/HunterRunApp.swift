@@ -90,7 +90,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.7.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.8.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -145,6 +145,7 @@ struct SetupView: View {
                         }.card()
                     }.buttonStyle(.plain).accessibilityIdentifier("setup.pace")
                     HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
+                    NavigationLink { EncounterGuideView() } label: { Label("현장 사건 안내", systemImage: "waveform") }.accessibilityIdentifier("setup.encounters")
                     VStack(alignment: .leading, spacing: 14) {
                         Text("활동 목표").font(.headline)
                         Picker("목표 종류", selection: $goalKind) {
@@ -183,6 +184,11 @@ struct SetupView: View {
                     Text("실내에서 먼저 확인").font(.headline)
                     Text("가짜 센서로 같은 게임 엔진을 실행합니다. 모의 기록과 보상은 실제 성장에 반영되지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
                     Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true) }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
+                    Button("20분 의뢰 모의 활동 · 장기전 포함") {
+                        model.selectedBoss = nil; model.selectedMode = .contract
+                        model.start(simulated: true, seconds: 1200, pursuit: false)
+                    }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.long")
+                    Text("긴 모의 활동에서는 진행 속도를 10배로 바꿔 장기전과 기습 대응을 빠르게 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
         }
@@ -223,7 +229,8 @@ struct ActiveRunView: View {
                                 Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있습니다" : "주변을 탐색하고 있습니다")).font(.title2.bold())
                                 Text(eventMessage(run)).foregroundStyle(Theme.muted)
                                 if let event = run.event {
-                                    ProgressView(value: min(event.elapsed, event.template.duration), total: event.template.duration).tint(Theme.teal)
+                                    ProgressView(value: event.progress).tint(Theme.teal)
+                                    if event.template.kind == .endurance { Text("장기전 · \(Int(event.traveledDistance ?? 0)) / \(Int(event.template.targetDistance ?? 400)) m").font(.caption).foregroundStyle(Theme.teal) }
                                 }
                             }.card()
                             HStack {
@@ -297,6 +304,8 @@ struct ActiveRunView: View {
         guard let event = run.event else { return "편안한 페이스로 이동하세요. 정지는 실패로 처리하지 않습니다." }
         if event.stage == .briefing { return "오퍼레이터 안내를 듣는 중입니다." }
         if event.stage == .armed { return "안전한 구간이면 조금 가속하세요. 유지하면 조사로 전환합니다." }
+        if event.template.kind == .endurance { return "완만한 페이스로 400m를 전진합니다. 정지 중에는 거리와 판정도 멈춥니다." }
+        if event.template.kind == .ambush { return "가속 없이 달리기 상태를 유지하세요. 멈춰야 할 때는 판정도 기다립니다." }
         return event.template.kind == .discovery ? "주변 흔적을 확보하고 있습니다." : "안내받은 페이스를 유지하세요. 멈춰야 할 때는 편하게 멈추세요."
     }
     private func stateName(_ run: RunSession) -> String {
@@ -390,7 +399,7 @@ struct SettingsView: View {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
                     Button("안내 음성 테스트") { model.audioTest() }
-                    Text("현재는 임시 안내 음성입니다. 새 오퍼레이터 음색을 제작 중입니다.").font(.caption)
+                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 19개가 적용되어 있습니다.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
@@ -408,8 +417,8 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.7.0 · 활동 중심 메뉴와 화면 유지")
-                    Text("중앙 헌터 활동 · 홈 상단 설정 · 활동 중 화면 유지.").font(.caption)
+                    Text("0.8.0 · 오퍼레이터와 현장 사건")
+                    Text("새 오퍼레이터 음색과 캐릭터 · 400m 장기전 · 기습 대응 · 반복 대사 변형.").font(.caption)
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }
         }

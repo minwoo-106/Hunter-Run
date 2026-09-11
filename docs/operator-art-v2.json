@@ -1,0 +1,7 @@
+{
+  "source": "exec-6e9aef3c-e25e-4fb9-8fae-5e5526665156.png",
+  "sha256": "44b3dd1ed9758f2a37a0d2d6e73e5c25729684122ab1fc5b30fe906f29c4fa3a",
+  "background_removal": "rembg/isnet-anime",
+  "user_authorized_python": true,
+  "alpha_cleanup": "Alpha <=3 made transparent; >=252 made opaque; intermediate edge alpha preserved."
+}

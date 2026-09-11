@@ -1,5 +1,5 @@
 """Validate project inputs without requiring Apple SDKs."""
-import json, pathlib, plistlib, struct, wave
+import hashlib, json, pathlib, plistlib, struct, wave
 root = pathlib.Path(__file__).resolve().parents[1]
 mission = json.loads((root / "Resources/mission.json").read_text(encoding="utf-8"))
 assert mission["schema"] == 1
@@ -14,6 +14,22 @@ for key in keys:
     assert path.is_file(), path
     with wave.open(str(path)) as f:
         assert 0 < f.getnframes() / f.getframerate() < 15, key
+voice = json.loads((root / "Resources/operator-voice.json").read_text(encoding="utf-8"))
+lines = json.loads((root / "Resources/audio-lines.json").read_text(encoding="utf-8"))
+keys.update(lines)
+assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 19
+assert {c["key"] for c in voice["clips"]} == keys == set(lines)
+for clip in voice["clips"]:
+    path = root / "Resources/Audio" / clip["file"]
+    assert clip["text"] == lines[clip["key"]]
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == clip["sha256"]
+    with wave.open(str(path)) as f:
+        assert f.getnchannels() == 1 and f.getsampwidth() == 2 and f.getframerate() == 24000
+        duration = f.getnframes() / f.getframerate()
+        assert .3 < duration < 15 and abs(duration - clip["duration"]) < .002
+        samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
+        assert 100 < max(abs(s) for s in samples) < 32700
+print("Validated 19 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
@@ -65,3 +81,14 @@ with wave.open(str(root / 'Resources/Music/association-theme.wav')) as music:
     assert music.getnchannels() == 2 and music.getsampwidth() == 2 and music.getframerate() == 44100
     assert music.getnframes() == 32 * 44100
 print('Validated two major bosses, seven monster illustrations, three association stages and lobby music.')
+
+variants = json.loads((root / 'Resources/audio-variants.json').read_text(encoding='utf-8'))
+assert set(variants) == {'discovery', 'success', 'partial'}
+for key, clips in variants.items():
+    assert key in clips and len(clips) >= 2 and len(clips) == len(set(clips))
+    assert all(clip in lines for clip in clips)
+events = [e for mode in missions['modes'].values() for e in mode['events']]
+assert {'endurance', 'ambush'} <= {e['kind'] for e in events}
+for event in events:
+    if event['kind'] == 'endurance': assert 400 <= event['targetDistance'] <= 800
+print('Validated distance encounters and non-repeating voice variant mappings.')

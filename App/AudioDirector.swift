@@ -7,6 +7,12 @@ final class AudioDirector: NSObject, AVAudioPlayerDelegate {
     private var completion: (() -> Void)?
     private var playingID: UUID?
     private let request = AudioRequest()
+    private var variants = VoiceVariants()
+    private let variantCatalog: [String: [String]] = {
+        guard let url = Bundle.main.url(forResource: "audio-variants", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else { return [:] }
+        return (try? JSONDecoder().decode([String: [String]].self, from: data)) ?? [:]
+    }()
     var onInterruption: (() -> Void)?
     var onFailure: ((String) -> Void)?
     var ducking = true
@@ -33,7 +39,8 @@ final class AudioDirector: NSObject, AVAudioPlayerDelegate {
         AudioWorker.shared.enqueue { [self] in
             guard request.valid(token) else { return }
             stopCurrent()
-            guard let url = Bundle.main.url(forResource: key, withExtension: "wav", subdirectory: "Audio") ?? Bundle.main.url(forResource: key, withExtension: "wav") else {
+            let clip = variants.select(key, catalog: variantCatalog)
+            guard let url = Bundle.main.url(forResource: clip, withExtension: "wav", subdirectory: "Audio") ?? Bundle.main.url(forResource: clip, withExtension: "wav") else {
                 request.cancel(); onFailure?("안내 음성 파일을 찾을 수 없습니다: " + key); return
             }
             do {

@@ -113,11 +113,12 @@ public struct RunEngine {
                 session.event = event; return cues
             }
             event.elapsed += dt; event.evaluatedSeconds += dt
-            let threshold = event.template.kind == .pursuit ? 1.08 : 0.85
-            let qualified = event.template.kind == .discovery || frame.speed >= event.baseline * threshold
+            let threshold = event.template.kind == .pursuit ? 1.08 : event.template.kind == .endurance ? 0.75 : 0.85
+            let qualified = event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
             if qualified { event.qualified += dt }
+            if event.template.kind == .endurance { event.traveledDistance = (event.traveledDistance ?? 0) + distance }
             session.event = event
-            if event.elapsed >= event.template.duration {
+            if event.progress >= 1 {
                 let ratio = event.qualified / max(1, event.evaluatedSeconds)
                 let outcome: Outcome = ratio >= 0.9 ? .perfect : ratio >= 0.7 ? .success : ratio >= 0.4 ? .partial : .fail
                 let multiplier: Double = [.perfect: 1.2, .success: 1.0, .partial: 0.55, .fail: 0.15][outcome] ?? 0
@@ -142,11 +143,7 @@ public struct RunEngine {
         let cycle = session.patrolCycle
         let offset = Double(cycle) * session.patrolDuration
         let patrolContent = session.boss?.content ?? content
-        let candidates = patrolContent.events.map { template -> MissionTemplate in
-            var item = template
-            if cycle > 0 { item.id += "#\(cycle)" }
-            return item
-        }
+        let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
             session.consumed.insert(next.id)
             let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
@@ -154,9 +151,11 @@ public struct RunEngine {
             if next.kind == .pursuit && (!session.allowPursuit || session.baselineSamples.count < 30 || (!session.simulated && session.learnedReference == nil && (session.paceObservation?.stableSeconds ?? 0) < 300) || session.intensityCount >= 2 || session.activeSeconds - session.lastIntensityAt < 180 || frame.signal != .good || session.withdrawn) {
                 next.kind = .discovery; next.title = "마력 흔적 조사"; next.audio = "investigate"
             }
-            if session.withdrawn && next.kind == .boss { next.kind = .discovery; next.title = "게이트 외곽 조사"; next.audio = "investigate" }
+            if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
+                next.kind = .discovery; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
+            }
             if next.kind != .discovery && (frame.movement != .running || frame.signal != .good) {
-                next.kind = .discovery; next.audio = "investigate"; next.title = "주변 흔적 조사"
+                next.kind = .discovery; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
             }
             if next.id.hasPrefix("major-strike"), let boss = session.boss {
                 if boss.remainingHP <= 0 { return [.checkpoint] }

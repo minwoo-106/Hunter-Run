@@ -50,17 +50,27 @@
         {
           "id": "beast",
           "title": "잔향 늑대와 조우",
-          "kind": "maintain",
+          "kind": "ambush",
           "startFraction": 0.3,
-          "duration": 40,
+          "duration": 25,
           "hp": 70,
-          "audio": "maintain"
+          "audio": "ambush"
+        },
+        {
+          "id": "contract-endurance",
+          "title": "중장갑 개체 압박",
+          "kind": "endurance",
+          "startFraction": 0.4,
+          "duration": 180,
+          "hp": 90,
+          "audio": "endurance",
+          "targetDistance": 400
         },
         {
           "id": "trail",
           "title": "도주 개체 추적",
           "kind": "pursuit",
-          "startFraction": 0.5,
+          "startFraction": 0.62,
           "duration": 25,
           "hp": 60,
           "audio": "pursuit"
@@ -69,7 +79,7 @@
           "id": "gate",
           "title": "신호원 안정화",
           "kind": "boss",
-          "startFraction": 0.72,
+          "startFraction": 0.79,
           "duration": 45,
           "hp": 100,
           "audio": "boss"
@@ -92,11 +102,12 @@
         {
           "id": "gate-guard",
           "title": "철각 파수병",
-          "kind": "maintain",
+          "kind": "endurance",
           "startFraction": 0.28,
-          "duration": 40,
+          "duration": 180,
           "hp": 75,
-          "audio": "maintain"
+          "audio": "endurance",
+          "targetDistance": 400
         },
         {
           "id": "gate-trail",
@@ -106,6 +117,15 @@
           "duration": 25,
           "hp": 65,
           "audio": "pursuit"
+        },
+        {
+          "id": "gate-ambush",
+          "title": "균열 측면 기습",
+          "kind": "ambush",
+          "startFraction": 0.54,
+          "duration": 25,
+          "hp": 65,
+          "audio": "ambush"
         },
         {
           "id": "gate-core",
@@ -132,7 +152,7 @@
     "id": "contract-cache",
     "title": "후속 보급품 조사",
     "kind": "discovery",
-    "startFraction": 0.6,
+    "startFraction": 0.54,
     "duration": 35,
     "hp": 0,
     "audio": "discovery"

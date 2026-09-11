@@ -1,4 +1,4 @@
-# Hunter Run — 0.7.0 activity navigation demo
+# Hunter Run — 0.8.0 operator and field encounters
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
@@ -11,6 +11,16 @@ All 68 core tests and 8 iPhone simulator UI tests passed. The physical-iPhone Re
 [Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa432a01c8c285ff0061c1a).
 UI checks cover the five bottom entries and central activity emphasis, home bounds/settings gear, settings/story replay, equipment, goals, progression locks, audio initialization, boss simulation and activity preparation.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.8 (Apple build pending)
+- Approved original operator voice: 19 local WAVs, including three pairs of alternating equivalent lines.
+- Large-eyed young adult operator with navy hair streaks and true transparent cutout.
+- 400m endurance battles and 25-second ambush responses; short goals use a brief hold.
+- Deterministic patrol timing variation with recovery stability and canonical codex identities.
+- Recovery-period combat suppression, encounter guide and 20-minute mock contract.
+- Versioned installer filenames and verification of all bundled voice hashes.
+- Local validation: 77 core tests and content/audio checks passed.
+[0.8 test guide](docs/0.8-현장-테스트.md).
 
 ## Added in 0.7
 - Bottom navigation: home / hunter / large central hunter activity / association / codex.
@@ -62,7 +72,7 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 - 5/20/30-minute real runs, unlockable 45-minute goals, and a 3-minute simulated run.
 - GPS + motion + pedometer inputs; uncertainty suspends precision scoring.
 - Foreground-started background location session; intermittent local voice playback.
-- Fourteen pre-generated temporary Korean WAV clips; no runtime TTS or server.
+- Nineteen pre-generated designed Korean WAV clips; no runtime TTS or server.
 - Pause/resume, goal completion, local progress, recovery, import/export, basic field archive.
 - Mock speed/movement/GPS controls and a non-destructive recovery drill.
 - Pure Swift engine tests including stop protection, replay, gap, and settlement invariants.
@@ -76,7 +86,7 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 [한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
 
 ## Not yet implemented
-Expanded voiced story/content, final operator voice,
+Expanded voiced story/content, further operator performance polish,
 polished audio production and production balancing.
 This is a playable progression milestone, not content-complete v1. See [remaining work](docs/v1-remaining.md).
 
@@ -103,8 +113,7 @@ Linux tests do not validate Apple framework compilation or real sensor behavior.
 
 ## First iPhone test
 See [docs/TESTING.md](docs/TESTING.md). Start with 5 minutes and pursuit OFF.
-Audio files are temporary Windows-generated Korean speech for personal demo evaluation;
-replace with an approved operator voice and review distribution rights before public release.
+Audio files are locally generated Korean operator speech from the user-approved synthetic reference. No runtime TTS or paid API is used.
 
 ## Design
 Approved operator: original earpiece pose, white shirt, dark tie, calm office atmosphere.

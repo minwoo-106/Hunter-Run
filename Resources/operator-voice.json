@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "voice": "adult-warm-operator",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+  "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+  "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6",
+  "clips": [
+    {
+      "key": "partial",
+      "file": "partial.wav",
+      "text": "확보한 성과를 보존하고 이동하겠습니다.",
+      "seed": 2923122257,
+      "sample_rate": 24000,
+      "duration": 2.565,
+      "sha256": "8c2198b7260775a0ac5367acfe27de3b753f06b5041fe8f187a78caf96399a1d"
+    },
+    {
+      "key": "resume",
+      "file": "resume.wav",
+      "text": "다시 이동합니다.",
+      "seed": 2180539624,
+      "sample_rate": 24000,
+      "duration": 1.173,
+      "sha256": "6ca11b5555e038e58a2b57936bb04892f36f17e2e0ef47a877b9434d919d9eab"
+    },
+    {
+      "key": "discovery",
+      "file": "discovery.wav",
+      "text": "마력 흔적을 발견했어요. 편하게 이동하며 조사하겠습니다.",
+      "seed": 1917210534,
+      "sample_rate": 24000,
+      "duration": 4.11,
+      "sha256": "3dd546612e675727c11dcf227e084e373565170d8bae99a9c107ecf244984a1e"
+    },
+    {
+      "key": "investigate",
+      "file": "investigate.wav",
+      "text": "주변 흔적을 조사하겠습니다.",
+      "seed": 3458449582,
+      "sample_rate": 24000,
+      "duration": 1.958,
+      "sha256": "8fda577a4c4fc1a80c8cc9a3f30b8f2995af720d503cd13d3a2333597b2cf5b5"
+    },
+    {
+      "key": "run_end",
+      "file": "run_end.wav",
+      "text": "활동을 마쳤습니다. 확보한 기록을 정리할게요.",
+      "seed": 3089821755,
+      "sample_rate": 24000,
+      "duration": 3.432,
+      "sha256": "ef95f496bb77e6814d5b4004e41412c291b094206832d1e7d7d1928f1c480a70"
+    },
+    {
+      "key": "pursuit",
+      "file": "pursuit.wav",
+      "text": "추적 가능해요. 안전한 구간이면 조금 가속하세요. 아니면 흔적을 조사할게요.",
+      "seed": 3997637607,
+      "sample_rate": 24000,
+      "duration": 7.361,
+      "sha256": "f58c858a79990b569c055fb48f324683e5b07d4bcbb6fc74e4a864962306d65b"
+    },
+    {
+      "key": "pause",
+      "file": "pause.wav",
+      "text": "잠시 대기할게요.",
+      "seed": 431849061,
+      "sample_rate": 24000,
+      "duration": 1.398,
+      "sha256": "eebf4bec31c2c93d668e1bced2067297a07181b73da5cee8fb3ad9376482e1b9"
+    },
+    {
+      "key": "run_start",
+      "file": "run_start.wav",
+      "text": "헌터 활동을 시작합니다. 편안한 페이스로 이동하세요.",
+      "seed": 1026166950,
+      "sample_rate": 24000,
+      "duration": 4.023,
+      "sha256": "993198ab064036ebf3293dd421426ec01fcc4cf448b006e87a92c2016094c4ba"
+    },
+    {
+      "key": "boss",
+      "file": "boss.wav",
+      "text": "신호원을 찾았어요. 평소 페이스로 달리며 안정화해주세요.",
+      "seed": 257529393,
+      "sample_rate": 24000,
+      "duration": 5.193,
+      "sha256": "a233bf8165e4dc80ffca610c9f9743f16e5a7ef94afaabb211e918b864bcdaea"
+    },
+    {
+      "key": "success",
+      "file": "success.wav",
+      "text": "성과를 확보했습니다.",
+      "seed": 3967306607,
+      "sample_rate": 24000,
+      "duration": 1.766,
+      "sha256": "5791ffa406364060f15f82821f3ac88ebc601d285c9ea951bdc57ec886a6cce5"
+    },
+    {
+      "key": "signal",
+      "file": "signal.wav",
+      "text": "측정이 불안정해요. 속도 평가는 중단할게요.",
+      "seed": 4024589596,
+      "sample_rate": 24000,
+      "duration": 3.564,
+      "sha256": "fd874f03f5be1df7cb2a82a59ffcbc7924b4e99f23a8c9b7f3cd633dfbc02419"
+    },
+    {
+      "key": "maintain",
+      "file": "maintain.wav",
+      "text": "개체가 접근합니다. 평소 달리기 페이스를 유지해주세요.",
+      "seed": 3274564828,
+      "sample_rate": 24000,
+      "duration": 3.963,
+      "sha256": "343c7820bfb66df3f21f295d4ce38015e64a60d996e8caa3e47eec8e78e0fb9c"
+    },
+    {
+      "key": "audio_test",
+      "file": "audio_test.wav",
+      "text": "통신 확인. 음악과 함께 제 목소리가 들리시나요?",
+      "seed": 1404287023,
+      "sample_rate": 24000,
+      "duration": 4.363,
+      "sha256": "3a0a9291d4cfbb3228e1ded16432a0f569888f0078ad9ad4174cee879d4bf7f4"
+    },
+    {
+      "key": "pursuit_started",
+      "file": "pursuit_started.wav",
+      "text": "추적을 시작합니다.",
+      "seed": 1010824296,
+      "sample_rate": 24000,
+      "duration": 1.308,
+      "sha256": "844e3e068e11216c3347aa90ffaf0313aeb4b32666736cf73f82d975478087d5"
+    },
+    {
+      "key": "endurance",
+      "file": "endurance.wav",
+      "text": "중장갑 개체를 발견했어요. 편안한 페이스로 사백 미터를 전진하며 압박해주세요.",
+      "seed": 3450173571,
+      "sample_rate": 24000,
+      "duration": 5.445,
+      "sha256": "aec1c42c93e7a58b9eee017a7838253a9985221be136e5cf228e91b0446f7622"
+    },
+    {
+      "key": "ambush",
+      "file": "ambush.wav",
+      "text": "측면에서 개체가 접근해요. 속도를 높일 필요는 없어요. 잠시 달리기 상태를 유지해주세요.",
+      "seed": 2937096347,
+      "sample_rate": 24000,
+      "duration": 8.051,
+      "sha256": "31ff4ac5b21581969bec4af62093cb40ac05bfaa44c0bcd1360c3756822c5bcb"
+    },
+    {
+      "key": "discovery_alt",
+      "file": "discovery_alt.wav",
+      "text": "새로운 흔적이 잡혔어요. 지금처럼 편하게 이동해주시면 제가 조사할게요.",
+      "seed": 97159083,
+      "sample_rate": 24000,
+      "duration": 4.626,
+      "sha256": "33df8455c97a19181fb9a2e6c8e9d635c7c2f368085579e4bd48b381a72cda5e"
+    },
+    {
+      "key": "success_alt",
+      "file": "success_alt.wav",
+      "text": "좋아요. 이번 성과도 기록해둘게요.",
+      "seed": 2048006763,
+      "sample_rate": 24000,
+      "duration": 3.081,
+      "sha256": "ed7224d14d8fa353b517a928d8d3d2147e71d83412cc1d4583a188369a0da273"
+    },
+    {
+      "key": "partial_alt",
+      "file": "partial_alt.wav",
+      "text": "괜찮아요. 확보한 것부터 챙기고 다음 구간으로 이동할게요.",
+      "seed": 3321147301,
+      "sample_rate": 24000,
+      "duration": 4.272,
+      "sha256": "6eb6544fd817aed5be40351ccda494e0ad308c1ee23b1cbc9d379d32842973a8"
+    }
+  ],
+  "approved_reference": "User approved run_start/discovery calibration on 2026-09-12."
+}

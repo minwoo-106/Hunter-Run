@@ -179,6 +179,7 @@ import UIKit
         displayedPace.reset(); currentSpeed = 0
         session.learnedReference = simulated ? nil : save.profile.paceMemory?.reference
         session.goal = requested
+        session.directorVersion = 1
         session.missionSnapshot = mission
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
@@ -338,7 +339,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.7.0 activity navigation and display
+        Hunter Run 0.8.0 operator voice and artwork
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

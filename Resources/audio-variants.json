@@ -1,0 +1,14 @@
+{
+  "discovery": [
+    "discovery",
+    "discovery_alt"
+  ],
+  "success": [
+    "success",
+    "success_alt"
+  ],
+  "partial": [
+    "partial",
+    "partial_alt"
+  ]
+}

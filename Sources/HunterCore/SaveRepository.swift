@@ -46,6 +46,8 @@ public final class SaveRepository {
         guard (save.profile.bosses ?? [:]).allSatisfy({ !$0.key.isEmpty && $0.value.isValid }) else { throw Failure.invalid }
         guard save.profile.paceMemory?.isValid ?? true, save.profile.runs.allSatisfy({ $0.paceReport?.isValid ?? true }) else { throw Failure.invalid }
         if let run = save.active {
+            guard run.directorVersion == nil || run.directorVersion == 1,
+                  run.event?.traveledDistance.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.paceObservation?.isValid ?? true,
                   run.learnedReference.map(PaceLearning.validSpeed) ?? true,
                   run.paceCooldownUntil.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }

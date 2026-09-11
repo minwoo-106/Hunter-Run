@@ -1,0 +1,9 @@
+{
+  "text": "헌터 활동을 시작합니다. 편안한 페이스로 이동하세요. 마력 흔적을 발견했어요. 제가 곁에서 안내할게요.",
+  "instruct": "A clearly adult Korean woman aged twenty-four, a bright and dependable fantasy game operator. Natural adult female speaking register with a medium pitch, warm rounded resonance and a clear grounded core. Friendly, cheerful, quietly spirited and confidently reassuring. A smile in her voice and subtle natural breaths between phrases. Clean conversational Korean pronunciation with mature articulation and relaxed, supported sentence endings. Light playful warmth, not exaggerated cuteness. Keep the voice feminine and alive with energy. No childlike tiny voice, no squeaky high register, no baby talk, no nasal sing-song delivery, no lethargic whisper. Close studio recording.",
+  "seed": 741,
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "duration": 8.16,
+  "sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
+}

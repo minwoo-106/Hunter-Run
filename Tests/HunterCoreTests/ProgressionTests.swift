@@ -12,7 +12,7 @@ final class ProgressionTests: XCTestCase {
         let missions = try load("missions.json", as: MissionCatalog.self); try missions.validate()
         XCTAssertEqual(catalog.equipment.count, 12)
         XCTAssertEqual(missions.content(for: .exploration, extended: false).events.filter { $0.kind != .discovery }.count, 0)
-        XCTAssertEqual(missions.content(for: .contract, extended: true).events.count, 5)
+        XCTAssertEqual(missions.content(for: .contract, extended: true).events.count, 6)
     }
     func testLegacySavePreservesProgressAndCanBeWritten() throws {
         let data = Data(#"{"schema":1,"profile":{"name":"기존 헌터","xp":450,"crystals":25,"research":6,"observationLevel":2,"settled":[],"runs":[]}}"#.utf8)

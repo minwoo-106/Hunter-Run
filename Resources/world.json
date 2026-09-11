@@ -18,7 +18,8 @@
       "description": "불안정한 균열 사이로 도주하는 개체. 추격을 선택하지 않아도 흔적을 조사할 수 있습니다.",
       "eventIDs": [
         "trail",
-        "gate-trail"
+        "gate-trail",
+        "gate-ambush"
       ],
       "bossID": null
     },
@@ -28,7 +29,8 @@
       "family": "구조체",
       "description": "게이트 입구를 지키는 오래된 철과 암석의 파수병입니다.",
       "eventIDs": [
-        "gate-guard"
+        "gate-guard",
+        "contract-endurance"
       ],
       "bossID": null
     },

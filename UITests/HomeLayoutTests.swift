@@ -175,6 +175,20 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(monster.waitForExistence(timeout: 5)); monster.tap()
         XCTAssertTrue(app.staticTexts["아직 발견하지 못했습니다"].waitForExistence(timeout: 5))
     }
+    @MainActor func testNewEncounterGuideIsReachableFromPreparation() {
+        let app = application(); app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        let guide = app.buttons["setup.encounters"]
+        for _ in 0..<6 { if guide.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(guide.isHittable); guide.tap()
+        XCTAssertTrue(app.navigationBars["현장 사건 안내"].waitForExistence(timeout: 5))
+        let endurance = app.staticTexts["장기전 · 400m 전진"]
+        for _ in 0..<6 { if endurance.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(endurance.isHittable)
+        let ambush = app.staticTexts["기습 대응 · 25초 유지"]
+        for _ in 0..<4 { if ambush.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(ambush.isHittable)
+    }
     @MainActor func testEquipmentArtworkDetailsAndHistory() {
         let app = application(); app.launch()
         XCTAssertTrue(app.buttons["nav.1"].waitForExistence(timeout: 10)); app.buttons["nav.1"].tap()
