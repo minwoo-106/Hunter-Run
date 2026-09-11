@@ -19,3 +19,8 @@ Both initial NO/YES launches reached the same chain: the argument-domain string 
 The temporary process-sampling workflow/script was removed after diagnosis. Device audio quality, speaker/AirPods playback, interruption and mixing still require an iPhone retest after this change.
 
 The worker follows Apple's [secondary-thread run-loop guidance](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html).
+
+Apple SDK compilation also required the rawValue CFString of the CFRunLoopMode wrapper when passing a mode to CFRunLoopPerformBlock; Linux exposes the constant as a CFString. The worker drains autoreleased objects while servicing its run loop.
+
+## Verified regression result
+Build 13 (source `1c60bf5`) passed all 43 core tests and 6 iPhone simulator UI tests, including `testAudioStartupKeepsNavigationResponsive`, and compiled the physical-iPhone Release target. [Verified build](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3cf199047bd205fe62fe5). This proves navigation remains responsive during real audio initialization; it does not establish audible output or route behavior on a physical device.
