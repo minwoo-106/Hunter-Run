@@ -18,7 +18,7 @@ final class AudioWorker {
             loop = current; lock.unlock()
             while true {
                 #if canImport(ObjectiveC)
-                autoreleasepool { _ = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 3600, true) }
+                autoreleasepool { _ = CFRunLoopRunInMode(CFRunLoopMode.defaultMode, 3600, true) }
                 #else
                 _ = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 3600, true)
                 #endif
@@ -34,7 +34,7 @@ final class AudioWorker {
     }
     private func schedule(on loop: CFRunLoop, _ task: @escaping () -> Void) {
         #if canImport(ObjectiveC)
-        CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode!.rawValue, task)
+        CFRunLoopPerformBlock(loop, CFRunLoopMode.defaultMode!.rawValue, task)
         #else
         CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode!, task)
         #endif
