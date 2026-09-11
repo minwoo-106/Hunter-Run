@@ -3,17 +3,55 @@ import XCTest
 final class HomeLayoutTests: XCTestCase {
     @MainActor private func application(silent: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
-        if silent { app.launchArguments = ["--ui-testing-silent-audio"] }
+        app.launchArguments = ["--ui-testing-skip-welcome"]
+        if silent { app.launchArguments.append("--ui-testing-silent-audio") }
         return app
     }
     @MainActor func testAudioStartupKeepsNavigationResponsive() {
         let app = application(silent: false); app.launch()
+        XCTAssertTrue(app.buttons["nav.1"].waitForExistence(timeout: 10))
+        for index in [1, 3, 4, 0] { app.buttons["nav.\(index)"].tap() }
         let run = app.buttons["home.run"]
         XCTAssertTrue(run.waitForExistence(timeout: 10)); XCTAssertTrue(run.isHittable); run.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
         app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
+    }
+
+    @MainActor func testStoryReadingLocksAndWelcomeReplay() {
+        let app = application(); app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
+        app.buttons["nav.2"].tap()
+        let archive = app.buttons["association.stories"]
+        XCTAssertTrue(archive.waitForExistence(timeout: 5)); archive.tap()
+        app.buttons["story.arrival"].tap()
+        let read = app.buttons["story.read"]
+        for _ in 0..<6 { if read.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(read.isHittable)
+        if read.isEnabled { read.tap() }
+        XCTAssertFalse(read.isEnabled)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["story.signal"].tap()
+        XCTAssertTrue(app.staticTexts["story.locked"].waitForExistence(timeout: 5))
+        app.buttons["닫기"].tap()
+        app.buttons["nav.4"].tap()
+        let welcome = app.buttons["settings.welcome"]
+        for _ in 0..<6 { if welcome.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(welcome.isHittable); welcome.tap()
+        XCTAssertTrue(app.buttons["welcome.skip"].waitForExistence(timeout: 5))
+        for _ in 0..<3 {
+            let next = app.buttons["welcome.next"]
+            for _ in 0..<4 { if next.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+            XCTAssertTrue(next.isHittable); next.tap()
+            XCTAssertTrue(app.buttons["welcome.skip"].exists)
+        }
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Welcome permissions"; shot.lifetime = .keepAlways; add(shot)
+        app.buttons["welcome.skip"].tap()
+        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 5)); app.buttons["nav.0"].tap()
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["welcome.skip"].exists)
     }
 
     @MainActor func testHomeFitsScreen() throws {

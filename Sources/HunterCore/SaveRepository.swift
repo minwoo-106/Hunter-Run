@@ -5,6 +5,9 @@ public final class SaveRepository {
     public init(directory: URL) { self.directory = directory }
     public enum Failure: Error { case damaged, incompatible, invalid }
     private var current: URL { directory.appendingPathComponent("save.json") }
+    public var hasStoredSave: Bool {
+        FileManager.default.fileExists(atPath: current.path) || FileManager.default.fileExists(atPath: directory.appendingPathComponent("backup.json").path)
+    }
     public func load() throws -> SaveState {
         let fm = FileManager.default
         let candidates = [current, directory.appendingPathComponent("backup.json")]

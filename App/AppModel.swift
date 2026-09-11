@@ -11,6 +11,8 @@ import UIKit
     @Published var selectedTab = 0
     @Published var showRun = false
     @Published var showAssociation = false
+    @Published var showWelcome = false
+    @Published var showStories = false
     @Published var selectedBoss: String?
     @Published var selectedMode: RunMode = .contract
     @Published var mockMovement: Movement = .running
@@ -39,7 +41,11 @@ import UIKit
         return boss.available(to: save.profile, catalog: catalog) && BossCampaign.state(boss, profile: save.profile).remainingHP > 0
     }
     func refreshLobbyMusic() {
-        if sceneActive && homeMusicEnabled && !testingAudio && !showRun && engine == nil && (selectedTab == 0 || showAssociation) {
+        var context = LobbyMusicContext()
+        context.tab = selectedTab; context.associationPresented = showAssociation
+        context.runPresented = showRun; context.hasRun = engine != nil
+        context.foreground = sceneActive; context.enabled = homeMusicEnabled; context.testingVoice = testingAudio
+        if context.shouldPlay {
             lobbyMusic.play(volume: Float(homeMusicVolume))
         } else { lobbyMusic.stop() }
     }
@@ -88,10 +94,16 @@ import UIKit
         if let url = Bundle.main.url(forResource: "world", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(WorldContent.self, from: data),
            (try? decoded.validate()) != nil { world = decoded } else { world = nil }
+        let existingSave = repository.hasStoredSave
         do { save = try repository.load(); recoverable = save.active != nil }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
         if content == nil || progressionCatalog == nil || missions == nil || world == nil { notice = "게임 콘텐츠를 읽지 못했습니다." }
         isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && !saveBlocked
+        if !existingSave { save.profile.introductionSeen = false }
+        showWelcome = isReady && (!existingSave || save.profile.introductionSeen == false)
+        #if targetEnvironment(simulator)
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-welcome") { showWelcome = false }
+        #endif
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -108,6 +120,19 @@ import UIKit
                 if self.engine != nil { self.engine?.pause(true); self.persist() }
             }
         }
+    }
+    func completeWelcome() {
+        guard !saveBlocked else { return }
+        var candidate = save; candidate.profile.introductionSeen = true
+        do { try repository.write(candidate); save = candidate; showWelcome = false }
+        catch { notice = "안내 확인을 저장하지 못했습니다. 다시 시도해주세요." }
+    }
+    func readStory(_ id: String) {
+        guard isReady, !growthLocked else { notice = "활동을 마친 뒤 통신 기록을 확인해주세요."; return }
+        var candidate = save
+        guard StoryProgress.markRead(id, profile: &candidate.profile) else { return }
+        do { try repository.write(candidate); save = candidate }
+        catch { notice = "읽음 표시를 저장하지 못했습니다. 다시 시도해주세요." }
     }
     func updatePermissions() {
         switch sensor.permission {
@@ -287,7 +312,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.4.0 world and boss demo
+        Hunter Run 0.5.0 association stories demo
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

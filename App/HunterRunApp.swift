@@ -39,6 +39,8 @@ struct RootView: View {
         .onChange(of: model.selectedTab) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic() }
+        .sheet(isPresented: $model.showWelcome) { WelcomeView() }
+        .sheet(isPresented: $model.showStories) { NavigationStack { StoryArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showStories = false } } } } }
         .sheet(isPresented: $model.showAssociation) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showAssociation = false } } } } }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
@@ -66,8 +68,9 @@ struct HomeView: View {
                     Spacer(minLength: 60)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("오셨네요. 오늘도 함께하겠습니다.").font(.headline).accessibilityIdentifier("home.greeting")
-                        Text("폐쇄 구역에서 새로운 마력 신호가 발견됐어요.").font(.subheadline).foregroundStyle(Theme.muted)
+                        Text(StoryProgress.unread(model.save.profile).isEmpty ? "협회 통신 기록 · 우리 지부의 이야기를 다시 볼까요?" : "새 협회 통신 \(StoryProgress.unread(model.save.profile).count)건 · 눌러서 확인").font(.subheadline).foregroundStyle(Theme.muted)
                     }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                        .onTapGesture { model.showStories = true }.accessibilityAddTraits(.isButton).accessibilityIdentifier("home.stories")
                     if model.recoverable {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("중단된 활동이 있습니다").font(.headline)
@@ -88,7 +91,7 @@ struct HomeView: View {
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
                     }.accessibilityLabel("활동 시작 RUN").accessibilityIdentifier("home.run")
                     ResourceStrip()
-                    Text("WORLD DEMO · 0.4.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("STORY DEMO · 0.5.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -350,7 +353,7 @@ struct FieldArchiveView: View {
                             }
                         }.card()
                     }
-                    Text("연구부를 확장하면 발견한 현상의 분석 정보가 열립니다. 몬스터 일러스트는 후속 버전에 추가됩니다.").font(.caption).foregroundStyle(Theme.muted)
+                    Text("연구부를 확장하면 발견한 현상의 분석 정보가 열립니다. 개체 일러스트는 도감의 개체 목록에서 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }
@@ -371,7 +374,7 @@ struct SettingsView: View {
                 Section("협회 BGM") {
                     Toggle("협회 배경음악", isOn: $model.homeMusicEnabled).onChange(of: model.homeMusicEnabled) { _, _ in model.applyHomeMusic() }
                     Slider(value: $model.homeMusicVolume, in: 0...1).accessibilityLabel("협회 BGM 음량").onChange(of: model.homeMusicVolume) { _, _ in model.applyHomeMusic() }
-                    Text(model.musicNotice ?? "홈과 협회 관리에서만 재생되는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
+                    Text(model.musicNotice ?? "RUN을 제외한 모든 화면에서 이어지는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
                 }
                 Section("오디오") {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
@@ -390,11 +393,13 @@ struct SettingsView: View {
                     Text("진단 파일에는 원시 GPS 좌표와 헌터명을 넣지 않습니다.").font(.caption)
                 }
                 Section("이용 안내") {
+                    Button("첫 이용 안내 다시 보기") { model.showWelcome = true }.accessibilityIdentifier("settings.welcome")
+                    NavigationLink("협회 통신 기록") { StoryArchiveView() }.accessibilityIdentifier("settings.stories")
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.4.0 · 주요 보스와 협회 성장")
-                    Text("누적 보스 2종 · 개체 일러스트 7종 · 협회 외형 3단계. 정식 오퍼레이터 음성은 아직 준비 중입니다.").font(.caption)
+                    Text("0.5.0 · 협회 통신과 첫 이용 안내")
+                    Text("협회 통신 기록 6편 · 건너뛸 수 있는 첫 이용 안내 · RUN 외 화면 BGM 연속 재생. 오퍼레이터는 아직 임시 음성입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")
         }

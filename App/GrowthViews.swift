@@ -21,6 +21,7 @@ struct AssociationView: View {
                 Text(AssociationStage.name(model.save.profile)).font(.headline).foregroundStyle(Theme.teal)
                 Text("시설 확장 \(AssociationStage.upgrades(model.save.profile)) / 4 · 2개 확장 시 정식 지부, 4개 확장 시 광역 지부").font(.caption).foregroundStyle(Theme.muted)
                 NavigationLink { BossBoardView() } label: { Label("주요 보스 토벌 게시판", systemImage: "shield.checkered").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.bosses")
+                NavigationLink { StoryArchiveView() } label: { Label("협회 통신 기록", systemImage: "envelope.badge").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.stories")
                 Text("우리의 지부를\n키워갑니다.").font(.largeTitle.bold())
                 Text("현장에서 얻은 자원으로 새로운 기능을 열어보세요.").foregroundStyle(Theme.muted)
                 ResourceStrip()

@@ -116,6 +116,8 @@ public struct Profile: Codable {
     public var runs: [RunSummary] = []
     public var progression: GrowthState? = nil
     public var bosses: [String: BossState]? = nil
+    public var readStories: Set<String>? = nil
+    public var introductionSeen: Bool? = nil
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
         set { progression = newValue }
