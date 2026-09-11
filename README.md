@@ -1,17 +1,26 @@
-# Hunter Run — 0.5.0 association stories demo
+# Hunter Run — 0.6.0 hunter activity and pace demo
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.5.0)
-Codemagic demo build 15 completed on 2026-09-11 from commit `74662e7` on Mac mini M2 in 9m 4s.
-All 51 core tests and 7 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-install.zip` (43.64 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa3f2b105d4cecd5b0308ad).
-UI coverage includes real-audio initialization and navigation, home bounds, equipment, goals, progression locks, boss simulation, story reading/locked content, all welcome pages and persisted completion after relaunch.
-The user confirmed 0.4.0 installation and testing complete. Audible continuity across screens in 0.5 still needs physical-device confirmation.
+## Verified build (0.6.0)
+Codemagic demo build 16 completed on 2026-09-12 KST from commit `5de81db` on Mac mini M2 in 9m 23s.
+All 68 core tests and 8 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
+`HunterRun-install.zip` (43.68 MB) contains the unsigned IPA; the complete inner archive, app executable and Info.plist were verified during packaging.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa42995c9802c8916e0405b).
+UI coverage includes the new activity naming/pace reference screen, real-audio initialization and navigation, home bounds, equipment, goals, progression locks, boss simulation, story reading/locked content, all welcome pages and persisted completion after relaunch.
+The user confirmed 0.5.0 installation and testing. Follow-up changes require a new device check.
 [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.6
+- Lobby BGM continues through activity preparation and stops on actual/mock activity start.
+- Hunter activity entry with exploration, contract, gate investigation and boss-hunt start labels.
+- Personal pace reference from eligible real sessions: at least five minutes of good-GPS stable running, excluding events and post-combat recovery. Last-five median with a 5% per-session change limit; today's slower baseline takes priority.
+- Reference/reset screen and per-activity observation reports; legacy saves retained, simulations excluded from learning.
+- Recent pace display uses a time-weighted 12-second window with bounded changes, clears on stops/pause/unreliable GPS and restarts from fresh data. Raw gameplay, distance and time values are unchanged.
+Validation: 68 core tests, 8 iPhone UI tests, Release compilation, resource validation and installer integrity passed in verified build 16. Physical-device pace/audio follow-up remains necessary.
+[한국어 0.6 테스트](docs/0.6-활동-테스트.md), [pace display regression](docs/pace-display-regression.md).
 
 ## Added in 0.5
 - Continuous lobby BGM across home, hunter/equipment, archive, menu and association. RUN setup and active/result screens stay silent for BGM.
@@ -61,7 +70,7 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 [한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
 
 ## Not yet implemented
-Long-term pace learning, expanded voiced story/content, final operator voice,
+Expanded voiced story/content, final operator voice,
 polished audio production and production balancing.
 This is a playable progression milestone, not content-complete v1. See [remaining work](docs/v1-remaining.md).
 

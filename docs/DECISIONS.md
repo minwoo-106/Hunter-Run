@@ -42,3 +42,10 @@ Association stages follow two and four Lv.2 departments. Seven individual creatu
 Lobby audio is an original 32-second locally synthesized sketch, without external samples or runtime services. It plays in foreground home/association only, yields to other audio, and stops when starting/recovering a run, backgrounding, interrupting, or losing headphones. Playback controls persist locally. Existing operator clips remain temporary.
 
 Audio hardware initialization is serialized on a dedicated run loop after a cloud simulator sample showed AVAudioPlayer.play blocking the main thread. Request cancellation is independent of that loop, and preparation has an eight-second timeout. Feature UI tests have a simulator-only silent backend; a separate test retains real audio initialization to verify navigation responsiveness. Actual output remains a device test.
+
+## 0.6 activity preparation and pace
+Lobby BGM now includes activity setup and mode selection; actual/mock activity and result presentation remain silent for BGM. UI names use hunter activities and mode-specific exploration/contract/gate/hunt labels. Existing temporary voice recordings are retained until final voice production.
+
+Pace learning requires five eligible minutes of good-GPS running, excludes all events and 60 seconds after non-discovery events, and stores a capped time-weighted histogram without coordinates. Only idempotent real settlement updates the last-five lower median with a 5% reference change cap. History may lower but cannot raise today's observed baseline. Reset preserves all other progress.
+
+Recent displayed pace is separate from learning and scoring: elapsed-time-weighted 12-second speed, three-second warmup and 0.15 m/s/second display change cap. Stops, poor GPS, pause and gaps clear it. This addresses the observed sensitivity of direct pace conversion; field sensor quality still requires real-device testing.
