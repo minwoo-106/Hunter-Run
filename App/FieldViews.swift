@@ -2,15 +2,15 @@ import SwiftUI
 
 struct HunterTabBar: View {
     @EnvironmentObject var model: AppModel
-    private let labels = ["홈", "헌터", "협회 관리", "도감", "메뉴"]
-    private let icons = ["house", "person.crop.circle", "building.2", "book", "ellipsis"]
+    private let labels = ["홈", "헌터", "헌터 활동", "협회 관리", "도감"]
+    private let icons = ["house", "person.crop.circle", "figure.run", "building.2", "book"]
     var body: some View {
         HStack(alignment: .center, spacing: 2) {
             ForEach(0..<5) { index in
-                Button { if index == 2 { model.showAssociation = true } else { model.selectedTab = index } } label: {
+                Button { if index == 3 { model.showAssociation = true } else { model.selectedTab = index } } label: {
                     VStack(spacing: 4) {
                         Image(systemName: icons[index]).font(.system(size: index == 2 ? 27 : 21, weight: .semibold))
-                        Text(labels[index]).font(.system(size: 11, weight: .semibold))
+                        Text(labels[index]).font(.system(size: 11, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
                     }
                     .frame(maxWidth: .infinity).frame(height: index == 2 ? 64 : 54)
                     .foregroundStyle(index == 2 ? Theme.ink : model.selectedTab == index ? Theme.teal : Theme.muted)
@@ -20,7 +20,7 @@ struct HunterTabBar: View {
                     }
                     .offset(y: index == 2 ? -4 : 0)
                 }.buttonStyle(.plain).accessibilityLabel(labels[index]).accessibilityIdentifier("nav.\(index)")
-                    .accessibilityAddTraits((index == 2 ? model.showAssociation : model.selectedTab == index) ? .isSelected : [])
+                    .accessibilityAddTraits((index == 3 ? model.showAssociation : !model.showAssociation && model.selectedTab == index) ? .isSelected : [])
             }
         }.padding(.horizontal, 12).padding(.top, 10).padding(.bottom, 4)
             .background(Theme.ink.opacity(0.98))
@@ -157,9 +157,9 @@ struct FieldGuideView: View {
                 guide("01 · 나에게 맞는 활동", "탐험은 걷기 중심의 조사, 계약은 페이스 유지와 선택적 추격, 게이트는 해금 후 입장하는 고위험 의뢰입니다.")
                 guide("02 · 목표와 종료", "시간·거리 목표는 달성하면 자동 종료합니다. 자유 활동은 직접 종료합니다. 일찍 마쳐도 확보한 성과를 저장하며, 모의 활동은 실제 보상을 지급하지 않습니다.")
                 guide("03 · 멈춰도 괜찮습니다", "신호 대기처럼 잠깐 멈춘 동안에는 판정도 멈춥니다. 직접 일시정지했다면 ‘계속’을 눌러 재개하세요. 화면을 보지 않아도 음성으로 사건을 안내합니다.")
-                guide("04 · 보상에서 성장으로", "헌터의 장비 보관함에서 장비를 확보하고 장착하세요. 하단 중앙 협회 관리에서 부서를 확장하면 새로운 기능이 열립니다. 등급은 헌터의 협회 평가에서 심사합니다.")
+                guide("04 · 보상에서 성장으로", "헌터의 장비 보관함에서 장비를 확보하고 장착하세요. 하단 오른쪽 협회 관리에서 부서를 확장하면 새로운 기능이 열립니다. 등급은 헌터의 협회 평가에서 심사합니다.")
                 guide("05 · 게이트 입장", "D급 심사에는 Lv.2와 목표 완료 2회가 필요합니다. 관측부 Lv.2까지 갖추면 게이트가 열립니다. 자유 활동도 경험치와 자원을 주지만 목표 완료 횟수에는 포함되지 않습니다.")
-                guide("06 · 기록과 복구", "앱이 중단되면 홈에서 활동을 복구할 수 있습니다. 메뉴에서 저장 파일을 백업하고, 헌터에서 지난 활동의 사건과 보상을 확인하세요.")
+                guide("06 · 기록과 복구", "앱이 중단되면 홈에서 활동을 복구할 수 있습니다. 홈 상단 설정에서 저장 파일을 백업하고, 헌터에서 지난 활동의 사건과 보상을 확인하세요.")
             }.padding(22)
         }.background(Theme.ink).navigationTitle("활동과 성장 가이드").navigationBarTitleDisplayMode(.inline)
     }

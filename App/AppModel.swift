@@ -11,6 +11,8 @@ import UIKit
     @Published var selectedTab = 0
     @Published var showRun = false
     @Published var showAssociation = false
+    @Published var showSettings = false
+    var replayWelcomeAfterSettings = false
     @Published var showWelcome = false
     @Published var showStories = false
     @Published var selectedBoss: String?
@@ -54,6 +56,12 @@ import UIKit
         sceneActive = active
         if active { lobbyMusic.allowPlayback() }
         refreshLobbyMusic()
+        refreshActivityDisplay()
+    }
+    /// Only prevent automatic locking during a presented, unfinished activity.
+    /// Backgrounding, results and normal browsing return control to iOS.
+    func refreshActivityDisplay() {
+        UIApplication.shared.isIdleTimerDisabled = sceneActive && showRun && engine != nil && engine?.session.phase != .finished
     }
     func applyHomeMusic() {
         UserDefaults.standard.set(homeMusicEnabled, forKey: "homeMusicEnabled")
@@ -295,15 +303,20 @@ import UIKit
     func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
     func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
-    func audioTest() {
+    func audioTest() { previewAudio("audio_test") }
+    private func previewAudio(_ key: String) {
         guard engine == nil else { return }
         lobbyMusic.stop(); testingAudio = true
         audio.ducking = ducking; audio.volume = Float(voiceVolume)
-        audio.play("audio_test") { [weak self] in
+        audio.play(key) { [weak self] in
             DispatchQueue.main.async { self?.testingAudio = false; self?.refreshLobbyMusic() }
         }
     }
     func applyAudio() { audio.ducking = ducking; audio.volume = Float(voiceVolume) }
+    func stopAudioPreview() {
+        guard testingAudio, engine == nil else { return }
+        audio.stop(); testingAudio = false; refreshLobbyMusic()
+    }
     func exportSave() -> URL? {
         do {
             let url = FileManager.default.temporaryDirectory.appendingPathComponent("HunterRun-backup.json")
@@ -325,7 +338,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.6.0 hunter activity demo
+        Hunter Run 0.7.0 activity navigation and display
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

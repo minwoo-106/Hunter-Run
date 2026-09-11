@@ -24,22 +24,25 @@ struct RootView: View {
     var body: some View {
         VStack(spacing: 0) {
         TabView(selection: $model.selectedTab) {
-            HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("협회", systemImage: "building.2") }
+            HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
             HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
             SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
-            CodexView().toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("도감", systemImage: "book") }
-            SettingsView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("메뉴", systemImage: "ellipsis") }
+            CodexView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("도감", systemImage: "book") }
         }
         .toolbar(.hidden, for: .tabBar)
         HunterTabBar()
         }
         .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
-        .onAppear { model.refreshLobbyMusic() }
+        .onAppear { model.refreshLobbyMusic(); model.refreshActivityDisplay() }
         .onChange(of: model.selectedTab) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
-        .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic() }
+        .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic(); model.refreshActivityDisplay() }
+        .onChange(of: model.engine?.session.phase) { _, _ in model.refreshActivityDisplay() }
         .sheet(isPresented: $model.showWelcome) { WelcomeView() }
+        .sheet(isPresented: $model.showSettings, onDismiss: {
+            if model.replayWelcomeAfterSettings { model.replayWelcomeAfterSettings = false; model.showWelcome = true }
+        }) { SettingsView() }
         .sheet(isPresented: $model.showStories) { NavigationStack { StoryArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showStories = false } } } } }
         .sheet(isPresented: $model.showAssociation) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showAssociation = false } } } } }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
@@ -63,6 +66,11 @@ struct HomeView: View {
                         VStack(alignment: .trailing) {
                             Text(model.save.profile.name).font(.headline).lineLimit(1).minimumScaleFactor(0.8).accessibilityIdentifier("home.profile")
                             Text("\(model.save.profile.growth.rank)급 · Lv.\(model.save.profile.level)").font(.caption).foregroundStyle(Theme.muted)
+                            Button { model.showSettings = true } label: {
+                                Image(systemName: "gearshape.fill").font(.system(size: 20, weight: .semibold))
+                                    .foregroundStyle(.white).frame(width: 44, height: 44)
+                                    .background(.black.opacity(0.28), in: Circle())
+                            }.buttonStyle(.plain).accessibilityLabel("설정").accessibilityIdentifier("home.settings")
                         }
                     }
                     Spacer(minLength: 60)
@@ -81,18 +89,8 @@ struct HomeView: View {
                             }
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
-                    Button { model.selectedTab = 2 } label: {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("헌터 활동").font(.system(size: 32, weight: .black, design: .rounded)).italic()
-                                Text("활동 시작 · 오늘의 의뢰").font(.subheadline)
-                            }
-                            Spacer(); Image(systemName: "arrow.up.right").font(.title2)
-                        }.padding(20).foregroundStyle(Theme.ink)
-                            .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
-                    }.accessibilityLabel("헌터 활동 준비").accessibilityIdentifier("home.run")
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.6.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.7.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -179,6 +177,7 @@ struct SetupView: View {
                         model.start(simulated: false, seconds: goalKind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal)
                     } label: { Label(model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
                         .buttonStyle(.borderedProminent).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
+                    Text("활동 중에는 화면을 자동으로 끄지 않습니다. 전원 버튼으로 직접 잠글 수 있으며, 종료하면 원래 자동 잠금 설정으로 돌아갑니다.").font(.caption).foregroundStyle(Theme.muted)
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
                     Divider()
                     Text("실내에서 먼저 확인").font(.headline)
@@ -391,7 +390,7 @@ struct SettingsView: View {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
                     Button("안내 음성 테스트") { model.audioTest() }
-                    Text("데모는 미리 제작한 임시 한국어 음성을 사용합니다.").font(.caption)
+                    Text("현재는 임시 안내 음성입니다. 새 오퍼레이터 음색을 제작 중입니다.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
@@ -404,16 +403,17 @@ struct SettingsView: View {
                     Text("진단 파일에는 원시 GPS 좌표와 헌터명을 넣지 않습니다.").font(.caption)
                 }
                 Section("이용 안내") {
-                    Button("첫 이용 안내 다시 보기") { model.showWelcome = true }.accessibilityIdentifier("settings.welcome")
+                    Button("첫 이용 안내 다시 보기") { model.replayWelcomeAfterSettings = true; model.showSettings = false }.accessibilityIdentifier("settings.welcome")
                     NavigationLink("협회 통신 기록") { StoryArchiveView() }.accessibilityIdentifier("settings.stories")
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.6.0 · 헌터 활동과 개인 기준")
-                    Text("활동 준비 BGM · 모드별 활동 명칭 · 안정 구간 페이스 학습과 현장 관측 보고. 오퍼레이터는 아직 임시 음성입니다.").font(.caption)
+                    Text("0.7.0 · 활동 중심 메뉴와 화면 유지")
+                    Text("중앙 헌터 활동 · 홈 상단 설정 · 활동 중 화면 유지.").font(.caption)
                 }
-            }.navigationTitle("메뉴")
+            }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }
         }
+        .onDisappear { model.stopAudioPreview() }
         .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
             if case .success(let url) = result { pendingImport = url; confirmImport = true }
         }

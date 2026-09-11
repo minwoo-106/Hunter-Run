@@ -7,22 +7,28 @@ final class HomeLayoutTests: XCTestCase {
         if silent { app.launchArguments.append("--ui-testing-silent-audio") }
         return app
     }
+    @MainActor private func openSettings(_ app: XCUIApplication) {
+        app.buttons["nav.0"].tap()
+        XCTAssertTrue(app.buttons["home.settings"].waitForExistence(timeout: 5))
+        app.buttons["home.settings"].tap()
+        XCTAssertTrue(app.navigationBars["설정"].waitForExistence(timeout: 5))
+    }
     @MainActor func testAudioStartupKeepsNavigationResponsive() {
         let app = application(silent: false); app.launch()
         XCTAssertTrue(app.buttons["nav.1"].waitForExistence(timeout: 10))
-        for index in [1, 3, 4, 0] { app.buttons["nav.\(index)"].tap() }
-        let run = app.buttons["home.run"]
+        for index in [1, 4, 0] { app.buttons["nav.\(index)"].tap() }
+        let run = app.buttons["nav.2"]
         XCTAssertTrue(run.waitForExistence(timeout: 10)); XCTAssertTrue(run.isHittable); run.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
-        app.buttons["nav.2"].tap()
+        app.buttons["nav.3"].tap()
         XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
     }
 
     @MainActor func testStoryReadingLocksAndWelcomeReplay() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
-        app.buttons["nav.2"].tap()
+        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10))
+        app.buttons["nav.3"].tap()
         let archive = app.buttons["association.stories"]
         XCTAssertTrue(archive.waitForExistence(timeout: 5)); archive.tap()
         app.buttons["story.arrival"].tap()
@@ -38,7 +44,7 @@ final class HomeLayoutTests: XCTestCase {
         app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["닫기"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
-        app.buttons["nav.4"].tap()
+        openSettings(app)
         let welcome = app.buttons["settings.welcome"]
         for _ in 0..<6 { if welcome.isHittable { break }; app.swipeUp() }
         XCTAssertTrue(welcome.isHittable); welcome.tap()
@@ -63,7 +69,7 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["hunter.pace"].tap()
         XCTAssertTrue(app.staticTexts["pace.reference"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["pace.reference"].label, "표본 수집 중")
-        app.buttons["nav.0"].tap(); app.buttons["home.run"].tap()
+        app.buttons["nav.0"].tap(); app.buttons["nav.2"].tap()
         XCTAssertTrue(app.navigationBars["헌터 활동 준비"].waitForExistence(timeout: 5))
         app.buttons["mode.exploration"].tap()
         let start = app.buttons["activity.start"]
@@ -82,7 +88,7 @@ final class HomeLayoutTests: XCTestCase {
         screenshot.lifetime = .keepAlways
         add(screenshot)
         let screen = app.windows.firstMatch.frame
-        for id in ["home.profile", "home.greeting", "home.run"] {
+        for id in ["home.profile", "home.greeting", "home.settings"] {
             let element = app.descendants(matching: .any).matching(identifier: id).firstMatch
             XCTAssertTrue(element.exists, id)
             let frame = element.frame
@@ -96,15 +102,21 @@ final class HomeLayoutTests: XCTestCase {
         let version = app.staticTexts["home.version"]
         XCTAssertTrue(version.exists)
         print("LAYOUT home.version frame=\(version.frame) nav=\(run.frame)")
-        XCTAssertLessThanOrEqual(version.frame.maxY, run.frame.minY, "Home content overlaps central association")
-        XCTAssertLessThanOrEqual(app.buttons["home.run"].frame.maxY, run.frame.minY, "Association button overlaps central association")
+        XCTAssertLessThanOrEqual(version.frame.maxY, run.frame.minY, "Home content overlaps central activity")
+        XCTAssertFalse(app.buttons["home.run"].exists)
+        let labels = ["홈", "헌터", "헌터 활동", "협회 관리", "도감"]
+        for index in 0..<5 {
+            XCTAssertEqual(app.buttons["nav.\(index)"].label, labels[index])
+            if index > 0 { XCTAssertGreaterThan(app.buttons["nav.\(index)"].frame.midX, app.buttons["nav.\(index - 1)"].frame.midX) }
+        }
+        XCTAssertGreaterThanOrEqual(app.buttons["home.settings"].frame.width, 44)
         XCTAssertTrue(run.isHittable)
-        app.buttons["home.run"].tap()
+        app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
     }
     @MainActor func testGrowthNavigationAndModeLocks() {
         let app = application(); app.launch()
-        let association = app.buttons["nav.2"]
+        let association = app.buttons["nav.3"]
         XCTAssertTrue(association.waitForExistence(timeout: 10)); association.tap()
         XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap()
@@ -112,7 +124,7 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["장비 보관함"].tap()
         XCTAssertTrue(app.staticTexts["협회 지급검"].waitForExistence(timeout: 5))
         app.buttons["nav.0"].tap()
-        app.buttons["home.run"].tap()
+        app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
         app.buttons["mode.exploration"].tap()
         XCTAssertTrue(app.staticTexts["도시 경계의 잔향"].exists)
@@ -120,11 +132,11 @@ final class HomeLayoutTests: XCTestCase {
     }
     @MainActor func testGoalSelectionAndCentralNavigation() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.tabBars.firstMatch.exists)
         XCTAssertGreaterThan(app.buttons["nav.2"].frame.height, app.buttons["nav.1"].frame.height)
         app.buttons["nav.0"].tap()
-        app.buttons["home.run"].tap()
+        app.buttons["nav.2"].tap()
         let goals = app.segmentedControls["goal.kind"]
         for _ in 0..<5 { if goals.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(goals.isHittable)
@@ -140,7 +152,7 @@ final class HomeLayoutTests: XCTestCase {
     }
     @MainActor func testBossPreparationAndUndiscoveredArchive() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10)); app.buttons["nav.3"].tap()
         app.buttons["association.bosses"].tap()
         let demo = app.buttons["boss.demo.boundary-lord"]
         for _ in 0..<7 { if demo.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
@@ -158,7 +170,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(end.isHittable); end.tap()
         app.buttons["저장하고 종료"].tap()
         XCTAssertTrue(app.buttons["협회로 돌아가기"].waitForExistence(timeout: 5)); app.buttons["협회로 돌아가기"].tap()
-        app.buttons["nav.3"].tap()
+        app.buttons["nav.4"].tap()
         let monster = app.buttons["monster.echo-wolf"]
         XCTAssertTrue(monster.waitForExistence(timeout: 5)); monster.tap()
         XCTAssertTrue(app.staticTexts["아직 발견하지 못했습니다"].waitForExistence(timeout: 5))
@@ -172,7 +184,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["장비 상세"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.images["협회 지급검 장비 이미지"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Equipment illustration"; shot.lifetime = .keepAlways; add(shot)
-        app.buttons["nav.4"].tap()
+        openSettings(app)
         let guide = app.buttons["활동과 성장 가이드"]
         for _ in 0..<5 { if guide.isHittable { break }; app.swipeUp() }
         XCTAssertTrue(guide.isHittable); guide.tap()
