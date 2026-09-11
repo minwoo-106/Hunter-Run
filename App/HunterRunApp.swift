@@ -371,7 +371,7 @@ struct SettingsView: View {
                 Section("협회 BGM") {
                     Toggle("협회 배경음악", isOn: $model.homeMusicEnabled).onChange(of: model.homeMusicEnabled) { _, _ in model.applyHomeMusic() }
                     Slider(value: $model.homeMusicVolume, in: 0...1).accessibilityLabel("협회 BGM 음량").onChange(of: model.homeMusicVolume) { _, _ in model.applyHomeMusic() }
-                    Text("홈과 협회 관리에서만 재생되는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
+                    Text(model.musicNotice ?? "홈과 협회 관리에서만 재생되는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
                 }
                 Section("오디오") {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }

@@ -1,8 +1,23 @@
 import XCTest
 
 final class HomeLayoutTests: XCTestCase {
-    @MainActor func testHomeFitsScreen() throws {
+    @MainActor private func application(silent: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
+        if silent { app.launchArguments = ["--ui-testing-silent-audio"] }
+        return app
+    }
+    @MainActor func testAudioStartupKeepsNavigationResponsive() {
+        let app = application(silent: false); app.launch()
+        let run = app.buttons["home.run"]
+        XCTAssertTrue(run.waitForExistence(timeout: 10)); XCTAssertTrue(run.isHittable); run.tap()
+        XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
+        app.buttons["nav.2"].tap()
+        XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
+        app.buttons["닫기"].tap()
+    }
+
+    @MainActor func testHomeFitsScreen() throws {
+        let app = application()
         app.launch()
         let run = app.buttons["nav.2"]
         XCTAssertTrue(run.waitForExistence(timeout: 15))
@@ -32,7 +47,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
     }
     @MainActor func testGrowthNavigationAndModeLocks() {
-        let app = XCUIApplication(); app.launch()
+        let app = application(); app.launch()
         let association = app.buttons["nav.2"]
         XCTAssertTrue(association.waitForExistence(timeout: 10)); association.tap()
         XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
@@ -48,7 +63,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertFalse(app.buttons["mode.gate"].isEnabled)
     }
     @MainActor func testGoalSelectionAndCentralNavigation() {
-        let app = XCUIApplication(); app.launch()
+        let app = application(); app.launch()
         XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.tabBars.firstMatch.exists)
         XCTAssertGreaterThan(app.buttons["nav.2"].frame.height, app.buttons["nav.1"].frame.height)
@@ -68,7 +83,7 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Activity goals"; shot.lifetime = .keepAlways; add(shot)
     }
     @MainActor func testBossPreparationAndUndiscoveredArchive() {
-        let app = XCUIApplication(); app.launch()
+        let app = application(); app.launch()
         XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
         app.buttons["association.bosses"].tap()
         let demo = app.buttons["boss.demo.boundary-lord"]
@@ -93,7 +108,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["아직 발견하지 못했습니다"].waitForExistence(timeout: 5))
     }
     @MainActor func testEquipmentArtworkDetailsAndHistory() {
-        let app = XCUIApplication(); app.launch()
+        let app = application(); app.launch()
         XCTAssertTrue(app.buttons["nav.1"].waitForExistence(timeout: 10)); app.buttons["nav.1"].tap()
         app.buttons["장비 보관함"].tap()
         let item = app.buttons["gear.field-blade"]

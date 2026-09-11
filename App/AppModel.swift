@@ -26,8 +26,9 @@ import UIKit
     @Published var lastDemo: RunSession?
     @Published var voiceVolume = 0.85
     @Published var ducking = true
-    @Published var homeMusicEnabled = UserDefaults.standard.object(forKey: "homeMusicEnabled") as? Bool ?? true
+    @Published var homeMusicEnabled = (UserDefaults.standard.object(forKey: "homeMusicEnabled") == nil ? true : UserDefaults.standard.bool(forKey: "homeMusicEnabled"))
     @Published var homeMusicVolume = UserDefaults.standard.object(forKey: "homeMusicVolume") as? Double ?? 0.45
+    @Published var musicNotice: String?
     let lobbyMusic = LobbyMusicPlayer()
     private var sceneActive = true
     private var testingAudio = false
@@ -50,7 +51,7 @@ import UIKit
     func applyHomeMusic() {
         UserDefaults.standard.set(homeMusicEnabled, forKey: "homeMusicEnabled")
         UserDefaults.standard.set(homeMusicVolume, forKey: "homeMusicVolume")
-        lobbyMusic.allowPlayback(); refreshLobbyMusic()
+        musicNotice = nil; lobbyMusic.allowPlayback(); refreshLobbyMusic()
     }
     let sensor = SensorProbe()
     let audio = AudioDirector()
@@ -96,6 +97,7 @@ import UIKit
             self.updatePermissions()
             if self.engine?.session.simulated == false { self.tick() }
         }
+        lobbyMusic.onFailure = { [weak self] message in DispatchQueue.main.async { self?.musicNotice = message } }
         audio.onInterruption = { [weak self] in
             DispatchQueue.main.async { self?.interruption() }
         }

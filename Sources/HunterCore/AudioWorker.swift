@@ -1,0 +1,51 @@
+import Foundation
+import CoreFoundation
+
+/// Own audio APIs on a non-UI run loop so hardware delays never freeze SwiftUI.
+final class AudioWorker {
+    static let shared = AudioWorker()
+    private let lock = NSLock()
+    private var loop: CFRunLoop?
+    private var pending: [() -> Void] = []
+    private var thread: Thread!
+    private init() {
+        thread = Thread { [self] in
+            let current = CFRunLoopGetCurrent()!
+            let keepAlive = Timer(timeInterval: 3600, repeats: true) { _ in }
+            RunLoop.current.add(keepAlive, forMode: .default)
+            lock.lock(); let tasks = pending; pending = []
+            for task in tasks { CFRunLoopPerformBlock(current, kCFRunLoopDefaultMode, task) }
+            loop = current; lock.unlock()
+            CFRunLoopRun()
+        }
+        thread.name = "HunterRun.Audio"; thread.qualityOfService = .userInitiated; thread.start()
+    }
+    func enqueue(_ task: @escaping () -> Void) {
+        lock.lock()
+        guard let loop else { pending.append(task); lock.unlock(); return }
+        lock.unlock()
+        CFRunLoopPerformBlock(loop, kCFRunLoopDefaultMode, task); CFRunLoopWakeUp(loop)
+    }
+}
+
+/// Cancellation remains available while an OS call is waiting for hardware.
+final class AudioRequest {
+    private let lock = NSLock()
+    private var id: UUID?
+    private var preparing = false
+    func begin() -> UUID { lock.lock(); defer { lock.unlock() }; let next = UUID(); id = next; preparing = true; return next }
+    func cancel() { lock.lock(); defer { lock.unlock() }; id = nil; preparing = false }
+    func valid(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; return id == token }
+    func ready(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; guard id == token else { return false }; preparing = false; return true }
+    func expire(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; guard id == token, preparing else { return false }; id = nil; preparing = false; return true }
+}
+
+enum AudioEnvironment {
+    static var silentUITest: Bool {
+        #if targetEnvironment(simulator)
+        return ProcessInfo.processInfo.arguments.contains("--ui-testing-silent-audio")
+        #else
+        return false
+        #endif
+    }
+}
