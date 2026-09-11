@@ -68,9 +68,10 @@ struct HomeView: View {
                     Spacer(minLength: 60)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("오셨네요. 오늘도 함께하겠습니다.").font(.headline).accessibilityIdentifier("home.greeting")
-                        Text(StoryProgress.unread(model.save.profile).isEmpty ? "협회 통신 기록 · 우리 지부의 이야기를 다시 볼까요?" : "새 협회 통신 \(StoryProgress.unread(model.save.profile).count)건 · 눌러서 확인").font(.subheadline).foregroundStyle(Theme.muted)
+                        Button { model.showStories = true } label: {
+                            Text(StoryProgress.unread(model.save.profile).isEmpty ? "협회 통신 기록 · 우리 지부의 이야기를 다시 볼까요?" : "새 협회 통신 \(StoryProgress.unread(model.save.profile).count)건 · 눌러서 확인").font(.subheadline).foregroundStyle(Theme.muted)
+                        }.buttonStyle(.plain).accessibilityIdentifier("home.stories")
                     }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
-                        .onTapGesture { model.showStories = true }.accessibilityAddTraits(.isButton).accessibilityIdentifier("home.stories")
                     if model.recoverable {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("중단된 활동이 있습니다").font(.headline)
