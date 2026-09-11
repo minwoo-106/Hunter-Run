@@ -72,7 +72,7 @@ struct BossSelectionView: View {
                 if model.selectedBoss == boss.id {
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     BossHPView(name: boss.name, remaining: state.remainingHP, maximum: state.maximumHP, phase: BossEncounter(definition: boss, state: state).phaseName)
-                    if !available { Text("실제 토벌은 \(boss.requiredRank)급과 관측부 Lv.2가 필요합니다. 아래 3분 모의 러닝으로 먼저 체험할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted) }
+                    if !available { Text("실제 토벌은 \(boss.requiredRank)급과 관측부 Lv.2가 필요합니다. 아래 3분 모의 활동으로 먼저 체험할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted) }
                 }
             }
         }.card().accessibilityIdentifier("boss.selection")

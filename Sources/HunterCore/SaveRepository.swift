@@ -44,7 +44,11 @@ public final class SaveRepository {
               growth.departments.allSatisfy({ Department(rawValue: $0.key) != nil && (1...2).contains($0.value) }),
               growth.equipped.allSatisfy({ EquipmentSlot(rawValue: $0.key) != nil && growth.owned.contains($0.value) }) else { throw Failure.invalid }
         guard (save.profile.bosses ?? [:]).allSatisfy({ !$0.key.isEmpty && $0.value.isValid }) else { throw Failure.invalid }
+        guard save.profile.paceMemory?.isValid ?? true, save.profile.runs.allSatisfy({ $0.paceReport?.isValid ?? true }) else { throw Failure.invalid }
         if let run = save.active {
+            guard run.paceObservation?.isValid ?? true,
+                  run.learnedReference.map(PaceLearning.validSpeed) ?? true,
+                  run.paceCooldownUntil.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.targetSeconds.isFinite, run.targetSeconds >= 60, run.activeSeconds.isFinite,
                   run.activeSeconds >= 0, run.activityGoal.isValid,
                   (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),

@@ -71,11 +71,16 @@ public struct RunEngine {
         if frame.movement == .running { session.runningSeconds += dt }
         session.distance += distance
         let stable = frame.movement == .running && frame.signal == .good && frame.speed >= 1 && frame.speed <= 6
+        session.paceObservation?.observe(speed: frame.speed, seconds: dt, goodSignal: frame.signal == .good,
+            eligible: stable && session.event == nil && session.activeSeconds >= (session.paceCooldownUntil ?? 0))
         if stable && session.event == nil && session.activeSeconds < session.calibrationSeconds {
             session.baselineSamples.append(frame.speed)
             if session.baselineSamples.count > 180 { session.baselineSamples.removeFirst() }
             let sorted = session.baselineSamples.sorted()
             session.baseline = sorted[sorted.count / 2]
+        }
+        if let observation = session.paceObservation, observation.stableSeconds >= 300, let median = observation.median {
+            session.baseline = median
         }
         session.phase = session.activeSeconds < session.calibrationSeconds ? .calibrating : .moving
         var cues: [GameCue] = []
@@ -146,7 +151,7 @@ public struct RunEngine {
             session.consumed.insert(next.id)
             let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
             if remaining < next.duration + 30 { return [.checkpoint] }
-            if next.kind == .pursuit && (!session.allowPursuit || session.baselineSamples.count < 30 || session.intensityCount >= 2 || session.activeSeconds - session.lastIntensityAt < 180 || frame.signal != .good || session.withdrawn) {
+            if next.kind == .pursuit && (!session.allowPursuit || session.baselineSamples.count < 30 || (!session.simulated && session.learnedReference == nil && (session.paceObservation?.stableSeconds ?? 0) < 300) || session.intensityCount >= 2 || session.activeSeconds - session.lastIntensityAt < 180 || frame.signal != .good || session.withdrawn) {
                 next.kind = .discovery; next.title = "마력 흔적 조사"; next.audio = "investigate"
             }
             if session.withdrawn && next.kind == .boss { next.kind = .discovery; next.title = "게이트 외곽 조사"; next.audio = "investigate" }
@@ -157,13 +162,14 @@ public struct RunEngine {
                 if boss.remainingHP <= 0 { return [.checkpoint] }
                 next.hp = boss.remainingHP
             }
-            session.event = RunEvent(template: next, hp: next.hp, startingHP: next.hp, baseline: max(1.0, session.baseline > 0 ? session.baseline : frame.speed))
+            session.event = RunEvent(template: next, hp: next.hp, startingHP: next.hp, baseline: PaceLearning.effectiveBaseline(current: session.baseline, learned: session.learnedReference, fallback: frame.speed))
             cues += [.voice(next.audio), .checkpoint]
         }
         return cues
     }
     private mutating func closeEvent(_ outcome: Outcome) {
         guard let event = session.event else { return }
+        if event.template.kind != .discovery { session.paceCooldownUntil = session.activeSeconds + 60 }
         session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind))
         session.event = nil
     }
@@ -179,7 +185,8 @@ public enum Settlement {
         let research = completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)
         let regularCores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
         let cores = bossReport?.cleared == true ? 2 : regularCores
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport)
+        let paceReport = PaceLearning.settle(session, profile: &profile)
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)

@@ -89,18 +89,18 @@ struct WelcomeView: View {
                     case 1:
                         welcomeItem("걷기도 활동입니다", "달리지 않는다고 억지로 가속할 필요는 없습니다. 전투는 흔적 조사로 전환될 수 있습니다.")
                         welcomeItem("멈춰야 하면 멈추세요", "신호가 약하거나 정지하면 정밀 판정이 쉬어갑니다. 추격은 선택 사항입니다.")
-                        welcomeItem("화면 대신 안내를 들어요", "활동 중 조작은 안전한 곳에서 하세요. 먼저 3분 모의 러닝으로 흐름을 볼 수 있습니다.")
+                        welcomeItem("화면 대신 안내를 들어요", "활동 중 조작은 안전한 곳에서 하세요. 먼저 3분 모의 활동으로 흐름을 볼 수 있습니다.")
                     case 2:
-                        welcomeItem("RUN으로 활동 준비", "탐험·의뢰·게이트와 시간·거리·자유 목표를 선택합니다.")
+                        welcomeItem("헌터 활동 준비", "탐험·의뢰·게이트와 시간·거리·자유 목표를 선택합니다.")
                         welcomeItem("협회와 장비 성장", "실제 활동의 자원으로 부서를 확장하고 장비를 확보합니다. 하단 가운데가 협회 관리입니다.")
                         welcomeItem("통신 기록과 도감", "발견한 개체와 지부의 이야기가 쌓입니다. 다음 해금 조건은 협회 통신 기록에서 확인하세요.")
                     default:
                         welcomeItem("위치와 동작", "위치는 거리·페이스 측정, 동작은 걷기·달리기 구분에 사용합니다. 동작 권한은 실제 활동을 시작할 때 요청합니다. 둘 다 모의 체험에는 필요하지 않습니다.")
                         Button("위치 권한 확인") { model.authorize() }.buttonStyle(.bordered)
                         Text(model.permissionText).font(.caption).foregroundStyle(Theme.muted)
-                        welcomeItem("소리 확인", "RUN에서는 협회 BGM이 멈추고 안내 음성을 듣습니다. 스피커 또는 이어폰으로 아래 테스트를 확인하세요.")
+                        welcomeItem("소리 확인", "실제 활동을 시작하면 협회 BGM이 멈추고 안내 음성을 듣습니다. 스피커 또는 이어폰으로 아래 테스트를 확인하세요.")
                         Button("안내 음성 테스트") { model.audioTest() }.buttonStyle(.bordered)
-                        Text("권한과 소리는 나중에 RUN과 메뉴에서도 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
+                        Text("권한과 소리는 나중에 활동 준비와 메뉴에서도 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                     }
                     HStack {
                         if page > 0 { Button("이전") { page -= 1 }.buttonStyle(.bordered) }

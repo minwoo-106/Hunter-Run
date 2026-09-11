@@ -26,7 +26,7 @@ struct RootView: View {
         TabView(selection: $model.selectedTab) {
             HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("협회", systemImage: "building.2") }
             HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
-            SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("RUN", systemImage: "figure.run") }
+            SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
             CodexView().toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("도감", systemImage: "book") }
             SettingsView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("메뉴", systemImage: "ellipsis") }
         }
@@ -84,15 +84,15 @@ struct HomeView: View {
                     Button { model.selectedTab = 2 } label: {
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("RUN").font(.system(size: 35, weight: .black, design: .rounded)).italic()
+                                Text("헌터 활동").font(.system(size: 32, weight: .black, design: .rounded)).italic()
                                 Text("활동 시작 · 오늘의 의뢰").font(.subheadline)
                             }
                             Spacer(); Image(systemName: "arrow.up.right").font(.title2)
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
-                    }.accessibilityLabel("활동 시작 RUN").accessibilityIdentifier("home.run")
+                    }.accessibilityLabel("헌터 활동 준비").accessibilityIdentifier("home.run")
                     ResourceStrip()
-                    Text("STORY DEMO · 0.5.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.6.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -140,6 +140,12 @@ struct SetupView: View {
                     if !model.modeAllowed(.gate) { Text("고위험 게이트: 관측부 Lv.2와 D급 평가 통과 필요").font(.caption).foregroundStyle(Theme.muted) }
                     if model.selectedMode == .gate { BossSelectionView() }
                     Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
+                    NavigationLink { PaceProfileView() } label: {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("나의 활동 기준").font(.headline)
+                            Text(learnedPaceText(model.save.profile.paceMemory?.reference)).foregroundStyle(Theme.teal)
+                        }.card()
+                    }.buttonStyle(.plain).accessibilityIdentifier("setup.pace")
                     HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
                     VStack(alignment: .leading, spacing: 14) {
                         Text("활동 목표").font(.headline)
@@ -171,15 +177,15 @@ struct SetupView: View {
                     Button {
                         let goal = ActivityGoal(kind: goalKind, value: goalKind == .time ? Double(minutes * 60) : goalKind == .distance ? Double(kilometers * 1000) : 0)
                         model.start(simulated: false, seconds: goalKind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal)
-                    } label: { Label("START RUN", systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
-                        .buttonStyle(.borderedProminent).disabled(!model.canStartReal)
+                    } label: { Label(model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
+                        .buttonStyle(.borderedProminent).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
                     Divider()
                     Text("실내에서 먼저 확인").font(.headline)
                     Text("가짜 센서로 같은 게임 엔진을 실행합니다. 모의 기록과 보상은 실제 성장에 반영되지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
-                    Button("3분 모의 러닝") { model.start(simulated: true, seconds: 180, pursuit: true) }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable)
+                    Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true) }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
                 }.padding(22)
-            }.background(Theme.ink).navigationTitle("RUN").navigationBarTitleDisplayMode(.inline)
+            }.background(Theme.ink).navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
         }
     }
 }
@@ -199,15 +205,17 @@ struct ActiveRunView: View {
                                 Spacer()
                                 Text(stateName(run)).font(.caption.bold()).foregroundStyle(Theme.teal)
                             }
+                            Text((run.mode ?? .contract).activityTitle(boss: run.boss != nil)).font(.title2.bold())
                             Text(String(format: "%.2f", run.distance / 1000)).font(.system(size: 64, weight: .light, design: .rounded)).minimumScaleFactor(0.65)
                             Text("KILOMETERS").font(.caption.monospaced()).foregroundStyle(Theme.muted)
                             HStack {
                                 metric("활동시간", clock(run.activeSeconds))
                                 Spacer()
-                                metric("현재 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—")
+                                metric("최근 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—")
                                 Spacer()
                                 metric("목표", run.activityGoal.label)
                             }
+                            Text("최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
                             if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
                             if let boss = run.boss { BossHPView(name: boss.definition.name, remaining: boss.remainingHP, maximum: boss.maximumHP, phase: boss.phaseName) }
@@ -250,11 +258,12 @@ struct ActiveRunView: View {
                 Text("활동 보고").font(.largeTitle.bold())
                 HStack { metric("거리", String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
                 Text(run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.").foregroundStyle(Theme.muted)
+                if let report = run.simulated ? PaceLearning.report(run, memory: nil) : model.lastSummary?.paceReport { PaceFeedbackView(report: report, simulated: run.simulated) }
                 ForEach(run.records) { record in
                     HStack { Text(record.title); Spacer(); Text(outcomeName(record.outcome)).foregroundStyle(Theme.teal) }.card()
                 }
                 if run.simulated {
-                    Text("모의 러닝입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
+                    Text("모의 활동입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
                 } else if let summary = model.lastSummary {
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
                     Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
@@ -308,6 +317,7 @@ struct HunterView: View {
                     Text("다음 레벨까지 \(300 - model.save.profile.xp % 300) EXP").font(.caption).foregroundStyle(Theme.muted)
                     HStack { metric("마정석", "\(model.save.profile.crystals)"); Spacer(); metric("조사 데이터", "\(model.save.profile.research)") }.card()
                     ResourceStrip()
+                    NavigationLink { PaceProfileView() } label: { Label("나의 활동 기준", systemImage: "waveform.path").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("hunter.pace")
                     NavigationLink { EquipmentView() } label: { Label("장비 보관함", systemImage: "shield.lefthalf.filled").frame(maxWidth: .infinity, alignment: .leading).card() }
                     NavigationLink { RankView() } label: { Label("협회 평가 · 승급", systemImage: "checkmark.seal").frame(maxWidth: .infinity, alignment: .leading).card() }
                     NavigationLink { AssociationView() } label: { Label("협회 부서 관리", systemImage: "building.2").frame(maxWidth: .infinity, alignment: .leading).card() }
@@ -375,7 +385,7 @@ struct SettingsView: View {
                 Section("협회 BGM") {
                     Toggle("협회 배경음악", isOn: $model.homeMusicEnabled).onChange(of: model.homeMusicEnabled) { _, _ in model.applyHomeMusic() }
                     Slider(value: $model.homeMusicVolume, in: 0...1).accessibilityLabel("협회 BGM 음량").onChange(of: model.homeMusicVolume) { _, _ in model.applyHomeMusic() }
-                    Text(model.musicNotice ?? "RUN을 제외한 모든 화면에서 이어지는 BGM 초안입니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
+                    Text(model.musicNotice ?? "활동 준비 화면까지 BGM이 이어집니다. 실제 또는 모의 활동을 시작하면 멈춥니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
                 }
                 Section("오디오") {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
@@ -399,8 +409,8 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.5.0 · 협회 통신과 첫 이용 안내")
-                    Text("협회 통신 기록 6편 · 건너뛸 수 있는 첫 이용 안내 · RUN 외 화면 BGM 연속 재생. 오퍼레이터는 아직 임시 음성입니다.").font(.caption)
+                    Text("0.6.0 · 헌터 활동과 개인 기준")
+                    Text("활동 준비 BGM · 모드별 활동 명칭 · 안정 구간 페이스 학습과 현장 관측 보고. 오퍼레이터는 아직 임시 음성입니다.").font(.caption)
                 }
             }.navigationTitle("메뉴")
         }

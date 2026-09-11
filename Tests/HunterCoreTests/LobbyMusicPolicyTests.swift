@@ -5,7 +5,7 @@ final class LobbyMusicPolicyTests: XCTestCase {
     func testBrowsingKeepsMusicAcrossEveryNonRunScreen() {
         var context = LobbyMusicContext()
         // Home -> hunter -> archive -> menu -> association -> underlying menu.
-        for tab in [0, 1, 3, 4] {
+        for tab in [0, 1, 2, 3, 4] {
             context.tab = tab
             XCTAssertTrue(context.shouldPlay, "Music must continue on tab \(tab)")
         }
@@ -16,7 +16,7 @@ final class LobbyMusicPolicyTests: XCTestCase {
     }
     func testAssociationOverSetupUsesVisibleScreen() {
         var context = LobbyMusicContext(); context.tab = 2
-        XCTAssertFalse(context.shouldPlay)
+        XCTAssertTrue(context.shouldPlay)
         context.associationPresented = true
         XCTAssertTrue(context.shouldPlay)
         context.runPresented = true

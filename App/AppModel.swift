@@ -20,6 +20,7 @@ import UIKit
     @Published var mockSpeed = 2.6
     @Published var mockRate = 1
     @Published var currentSpeed = 0.0
+    private var displayedPace = DisplayedPace()
     @Published var signal: Signal = .unavailable
     @Published var movement: Movement = .unknown
     @Published var permissionText = "미확인"
@@ -127,6 +128,12 @@ import UIKit
         do { try repository.write(candidate); save = candidate; showWelcome = false }
         catch { notice = "안내 확인을 저장하지 못했습니다. 다시 시도해주세요." }
     }
+    func resetPaceMemory() {
+        guard !growthLocked else { notice = "활동을 마친 뒤 기준을 초기화해주세요."; return }
+        var candidate = save; candidate.profile.paceMemory = nil
+        do { try repository.write(candidate); save = candidate }
+        catch { notice = "기준을 초기화하지 못했습니다. 다시 시도해주세요." }
+    }
     func readStory(_ id: String) {
         guard isReady, !growthLocked else { notice = "활동을 마친 뒤 통신 기록을 확인해주세요."; return }
         var candidate = save
@@ -161,6 +168,8 @@ import UIKit
             session.boss = encounter; mission = encounter.content
         }
         lobbyMusic.stop(); testingAudio = false
+        displayedPace.reset(); currentSpeed = 0
+        session.learnedReference = simulated ? nil : save.profile.paceMemory?.reference
         session.goal = requested
         session.missionSnapshot = mission
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
@@ -189,7 +198,8 @@ import UIKit
         if Date().timeIntervalSince(lastSaveAt) >= 10 { persist() }
     }
     private func process(_ frame: SensorFrame) {
-        currentSpeed = frame.speed; signal = frame.signal; movement = frame.movement
+        displayedPace.update(frame, paused: engine?.session.manualPause == true || engine?.session.interruption == true)
+        currentSpeed = displayedPace.speed ?? 0; signal = frame.signal; movement = frame.movement
         guard var current = engine else { return }
         let cues = current.consume(frame); engine = current
         for cue in cues {
@@ -210,8 +220,9 @@ import UIKit
             }
         }
     }
-    func pause() { engine?.pause(true); audio.stop(); persist() }
+    func pause() { engine?.pause(true); displayedPace.reset(); currentSpeed = 0; audio.stop(); persist() }
     func resume() {
+        displayedPace.reset(); currentSpeed = 0
         engine?.pause(false)
         if let event = engine?.session.event, event.stage == .briefing {
             audio.play(event.template.audio) { [weak self] in
@@ -224,6 +235,7 @@ import UIKit
         testingAudio = false
         guard engine != nil else { return }
         engine?.interrupt(true); engine?.interrupt(false)
+        displayedPace.reset(); currentSpeed = 0
         notice = "통화 또는 이어폰 변경으로 일시정지했습니다. 안전한 곳에서 재개해주세요."
         persist()
     }
@@ -241,6 +253,7 @@ import UIKit
     func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
     func recover() {
         guard let run = save.active, let content else { return }
+        displayedPace.reset(); currentSpeed = 0
         lobbyMusic.stop(); testingAudio = false
         engine = RunEngine(session: run, content: run.missionSnapshot ?? content, attack: save.profile.attack)
         if run.phase == .finished { finish(); showRun = true; return }
@@ -312,7 +325,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.5.0 association stories demo
+        Hunter Run 0.6.0 hunter activity demo
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

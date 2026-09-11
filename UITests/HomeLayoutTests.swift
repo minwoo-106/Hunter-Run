@@ -57,6 +57,21 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertFalse(app.buttons["welcome.skip"].exists)
     }
 
+    @MainActor func testActivityNamingAndPaceProfile() {
+        let app = application(); app.launch()
+        XCTAssertTrue(app.buttons["nav.1"].waitForExistence(timeout: 10)); app.buttons["nav.1"].tap()
+        app.buttons["hunter.pace"].tap()
+        XCTAssertTrue(app.staticTexts["pace.reference"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["pace.reference"].label, "표본 수집 중")
+        app.buttons["nav.0"].tap(); app.buttons["home.run"].tap()
+        XCTAssertTrue(app.navigationBars["헌터 활동 준비"].waitForExistence(timeout: 5))
+        app.buttons["mode.exploration"].tap()
+        let start = app.buttons["activity.start"]
+        for _ in 0..<8 { if start.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(start.exists); XCTAssertEqual(start.label, "현장 탐험 시작")
+        XCTAssertTrue(app.buttons["activity.mock"].exists)
+    }
+
     @MainActor func testHomeFitsScreen() throws {
         let app = application()
         app.launch()
@@ -133,9 +148,9 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Major boss board"; shot.lifetime = .keepAlways; add(shot)
         demo.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
-        let mock = app.buttons["3분 모의 러닝"]
+        let mock = app.buttons["activity.mock"]
         for _ in 0..<10 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-        XCTAssertFalse(app.buttons["START RUN"].isEnabled)
+        XCTAssertFalse(app.buttons["activity.start"].isEnabled)
         XCTAssertTrue(mock.isHittable); mock.tap()
         XCTAssertTrue(app.staticTexts["경계의 군주"].waitForExistence(timeout: 5))
         let end = app.buttons["활동 종료"]
