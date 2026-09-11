@@ -58,13 +58,13 @@ struct HomeView: View {
                         }
                         Spacer()
                         VStack(alignment: .trailing) {
-                            Text(model.save.profile.name).font(.headline)
+                            Text(model.save.profile.name).font(.headline).accessibilityIdentifier("home.profile")
                             Text("E급 · Lv.\(model.save.profile.level)").font(.caption).foregroundStyle(Theme.muted)
                         }
                     }
                     Spacer(minLength: 60)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("오셨네요. 오늘도 함께하겠습니다.").font(.headline)
+                        Text("오셨네요. 오늘도 함께하겠습니다.").font(.headline).accessibilityIdentifier("home.greeting")
                         Text("폐쇄 구역에서 새로운 마력 신호가 발견됐어요.").font(.subheadline).foregroundStyle(Theme.muted)
                     }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
                     if model.recoverable {
@@ -85,7 +85,7 @@ struct HomeView: View {
                             Spacer(); Image(systemName: "arrow.up.right").font(.title2)
                         }.padding(20).foregroundStyle(Theme.ink)
                             .background(LinearGradient(colors: [Theme.teal, .cyan.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 22))
-                    }.accessibilityLabel("러닝 준비 화면 열기")
+                    }.accessibilityLabel("러닝 준비 화면 열기").accessibilityIdentifier("home.run")
                     Text("TECHNICAL DEMO · 0.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted)
                 }.padding(20)
             }

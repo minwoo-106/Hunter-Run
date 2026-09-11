@@ -29,3 +29,18 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
     scheme:
       gatherCoverageData: false
+      testTargets:
+        - HunterRunUITests
+  HunterRunUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: HunterRun
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.hunterrun.demo.uitests
+        CODE_SIGNING_ALLOWED: NO
+        TARGETED_DEVICE_FAMILY: "1"
