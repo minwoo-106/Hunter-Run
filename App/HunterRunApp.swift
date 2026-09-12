@@ -90,7 +90,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.10.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.10.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -430,7 +430,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.10.0 · 상황을 알려주는 오퍼레이터")
+                    Text("0.10.1 · 상황을 알려주는 오퍼레이터")
                     Text("해요체 안내 · 개체별 조우와 실제 처치 결과 · 보스 단계 음성 · 협회 통신 듣기.").font(.caption)
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }

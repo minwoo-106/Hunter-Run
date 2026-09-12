@@ -1,4 +1,4 @@
-# Hunter Run — 0.10.0 optional bursts and consistent voice
+# Hunter Run — 0.10.1 optional bursts and consistent voice
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
@@ -11,6 +11,11 @@ All 93 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Re
 Packaging verified ZIP/IPA integrity, version/build, executable and all 64 bundled voice hashes.
 [Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb).
 During the build, the user reported four remaining voice mismatches (28, 57, 61, 64). New candidates are prepared for listening; build11 still contains those four earlier files. Final audio update is pending that feedback.
+
+## Added in 0.10.1
+- User-approved replacements for clips 28, 57, 61 and 64; the other 60 files are unchanged.
+- Clip 28 has its last 0.5 seconds removed at a quiet boundary, eliminating the reported trailing sound.
+- Updated installer pending Apple build.
 
 ## Added in 0.10
 - User-selected A narration method for the 14 flagged recordings and revised/new lines; no “우와” in current dialogue.

@@ -367,7 +367,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.10.0 operator voice and artwork
+        Hunter Run 0.10.1 operator voice and artwork
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

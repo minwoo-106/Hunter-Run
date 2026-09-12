@@ -1,3 +1,11 @@
+# 0.10.1 build12 · 네 음성 승인 반영, 빌드 준비
+
+- 사용자 네 후보 승인,28번 마지막0.5초 제거 요청. 적용 완료: cat_ambush 5.859초.
+- 57/61/64 승인 후보 적용. 나머지60개 파일 SHA 유지. Resources/operator-voice.json에 길이/체크섬/trim기록.
+- 최종파일 outputs/operator-consistent-final-010.
+- 0.10.1/build12로 버전 갱신, Apple 빌드 예정.
+
+## 이전 검증 및 작업 기록
 # 0.10.0 build11 기술 검증 완료 · 음성4개 청취 대기
 
 - Codemagic20: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb
