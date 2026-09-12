@@ -29,6 +29,9 @@ public struct NarrationCatalog: Codable {
             rule.eventIDs.contains(record.catalogID) && (rule.bossID == nil || rule.bossID == bossID)
         }
         if record.defeated == true && record.damage > 0 { return match?.defeated ?? "combat_hit" }
+        if record.accelerated == true {
+            return record.outcome == .partial || record.outcome == .fail || record.damage <= 0 ? "burst_partial" : "burst_hit"
+        }
         if record.outcome == .fail { return "combat_withdraw" }
         if record.outcome == .partial { return "partial" }
         if record.damage > 0 { return match?.hit ?? "combat_hit" }

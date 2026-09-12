@@ -58,7 +58,11 @@ final class NarrationTests: XCTestCase {
         let world = try JSONDecoder().decode(WorldContent.self, from: Data(contentsOf: root.appendingPathComponent("Resources/world.json")))
         for (boss, prefix) in zip(world.bosses, ["lord", "librarian"]) {
             for (index, phase) in boss.phases.enumerated() {
-                XCTAssertTrue(phase.events.filter { $0.id.hasPrefix("major-strike") }.allSatisfy { $0.audio == "\(prefix)_phase\(index + 1)" })
+                let strikes = phase.events.filter { $0.id.hasPrefix("major-strike") }
+                XCTAssertTrue(strikes.contains { $0.burstSeconds == 10 })
+                XCTAssertTrue(strikes.contains { $0.burstSeconds == nil })
+                XCTAssertTrue(strikes.allSatisfy { $0.audio.hasPrefix(prefix + "_") })
+                XCTAssertTrue(strikes.contains { $0.audio == "\(prefix)_phase\(index + 1)" })
             }
         }
     }

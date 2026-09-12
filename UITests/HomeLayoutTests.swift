@@ -163,7 +163,7 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Major boss board"; shot.lifetime = .keepAlways; add(shot)
         demo.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
-        let mock = app.buttons["activity.mock"]
+        let mock = app.buttons["activity.mock.boss"]
         for _ in 0..<10 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertFalse(app.buttons["activity.start"].isEnabled)
         XCTAssertTrue(mock.isHittable); mock.tap()

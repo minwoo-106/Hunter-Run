@@ -231,12 +231,15 @@ import UIKit
             case .voice(let key):
                 let id = current.session.event?.template.id
                 let rebrief = key == "resume" && current.session.event?.stage == .briefing
-                let logicalKey = rebrief ? (current.session.event?.template.audio ?? key) : key
+                let logicalKey = rebrief ? (current.session.event?.instructionAudio ?? key) : key
                 let playbackKey = narration?.response(to: logicalKey, session: current.session) ?? logicalKey
-                let isInstruction = current.session.event?.stage == .briefing && playbackKey == current.session.event?.template.audio
+                let isInstruction = current.session.event?.stage == .briefing && playbackKey == current.session.event?.instructionAudio
                 playOperator(playbackKey) { [weak self] in
                     DispatchQueue.main.async {
-                        guard isInstruction, let self, self.engine?.session.event?.template.id == id else { return }
+                        guard isInstruction, let self, self.engine?.session.event?.template.id == id,
+                              self.engine?.session.event?.stage == .briefing,
+                              self.engine?.session.event?.instructionAudio == playbackKey,
+                              self.engine?.session.manualPause == false else { return }
                         self.engine?.instructionFinished(); self.persist()
                     }
                 }
@@ -248,7 +251,7 @@ import UIKit
         displayedPace.reset(); currentSpeed = 0
         engine?.pause(false)
         if let event = engine?.session.event, event.stage == .briefing {
-            playOperator(event.template.audio) { [weak self] in
+            playOperator(event.instructionAudio) { [weak self] in
                 DispatchQueue.main.async { self?.engine?.instructionFinished(); self?.persist() }
             }
         } else { playOperator("resume") }
@@ -364,7 +367,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.9.0 operator voice and artwork
+        Hunter Run 0.10.0 operator voice and artwork
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

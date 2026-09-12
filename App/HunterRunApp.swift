@@ -90,7 +90,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.9.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.10.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -164,8 +164,8 @@ struct SetupView: View {
                         } else {
                             Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동은 승급의 목표 완료 횟수에는 포함되지 않습니다.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
                         }
-                        Toggle("선택적 추격 허용", isOn: $pursuit)
-                        Text("가속하지 않으면 흔적 조사로 전환합니다. 첫 테스트는 추격을 꺼두는 것을 권합니다.").font(.caption).foregroundStyle(Theme.muted)
+                        Toggle("선택적 가속 허용", isOn: $pursuit)
+                        Text("추격·보스 가속은 10초씩 최대 2회, 사이에 최소 3분을 둡니다. 가속하지 않으면 추격은 조사로, 보스는 유지 공격으로 바뀝니다.").font(.caption).foregroundStyle(Theme.muted)
                     }.card()
                     VStack(alignment: .leading, spacing: 12) {
                         Label(model.permissionText, systemImage: "location")
@@ -186,8 +186,13 @@ struct SetupView: View {
                     Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true) }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
                     Button("20분 의뢰 모의 활동 · 장기전 포함") {
                         model.selectedBoss = nil; model.selectedMode = .contract
-                        model.start(simulated: true, seconds: 1200, pursuit: false)
+                        model.start(simulated: true, seconds: 1200, pursuit: true)
                     }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.long")
+                    if model.selectedBoss != nil {
+                        Button("20분 보스 패턴 모의 활동 · 가속 포함") {
+                            model.start(simulated: true, seconds: 1200, pursuit: true)
+                        }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.boss")
+                    }
                     Text("긴 모의 활동에서는 진행 속도를 10배로 바꿔 장기전과 기습 대응을 빠르게 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
@@ -223,12 +228,20 @@ struct ActiveRunView: View {
                             Text("최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
                             if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
+                            if AccelerationRules.isRecovering(run) {
+                                Text(run.intensityCount >= 2 ? "회복 이동 · 이번 활동의 가속을 마쳤어요" : "회복 이동 · 다음 가속까지 \(max(0, Int(ceil(180 - (run.activeSeconds - run.lastIntensityAt)))))초")
+                                    .font(.caption).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.recovery")
+                            }
                             if let boss = run.boss { BossHPView(name: boss.definition.name, remaining: boss.remainingHP, maximum: boss.maximumHP, phase: boss.phaseName) }
                             VStack(alignment: .leading, spacing: 12) {
                                 eyebrow("OPERATOR")
                                 Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있어요" : "주변을 살펴보고 있어요")).font(.title2.bold())
                                 Text(model.operatorCaption ?? eventMessage(run)).foregroundStyle(Theme.muted).accessibilityIdentifier("activity.caption")
                                 if let event = run.event {
+                                    if event.template.burstSeconds != nil {
+                                        Text(event.stage == .armed ? "가속 선택 대기 · 평소 페이스면 유지/조사로 전환" : event.stage == .briefing ? "안내 후 시작해요" : "가속 남은 시간 · \(max(0, Int(ceil((event.template.burstSeconds ?? 10) - event.elapsed))))초")
+                                            .font(.headline).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.burst")
+                                    }
                                     ProgressView(value: event.progress).tint(Theme.teal)
                                     if event.template.kind == .endurance { Text("장기전 · \(Int(event.traveledDistance ?? 0)) / \(Int(event.template.targetDistance ?? 400)) m").font(.caption).foregroundStyle(Theme.teal) }
                                 }
@@ -303,7 +316,7 @@ struct ActiveRunView: View {
     private func eventMessage(_ run: RunSession) -> String {
         guard let event = run.event else { return "편안한 페이스로 함께 이동해요. 잠시 멈춰도 괜찮아요!" }
         if event.stage == .briefing { return "지금 필요한 행동을 안내하고 있어요." }
-        if event.stage == .armed { return "안전한 구간이면 조금 가속해도 좋아요. 아니면 흔적을 함께 조사해요." }
+        if event.stage == .armed { return event.template.kind == .boss ? "안전하면 가속 공격을 선택해요. 아니면 유지 공격으로 이어가요." : "안전하면 가속해도 좋아요. 아니면 흔적을 함께 조사해요." }
         if event.template.kind == .endurance { return "편안한 페이스로 400m를 함께 전진해요. 잠시 멈춰도 괜찮아요!" }
         if event.template.kind == .ambush { return "더 빨라질 필요 없이 달리기를 이어가요. 멈춰야 할 때는 기다릴게요." }
         return event.template.kind == .discovery ? "주변 흔적을 모으고 있어요!" : "안내받은 페이스로 함께 가요. 멈춰야 할 때는 편하게 멈춰요."
@@ -399,7 +412,7 @@ struct SettingsView: View {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
                     Button("안내 음성 테스트") { model.audioTest() }
-                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 56개가 적용되어 있습니다.").font(.caption)
+                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 64개가 적용되어 있습니다.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
@@ -417,7 +430,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.9.0 · 상황을 알려주는 오퍼레이터")
+                    Text("0.10.0 · 상황을 알려주는 오퍼레이터")
                     Text("해요체 안내 · 개체별 조우와 실제 처치 결과 · 보스 단계 음성 · 협회 통신 듣기.").font(.caption)
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }

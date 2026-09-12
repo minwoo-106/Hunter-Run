@@ -25,9 +25,11 @@
       "title": "도주 개체 추적",
       "kind": "pursuit",
       "startFraction": 0.5,
-      "duration": 25,
+      "duration": 10,
       "hp": 60,
-      "audio": "pursuit"
+      "audio": "pursuit",
+      "burstSeconds": 10,
+      "steadyAudio": "investigate"
     },
     {
       "id": "gate",

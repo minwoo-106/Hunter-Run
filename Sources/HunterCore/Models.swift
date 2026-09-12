@@ -26,6 +26,17 @@ public struct MissionTemplate: Codable, Identifiable {
     public var audio: String
     public var targetDistance: Double? = nil
     public var shortAudio: String? = nil
+    public var burstSeconds: Double? = nil
+    public var steadyAudio: String? = nil
+    public var requestsAcceleration: Bool { kind == .pursuit || burstSeconds != nil }
+    public mutating func useSteadyAlternative() {
+        burstSeconds = nil
+        if kind == .pursuit {
+            kind = .discovery; duration = min(60, duration); audio = "investigate"; title = "도주 흔적 조사"
+        } else {
+            duration = 30; audio = steadyAudio ?? "boss"; title = title.replacingOccurrences(of: "가속", with: "유지")
+        }
+    }
 }
 public struct GameContent: Codable {
     public var schema: Int
@@ -33,7 +44,7 @@ public struct GameContent: Codable {
     public var events: [MissionTemplate]
     public func validate() throws {
         guard schema == 1, !events.isEmpty, Set(events.map(\.id)).count == events.count,
-              events.allSatisfy({ !$0.id.isEmpty && $0.duration.isFinite && $0.duration > 0 && $0.hp.isFinite && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 && ($0.kind != .endurance || ($0.targetDistance.map { $0.isFinite && (400...800).contains($0) } ?? false)) }) else { throw ContentError.invalid }
+              events.allSatisfy({ !$0.id.isEmpty && $0.duration.isFinite && $0.duration > 0 && $0.hp.isFinite && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 && ($0.burstSeconds == nil || ($0.burstSeconds == 10 && ($0.kind == .boss || $0.kind == .pursuit) && $0.steadyAudio?.isEmpty == false)) && ($0.kind != .endurance || ($0.targetDistance.map { $0.isFinite && (400...800).contains($0) } ?? false)) }) else { throw ContentError.invalid }
     }
     public enum ContentError: Error { case invalid }
 }
@@ -48,9 +59,14 @@ public struct RunEvent: Codable {
     public var baseline: Double
     public var evaluatedSeconds: Double = 0
     public var traveledDistance: Double? = nil
+    public var burstStarted: Bool? = nil
+    public var instructionAudio: String {
+        burstStarted == true && elapsed > 0 ? "burst_resume" : template.audio
+    }
     public var progress: Double {
+        if template.burstSeconds != nil && stage == .armed { return 0 }
         if template.kind == .endurance { return min(1, (traveledDistance ?? 0) / max(1, template.targetDistance ?? 400)) }
-        return min(1, elapsed / max(1, template.duration))
+        return min(1, elapsed / max(1, template.burstSeconds ?? template.duration))
     }
 }
 public struct EventRecord: Codable, Identifiable {
@@ -60,6 +76,7 @@ public struct EventRecord: Codable, Identifiable {
     public var damage: Double
     public var defeated: Bool? = nil
     public var kind: EventKind? = nil
+    public var accelerated: Bool? = nil
 }
 public struct RunSession: Codable, Identifiable {
     public var id = UUID()

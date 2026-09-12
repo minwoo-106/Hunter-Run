@@ -1,0 +1,162 @@
+{
+  "version": "0.9.0",
+  "reported_numbers": [
+    4,
+    6,
+    11,
+    20,
+    24,
+    26,
+    28,
+    30,
+    33,
+    35,
+    43,
+    53,
+    54,
+    55
+  ],
+  "symptom": "Different voice from start or switches mid-sentence; user listening judgement",
+  "clips": [
+    {
+      "number": 4,
+      "key": "discovery",
+      "file": "discovery.wav",
+      "text": "앗, 마력 흔적을 찾았어요! 지금처럼 편하게 이동하면 제가 조사할게요.",
+      "seed": 3313380379,
+      "sample_rate": 24000,
+      "duration": 6.179,
+      "sha256": "a7fa70a72632fe6308d2b71c01b4c9472d63de7cf1845a89bcce7568091bb24d"
+    },
+    {
+      "number": 6,
+      "key": "run_end",
+      "file": "run_end.wav",
+      "text": "오늘 활동을 마쳤어요! 함께 모은 기록을 정리해둘게요. 수고하셨어요!",
+      "seed": 2901357704,
+      "sample_rate": 24000,
+      "duration": 6.814,
+      "sha256": "a44828d3b34442a545073dc999c4082ea85fe8b82540194835d44eb9ccef396f"
+    },
+    {
+      "number": 11,
+      "key": "signal",
+      "file": "signal.wav",
+      "text": "위치 신호가 조금 약해요. 속도 판정은 쉬고, 편하게 이동해요.",
+      "seed": 982342272,
+      "sample_rate": 24000,
+      "duration": 5.566,
+      "sha256": "c6d80a80c0c461988da8e84255c184d6dafc149547ce647c8bd577ef6b27cc7e"
+    },
+    {
+      "number": 20,
+      "key": "combat_hit",
+      "file": "combat_hit.wav",
+      "text": "좋아요! 개체에게 피해를 줬어요. 남은 흔적도 확인해볼게요.",
+      "seed": 988129930,
+      "sample_rate": 24000,
+      "duration": 6.276,
+      "sha256": "b2758a37689f86bb4fad93f2e030da606c94ac79b19008e96d079697da604695"
+    },
+    {
+      "number": 24,
+      "key": "wolf_intro",
+      "file": "wolf_intro.wav",
+      "text": "앗, 잔향 늑대가 다가와요! 더 빨라질 필요 없이 잠시 달리기를 이어가요.",
+      "seed": 757533846,
+      "sample_rate": 24000,
+      "duration": 6.156,
+      "sha256": "08f5883a6069a13dae9df5652dbbc85e1af0813b3de3eed93711ea8001eb1443"
+    },
+    {
+      "number": 26,
+      "key": "wolf_hit",
+      "file": "wolf_hit.wav",
+      "text": "좋아요! 잔향 늑대에게 피해를 줬어요. 아직 반응이 남아 있어요.",
+      "seed": 2046406207,
+      "sample_rate": 24000,
+      "duration": 6.133,
+      "sha256": "a0c8403693a8f8c60e1fc57320091f6342d3d93f7b39c37e9b807695baede35d"
+    },
+    {
+      "number": 28,
+      "key": "cat_ambush",
+      "file": "cat_ambush.wav",
+      "text": "균열 살쾡이가 옆에서 다가와요! 가속할 필요는 없어요. 잠시 달리기를 이어가요.",
+      "seed": 1644420707,
+      "sample_rate": 24000,
+      "duration": 7.57,
+      "sha256": "e99fee92adda5be54128421cf3d30f555d6bd823280d609680d314c3e1b04b33"
+    },
+    {
+      "number": 30,
+      "key": "cat_hit",
+      "file": "cat_hit.wav",
+      "text": "좋아요! 균열 살쾡이에게 피해를 줬어요. 남은 반응을 살펴볼게요.",
+      "seed": 276504731,
+      "sample_rate": 24000,
+      "duration": 6.834,
+      "sha256": "52be44bcae38ee7ec4885c151e5cef9bb617cc65688635ac1b28582a0c4feb4e"
+    },
+    {
+      "number": 33,
+      "key": "guard_hit",
+      "file": "guard_hit.wav",
+      "text": "철각 파수병의 외피에 피해를 줬어요! 조금씩 약해지고 있어요.",
+      "seed": 144275033,
+      "sample_rate": 24000,
+      "duration": 5.281,
+      "sha256": "ba87cb0b53dc14aa0233437dc218200821eeddc0eda6764ef58427bd03e312c0"
+    },
+    {
+      "number": 35,
+      "key": "watcher_defeated",
+      "file": "watcher_defeated.wav",
+      "text": "우와, 균열 감시자를 처치했어요! 이번 게이트를 잘 돌파했어요!",
+      "seed": 649905811,
+      "sample_rate": 24000,
+      "duration": 5.78,
+      "sha256": "5c721d9fff5944f08f86c7e849e3d3b034c0ac49c4a99d388f0ff37863919b74"
+    },
+    {
+      "number": 43,
+      "key": "lord_hit",
+      "file": "lord_hit.wav",
+      "text": "좋아요! 경계의 군주에게 피해를 줬어요. 이번 성과는 다음 토벌로 이어져요!",
+      "seed": 1717991114,
+      "sample_rate": 24000,
+      "duration": 7.196,
+      "sha256": "bfac8a3e9f2d2559030ea484a623562facb37d2dfd5a2d181ec5120050e5cea7"
+    },
+    {
+      "number": 53,
+      "key": "dispatch_branch",
+      "file": "dispatch_branch.wav",
+      "text": "우와, 지부가 한층 든든해졌어요! 새 관측 장비로 경계의 군주를 확인했어요. 차근차근 함께 조사해봐요.",
+      "seed": 2541042990,
+      "sample_rate": 24000,
+      "duration": 9.3,
+      "sha256": "54a8676982e9d6cfd7466fcac636389bba8af6b00bec603a927ee4bfe4940723"
+    },
+    {
+      "number": 54,
+      "key": "dispatch_boundary",
+      "file": "dispatch_boundary.wav",
+      "text": "경계의 군주 뒤에 새로운 기록이 숨어 있었어요! 공허의 사서와 관련된 흔적이에요. 다음에 함께 살펴봐요!",
+      "seed": 631506256,
+      "sample_rate": 24000,
+      "duration": 8.646,
+      "sha256": "a5e4eccf8d20831966719a1a815b38e291668af1c062af5c1057a32187d988a0"
+    },
+    {
+      "number": 55,
+      "key": "dispatch_network",
+      "file": "dispatch_network.wav",
+      "text": "처음 켰던 작은 표시등이 이제 지부 전체를 밝히고 있어요! 함께 모은 기록 덕분이에요. 다음 활동도 기대돼요!",
+      "seed": 350508750,
+      "sample_rate": 24000,
+      "duration": 8.924,
+      "sha256": "cada24724e18b63c45c88fb70080f1aff81f21f5d7f5e7286463055712a87dd9"
+    }
+  ]
+}

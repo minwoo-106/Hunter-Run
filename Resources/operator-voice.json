@@ -3,8 +3,8 @@
   "voice": "adult-warm-operator",
   "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
   "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
-  "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6",
-  "seed_tag": "hunter-operator-v2:",
+  "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+  "seed_tag": "hunter-consistent-v1:",
   "clips": [
     {
       "key": "run_start",
@@ -13,7 +13,8 @@
       "seed": 1376019362,
       "sample_rate": 24000,
       "duration": 4.558,
-      "sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582"
+      "sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "partial",
@@ -22,7 +23,8 @@
       "seed": 687136431,
       "sample_rate": 24000,
       "duration": 5.072,
-      "sha256": "787e55b1726d2446ebc1bfe085b30222999b0b4f6fb50cf3d427f3ee23a29b16"
+      "sha256": "787e55b1726d2446ebc1bfe085b30222999b0b4f6fb50cf3d427f3ee23a29b16",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "resume",
@@ -31,16 +33,22 @@
       "seed": 2916212082,
       "sample_rate": 24000,
       "duration": 2.481,
-      "sha256": "fa04467350f2c46a9d872716f1c66c775d9584e2ce07d9cabddc8a2a23d9d025"
+      "sha256": "fa04467350f2c46a9d872716f1c66c775d9584e2ce07d9cabddc8a2a23d9d025",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "discovery",
       "file": "discovery.wav",
       "text": "앗, 마력 흔적을 찾았어요! 지금처럼 편하게 이동하면 제가 조사할게요.",
-      "seed": 3313380379,
+      "seed": 2131327200,
+      "seeds": [
+        2131327200
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.179,
-      "sha256": "a7fa70a72632fe6308d2b71c01b4c9472d63de7cf1845a89bcce7568091bb24d"
+      "duration": 4.96,
+      "sha256": "a661421baaabbb0a43a29ee675152c5da12ef860ee6b19dc8c9588a51a9396de"
     },
     {
       "key": "investigate",
@@ -49,25 +57,36 @@
       "seed": 4106443789,
       "sample_rate": 24000,
       "duration": 4.629,
-      "sha256": "92e7c202005828c891907f068fab90129409c249a3882b7c39d632a96502d691"
+      "sha256": "92e7c202005828c891907f068fab90129409c249a3882b7c39d632a96502d691",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "run_end",
       "file": "run_end.wav",
       "text": "오늘 활동을 마쳤어요! 함께 모은 기록을 정리해둘게요. 수고하셨어요!",
-      "seed": 2901357704,
+      "seed": 212703668,
+      "seeds": [
+        212703668
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.814,
-      "sha256": "a44828d3b34442a545073dc999c4082ea85fe8b82540194835d44eb9ccef396f"
+      "duration": 5.052,
+      "sha256": "a14327a202724e18b5d40e354c5b0dcec86122f27c42926eb0b303012f039caa"
     },
     {
       "key": "pursuit",
       "file": "pursuit.wav",
-      "text": "도망가는 개체가 보여요! 안전한 구간이면 조금 가속해도 좋아요. 아니면 흔적을 살펴봐요.",
-      "seed": 4141361917,
+      "text": "도망가는 개체가 보여요! 안전한 구간이면 십 초 가속으로 따라가봐요. 아니면 흔적을 조사해요.",
+      "seed": 3553160607,
+      "seeds": [
+        3553160607
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.859,
-      "sha256": "a261fbf2a7c7dd5b8e022f3ebe9bb9165c3b6df9741aa70112ba4cc88be87066"
+      "duration": 8.191,
+      "sha256": "69833876ff24c2ea55c05f70b3a5127809edd164001f6dc83bacac3a95bc1d7a"
     },
     {
       "key": "pause",
@@ -76,7 +95,8 @@
       "seed": 3150841026,
       "sample_rate": 24000,
       "duration": 3.77,
-      "sha256": "e4518c0c09c8bcb3fcc558f5c0f52ce78dbee704f791074189716f1085f3258e"
+      "sha256": "e4518c0c09c8bcb3fcc558f5c0f52ce78dbee704f791074189716f1085f3258e",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "boss",
@@ -85,7 +105,8 @@
       "seed": 944827260,
       "sample_rate": 24000,
       "duration": 4.491,
-      "sha256": "46d772bb9c3bca4643295d993fd203d7ddbb8ca369279bab600229deb9650e97"
+      "sha256": "46d772bb9c3bca4643295d993fd203d7ddbb8ca369279bab600229deb9650e97",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "success",
@@ -94,16 +115,22 @@
       "seed": 94902761,
       "sample_rate": 24000,
       "duration": 3.072,
-      "sha256": "944db9e1377bcd6db4d6f5b28c054bff0ffc956bab188ca6ded4e3ac77a1c565"
+      "sha256": "944db9e1377bcd6db4d6f5b28c054bff0ffc956bab188ca6ded4e3ac77a1c565",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "signal",
       "file": "signal.wav",
       "text": "위치 신호가 조금 약해요. 속도 판정은 쉬고, 편하게 이동해요.",
-      "seed": 982342272,
+      "seed": 2345270790,
+      "seeds": [
+        2345270790
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.566,
-      "sha256": "c6d80a80c0c461988da8e84255c184d6dafc149547ce647c8bd577ef6b27cc7e"
+      "duration": 4.96,
+      "sha256": "120d223f8ba571485ec768c48f3878e8271aa8d0205e58aef5c81fb566a9b405"
     },
     {
       "key": "maintain",
@@ -112,7 +139,8 @@
       "seed": 1431613968,
       "sample_rate": 24000,
       "duration": 4.314,
-      "sha256": "77df270c6ac27e1813af0f33b79da1e2edec7cd0c72ba7bcbcabace56f0d278b"
+      "sha256": "77df270c6ac27e1813af0f33b79da1e2edec7cd0c72ba7bcbcabace56f0d278b",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "audio_test",
@@ -121,7 +149,8 @@
       "seed": 1790266877,
       "sample_rate": 24000,
       "duration": 5.571,
-      "sha256": "5a27fea28d6cbae0ba724cda98d208da1d443e3b55c54c8b7ddc06a9bf7fba54"
+      "sha256": "5a27fea28d6cbae0ba724cda98d208da1d443e3b55c54c8b7ddc06a9bf7fba54",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "pursuit_started",
@@ -130,7 +159,8 @@
       "seed": 2223212693,
       "sample_rate": 24000,
       "duration": 4.929,
-      "sha256": "f532c5b018a6d25ea361a623b5fadec9db16dbdcadd4bc5b7a981c4b91372ee4"
+      "sha256": "f532c5b018a6d25ea361a623b5fadec9db16dbdcadd4bc5b7a981c4b91372ee4",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "endurance",
@@ -139,7 +169,8 @@
       "seed": 2119943695,
       "sample_rate": 24000,
       "duration": 4.967,
-      "sha256": "f4f9119f2246eb832c57ea3d3e8f962730c3a8218472e2963540f81f087fd055"
+      "sha256": "f4f9119f2246eb832c57ea3d3e8f962730c3a8218472e2963540f81f087fd055",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "ambush",
@@ -148,7 +179,8 @@
       "seed": 1054331955,
       "sample_rate": 24000,
       "duration": 5.582,
-      "sha256": "42a44438df52584e36a9d3205192a90ca9deed95d0fd2c257ed1a725160345e7"
+      "sha256": "42a44438df52584e36a9d3205192a90ca9deed95d0fd2c257ed1a725160345e7",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "discovery_alt",
@@ -157,7 +189,8 @@
       "seed": 2878377685,
       "sample_rate": 24000,
       "duration": 4.52,
-      "sha256": "a9e2f9abb359df09c51bd01370ab70b95408097aae0f29279cc69be90a724826"
+      "sha256": "a9e2f9abb359df09c51bd01370ab70b95408097aae0f29279cc69be90a724826",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "success_alt",
@@ -166,7 +199,8 @@
       "seed": 4214578571,
       "sample_rate": 24000,
       "duration": 3.316,
-      "sha256": "6c887d52e913cda06c2026b61c8c9e3fdd8810d7aa3aab8af922caaa060ee9f3"
+      "sha256": "6c887d52e913cda06c2026b61c8c9e3fdd8810d7aa3aab8af922caaa060ee9f3",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "partial_alt",
@@ -175,16 +209,22 @@
       "seed": 598707560,
       "sample_rate": 24000,
       "duration": 5.107,
-      "sha256": "cfd9e1f03888c95f448e26bc77ed23f02c89485a41a819e8e8c28e2bb530a447"
+      "sha256": "cfd9e1f03888c95f448e26bc77ed23f02c89485a41a819e8e8c28e2bb530a447",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "combat_hit",
       "file": "combat_hit.wav",
       "text": "좋아요! 개체에게 피해를 줬어요. 남은 흔적도 확인해볼게요.",
-      "seed": 988129930,
+      "seed": 1503129855,
+      "seeds": [
+        1503129855
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.276,
-      "sha256": "b2758a37689f86bb4fad93f2e030da606c94ac79b19008e96d079697da604695"
+      "duration": 5.034,
+      "sha256": "7c89f7127d13e811c86d0b2999f16baa277129a100e38ba2eec81721732a7cd4"
     },
     {
       "key": "combat_withdraw",
@@ -193,7 +233,8 @@
       "seed": 1414115884,
       "sample_rate": 24000,
       "duration": 4.101,
-      "sha256": "d1885541bc0cad0dc87492beaac2e52d60266924c1c364fb56ae56201496e5d0"
+      "sha256": "d1885541bc0cad0dc87492beaac2e52d60266924c1c364fb56ae56201496e5d0",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "recovery",
@@ -202,7 +243,8 @@
       "seed": 3302479348,
       "sample_rate": 24000,
       "duration": 5.272,
-      "sha256": "3102fda8eb23e6cdf723a52a0a14ae28abe0aa3f0d57041540021820fe785ac5"
+      "sha256": "3102fda8eb23e6cdf723a52a0a14ae28abe0aa3f0d57041540021820fe785ac5",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "survey_done",
@@ -211,70 +253,106 @@
       "seed": 2200609826,
       "sample_rate": 24000,
       "duration": 4.715,
-      "sha256": "2e16744c727285d3160cb919781398150b18418d3fbf96537fa52e5efa4cd740"
+      "sha256": "2e16744c727285d3160cb919781398150b18418d3fbf96537fa52e5efa4cd740",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "wolf_intro",
       "file": "wolf_intro.wav",
       "text": "앗, 잔향 늑대가 다가와요! 더 빨라질 필요 없이 잠시 달리기를 이어가요.",
-      "seed": 757533846,
+      "seed": 2564213302,
+      "seeds": [
+        2564213302
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.156,
-      "sha256": "08f5883a6069a13dae9df5652dbbc85e1af0813b3de3eed93711ea8001eb1443"
+      "duration": 5.427,
+      "sha256": "1dbdeabeac122706f007ede9742fd981b16f3c7856a7554e612be3472839c0c2"
     },
     {
       "key": "wolf_defeated",
       "file": "wolf_defeated.wav",
-      "text": "우와, 잔향 늑대를 처치했어요! 멋진 활약이었어요!",
-      "seed": 2806613749,
+      "text": "대단해요! 잔향 늑대를 처치했어요! 멋진 활약이었어요!",
+      "seed": 2548033721,
+      "seeds": [
+        2548033721
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.226,
-      "sha256": "af1093bf002d687e5b88d21b02fc20ed9daa9a03de95786c764de83dc12e8119"
+      "duration": 4.399,
+      "sha256": "402584cc1193d6382611ea07077bec54cf497c0e135959effe9a48971afec850"
     },
     {
       "key": "wolf_hit",
       "file": "wolf_hit.wav",
       "text": "좋아요! 잔향 늑대에게 피해를 줬어요. 아직 반응이 남아 있어요.",
-      "seed": 2046406207,
+      "seed": 3396108632,
+      "seeds": [
+        3396108632
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.133,
-      "sha256": "a0c8403693a8f8c60e1fc57320091f6342d3d93f7b39c37e9b807695baede35d"
+      "duration": 4.813,
+      "sha256": "cb537bdd8eb6a688050f131783d4cc45b4da33d949d98741e506af90d89d133f"
     },
     {
       "key": "cat_pursuit",
       "file": "cat_pursuit.wav",
-      "text": "균열 살쾡이가 도망가요! 안전하면 조금 가속해요. 아니면 흔적을 조사해요.",
-      "seed": 1120052437,
+      "text": "균열 살쾡이가 도망가요! 안전한 구간이면 십 초 가속으로 따라가봐요. 아니면 흔적을 조사해요.",
+      "seed": 3885034105,
+      "seeds": [
+        3885034105
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.624,
-      "sha256": "a8fd58c6dcdb5c4546160b705152bd6ff0d2c3999fa51274bcf51ba95a4dfa1c"
+      "duration": 7.017,
+      "sha256": "659b658a3c4683a0fdb0c8d036f183455ac4780ab6116093eb5d01353bbea4cc"
     },
     {
       "key": "cat_ambush",
       "file": "cat_ambush.wav",
       "text": "균열 살쾡이가 옆에서 다가와요! 가속할 필요는 없어요. 잠시 달리기를 이어가요.",
-      "seed": 1644420707,
+      "seed": 1786368367,
+      "seeds": [
+        1786368367
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 7.57,
-      "sha256": "e99fee92adda5be54128421cf3d30f555d6bd823280d609680d314c3e1b04b33"
+      "duration": 7.366,
+      "sha256": "0b35f2b2f61ccda25a9bcc74db51944ad99488827341563c018064e5b4e351c9"
     },
     {
       "key": "cat_defeated",
       "file": "cat_defeated.wav",
-      "text": "우와, 균열 살쾡이를 처치했어요! 관측 기록에 남겨둘게요!",
-      "seed": 3266937051,
+      "text": "대단해요! 균열 살쾡이를 처치했어요! 관측 기록에 남겨둘게요! 이제 편하게 회복해요.",
+      "seed": 1991162464,
+      "seeds": [
+        1991162464
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.523,
-      "sha256": "9451a73775c0a3a47937e0fb14080136f7daa833bf19330b14ae4aa33210053a"
+      "duration": 6.853,
+      "sha256": "58cc7c0e3afb9b08e4270a903c588ad0a996297a54dd632882c484171a300ff0"
     },
     {
       "key": "cat_hit",
       "file": "cat_hit.wav",
       "text": "좋아요! 균열 살쾡이에게 피해를 줬어요. 남은 반응을 살펴볼게요.",
-      "seed": 276504731,
+      "seed": 568390392,
+      "seeds": [
+        568390392
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.834,
-      "sha256": "52be44bcae38ee7ec4885c151e5cef9bb617cc65688635ac1b28582a0c4feb4e"
+      "duration": 4.987,
+      "sha256": "e724d3a84bb9c4c9dd2d95a5fb79358466e0f923c1d859093af13756de1ed2b2"
     },
     {
       "key": "guard_intro",
@@ -283,25 +361,36 @@
       "seed": 1425047331,
       "sample_rate": 24000,
       "duration": 4.893,
-      "sha256": "78d628b0ed018049f1c6c8d58333cfda8003302ac570694f915fe79fb02e0733"
+      "sha256": "78d628b0ed018049f1c6c8d58333cfda8003302ac570694f915fe79fb02e0733",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "guard_defeated",
       "file": "guard_defeated.wav",
-      "text": "우와, 철각 파수병을 처치했어요! 단단한 외피를 뚫었어요!",
-      "seed": 3926599042,
+      "text": "대단해요! 철각 파수병을 처치했어요! 단단한 외피를 뚫었어요!",
+      "seed": 1897934096,
+      "seeds": [
+        1897934096
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.974,
-      "sha256": "19b3a4d9b7e6075b15c2b0425e70572b584f642ce0d74c631b4f2704df4d823b"
+      "duration": 6.237,
+      "sha256": "b9ac08c26fac783bd8b857aa99abfb96fb87d86bed8d2bfb4b96da9efc4310b2"
     },
     {
       "key": "guard_hit",
       "file": "guard_hit.wav",
       "text": "철각 파수병의 외피에 피해를 줬어요! 조금씩 약해지고 있어요.",
-      "seed": 144275033,
+      "seed": 2213639645,
+      "seeds": [
+        2213639645
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.281,
-      "sha256": "ba87cb0b53dc14aa0233437dc218200821eeddc0eda6764ef58427bd03e312c0"
+      "duration": 4.617,
+      "sha256": "afbe9431abfb3e6a9026d3508a55590a2e1bae9f4f47a59f72843b8d08f8dcfc"
     },
     {
       "key": "watcher_intro",
@@ -310,16 +399,22 @@
       "seed": 3688057871,
       "sample_rate": 24000,
       "duration": 4.374,
-      "sha256": "e577d77b3e51d94dc1e132289b097df75f42a8c3f8115941f955036f7167e603"
+      "sha256": "e577d77b3e51d94dc1e132289b097df75f42a8c3f8115941f955036f7167e603",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "watcher_defeated",
       "file": "watcher_defeated.wav",
-      "text": "우와, 균열 감시자를 처치했어요! 이번 게이트를 잘 돌파했어요!",
-      "seed": 649905811,
+      "text": "대단해요! 균열 감시자를 처치했어요! 이번 게이트를 잘 돌파했어요!",
+      "seed": 1914059611,
+      "seeds": [
+        1914059611
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.78,
-      "sha256": "5c721d9fff5944f08f86c7e849e3d3b034c0ac49c4a99d388f0ff37863919b74"
+      "duration": 5.195,
+      "sha256": "13cd2945f49b11573d931b561fe2269b38f9073506e37bdb60faff6f8d8634e3"
     },
     {
       "key": "watcher_hit",
@@ -328,7 +423,8 @@
       "seed": 2258801335,
       "sample_rate": 24000,
       "duration": 4.829,
-      "sha256": "0488365f0777f9c430fae5bf4608ad70e8e245fb1bb373575d41c2995b030e63"
+      "sha256": "0488365f0777f9c430fae5bf4608ad70e8e245fb1bb373575d41c2995b030e63",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "heart_intro",
@@ -337,7 +433,8 @@
       "seed": 287942416,
       "sample_rate": 24000,
       "duration": 4.95,
-      "sha256": "6acddd48487ae737a0f912a708450028a3083595abe6e97116fff56e44f2ecc0"
+      "sha256": "6acddd48487ae737a0f912a708450028a3083595abe6e97116fff56e44f2ecc0",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "heart_defeated",
@@ -346,7 +443,8 @@
       "seed": 1565430144,
       "sample_rate": 24000,
       "duration": 5.023,
-      "sha256": "f249e8d689b1f52e40cf3cf96c1d66da665668044623a9a906b7c6aa812d34b5"
+      "sha256": "f249e8d689b1f52e40cf3cf96c1d66da665668044623a9a906b7c6aa812d34b5",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "heart_hit",
@@ -355,16 +453,22 @@
       "seed": 2705428414,
       "sample_rate": 24000,
       "duration": 4.617,
-      "sha256": "22aa453946606685237a025e0fc7535a666faae66fba77f544c268c9471778ac"
+      "sha256": "22aa453946606685237a025e0fc7535a666faae66fba77f544c268c9471778ac",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "lord_phase1",
       "file": "lord_phase1.wav",
-      "text": "경계의 군주를 찾았어요! 평소 페이스로 달리며 외피부터 약화시켜봐요.",
-      "seed": 1417763434,
+      "text": "경계의 군주가 방어막을 펼쳤어요! 안전한 구간이면 십 초 가속으로 틈을 만들어봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 774328440,
+      "seeds": [
+        774328440
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.158,
-      "sha256": "dc793f9dbb6d13e36d5795bee39913999c8b7c6be59ece1a2c1fe1d4ec9d427e"
+      "duration": 8.765,
+      "sha256": "e406512f24ed034e4a0d8710aa2ba91c3c6fa8ef29bf6803de9c0a3e43832823"
     },
     {
       "key": "lord_phase2",
@@ -373,43 +477,64 @@
       "seed": 3002801629,
       "sample_rate": 24000,
       "duration": 4.684,
-      "sha256": "c5df00aa7f7b9cddf8eee8a9879225218b8ad7d31a14cd83a38b008ec148f6fd"
+      "sha256": "c5df00aa7f7b9cddf8eee8a9879225218b8ad7d31a14cd83a38b008ec148f6fd",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "lord_phase3",
       "file": "lord_phase3.wav",
-      "text": "경계의 군주의 핵이 드러났어요! 서두르지 말고 평소 페이스를 이어가요.",
-      "seed": 757031365,
+      "text": "경계의 군주의 핵이 드러났어요! 안전한 구간이면 십 초 가속으로 공략해봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 894676288,
+      "seeds": [
+        894676288
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.74,
-      "sha256": "fa9fc3f9a2220e5e95b9440c4f8e590c6eac8f63825e31ca2e82ef47a796003c"
+      "duration": 7.351,
+      "sha256": "e810282e29e2c77cdd5640bb4162ea0acffd3b4b6ef212ea166437abaa491f1b"
     },
     {
       "key": "lord_hit",
       "file": "lord_hit.wav",
       "text": "좋아요! 경계의 군주에게 피해를 줬어요. 이번 성과는 다음 토벌로 이어져요!",
-      "seed": 1717991114,
+      "seed": 2817829207,
+      "seeds": [
+        2817829207
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 7.196,
-      "sha256": "bfac8a3e9f2d2559030ea484a623562facb37d2dfd5a2d181ec5120050e5cea7"
+      "duration": 5.483,
+      "sha256": "68eac5d4e39d1586a8d3376f9fbc4ab0a66e92485e708bb11e81bd85a3c4d2f2"
     },
     {
       "key": "lord_defeated",
       "file": "lord_defeated.wav",
-      "text": "우와, 경계의 군주를 처치했어요! 함께 쌓아온 토벌 기록이 빛을 발했어요!",
-      "seed": 1034320761,
+      "text": "대단해요! 경계의 군주를 처치했어요! 함께 쌓아온 토벌 기록이 빛을 발했어요! 이제 편하게 회복해요.",
+      "seed": 1943416078,
+      "seeds": [
+        1943416078
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.51,
-      "sha256": "f99f2664dbd070a2a861e78d135a05ee043be7755a42a5c66b0c65825fa29cf2"
+      "duration": 6.986,
+      "sha256": "aa7d6fb7a6202b45af54d84700ee5ea3f63d055ed8c56b865487beb6dfe1ecb3"
     },
     {
       "key": "librarian_phase1",
       "file": "librarian_phase1.wav",
-      "text": "공허의 사서가 결계를 펼쳤어요! 평소 페이스로 달리며 결계를 약화시켜봐요.",
-      "seed": 715503663,
+      "text": "공허의 사서가 결계를 펼쳤어요! 안전한 구간이면 십 초 가속으로 결계를 약화시켜봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 3213464005,
+      "seeds": [
+        3213464005
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.356,
-      "sha256": "ffcf4d13523591d0cf969a7143c1e85fc4765875afc611402c9e10ca71275275"
+      "duration": 9.248,
+      "sha256": "a2168c28cb7ea8a5a0e201155c8ae954838fde4e99c70f85fb48d2cd83a4fef5"
     },
     {
       "key": "librarian_phase2",
@@ -418,16 +543,22 @@
       "seed": 3533327790,
       "sample_rate": 24000,
       "duration": 4.374,
-      "sha256": "9c2245ef057407917bbf60c607be2565650cf0802d527ec5607df1d5bba8a7ad"
+      "sha256": "9c2245ef057407917bbf60c607be2565650cf0802d527ec5607df1d5bba8a7ad",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "librarian_phase3",
       "file": "librarian_phase3.wav",
-      "text": "공허의 사서의 핵심 기록이 드러났어요! 평소 페이스로 달리며 마무리해봐요.",
-      "seed": 3169798679,
+      "text": "공허의 사서의 핵심 기록이 드러났어요! 안전한 구간이면 십 초 가속으로 공략해봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 854799239,
+      "seeds": [
+        854799239
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.902,
-      "sha256": "4df74ccb3bf6aa6a8285a5c67b8aac5ce9ece6064271deabcf7d26a045ebf5ed"
+      "duration": 8.808,
+      "sha256": "a2b3c46425f26f63f2effc75b310e7083fc36c350d605b1b24f820091c5d6d83"
     },
     {
       "key": "librarian_hit",
@@ -436,16 +567,22 @@
       "seed": 2401585723,
       "sample_rate": 24000,
       "duration": 5.368,
-      "sha256": "6ad2df0632fc974de970301c147c9ad431ec2d5a6d279d5efb8678e4c6696fd3"
+      "sha256": "6ad2df0632fc974de970301c147c9ad431ec2d5a6d279d5efb8678e4c6696fd3",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "librarian_defeated",
       "file": "librarian_defeated.wav",
-      "text": "우와, 공허의 사서를 처치했어요! 함께 닫혀 있던 기록을 열었어요!",
-      "seed": 1649400893,
+      "text": "대단해요! 공허의 사서를 처치했어요! 함께 닫혀 있던 기록을 열었어요! 이제 편하게 회복해요.",
+      "seed": 1435738466,
+      "seeds": [
+        1435738466
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.011,
-      "sha256": "d72f9d4b895796c09848b4c77aac86cee2f07845e2dbaa862175166e17ff83d9"
+      "duration": 6.512,
+      "sha256": "c3a8469deca140eb56c22663d01fe296d4d4f972509947d6047bde02b0f0252a"
     },
     {
       "key": "dispatch_arrival",
@@ -454,7 +591,8 @@
       "seed": 2888597447,
       "sample_rate": 24000,
       "duration": 7.012,
-      "sha256": "66b5e05557772935a337e70fbd8c218d3dc0b80b2b3f59c2af9c2ebe7104124d"
+      "sha256": "66b5e05557772935a337e70fbd8c218d3dc0b80b2b3f59c2af9c2ebe7104124d",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "dispatch_signal",
@@ -463,7 +601,8 @@
       "seed": 871750050,
       "sample_rate": 24000,
       "duration": 6.817,
-      "sha256": "894f179db6861647aeef6a4eb26bb3666b31db92fc7852a5e7c91121b9050538"
+      "sha256": "894f179db6861647aeef6a4eb26bb3666b31db92fc7852a5e7c91121b9050538",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "dispatch_pattern",
@@ -472,34 +611,50 @@
       "seed": 2499562739,
       "sample_rate": 24000,
       "duration": 6.317,
-      "sha256": "03b75f9bdffcc787fbb28e70beaef09c5d5a3c80bd38e9c0804cc4bb79f72b95"
+      "sha256": "03b75f9bdffcc787fbb28e70beaef09c5d5a3c80bd38e9c0804cc4bb79f72b95",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
     },
     {
       "key": "dispatch_branch",
       "file": "dispatch_branch.wav",
-      "text": "우와, 지부가 한층 든든해졌어요! 새 관측 장비로 경계의 군주를 확인했어요. 차근차근 함께 조사해봐요.",
-      "seed": 2541042990,
+      "text": "좋아요! 지부가 한층 든든해졌어요! 새 관측 장비로 경계의 군주를 확인했어요. 차근차근 함께 조사해봐요.",
+      "seed": 2346896598,
+      "seeds": [
+        2346896598
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 9.3,
-      "sha256": "54a8676982e9d6cfd7466fcac636389bba8af6b00bec603a927ee4bfe4940723"
+      "duration": 7.825,
+      "sha256": "eda028586eeda7d2d9da6a3a174132e5db19db00bec7df94e4f0cc346360cdbd"
     },
     {
       "key": "dispatch_boundary",
       "file": "dispatch_boundary.wav",
       "text": "경계의 군주 뒤에 새로운 기록이 숨어 있었어요! 공허의 사서와 관련된 흔적이에요. 다음에 함께 살펴봐요!",
-      "seed": 631506256,
+      "seed": 1015738402,
+      "seeds": [
+        1015738402
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 8.646,
-      "sha256": "a5e4eccf8d20831966719a1a815b38e291668af1c062af5c1057a32187d988a0"
+      "duration": 6.83,
+      "sha256": "d72f04e9744830b8e8ea2b9486b6705eb271f32ecff40e22cf7e999d72b52aca"
     },
     {
       "key": "dispatch_network",
       "file": "dispatch_network.wav",
       "text": "처음 켰던 작은 표시등이 이제 지부 전체를 밝히고 있어요! 함께 모은 기록 덕분이에요. 다음 활동도 기대돼요!",
-      "seed": 350508750,
+      "seed": 2192699660,
+      "seeds": [
+        2192699660
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 8.924,
-      "sha256": "cada24724e18b63c45c88fb70080f1aff81f21f5d7f5e7286463055712a87dd9"
+      "duration": 7.347,
+      "sha256": "a1b2872e9d1d964592beed1a4e132914f7df5d1cd920d9fbc990feb07bb47d3a"
     },
     {
       "key": "guard_hold",
@@ -508,7 +663,124 @@
       "seed": 49217534,
       "sample_rate": 24000,
       "duration": 4.99,
-      "sha256": "27b597894a3385e041d524210fce7e52c3673119d5ac65e085d055799a48bfbe"
+      "sha256": "27b597894a3385e041d524210fce7e52c3673119d5ac65e085d055799a48bfbe",
+      "reference_sha256": "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6"
+    },
+    {
+      "key": "lord_burst2",
+      "file": "lord_burst2.wav",
+      "text": "경계의 군주 외피에 틈이 생겼어요! 안전한 구간이면 십 초 가속으로 공략해봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 1724294379,
+      "seeds": [
+        1724294379
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 9.031,
+      "sha256": "89a8734cbcae0aff768a8745f23d1af4d0f9443fe1c00dfeabf1bedac4493ea3"
+    },
+    {
+      "key": "librarian_burst2",
+      "file": "librarian_burst2.wav",
+      "text": "공허의 사서의 결계가 흔들려요! 안전한 구간이면 십 초 가속으로 틈을 넓혀봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 4289956051,
+      "seeds": [
+        4289956051
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.222,
+      "sha256": "9ea03a053d8f320489cce7829fd7d5249e4c8a807add3051019ef68a65a44d86"
+    },
+    {
+      "key": "lord_hold",
+      "file": "lord_hold.wav",
+      "text": "경계의 군주를 유지 공격으로 압박해요! 삼십 초 동안 편안한 달리기 페이스를 이어가요.",
+      "seed": 144583048,
+      "seeds": [
+        144583048
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.339,
+      "sha256": "68eeb2185d648c74aa4489cc4f8a1f0a3996b20b915d82585fdac55a76bbd607"
+    },
+    {
+      "key": "librarian_hold",
+      "file": "librarian_hold.wav",
+      "text": "공허의 사서의 결계를 유지 공격으로 약화시켜요! 삼십 초 동안 편안한 달리기 페이스를 이어가요.",
+      "seed": 3229885375,
+      "seeds": [
+        3229885375
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.856,
+      "sha256": "ebd155e252bd10663e4b2ca2c477ceca5ec121280a35e2668711aaa943e583a4"
+    },
+    {
+      "key": "burst_start",
+      "file": "burst_start.wav",
+      "text": "좋아요! 가속 공격이 이어지고 있어요.",
+      "seed": 3501829730,
+      "seeds": [
+        3501829730
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.643,
+      "sha256": "297bd4d6c62ce8bf15e789fee4457c3e2258a3f5e4cedcdb92aa2a4a888dcb9f"
+    },
+    {
+      "key": "burst_resume",
+      "file": "burst_resume.wav",
+      "text": "남은 가속 구간을 이어가요. 무리하지 않는 속도로 움직여요.",
+      "seed": 4032359724,
+      "seeds": [
+        4032359724
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.966,
+      "sha256": "6d9af8b4fccdafde84ffee1edbc1a4296fc4018a8c5b5d7b9f50759a8b3f2683"
+    },
+    {
+      "key": "burst_hit",
+      "file": "burst_hit.wav",
+      "text": "잘했어요! 가속 공격으로 피해를 줬어요. 이제 속도를 낮추고 편하게 회복해요.",
+      "seed": 3636125697,
+      "seeds": [
+        3636125697
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.701,
+      "sha256": "e0995f4b2ea2b82f920e2a33de6d25b8acafcc5e71c55526456429197131889e"
+    },
+    {
+      "key": "burst_partial",
+      "file": "burst_partial.wav",
+      "text": "여기까지도 잘했어요! 확보한 기록은 챙겨뒀어요. 이제 속도를 낮추고 편하게 회복해요.",
+      "seed": 1900830497,
+      "seeds": [
+        1900830497
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.626,
+      "sha256": "361aa375a7542b59b9dc0efd3c2b60e7ad5ea360b39b412b3125e2aba4450a39"
     }
+  ],
+  "references": [
+    "9255d7aeaa8bcbab3c1443560b39f92e06b0250cb97fff05bb95fca1ccfae8d6",
+    "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582"
   ]
 }

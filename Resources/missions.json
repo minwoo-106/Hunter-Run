@@ -72,9 +72,11 @@
           "title": "도주 개체 추적",
           "kind": "pursuit",
           "startFraction": 0.62,
-          "duration": 25,
+          "duration": 10,
           "hp": 60,
-          "audio": "cat_pursuit"
+          "audio": "cat_pursuit",
+          "burstSeconds": 10,
+          "steadyAudio": "investigate"
         },
         {
           "id": "gate",
@@ -116,9 +118,11 @@
           "title": "도주하는 잔향",
           "kind": "pursuit",
           "startFraction": 0.44,
-          "duration": 25,
+          "duration": 10,
           "hp": 65,
-          "audio": "cat_pursuit"
+          "audio": "cat_pursuit",
+          "burstSeconds": 10,
+          "steadyAudio": "investigate"
         },
         {
           "id": "gate-ambush",

@@ -1,13 +1,15 @@
-# 0.9.0 build10 · 검증 및 배포 완료
+# 0.10.0 build11 · 제작 중
 
-- 사용자가 새 wolf_defeated/wolf_hit 대사를 청취하고 밝은 해요체 방향을 승인했습니다.
-- 기존 성인 참조 기반 전체56개 WAV 교체, 총303.3초. 승인 샘플3개와 SHA 동일.
-- NarrationCatalog: 실제 피해/처치/조사/철수/회복 구분, 개체 이름 있는 안내, 두 주요 보스의 각3단계 안내.
-- 활동 자막과 음성 변형 일치, 짧은 활동용 guard_hold, 해금된 협회 통신6편 음성 요약 버튼.
-- 소스1346c58. Codemagic19 main/Mac mini M2/ios-demo. 2026-09-12 11:47 KST 시작, 9분3초 완료.
-- 로컬 및 Apple Swift84개, iPhone UI9개, Release 컴파일, 리소스/PCM/길이/최대 진폭/대사/SHA 검사 통과.
-- 다운로드: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f
-- HunterRun-0.9.0-build10-install.zip: 54773180 bytes (52.24MB UI 표기), SHA256 f9d89c3ec99c4b635a32c5bcf5e808a56dff15a9a812aa41f7eac79c3db4f0e1.
-- HunterRun-0.9.0-build10-unsigned.ipa: 54766768 bytes, SHA256 6113fa9c61dee3f717d71b9f713aafa57dc68a274adb3feb64a00c0b415e0e74.
-- 다음: 실제 전체 안내의 억양/발음 피드백, 개체 전투 패턴·장비·엘리트와 협회 해금 연동, 시각 단계와 추가 통신, 실제 기록 기반 밸런스.
-- PC 종료 요청은 전날1회 완료. 이번 오전 작업에서는 종료하지 않습니다.
+- 사용자가0.9 음성4,6,11,20,24,26,28,30,33,35,43,53,54,55에서 음색 변화 보고. voice-review-0.9.json에 원본SHA 보존.
+- 24/53 비교본 A 선호 승인. 원래 승인받은1번 음성을 기준으로 통문장 합성(--whole); B 분리합성 제외.
+- 전체64개 제작/적용 완료. 새 파일은 outputs/operator-consistent-pack-010, burst_start 최종본은 operator-consistent-extra-010. 리소스 검증 통과.
+- burst_start는 ‘좋아요! 가속 공격이 이어지고 있어요.’ 최종본을 별도 제작해 적용 완료.
+- 10초 가속은 최초4초 선택 확인을 포함. 처음 안내 완료 후 판정. 가속이 시작됐다는 확인 음성에는 새 지시가 없음.
+- 양 보스3단계 혼합 패턴, 가속 미선택30초 유지, 최대2회/180초 간격/최초60초 조사, 중단 복구 남은 시간/횟수 보존.
+- 최종 로직93개 통과. Apple 빌드/UI 검사는 아직 필요.
+- 원본 기획서 기준 전체 약60% 추정. 상세 v1-progress-estimate.md.
+- 최신 배포0.9 source1346c58, Codemagic19: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f
+- PC 종료 요청은 전날1회 완료. 이번 작업에서 종료하지 않음.
+
+- 전체64개 적용 완료.33개 교체/신규(기존25개 교체+신규8개), 나머지31개 유지. burst_start 최종문구 별도 제작 적용. A 비교24/53과 SHA동일.
+- 최종 로컬93개 검사 통과. 0.10 청취 페이지 http://127.0.0.1:8769/0.10/

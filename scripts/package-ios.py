@@ -7,7 +7,7 @@ assert all(c.isdigit() or c=='.' for c in version) and str(build).isdigit()
 assert info['CFBundleIdentifier']=='com.hunterrun.demo'
 manifest_paths=list(app.rglob('operator-voice.json')); assert len(manifest_paths)==1
 voice=json.loads(manifest_paths[0].read_text())
-assert len(voice['clips'])==56
+assert len(voice['clips'])==64
 for clip in voice['clips']:
     files=list(app.rglob(clip['file'])); assert len(files)==1,clip['file']
     assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']
@@ -28,4 +28,4 @@ with zipfile.ZipFile(install) as z:
 report=dict(version=version,build=build,voice=voice['voice'],clips=len(voice['clips']),files=[dict(name=p.name,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in [ipa,install]])
 (out/(stem+'-manifest.json')).write_text(json.dumps(report,indent=2))
 print(json.dumps(report,indent=2))
-print('Verified versioned installer, inner IPA, executable and all 56 designed voice hashes.')
+print('Verified versioned installer, inner IPA, executable and all 64 designed voice hashes.')

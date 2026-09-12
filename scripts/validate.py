@@ -17,7 +17,7 @@ for key in keys:
 voice = json.loads((root / "Resources/operator-voice.json").read_text(encoding="utf-8"))
 lines = json.loads((root / "Resources/audio-lines.json").read_text(encoding="utf-8"))
 keys.update(lines)
-assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 56
+assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 64
 assert {c["key"] for c in voice["clips"]} == keys == set(lines)
 assert {p.stem for p in (root / "Resources/Audio").glob("*.wav")} == keys, "Unexpected or missing operator WAV"
 for clip in voice["clips"]:
@@ -30,7 +30,7 @@ for clip in voice["clips"]:
         assert .3 < duration < 15 and abs(duration - clip["duration"]) < .002
         samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
         assert 100 < max(abs(s) for s in samples) < 32700
-print("Validated 56 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
+print("Validated 64 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
@@ -107,3 +107,17 @@ for mode in missions['modes'].values():
 assert all('dispatch_' + key in lines for key in ['arrival','signal','pattern','branch','boundary','network'])
 assert not any(ending in text for text in lines.values() for ending in ['습니다', '입니다', '합니다', '겠습니다'])
 print('Validated encounter outcome mappings, named short instructions, six dispatches and consistent polite speech.')
+
+feedback = json.loads((root / 'docs/voice-review-0.9.json').read_text(encoding='utf-8'))
+for clip in feedback['clips']:
+    assert hashlib.sha256((root/'Resources/Audio'/clip['file']).read_bytes()).hexdigest() != clip['sha256'], 'Still contains rejected recording: '+clip['key']
+assert all('우와' not in line for line in lines.values())
+for boss in world['bosses']:
+    for phase in boss['phases']:
+        strikes = [e for e in phase['events'] if e['id'].startswith('major-strike')]
+        assert any(e.get('burstSeconds') == 10 for e in strikes)
+        assert any(e.get('burstSeconds') is None for e in strikes)
+        for event in strikes:
+            if event.get('burstSeconds'):
+                assert event['duration'] == 10 and event['steadyAudio'] in lines
+print('Verified replacement of 14 user-rejected WAVs, no 우와, and mixed 10-second/steady boss attacks.')

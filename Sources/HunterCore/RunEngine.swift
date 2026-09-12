@@ -24,7 +24,7 @@ public struct RunEngine {
     }
     public mutating func instructionFinished() {
         guard var event = session.event, event.stage == .briefing else { return }
-        event.stage = event.template.kind == .pursuit ? .armed : .active
+        event.stage = event.template.requestsAcceleration && event.burstStarted != true ? .armed : .active
         session.event = event
     }
     public mutating func end() {
@@ -101,21 +101,30 @@ public struct RunEngine {
                 event.elapsed += dt
                 if frame.speed >= event.baseline * 1.08 { event.pushing += dt } else { event.pushing = 0 }
                 if event.pushing >= 4 {
-                    event.stage = .active; event.elapsed = 0
-                    session.intensityCount += 1
-                    // The invitation explained the action; the acknowledgement has no new instruction.
-                    cues.append(.voice("pursuit_started"))
+                    event.elapsed = 0; session.intensityCount += 1
+                    session.lastIntensityAt = session.activeSeconds
+                    if event.template.burstSeconds != nil {
+                        // The four-second intent confirmation is part of the ten-second effort.
+                        event.burstStarted = true; event.stage = .active
+                        event.elapsed = event.pushing; event.evaluatedSeconds = event.pushing; event.qualified = event.pushing
+                        event.template.audio = "burst_start"
+                        cues.append(.voice("burst_start"))
+                    } else {
+                        event.stage = .active; cues.append(.voice("pursuit_started"))
+                    }
                 } else if event.elapsed >= 15 {
-                    event.template.kind = .discovery; event.stage = .active; event.elapsed = 0
-                    event.template.title = "도주 흔적 조사"; event.template.duration = min(60, event.template.duration)
-                    cues.append(.voice("investigate"))
+                    let timedBurst = event.template.burstSeconds != nil
+                    event.template.useSteadyAlternative(); event.elapsed = 0; event.pushing = 0
+                    event.stage = timedBurst ? .briefing : .active
+                    cues.append(.voice(event.template.audio))
                 }
                 session.event = event; return cues
             }
-            event.elapsed += dt; event.evaluatedSeconds += dt
-            let threshold = event.template.kind == .pursuit ? 1.08 : event.template.kind == .endurance ? 0.75 : 0.85
+            let eventDT = event.template.burstSeconds.map { min(dt, max(0, $0 - event.elapsed)) } ?? dt
+            event.elapsed += eventDT; event.evaluatedSeconds += eventDT
+            let threshold = event.template.requestsAcceleration ? 1.08 : event.template.kind == .endurance ? 0.75 : 0.85
             let qualified = event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
-            if qualified { event.qualified += dt }
+            if qualified { event.qualified += eventDT }
             if event.template.kind == .endurance { event.traveledDistance = (event.traveledDistance ?? 0) + distance }
             session.event = event
             if event.progress >= 1 {
@@ -148,14 +157,14 @@ public struct RunEngine {
             session.consumed.insert(next.id)
             let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
             if remaining < next.duration + 30 { return [.checkpoint] }
-            if next.kind == .pursuit && (!session.allowPursuit || session.baselineSamples.count < 30 || (!session.simulated && session.learnedReference == nil && (session.paceObservation?.stableSeconds ?? 0) < 300) || session.intensityCount >= 2 || session.activeSeconds - session.lastIntensityAt < 180 || frame.signal != .good || session.withdrawn) {
-                next.kind = .discovery; next.title = "마력 흔적 조사"; next.audio = "investigate"
+            if next.requestsAcceleration && !AccelerationRules.canOffer(session, frame: frame) {
+                next.useSteadyAlternative()
             }
-            if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
-                next.kind = .discovery; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
+            if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || AccelerationRules.needsEasyMovement(session) || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
+                next.kind = .discovery; next.burstSeconds = nil; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
             }
             if next.kind != .discovery && (frame.movement != .running || frame.signal != .good) {
-                next.kind = .discovery; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
+                next.kind = .discovery; next.burstSeconds = nil; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
             }
             if next.id.hasPrefix("major-strike"), let boss = session.boss {
                 if boss.remainingHP <= 0 { return [.checkpoint] }
@@ -169,7 +178,8 @@ public struct RunEngine {
     private mutating func closeEvent(_ outcome: Outcome) {
         guard let event = session.event else { return }
         if event.template.kind != .discovery { session.paceCooldownUntil = session.activeSeconds + 60 }
-        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind))
+        if event.burstStarted == true { session.lastIntensityAt = session.activeSeconds }
+        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted))
         session.event = nil
     }
 }

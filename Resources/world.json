@@ -109,12 +109,23 @@
             },
             {
               "id": "major-strike-a",
-              "title": "경계의 군주 · 외피 약화",
+              "title": "경계의 군주 · 가속 공략",
               "kind": "boss",
               "startFraction": 0.55,
-              "duration": 45,
+              "duration": 10,
               "hp": 300,
-              "audio": "lord_phase1"
+              "audio": "lord_phase1",
+              "burstSeconds": 10,
+              "steadyAudio": "lord_hold"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "경계의 군주 · 유지 압박",
+              "kind": "boss",
+              "startFraction": 0.75,
+              "duration": 30,
+              "hp": 300,
+              "audio": "lord_hold"
             },
             {
               "id": "major-recovery",
@@ -142,10 +153,10 @@
             },
             {
               "id": "major-strike-a",
-              "title": "경계의 군주 · 균열 공략",
+              "title": "경계의 군주 · 유지 압박",
               "kind": "boss",
               "startFraction": 0.3,
-              "duration": 45,
+              "duration": 30,
               "hp": 300,
               "audio": "lord_phase2"
             },
@@ -159,6 +170,17 @@
               "audio": "maintain"
             },
             {
+              "id": "major-strike-b",
+              "title": "경계의 군주 · 가속 공략",
+              "kind": "boss",
+              "startFraction": 0.75,
+              "duration": 10,
+              "hp": 300,
+              "audio": "lord_burst2",
+              "burstSeconds": 10,
+              "steadyAudio": "lord_hold"
+            },
+            {
               "id": "major-recovery",
               "title": "안정화 파편 회수",
               "kind": "discovery",
@@ -184,12 +206,14 @@
             },
             {
               "id": "major-strike-a",
-              "title": "경계의 군주 · 핵심 안정화",
+              "title": "경계의 군주 · 가속 공략",
               "kind": "boss",
               "startFraction": 0.3,
-              "duration": 45,
+              "duration": 10,
               "hp": 300,
-              "audio": "lord_phase3"
+              "audio": "lord_phase3",
+              "burstSeconds": 10,
+              "steadyAudio": "lord_hold"
             },
             {
               "id": "major-guard",
@@ -202,12 +226,12 @@
             },
             {
               "id": "major-strike-b",
-              "title": "경계의 군주 · 최종 공략",
+              "title": "경계의 군주 · 유지 압박",
               "kind": "boss",
               "startFraction": 0.68,
-              "duration": 35,
+              "duration": 30,
               "hp": 300,
-              "audio": "lord_phase3"
+              "audio": "lord_hold"
             },
             {
               "id": "major-recovery",
@@ -253,12 +277,23 @@
             },
             {
               "id": "major-strike-a",
-              "title": "공허의 사서 · 외피 약화",
+              "title": "공허의 사서 · 가속 공략",
               "kind": "boss",
               "startFraction": 0.55,
-              "duration": 45,
+              "duration": 10,
               "hp": 540,
-              "audio": "librarian_phase1"
+              "audio": "librarian_phase1",
+              "burstSeconds": 10,
+              "steadyAudio": "librarian_hold"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "공허의 사서 · 유지 압박",
+              "kind": "boss",
+              "startFraction": 0.75,
+              "duration": 30,
+              "hp": 300,
+              "audio": "librarian_hold"
             },
             {
               "id": "major-recovery",
@@ -286,10 +321,10 @@
             },
             {
               "id": "major-strike-a",
-              "title": "공허의 사서 · 균열 공략",
+              "title": "공허의 사서 · 유지 압박",
               "kind": "boss",
               "startFraction": 0.3,
-              "duration": 45,
+              "duration": 30,
               "hp": 540,
               "audio": "librarian_phase2"
             },
@@ -303,6 +338,17 @@
               "audio": "maintain"
             },
             {
+              "id": "major-strike-b",
+              "title": "공허의 사서 · 가속 공략",
+              "kind": "boss",
+              "startFraction": 0.75,
+              "duration": 10,
+              "hp": 300,
+              "audio": "librarian_burst2",
+              "burstSeconds": 10,
+              "steadyAudio": "librarian_hold"
+            },
+            {
               "id": "major-recovery",
               "title": "안정화 파편 회수",
               "kind": "discovery",
@@ -328,12 +374,14 @@
             },
             {
               "id": "major-strike-a",
-              "title": "공허의 사서 · 핵심 안정화",
+              "title": "공허의 사서 · 가속 공략",
               "kind": "boss",
               "startFraction": 0.3,
-              "duration": 45,
+              "duration": 10,
               "hp": 540,
-              "audio": "librarian_phase3"
+              "audio": "librarian_phase3",
+              "burstSeconds": 10,
+              "steadyAudio": "librarian_hold"
             },
             {
               "id": "major-guard",
@@ -346,12 +394,12 @@
             },
             {
               "id": "major-strike-b",
-              "title": "공허의 사서 · 최종 공략",
+              "title": "공허의 사서 · 유지 압박",
               "kind": "boss",
               "startFraction": 0.68,
-              "duration": 35,
+              "duration": 30,
               "hp": 540,
-              "audio": "librarian_phase3"
+              "audio": "librarian_hold"
             },
             {
               "id": "major-recovery",

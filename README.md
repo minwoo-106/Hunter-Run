@@ -1,4 +1,4 @@
-# Hunter Run — 0.9.0 helpful operator
+# Hunter Run — 0.10.0 optional bursts and consistent voice
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
@@ -10,6 +10,14 @@ All 84 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Re
 `HunterRun-0.9.0-build10-install.zip` (52.24 MB) contains `HunterRun-0.9.0-build10-unsigned.ipa`.
 Packaging verified the outer ZIP, inner IPA, executable, version/build and all 56 designed voice hashes.
 [Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.10
+- User-selected A narration method for the 14 flagged recordings and revised/new lines; no “우와” in current dialogue.
+- Optional ten-second pursuits and boss barrier attacks, with four-second intent confirmation included in those ten seconds.
+- Thirty-second steady boss alternatives, two bursts per activity, 180-second intervals and 60-second easy investigation periods.
+- Mixed burst/steady attacks in every phase of both bosses, remaining-effort/recovery UI and a 20-minute boss mock activity.
+- Pause and save recovery preserve the remaining effort and intensity budget. Local 93 core tests passed; Apple build pending.
+[0.10 field guide](docs/0.10-가속과-음성.md), [v1 progress estimate](docs/v1-progress-estimate.md).
 
 ## Added in 0.9
 - 56 offline voice clips in consistent friendly Korean speech, using the user-approved adult voice reference.
@@ -79,7 +87,7 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 - 5/20/30-minute real runs, unlockable 45-minute goals, and a 3-minute simulated run.
 - GPS + motion + pedometer inputs; uncertainty suspends precision scoring.
 - Foreground-started background location session; intermittent local voice playback.
-- Fifty-six pre-generated designed Korean WAV clips; no runtime TTS or server.
+- Sixty-four pre-generated designed Korean WAV clips; no runtime TTS or server.
 - Pause/resume, goal completion, local progress, recovery, import/export, basic field archive.
 - Mock speed/movement/GPS controls and a non-destructive recovery drill.
 - Pure Swift engine tests including stop protection, replay, gap, and settlement invariants.
