@@ -1,4 +1,4 @@
-# Hunter Run — 0.8.0 operator and field encounters
+# Hunter Run — 0.9.0 helpful operator
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
@@ -10,6 +10,14 @@ All 77 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Re
 `HunterRun-0.8.0-build9-install.zip` (44.67 MB) contains `HunterRun-0.8.0-build9-unsigned.ipa`.
 Packaging verified the outer ZIP, inner IPA, executable, version/build and all 19 designed voice hashes.
 [Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa43fff31f87700ac95bea8). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+
+## Added in 0.9
+- 56 offline voice clips in consistent friendly Korean speech, using the user-approved adult voice reference.
+- Named encounter results distinguish real defeats, damage, investigation, withdrawal and recovery.
+- Phase-specific guidance for both major bosses and six unlock-gated dispatch summaries.
+- Activity captions use the exact selected voice variant; short endurance substitutions use a short hold instruction.
+- Local game engine: 84 passing tests. Apple compilation, UI tests and packaging pending for this source revision.
+[0.9 dialogue and test guide](docs/0.9-오퍼레이터-대사.md).
 
 ## Added in 0.8
 - Approved original operator voice: 19 local WAVs, including three pairs of alternating equivalent lines.
@@ -71,7 +79,7 @@ Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple 
 - 5/20/30-minute real runs, unlockable 45-minute goals, and a 3-minute simulated run.
 - GPS + motion + pedometer inputs; uncertainty suspends precision scoring.
 - Foreground-started background location session; intermittent local voice playback.
-- Nineteen pre-generated designed Korean WAV clips; no runtime TTS or server.
+- Fifty-six pre-generated designed Korean WAV clips; no runtime TTS or server.
 - Pause/resume, goal completion, local progress, recovery, import/export, basic field archive.
 - Mock speed/movement/GPS controls and a non-destructive recovery drill.
 - Pure Swift engine tests including stop protection, replay, gap, and settlement invariants.

@@ -54,17 +54,18 @@
           "startFraction": 0.3,
           "duration": 25,
           "hp": 70,
-          "audio": "ambush"
+          "audio": "wolf_intro"
         },
         {
           "id": "contract-endurance",
-          "title": "중장갑 개체 압박",
+          "title": "철각 파수병 압박",
           "kind": "endurance",
           "startFraction": 0.4,
           "duration": 180,
           "hp": 90,
-          "audio": "endurance",
-          "targetDistance": 400
+          "audio": "guard_intro",
+          "targetDistance": 400,
+          "shortAudio": "guard_hold"
         },
         {
           "id": "trail",
@@ -73,7 +74,7 @@
           "startFraction": 0.62,
           "duration": 25,
           "hp": 60,
-          "audio": "pursuit"
+          "audio": "cat_pursuit"
         },
         {
           "id": "gate",
@@ -82,7 +83,7 @@
           "startFraction": 0.79,
           "duration": 45,
           "hp": 100,
-          "audio": "boss"
+          "audio": "heart_intro"
         }
       ]
     },
@@ -101,13 +102,14 @@
         },
         {
           "id": "gate-guard",
-          "title": "철각 파수병",
+          "title": "철각 파수병 압박",
           "kind": "endurance",
           "startFraction": 0.28,
           "duration": 180,
           "hp": 75,
-          "audio": "endurance",
-          "targetDistance": 400
+          "audio": "guard_intro",
+          "targetDistance": 400,
+          "shortAudio": "guard_hold"
         },
         {
           "id": "gate-trail",
@@ -116,7 +118,7 @@
           "startFraction": 0.44,
           "duration": 25,
           "hp": 65,
-          "audio": "pursuit"
+          "audio": "cat_pursuit"
         },
         {
           "id": "gate-ambush",
@@ -125,7 +127,7 @@
           "startFraction": 0.54,
           "duration": 25,
           "hp": 65,
-          "audio": "ambush"
+          "audio": "cat_ambush"
         },
         {
           "id": "gate-core",
@@ -134,7 +136,7 @@
           "startFraction": 0.64,
           "duration": 45,
           "hp": 85,
-          "audio": "boss"
+          "audio": "watcher_intro"
         },
         {
           "id": "gate-salvage",

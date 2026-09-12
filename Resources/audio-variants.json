@@ -10,5 +10,10 @@
   "partial": [
     "partial",
     "partial_alt"
+  ],
+  "survey_done": [
+    "survey_done",
+    "success",
+    "success_alt"
   ]
 }

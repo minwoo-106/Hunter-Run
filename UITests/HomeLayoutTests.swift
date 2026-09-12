@@ -35,11 +35,14 @@ final class HomeLayoutTests: XCTestCase {
         let read = app.buttons["story.read"]
         for _ in 0..<6 { if read.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(read.isHittable)
+        let listen = app.buttons["story.listen"]
+        XCTAssertTrue(listen.isHittable); XCTAssertTrue(listen.isEnabled); listen.tap()
         if read.isEnabled { read.tap() }
         XCTAssertFalse(read.isEnabled)
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["story.signal"].tap()
         XCTAssertTrue(app.staticTexts["story.locked"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["story.listen"].exists)
         app.navigationBars.buttons.element(boundBy: 0).tap()
         app.navigationBars.buttons.element(boundBy: 0).tap()
         XCTAssertTrue(app.buttons["닫기"].waitForExistence(timeout: 5))

@@ -17,8 +17,9 @@ for key in keys:
 voice = json.loads((root / "Resources/operator-voice.json").read_text(encoding="utf-8"))
 lines = json.loads((root / "Resources/audio-lines.json").read_text(encoding="utf-8"))
 keys.update(lines)
-assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 19
+assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 56
 assert {c["key"] for c in voice["clips"]} == keys == set(lines)
+assert {p.stem for p in (root / "Resources/Audio").glob("*.wav")} == keys, "Unexpected or missing operator WAV"
 for clip in voice["clips"]:
     path = root / "Resources/Audio" / clip["file"]
     assert clip["text"] == lines[clip["key"]]
@@ -29,7 +30,7 @@ for clip in voice["clips"]:
         assert .3 < duration < 15 and abs(duration - clip["duration"]) < .002
         samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
         assert 100 < max(abs(s) for s in samples) < 32700
-print("Validated 19 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
+print("Validated 56 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
@@ -83,7 +84,7 @@ with wave.open(str(root / 'Resources/Music/association-theme.wav')) as music:
 print('Validated two major bosses, seven monster illustrations, three association stages and lobby music.')
 
 variants = json.loads((root / 'Resources/audio-variants.json').read_text(encoding='utf-8'))
-assert set(variants) == {'discovery', 'success', 'partial'}
+assert set(variants) == {'discovery', 'success', 'partial', 'survey_done'}
 for key, clips in variants.items():
     assert key in clips and len(clips) >= 2 and len(clips) == len(set(clips))
     assert all(clip in lines for clip in clips)
@@ -92,3 +93,17 @@ assert {'endurance', 'ambush'} <= {e['kind'] for e in events}
 for event in events:
     if event['kind'] == 'endurance': assert 400 <= event['targetDistance'] <= 800
 print('Validated distance encounters and non-repeating voice variant mappings.')
+
+narration = json.loads((root / 'Resources/narration.json').read_text(encoding='utf-8'))
+assert narration['schema'] == 1 and len(narration['encounters']) == 7
+assert {rule['id'] for rule in narration['encounters']} == {monster['id'] for monster in world['monsters']}
+for rule in narration['encounters']:
+    monster = next(m for m in world['monsters'] if m['id'] == rule['id'])
+    assert rule['eventIDs'] == monster['eventIDs'] and rule['bossID'] == monster.get('bossID')
+    assert rule['defeated'] in lines and rule['hit'] in lines
+for mode in missions['modes'].values():
+    for event in mode['events']:
+        if event.get('shortAudio'): assert event['shortAudio'] in lines
+assert all('dispatch_' + key in lines for key in ['arrival','signal','pattern','branch','boundary','network'])
+assert not any(ending in text for text in lines.values() for ending in ['습니다', '입니다', '합니다', '겠습니다'])
+print('Validated encounter outcome mappings, named short instructions, six dispatches and consistent polite speech.')

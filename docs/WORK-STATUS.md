@@ -1,12 +1,11 @@
-# 0.8.0 build9 · 배포 완료
+# 0.9.0 build10 · 제작 중, 배포 전
 
-- 사용자 승인: 이전8.16초 성인음색 참조 기반 실제 시작/발견 안내와 마지막 큰 눈·남색 브릿지 캐릭터.
-- Resources/Audio의 거절된 팩은 전부 교체. 승인 시작/발견 샘플과 해시 동일. 새19개 안내 및 반복 변형 매핑. Resources/operator-voice.json에 전체 해시.
-- 400m 장기전, 25초 기습, 복구 가능한 사건 시점 변형, 회복 구간 전투 억제, 사건 안내, 긴 모의 활동 추가.
-- Codemagic18 완료: source05a54ce, 8분21초, 로직77·iPhone UI9 통과, Release와 설치 파일/19개 음성 검증 완료.
-- 설치: HunterRun-0.8.0-build9-install.zip 44.67MB → -unsigned.ipa. 기존 앱 삭제 없이 같은 계정으로 AltStore 업데이트.
-- 빌드: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa43fff31f87700ac95bea8
-- ZIP SHA256: a094e4847895b67cd1737c998fc9b475c90cd9a5b141a66c42dadf55d41d4175
-- IPA SHA256: deca530c5ca814ad5edd4481a604498e87fc2b767067203dceca385b1359b5af
-- 다음은 실기기0.8 설치/음성/화면/새 사건 피드백, 이후 개체별 패턴·보스 단계 음성·장비/엘리트/협회 해금 확대. docs/v1-remaining.md에 원본 기획 목표 대비 수량 기록.
-- 추가 클라우드 빌드 없음. WSL Swift77개 통과 및 최종 사건9개 재검증. qwen환경/모델은 work에 보존하며 repo/앱에 포함하지 않음.
+- 사용자0.8실기기 확인: 새 캐릭터/목소리 정상. 해요체 통일과 밝고 구체적인 도우미 대사 요청.
+- 새 wolf_defeated/wolf_hit 샘플을 청취해 “좋아요. 이 방향으로 진행해주세요” 승인.
+- Resources/audio-lines.json56개 해요체로 작성. 전체 음성 outputs/operator-helper-pack55개 + operator-helper-extra1개 제작 완료.
+- Resources/Audio와 manifest를 최종56개로 전부 교체했습니다. 승인 샘플3개와 SHA가 동일합니다.
+- NarrationCatalog와 실제 피해/처치/조사/회복 구분, 이름 있는 조우 안내, 두 보스 단계별 안내, 활동 자막, 협회 통신6편 듣기 구현.
+- 로컬 Swift84개 통과. Apple 빌드/화면 검사 아직 필요. 버전0.9.0/build10.
+- 생성 참조 outputs/voice-adult-probe/operator-adult-activity.wav(기존 승인된 성인8.16초). seed-tag hunter-operator-v2:.
+- 최신 배포는0.8.0 build9(source05a54ce), Codemagic18: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa43fff31f87700ac95bea8
+- 개발작업끝에 PC종료했던 요청은 전날1회 작업으로 완료. 이번 오전 작업에서는 종료하지 않음.

@@ -25,6 +25,7 @@ public struct MissionTemplate: Codable, Identifiable {
     public var hp: Double
     public var audio: String
     public var targetDistance: Double? = nil
+    public var shortAudio: String? = nil
 }
 public struct GameContent: Codable {
     public var schema: Int

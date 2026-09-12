@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "encounters": [
+    {
+      "id": "echo-wolf",
+      "eventIDs": [
+        "beast"
+      ],
+      "bossID": null,
+      "defeated": "wolf_defeated",
+      "hit": "wolf_hit"
+    },
+    {
+      "id": "rift-runner",
+      "eventIDs": [
+        "trail",
+        "gate-trail",
+        "gate-ambush"
+      ],
+      "bossID": null,
+      "defeated": "cat_defeated",
+      "hit": "cat_hit"
+    },
+    {
+      "id": "iron-guard",
+      "eventIDs": [
+        "gate-guard",
+        "contract-endurance"
+      ],
+      "bossID": null,
+      "defeated": "guard_defeated",
+      "hit": "guard_hit"
+    },
+    {
+      "id": "rift-watcher",
+      "eventIDs": [
+        "gate-core"
+      ],
+      "bossID": null,
+      "defeated": "watcher_defeated",
+      "hit": "watcher_hit"
+    },
+    {
+      "id": "signal-heart",
+      "eventIDs": [
+        "gate"
+      ],
+      "bossID": null,
+      "defeated": "heart_defeated",
+      "hit": "heart_hit"
+    },
+    {
+      "id": "boundary-lord",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "boundary-lord",
+      "defeated": "lord_defeated",
+      "hit": "lord_hit"
+    },
+    {
+      "id": "void-librarian",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "void-librarian",
+      "defeated": "librarian_defeated",
+      "hit": "librarian_hit"
+    }
+  ]
+}

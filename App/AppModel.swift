@@ -70,6 +70,19 @@ import UIKit
     }
     let sensor = SensorProbe()
     let audio = AudioDirector()
+    @Published var operatorCaption: String?
+    private var voiceVariants = VoiceVariants()
+    private let voiceLines: [String: String] = AppModel.resource("audio-lines") ?? [:]
+    private let variantCatalog: [String: [String]] = AppModel.resource("audio-variants") ?? [:]
+    let narration: NarrationCatalog? = AppModel.resource("narration")
+    private var narrationReady: Bool {
+        guard let narration else { return false }
+        return (try? narration.validate()) != nil && !voiceLines.isEmpty
+    }
+    private static func resource<T: Decodable>(_ name: String) -> T? {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "json"), let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
     let repository: SaveRepository
     let content: GameContent?
     let progressionCatalog: ProgressionCatalog?
@@ -106,8 +119,8 @@ import UIKit
         let existingSave = repository.hasStoredSave
         do { save = try repository.load(); recoverable = save.active != nil }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
-        if content == nil || progressionCatalog == nil || missions == nil || world == nil { notice = "게임 콘텐츠를 읽지 못했습니다." }
-        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && !saveBlocked
+        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
         showWelcome = isReady && (!existingSave || save.profile.introductionSeen == false)
         #if targetEnvironment(simulator)
@@ -187,7 +200,7 @@ import UIKit
         if !simulated { sensor.start() }
         persist()
         beginTimer()
-        audio.play("run_start")
+        playOperator("run_start")
     }
     private func beginTimer() {
         timer?.invalidate()
@@ -218,9 +231,10 @@ import UIKit
             case .voice(let key):
                 let id = current.session.event?.template.id
                 let rebrief = key == "resume" && current.session.event?.stage == .briefing
-                let playbackKey = rebrief ? (current.session.event?.template.audio ?? key) : key
+                let logicalKey = rebrief ? (current.session.event?.template.audio ?? key) : key
+                let playbackKey = narration?.response(to: logicalKey, session: current.session) ?? logicalKey
                 let isInstruction = current.session.event?.stage == .briefing && playbackKey == current.session.event?.template.audio
-                audio.play(playbackKey) { [weak self] in
+                playOperator(playbackKey) { [weak self] in
                     DispatchQueue.main.async {
                         guard isInstruction, let self, self.engine?.session.event?.template.id == id else { return }
                         self.engine?.instructionFinished(); self.persist()
@@ -229,15 +243,15 @@ import UIKit
             }
         }
     }
-    func pause() { engine?.pause(true); displayedPace.reset(); currentSpeed = 0; audio.stop(); persist() }
+    func pause() { engine?.pause(true); displayedPace.reset(); currentSpeed = 0; audio.stop(); operatorCaption = voiceLines["pause"]; persist() }
     func resume() {
         displayedPace.reset(); currentSpeed = 0
         engine?.pause(false)
         if let event = engine?.session.event, event.stage == .briefing {
-            audio.play(event.template.audio) { [weak self] in
+            playOperator(event.template.audio) { [weak self] in
                 DispatchQueue.main.async { self?.engine?.instructionFinished(); self?.persist() }
             }
-        } else { audio.play("resume") }
+        } else { playOperator("resume") }
         persist()
     }
     func interruption() {
@@ -250,7 +264,9 @@ import UIKit
     }
     func finish() {
         guard engine != nil else { return }
+        let manualEnd = engine?.session.phase != .finished
         engine?.end(); sensor.stop(); timer?.invalidate(); timer = nil
+        if manualEnd { playOperator("run_end") }
         guard let run = engine?.session else { return }
         if run.simulated { lastDemo = run }
         else if let summary = Settlement.apply(run, to: &save.profile) { lastSummary = summary }
@@ -304,12 +320,21 @@ import UIKit
     func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
     func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
+    private func playOperator(_ key: String, completion: (() -> Void)? = nil) {
+        let clip = voiceVariants.select(key, catalog: variantCatalog)
+        operatorCaption = voiceLines[clip]
+        audio.play(clip, completion: completion)
+    }
+    func playDispatch(_ entry: StoryEntry) {
+        guard !growthLocked, StoryProgress.available(entry, profile: save.profile) else { return }
+        previewAudio("dispatch_" + entry.id)
+    }
     func audioTest() { previewAudio("audio_test") }
     private func previewAudio(_ key: String) {
         guard engine == nil else { return }
         lobbyMusic.stop(); testingAudio = true
         audio.ducking = ducking; audio.volume = Float(voiceVolume)
-        audio.play(key) { [weak self] in
+        playOperator(key) { [weak self] in
             DispatchQueue.main.async { self?.testingAudio = false; self?.refreshLobbyMusic() }
         }
     }
@@ -333,13 +358,13 @@ import UIKit
             let imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
             try repository.write(imported); save = imported
-            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil; recoverable = save.active != nil
+            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady; recoverable = save.active != nil
         } catch { notice = "호환되는 Hunter Run 백업 파일이 아닙니다." }
     }
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.8.0 operator voice and artwork
+        Hunter Run 0.9.0 operator voice and artwork
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

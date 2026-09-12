@@ -11,6 +11,7 @@ p.add_argument('--model', required=True)
 p.add_argument('--output', required=True)
 p.add_argument('--reference', required=True, help='Our own synthetic reference WAV')
 p.add_argument('--reference-manifest', required=True)
+p.add_argument('--seed-tag', default='hunter-operator-v2:')
 p.add_argument('--keys', nargs='*', help='Optional small calibration subset')
 a=p.parse_args()
 root=Path(__file__).resolve().parents[1]
@@ -20,15 +21,14 @@ ref_record=json.loads(Path(a.reference_manifest).read_text(encoding='utf-8'))
 if 'clips' in ref_record: ref_record=ref_record['clips'][0]
 assert hashlib.sha256(ref.read_bytes()).hexdigest()==ref_record['sha256']
 lines=json.loads((root/'Resources/audio-lines.json').read_text(encoding='utf-8'))
-lines['run_start']='헌터 활동을 시작합니다. 편안한 페이스로 이동하세요.'
 if a.keys: lines={key:lines[key] for key in a.keys}
 torch.set_num_threads(4)
 print('Loading Base model',flush=True)
 model=Qwen3TTSModel.from_pretrained(a.model, device_map='cuda:0', dtype=torch.bfloat16, attn_implementation='sdpa')
 prompt=model.create_voice_clone_prompt(ref_audio=str(ref),ref_text=ref_record['text'],x_vector_only_mode=False)
-manifest=dict(schema=1,voice='adult-warm-operator',model='Qwen/Qwen3-TTS-12Hz-1.7B-Base',revision='fd4b254389122332181a7c3db7f27e918eec64e3',reference_sha256=ref_record['sha256'],clips=[])
+manifest=dict(schema=1,voice='adult-warm-operator',model='Qwen/Qwen3-TTS-12Hz-1.7B-Base',revision='fd4b254389122332181a7c3db7f27e918eec64e3',reference_sha256=ref_record['sha256'],seed_tag=a.seed_tag,clips=[])
 for key,text in lines.items():
-    seed=int(hashlib.sha256(('hunter-operator-v1:'+key).encode()).hexdigest()[:8],16)
+    seed=int(hashlib.sha256((a.seed_tag+key).encode()).hexdigest()[:8],16)
     torch.manual_seed(seed); np.random.seed(seed)
     print('Generating '+key,flush=True); start=time.time()
     wavs,sr=model.generate_voice_clone(text=text,language='Korean',voice_clone_prompt=prompt,non_streaming_mode=True,max_new_tokens=450,temperature=.55)

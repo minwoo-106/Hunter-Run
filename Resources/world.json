@@ -114,7 +114,7 @@
               "startFraction": 0.55,
               "duration": 45,
               "hp": 300,
-              "audio": "boss"
+              "audio": "lord_phase1"
             },
             {
               "id": "major-recovery",
@@ -147,7 +147,7 @@
               "startFraction": 0.3,
               "duration": 45,
               "hp": 300,
-              "audio": "maintain"
+              "audio": "lord_phase2"
             },
             {
               "id": "major-guard",
@@ -189,7 +189,7 @@
               "startFraction": 0.3,
               "duration": 45,
               "hp": 300,
-              "audio": "boss"
+              "audio": "lord_phase3"
             },
             {
               "id": "major-guard",
@@ -207,7 +207,7 @@
               "startFraction": 0.68,
               "duration": 35,
               "hp": 300,
-              "audio": "boss"
+              "audio": "lord_phase3"
             },
             {
               "id": "major-recovery",
@@ -258,7 +258,7 @@
               "startFraction": 0.55,
               "duration": 45,
               "hp": 540,
-              "audio": "boss"
+              "audio": "librarian_phase1"
             },
             {
               "id": "major-recovery",
@@ -291,7 +291,7 @@
               "startFraction": 0.3,
               "duration": 45,
               "hp": 540,
-              "audio": "maintain"
+              "audio": "librarian_phase2"
             },
             {
               "id": "major-guard",
@@ -333,7 +333,7 @@
               "startFraction": 0.3,
               "duration": 45,
               "hp": 540,
-              "audio": "boss"
+              "audio": "librarian_phase3"
             },
             {
               "id": "major-guard",
@@ -351,7 +351,7 @@
               "startFraction": 0.68,
               "duration": 35,
               "hp": 540,
-              "audio": "boss"
+              "audio": "librarian_phase3"
             },
             {
               "id": "major-recovery",

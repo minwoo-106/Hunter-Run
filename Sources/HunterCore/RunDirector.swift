@@ -15,7 +15,7 @@ public enum RunDirector {
                 || session.activityGoal.kind == .distance && session.activityGoal.value <= 1000
             if event.kind == .endurance && short {
                 event.kind = .maintain; event.duration = 30; event.targetDistance = nil
-                event.title = "전방 개체 견제"; event.audio = "maintain"
+                event.audio = template.shortAudio ?? "maintain"
             }
             if cycle > 0 { event.id += "#\(cycle)" }
             return event

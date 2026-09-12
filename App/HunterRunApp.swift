@@ -75,7 +75,7 @@ struct HomeView: View {
                     }
                     Spacer(minLength: 60)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("오셨네요. 오늘도 함께하겠습니다.").font(.headline).accessibilityIdentifier("home.greeting")
+                        Text("오셨네요! 오늘도 함께해요.").font(.headline).accessibilityIdentifier("home.greeting")
                         Button { model.showStories = true } label: {
                             Text(StoryProgress.unread(model.save.profile).isEmpty ? "협회 통신 기록 · 우리 지부의 이야기를 다시 볼까요?" : "새 협회 통신 \(StoryProgress.unread(model.save.profile).count)건 · 눌러서 확인").font(.subheadline).foregroundStyle(Theme.muted)
                         }.buttonStyle(.plain).accessibilityIdentifier("home.stories")
@@ -90,7 +90,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.8.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.9.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -226,8 +226,8 @@ struct ActiveRunView: View {
                             if let boss = run.boss { BossHPView(name: boss.definition.name, remaining: boss.remainingHP, maximum: boss.maximumHP, phase: boss.phaseName) }
                             VStack(alignment: .leading, spacing: 12) {
                                 eyebrow("OPERATOR")
-                                Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있습니다" : "주변을 탐색하고 있습니다")).font(.title2.bold())
-                                Text(eventMessage(run)).foregroundStyle(Theme.muted)
+                                Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있어요" : "주변을 살펴보고 있어요")).font(.title2.bold())
+                                Text(model.operatorCaption ?? eventMessage(run)).foregroundStyle(Theme.muted).accessibilityIdentifier("activity.caption")
                                 if let event = run.event {
                                     ProgressView(value: event.progress).tint(Theme.teal)
                                     if event.template.kind == .endurance { Text("장기전 · \(Int(event.traveledDistance ?? 0)) / \(Int(event.template.targetDistance ?? 400)) m").font(.caption).foregroundStyle(Theme.teal) }
@@ -301,12 +301,12 @@ struct ActiveRunView: View {
         }.card()
     }
     private func eventMessage(_ run: RunSession) -> String {
-        guard let event = run.event else { return "편안한 페이스로 이동하세요. 정지는 실패로 처리하지 않습니다." }
-        if event.stage == .briefing { return "오퍼레이터 안내를 듣는 중입니다." }
-        if event.stage == .armed { return "안전한 구간이면 조금 가속하세요. 유지하면 조사로 전환합니다." }
-        if event.template.kind == .endurance { return "완만한 페이스로 400m를 전진합니다. 정지 중에는 거리와 판정도 멈춥니다." }
-        if event.template.kind == .ambush { return "가속 없이 달리기 상태를 유지하세요. 멈춰야 할 때는 판정도 기다립니다." }
-        return event.template.kind == .discovery ? "주변 흔적을 확보하고 있습니다." : "안내받은 페이스를 유지하세요. 멈춰야 할 때는 편하게 멈추세요."
+        guard let event = run.event else { return "편안한 페이스로 함께 이동해요. 잠시 멈춰도 괜찮아요!" }
+        if event.stage == .briefing { return "지금 필요한 행동을 안내하고 있어요." }
+        if event.stage == .armed { return "안전한 구간이면 조금 가속해도 좋아요. 아니면 흔적을 함께 조사해요." }
+        if event.template.kind == .endurance { return "편안한 페이스로 400m를 함께 전진해요. 잠시 멈춰도 괜찮아요!" }
+        if event.template.kind == .ambush { return "더 빨라질 필요 없이 달리기를 이어가요. 멈춰야 할 때는 기다릴게요." }
+        return event.template.kind == .discovery ? "주변 흔적을 모으고 있어요!" : "안내받은 페이스로 함께 가요. 멈춰야 할 때는 편하게 멈춰요."
     }
     private func stateName(_ run: RunSession) -> String {
         switch run.phase { case .calibrating: return "준비 중"; case .moving: return "활동 중"; case .paused: return "일시정지"; case .interrupted: return "중단"; case .finished: return "완료" }
@@ -399,7 +399,7 @@ struct SettingsView: View {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
                     Button("안내 음성 테스트") { model.audioTest() }
-                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 19개가 적용되어 있습니다.").font(.caption)
+                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 56개가 적용되어 있습니다.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
@@ -417,8 +417,8 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.8.0 · 오퍼레이터와 현장 사건")
-                    Text("새 오퍼레이터 음색과 캐릭터 · 400m 장기전 · 기습 대응 · 반복 대사 변형.").font(.caption)
+                    Text("0.9.0 · 상황을 알려주는 오퍼레이터")
+                    Text("해요체 안내 · 개체별 조우와 실제 처치 결과 · 보스 단계 음성 · 협회 통신 듣기.").font(.caption)
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }
         }
@@ -438,7 +438,7 @@ struct SettingsView: View {
 extension View {
     func card() -> some View {
         self.padding(18).frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 18))
+            .background(Color.white.opacity(0.056), in: RoundedRectangle(cornerRadius: 18))
             .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(Color.white.opacity(0.08)))
     }
 }

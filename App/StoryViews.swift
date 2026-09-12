@@ -48,6 +48,9 @@ struct StoryDetailView: View {
                     ForEach(Array(entry.paragraphs.enumerated()), id: \.offset) { _, paragraph in
                         Text(paragraph).font(.body).lineSpacing(7).fixedSize(horizontal: false, vertical: true)
                     }
+                    Button { model.playDispatch(entry) } label: { Label("오퍼레이터 통신 듣기", systemImage: "play.circle.fill") }
+                        .buttonStyle(.bordered).disabled(model.growthLocked).accessibilityIdentifier("story.listen")
+                    Text("이 기록의 핵심 내용을 오퍼레이터 목소리로 들어요.").font(.caption).foregroundStyle(Theme.muted)
                     Button((model.save.profile.readStories ?? []).contains(entry.id) ? "확인한 기록입니다" : "기록 확인 완료") { model.readStory(entry.id) }
                         .buttonStyle(.borderedProminent)
                         .disabled(model.growthLocked || (model.save.profile.readStories ?? []).contains(entry.id))
@@ -60,6 +63,7 @@ struct StoryDetailView: View {
                 }
             }.padding(22)
         }.background(Theme.ink).navigationTitle("통신 내용").navigationBarTitleDisplayMode(.inline)
+        .onDisappear { model.stopAudioPreview() }
     }
 }
 
