@@ -1,0 +1,15 @@
+{
+  "version": "0.10.1",
+  "build": 12,
+  "source": "388161b12cdf9470f3fa5873d6a5b812412f6561",
+  "codemagic": 21,
+  "url": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4cdaef69d4792da4a8063",
+  "core_tests": 93,
+  "ui_tests": 9,
+  "clips": 64,
+  "duration": "9m 37s",
+  "ipa_bytes": 57043070,
+  "zip_bytes": 57049984,
+  "ipa_sha256": "e458db9a692385e9ebc5e3cea6e38b0b9f32e5f3491b4652225b2d6bee04862c",
+  "zip_sha256": "0aba234d413daea7d31fef6f43142350011d0bb13d16704a9692f6563fca0368"
+}

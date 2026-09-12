@@ -4,25 +4,24 @@ iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified technical build (0.10.0)
-Codemagic demo build 20 completed on 2026-09-12 KST from commit `11a8285` on Mac mini M2 in 10m 5s.
-All 93 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-0.10.0-build11-install.zip` (57,084,438 bytes) contains `HunterRun-0.10.0-build11-unsigned.ipa`.
-Packaging verified ZIP/IPA integrity, version/build, executable and all 64 bundled voice hashes.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb).
-During the build, the user reported four remaining voice mismatches (28, 57, 61, 64). New candidates are prepared for listening; build11 still contains those four earlier files. Final audio update is pending that feedback.
+## Verified build (0.10.1)
+Codemagic demo build21 completed on2026-09-12 KST from commit `388161b` on Mac mini M2 in9m37s.
+All93 core tests and9 iPhone simulator UI tests passed; the physical-iPhone Release target compiled successfully.
+`HunterRun-0.10.1-build12-install.zip` (54.41MB) contains `HunterRun-0.10.1-build12-unsigned.ipa`.
+Packaging verified ZIP/IPA integrity, version/build, executable and all64 bundled voice hashes, including the four approved repairs and clip28's tail trim.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4cdaef69d4792da4a8063). [한국어 설치 안내](docs/시작안내.md).
 
 ## Added in 0.10.1
 - User-approved replacements for clips 28, 57, 61 and 64; the other 60 files are unchanged.
 - Clip 28 has its last 0.5 seconds removed at a quiet boundary, eliminating the reported trailing sound.
-- Updated installer pending Apple build.
+- Verified installer: build21,93 core and9 UI checks passed.
 
 ## Added in 0.10
 - User-selected A narration method for the 14 flagged recordings and revised/new lines; no “우와” in current dialogue.
 - Optional ten-second pursuits and boss barrier attacks, with four-second intent confirmation included in those ten seconds.
 - Thirty-second steady boss alternatives, two bursts per activity, 180-second intervals and 60-second easy investigation periods.
 - Mixed burst/steady attacks in every phase of both bosses, remaining-effort/recovery UI and a 20-minute boss mock activity.
-- Pause and save recovery preserve the remaining effort and intensity budget. All 93 core and 9 Apple UI tests passed in build20. Four voice follow-up candidates are awaiting user listening feedback.
+- Pause and save recovery preserve the remaining effort and intensity budget. All 93 core and 9 Apple UI tests passed in build20. The four follow-up recordings were approved and applied in0.10.1.
 [0.10 field guide](docs/0.10-가속과-음성.md), [v1 progress estimate](docs/v1-progress-estimate.md).
 
 ## Added in 0.9
