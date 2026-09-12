@@ -4,19 +4,19 @@ iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.8.0)
-Codemagic demo build 18 completed on 2026-09-12 KST from commit `05a54ce` on Mac mini M2 in 8m 21s.
-All 77 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-0.8.0-build9-install.zip` (44.67 MB) contains `HunterRun-0.8.0-build9-unsigned.ipa`.
-Packaging verified the outer ZIP, inner IPA, executable, version/build and all 19 designed voice hashes.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa43fff31f87700ac95bea8). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+## Verified build (0.9.0)
+Codemagic demo build 19 completed on 2026-09-12 KST from commit `1346c58` on Mac mini M2 in 9m 3s.
+All 84 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
+`HunterRun-0.9.0-build10-install.zip` (52.24 MB) contains `HunterRun-0.9.0-build10-unsigned.ipa`.
+Packaging verified the outer ZIP, inner IPA, executable, version/build and all 56 designed voice hashes.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
 
 ## Added in 0.9
 - 56 offline voice clips in consistent friendly Korean speech, using the user-approved adult voice reference.
 - Named encounter results distinguish real defeats, damage, investigation, withdrawal and recovery.
 - Phase-specific guidance for both major bosses and six unlock-gated dispatch summaries.
 - Activity captions use the exact selected voice variant; short endurance substitutions use a short hold instruction.
-- Local game engine: 84 passing tests. Apple compilation, UI tests and packaging pending for this source revision.
+- Local and Apple game engine: 84 passing tests; 9 simulator UI tests, Release compilation and all bundled voice hashes verified.
 [0.9 dialogue and test guide](docs/0.9-오퍼레이터-대사.md).
 
 ## Added in 0.8
