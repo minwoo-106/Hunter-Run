@@ -195,7 +195,7 @@ import UIKit
         if session.boss == nil, let catalog = progressionCatalog, let fieldEncounters {
             mission = fieldEncounters.populate(mission, mode: selectedMode, profile: save.profile, catalog: catalog)
         }
-        if simulated, let encounterDemo { mission = encounterDemo.preview }
+        if simulated, let encounterDemo { mission = encounterDemo.preview; mockRate = 10 }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
         session.learnedReference = simulated ? nil : save.profile.paceMemory?.reference

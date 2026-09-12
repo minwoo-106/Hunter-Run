@@ -220,7 +220,14 @@ final class HomeLayoutTests: XCTestCase {
         let mock = app.buttons["activity.mock.encounter"]
         for _ in 0..<6 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(mock.isHittable); mock.tap()
-        XCTAssertTrue(app.buttons["활동 종료"].waitForExistence(timeout: 5))
+        let end = app.buttons["활동 종료"]
+        XCTAssertTrue(end.waitForExistence(timeout: 5))
+        for _ in 0..<6 { if end.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(end.isHittable); end.tap()
+        app.buttons["저장하고 종료"].tap()
+        let back = app.buttons["협회로 돌아가기"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5)); back.tap()
+        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 5))
     }
 
 }
