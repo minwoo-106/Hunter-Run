@@ -1,0 +1,25 @@
+{
+  "version": "0.11.0",
+  "build": "13",
+  "source_commit": "b5e45291be7c782f983d41413699bd30c8663386",
+  "codemagic_index": 23,
+  "codemagic_url": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa51cfe6d07de75e140b03f",
+  "status": "finished",
+  "duration": "7m48s",
+  "machine": "Mac mini M2",
+  "core_tests": 101,
+  "ui_tests": 10,
+  "clips": 80,
+  "files": [
+    {
+      "name": "HunterRun-0.11.0-build13-unsigned.ipa",
+      "bytes": 82936232,
+      "sha256": "26f44bd8fc8bfd49db8b2b08d9c6c0733fd519f6830acbf5f9aa73c294006f09"
+    },
+    {
+      "name": "HunterRun-0.11.0-build13-install.zip",
+      "bytes": 82949105,
+      "sha256": "cefc2bf0f6225a74e8957613ee23ba9599cfe1337d0fe490f19d41d4f3ff7b2e"
+    }
+  ]
+}

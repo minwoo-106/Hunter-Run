@@ -1,15 +1,24 @@
-# Hunter Run — 0.10.1 optional bursts and consistent voice
+# Hunter Run — 0.11 field encounters and discovery gear
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.10.1)
-Codemagic demo build21 completed on2026-09-12 KST from commit `388161b` on Mac mini M2 in9m37s.
-All93 core tests and9 iPhone simulator UI tests passed; the physical-iPhone Release target compiled successfully.
-`HunterRun-0.10.1-build12-install.zip` (54.41MB) contains `HunterRun-0.10.1-build12-unsigned.ipa`.
-Packaging verified ZIP/IPA integrity, version/build, executable and all64 bundled voice hashes, including the four approved repairs and clip28's tail trim.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4cdaef69d4792da4a8063). [한국어 설치 안내](docs/시작안내.md).
+## 0.11 expansion
+- Four illustrated creatures: dark-elf scout/captain and succubus weaver/warden.
+- Eight discovery-linked equipment items, with individual artwork; all four departments can reach Lv.3.
+- Saved encounter alternatives rotate across patrols while retaining gate objectives and investigation-only exploration.
+- A public field board and targeted mock activities let players preview locked creatures without unlocking real rewards.
+- Sixteen new operator recordings; the 64 previously approved WAVs remain byte-for-byte unchanged.
+- 101 portable core tests and content/80-audio hash validation passed locally. Apple build23 also passed all101 core and10 UI checks.
+[0.11 field guide](docs/0.11-월영과-몽환.md).
+
+## Verified build (0.11.0)
+Codemagic demo build23 completed on2026-09-12 KST from commit `b5e4529` on Mac mini M2 in7m48s.
+All101 core tests and10 iPhone simulator UI tests passed, including field mock completion and subsequent story playback controls. Physical-iPhone Release compilation succeeded.
+`HunterRun-0.11.0-build13-install.zip` (79.11MB) contains `HunterRun-0.11.0-build13-unsigned.ipa`.
+Packaging verified ZIP/IPA integrity, version/build, executable and all80 voice hashes.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa51cfe6d07de75e140b03f). [한국어 설치 안내](docs/시작안내.md).
 
 ## Added in 0.10.1
 - User-approved replacements for clips 28, 57, 61 and 64; the other 60 files are unchanged.
