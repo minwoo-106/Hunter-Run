@@ -207,4 +207,20 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(guide.isHittable); guide.tap()
         XCTAssertTrue(app.staticTexts["01 · 나에게 맞는 활동"].waitForExistence(timeout: 5))
     }
+    @MainActor func testFieldBoardPreparesMockWithoutUnlockingRealContent() {
+        let app = application(); app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        let board = app.buttons["setup.field-intel"]
+        XCTAssertTrue(board.waitForExistence(timeout: 5)); board.tap()
+        let demo = app.buttons["encounter.demo.dark-elf-scout"]
+        for _ in 0..<6 { if demo.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(demo.isHittable)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Field expansion board"; shot.lifetime = .keepAlways; add(shot)
+        demo.tap()
+        let mock = app.buttons["activity.mock.encounter"]
+        for _ in 0..<6 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(mock.isHittable); mock.tap()
+        XCTAssertTrue(app.buttons["활동 종료"].waitForExistence(timeout: 5))
+    }
+
 }

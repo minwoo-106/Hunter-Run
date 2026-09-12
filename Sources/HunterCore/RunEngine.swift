@@ -186,6 +186,7 @@ public struct RunEngine {
 public enum Settlement {
     @discardableResult public static func apply(_ session: RunSession, to profile: inout Profile) -> RunSummary? {
         guard session.phase == .finished, !session.simulated, !profile.settled.contains(session.id) else { return nil }
+        FieldDiscovery.record(session, profile: &profile)
         let completed = session.records.filter { $0.outcome != .neutral }.count
         let bossReport = BossCampaign.settle(session, to: &profile)
         let xp = Int(session.activeSeconds / 10) + completed * 20 + (bossReport?.cleared == true ? 120 : 0)

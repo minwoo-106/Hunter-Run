@@ -7,6 +7,9 @@ public struct MonsterDefinition: Codable, Identifiable {
     public var description: String
     public var eventIDs: [String]
     public var bossID: String?
+    public func isKnown(in profile: Profile) -> Bool {
+        !records(in: profile).isEmpty || (bossID == nil && !FieldDiscovery.events(in: profile).isDisjoint(with: eventIDs))
+    }
     public func records(in profile: Profile) -> [EventRecord] {
         profile.runs.flatMap { run -> [EventRecord] in
             if let bossID, run.majorBoss?.bossID != bossID { return [] }

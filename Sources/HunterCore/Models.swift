@@ -42,9 +42,17 @@ public struct GameContent: Codable {
     public var schema: Int
     public var missionTitle: String
     public var events: [MissionTemplate]
+    public var encounterPools: [EncounterPool]? = nil
     public func validate() throws {
         guard schema == 1, !events.isEmpty, Set(events.map(\.id)).count == events.count,
               events.allSatisfy({ !$0.id.isEmpty && $0.duration.isFinite && $0.duration > 0 && $0.hp.isFinite && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 && ($0.burstSeconds == nil || ($0.burstSeconds == 10 && ($0.kind == .boss || $0.kind == .pursuit) && $0.steadyAudio?.isEmpty == false)) && ($0.kind != .endurance || ($0.targetDistance.map { $0.isFinite && (400...800).contains($0) } ?? false)) }) else { throw ContentError.invalid }
+        guard Set((encounterPools ?? []).map(\.slotID)).count == (encounterPools ?? []).count else { throw ContentError.invalid }
+        let alternativeIDs = (encounterPools ?? []).flatMap { $0.alternatives.map(\.id) }
+        guard Set(alternativeIDs).count == alternativeIDs.count, Set(alternativeIDs).isDisjoint(with: events.map(\.id)) else { throw ContentError.invalid }
+        for pool in encounterPools ?? [] {
+            guard events.contains(where: { $0.id == pool.slotID }), !pool.alternatives.isEmpty else { throw ContentError.invalid }
+            try GameContent(schema: 1, missionTitle: missionTitle, events: pool.alternatives).validate()
+        }
     }
     public enum ContentError: Error { case invalid }
 }
@@ -148,6 +156,7 @@ public struct Profile: Codable {
     public var bosses: [String: BossState]? = nil
     public var readStories: Set<String>? = nil
     public var introductionSeen: Bool? = nil
+    public var discoveredEvents: Set<String>? = nil
     public var paceMemory: PaceMemory? = nil
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }

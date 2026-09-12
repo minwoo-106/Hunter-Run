@@ -5,7 +5,14 @@ public enum RunDirector {
     public static func events(_ content: GameContent, session: RunSession, cycle: Int) -> [MissionTemplate] {
         content.events.map { template in
             var event = template
-            if session.directorVersion == 1 {
+            if session.directorVersion == 2, let pool = content.encounterPools?.first(where: { $0.slotID == template.id }) {
+                let key = session.id.uuidString + ":" + template.id
+                let hash = key.utf8.reduce(UInt64(14695981039346656037)) { ($0 ^ UInt64($1)) &* 1099511628211 }
+                let options = [template] + pool.alternatives
+                event = options[(Int(hash % UInt64(options.count)) + cycle) % options.count]
+                event.startFraction = template.startFraction
+            }
+            if session.directorVersion == 1 || session.directorVersion == 2 {
                 let key = session.id.uuidString + ":\(cycle):" + template.id
                 let hash = key.utf8.reduce(UInt64(14695981039346656037)) { ($0 ^ UInt64($1)) &* 1099511628211 }
                 let shift = (Double(hash % 1001) / 1000 - 0.5) * 0.03
@@ -15,7 +22,7 @@ public enum RunDirector {
                 || session.activityGoal.kind == .distance && session.activityGoal.value <= 1000
             if event.kind == .endurance && short {
                 event.kind = .maintain; event.duration = 30; event.targetDistance = nil
-                event.audio = template.shortAudio ?? "maintain"
+                event.audio = event.shortAudio ?? "maintain"
             }
             if cycle > 0 { event.id += "#\(cycle)" }
             return event

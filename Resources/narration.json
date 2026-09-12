@@ -68,6 +68,42 @@
       "bossID": "void-librarian",
       "defeated": "librarian_defeated",
       "hit": "librarian_hit"
+    },
+    {
+      "id": "dark-elf-scout",
+      "eventIDs": [
+        "dark-elf-scout"
+      ],
+      "bossID": null,
+      "defeated": "scout_defeated",
+      "hit": "scout_hit"
+    },
+    {
+      "id": "succubus-weaver",
+      "eventIDs": [
+        "succubus-weaver"
+      ],
+      "bossID": null,
+      "defeated": "weaver_defeated",
+      "hit": "weaver_hit"
+    },
+    {
+      "id": "dark-elf-captain",
+      "eventIDs": [
+        "dark-elf-captain"
+      ],
+      "bossID": null,
+      "defeated": "captain_defeated",
+      "hit": "captain_hit"
+    },
+    {
+      "id": "succubus-warden",
+      "eventIDs": [
+        "succubus-warden"
+      ],
+      "bossID": null,
+      "defeated": "warden_defeated",
+      "hit": "warden_hit"
     }
   ]
 }

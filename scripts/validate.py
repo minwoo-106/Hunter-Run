@@ -17,7 +17,7 @@ for key in keys:
 voice = json.loads((root / "Resources/operator-voice.json").read_text(encoding="utf-8"))
 lines = json.loads((root / "Resources/audio-lines.json").read_text(encoding="utf-8"))
 keys.update(lines)
-assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 64
+assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 80
 assert {c["key"] for c in voice["clips"]} == keys == set(lines)
 assert {p.stem for p in (root / "Resources/Audio").glob("*.wav")} == keys, "Unexpected or missing operator WAV"
 for clip in voice["clips"]:
@@ -30,7 +30,7 @@ for clip in voice["clips"]:
         assert .3 < duration < 15 and abs(duration - clip["duration"]) < .002
         samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
         assert 100 < max(abs(s) for s in samples) < 32700
-print("Validated 64 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
+print("Validated 80 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
@@ -50,7 +50,7 @@ print(f"Validated {len(ids)} events, {len(keys)} audio clips, permissions, artwo
 progression = json.loads((root / "Resources/progression.json").read_text(encoding="utf-8"))
 missions = json.loads((root / "Resources/missions.json").read_text(encoding="utf-8"))
 assert progression['schema'] == missions['schema'] == 1
-assert len(progression['equipment']) == len({e['id'] for e in progression['equipment']}) == 12
+assert len(progression['equipment']) == len({e['id'] for e in progression['equipment']}) == 20
 assert {u['department'] for u in progression['upgrades']} == {'observation', 'research', 'equipment', 'contracts'}
 assert set(missions['modes']) == {'exploration', 'contract', 'gate'}
 for mission in missions['modes'].values():
@@ -58,7 +58,7 @@ for mission in missions['modes'].values():
     assert len(events) == len({e['id'] for e in events})
     assert all(0 < e['startFraction'] < .9 and e['duration'] > 0 and e['hp'] >= 0 for e in events)
     assert all((root / 'Resources/Audio' / (e['audio'] + '.wav')).is_file() for e in events)
-print('Validated 12 equipment items, four department upgrades, and three mission modes.')
+print('Validated 20 equipment items, eight department upgrades, and three mission modes.')
 
 for item in progression['equipment']:
     folder = catalog / ('Gear-' + item['id'] + '.imageset')
@@ -67,10 +67,10 @@ for item in progression['equipment']:
     assert data[:8] == b"\x89PNG\r\n\x1a\n", item['id']
     width, height = struct.unpack('>II', data[16:24])
     assert width == height and width >= 512, item['id']
-print('Validated twelve individual equipment illustrations.')
+print('Validated twenty individual equipment illustrations.')
 
 world = json.loads((root / 'Resources/world.json').read_text(encoding='utf-8'))
-assert world['schema'] == 1 and len(world['bosses']) == 2 and len(world['monsters']) == 7
+assert world['schema'] == 1 and len(world['bosses']) == 2 and len(world['monsters']) == 11
 for boss in world['bosses']:
     assert len(boss['phases']) == 3 and 100 <= boss['maximumHP'] <= 100000
     for phase in boss['phases']:
@@ -81,7 +81,7 @@ for asset in ['Monster-' + m['id'] for m in world['monsters']] + ['AssociationOf
 with wave.open(str(root / 'Resources/Music/association-theme.wav')) as music:
     assert music.getnchannels() == 2 and music.getsampwidth() == 2 and music.getframerate() == 44100
     assert music.getnframes() == 32 * 44100
-print('Validated two major bosses, seven monster illustrations, three association stages and lobby music.')
+print('Validated two major bosses, eleven monster illustrations, three association stages and lobby music.')
 
 variants = json.loads((root / 'Resources/audio-variants.json').read_text(encoding='utf-8'))
 assert set(variants) == {'discovery', 'success', 'partial', 'survey_done'}
@@ -95,7 +95,7 @@ for event in events:
 print('Validated distance encounters and non-repeating voice variant mappings.')
 
 narration = json.loads((root / 'Resources/narration.json').read_text(encoding='utf-8'))
-assert narration['schema'] == 1 and len(narration['encounters']) == 7
+assert narration['schema'] == 1 and len(narration['encounters']) == 11
 assert {rule['id'] for rule in narration['encounters']} == {monster['id'] for monster in world['monsters']}
 for rule in narration['encounters']:
     monster = next(m for m in world['monsters'] if m['id'] == rule['id'])
@@ -121,3 +121,16 @@ for boss in world['bosses']:
             if event.get('burstSeconds'):
                 assert event['duration'] == 10 and event['steadyAudio'] in lines
 print('Verified replacement of 14 user-rejected WAVs, no 우와, and mixed 10-second/steady boss attacks.')
+
+encounters = json.loads((root/'Resources/encounters.json').read_text(encoding='utf-8'))
+assert len(encounters['encounters']) == 4
+for entry in encounters['encounters']:
+    assert entry['monsterID'] in {m['id'] for m in world['monsters']}
+    if entry.get('requiredAction'): assert any(entry['requiredAction'] in u['unlockActions'] for u in progression['upgrades'])
+    for mode, slot in entry['slots'].items(): assert slot in {e['id'] for e in missions['modes'][mode]['events']}
+    for event in [entry['event']] + ([entry['survey']] if entry.get('survey') else []):
+        for key in ['audio','shortAudio','steadyAudio']:
+            if event.get(key): assert event[key] in lines
+for item in progression['equipment']:
+    if item.get('requiredEvent'): assert item['requiredEvent'] in {e['event']['id'] for e in encounters['encounters']}
+print('Validated four encounter pools, cross-content unlocks and eight discovery-linked items.')

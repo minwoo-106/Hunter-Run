@@ -15,6 +15,7 @@ import UIKit
     var replayWelcomeAfterSettings = false
     @Published var showWelcome = false
     @Published var showStories = false
+    @Published var selectedFieldDemo: String?
     @Published var selectedBoss: String?
     @Published var selectedMode: RunMode = .contract
     @Published var mockMovement: Movement = .running
@@ -87,6 +88,7 @@ import UIKit
     let content: GameContent?
     let progressionCatalog: ProgressionCatalog?
     let missions: MissionCatalog?
+    let fieldEncounters: EncounterCatalog? = AppModel.resource("encounters")
     let world: WorldContent?
     var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
     var growthLocked: Bool { engine != nil || save.active != nil || recoverable || !isReady }
@@ -116,11 +118,12 @@ import UIKit
         if let url = Bundle.main.url(forResource: "world", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(WorldContent.self, from: data),
            (try? decoded.validate()) != nil { world = decoded } else { world = nil }
+        let encountersReady = fieldEncounters.map { (try? $0.validate()) != nil } ?? false
         let existingSave = repository.hasStoredSave
         do { save = try repository.load(); recoverable = save.active != nil }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
-        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
-        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && !saveBlocked
+        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
         showWelcome = isReady && (!existingSave || save.profile.introductionSeen == false)
         #if targetEnvironment(simulator)
@@ -170,11 +173,12 @@ import UIKit
         }
     }
     func authorize() { sensor.requestPermission() }
-    func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil) {
+    func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil, encounterDemo: FieldEncounter? = nil) {
         guard isReady, let content, engine == nil, save.active == nil else { return }
         if !simulated && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
         }
+        guard simulated || encounterDemo == nil else { return }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
         guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
         guard (simulated || modeAllowed(selectedMode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
@@ -188,11 +192,15 @@ import UIKit
             let encounter = BossEncounter(definition: boss, state: state)
             session.boss = encounter; mission = encounter.content
         }
+        if session.boss == nil, let catalog = progressionCatalog, let fieldEncounters {
+            mission = fieldEncounters.populate(mission, mode: selectedMode, profile: save.profile, catalog: catalog)
+        }
+        if simulated, let encounterDemo { mission = encounterDemo.preview }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
         session.learnedReference = simulated ? nil : save.profile.paceMemory?.reference
         session.goal = requested
-        session.directorVersion = 1
+        session.directorVersion = 2
         session.missionSnapshot = mission
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
@@ -312,9 +320,14 @@ import UIKit
             save = candidate; notice = message
         } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다." }
     }
+    func prepareFieldDemo(_ encounter: FieldEncounter) {
+        guard !growthLocked else { return }
+        selectedFieldDemo = encounter.id; selectedBoss = nil; selectedMode = .contract
+        showAssociation = false; selectedTab = 2
+    }
     func prepareBoss(_ boss: BossDefinition, simulated: Bool = false) {
         guard let catalog = progressionCatalog, (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "필요한 등급과 관측부 레벨을 먼저 달성해주세요."; return }
-        selectedBoss = boss.id; selectedMode = .gate; showAssociation = false; selectedTab = 2
+        selectedFieldDemo = nil; selectedBoss = boss.id; selectedMode = .gate; showAssociation = false; selectedTab = 2
     }
     func restartBoss(_ boss: BossDefinition) {
         changeGrowth { save, catalog in try BossCampaign.restart(boss, save: &save, catalog: catalog); return "새 토벌 회차를 열었습니다." }
@@ -367,7 +380,7 @@ import UIKit
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.10.1 operator voice and artwork
+        Hunter Run 0.11.0 operator voice and artwork
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

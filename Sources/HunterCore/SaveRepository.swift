@@ -38,15 +38,17 @@ public final class SaveRepository {
     public func validate(_ save: SaveState) throws {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
+        guard (save.profile.discoveredEvents?.count ?? 0) <= 1000,
+              (save.profile.discoveredEvents ?? []).allSatisfy({ !$0.isEmpty && $0.count <= 200 }) else { throw Failure.invalid }
         let growth = save.profile.growth
         guard save.profile.xp <= 100_000_000, save.profile.crystals <= 100_000_000, save.profile.research <= 100_000_000,
               Progression.ranks.contains(growth.rank), (0...1_000_000).contains(growth.cores),
-              growth.departments.allSatisfy({ Department(rawValue: $0.key) != nil && (1...2).contains($0.value) }),
+              growth.departments.allSatisfy({ Department(rawValue: $0.key) != nil && (1...3).contains($0.value) }),
               growth.equipped.allSatisfy({ EquipmentSlot(rawValue: $0.key) != nil && growth.owned.contains($0.value) }) else { throw Failure.invalid }
         guard (save.profile.bosses ?? [:]).allSatisfy({ !$0.key.isEmpty && $0.value.isValid }) else { throw Failure.invalid }
         guard save.profile.paceMemory?.isValid ?? true, save.profile.runs.allSatisfy({ $0.paceReport?.isValid ?? true }) else { throw Failure.invalid }
         if let run = save.active {
-            guard run.directorVersion == nil || run.directorVersion == 1,
+            guard run.directorVersion == nil || run.directorVersion == 1 || run.directorVersion == 2,
                   run.event?.traveledDistance.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.paceObservation?.isValid ?? true,
                   run.learnedReference.map(PaceLearning.validSpeed) ?? true,

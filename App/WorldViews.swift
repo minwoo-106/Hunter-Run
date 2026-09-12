@@ -92,7 +92,7 @@ struct CodexView: View {
                     Button("현장 사건 기록 보기") { archive = true }.buttonStyle(.bordered)
                     ForEach(model.world?.monsters ?? []) { monster in
                         let records = monster.records(in: model.save.profile)
-                        let known = !records.isEmpty
+                        let known = monster.isKnown(in: model.save.profile)
                         NavigationLink { MonsterDetailView(monster: monster) } label: {
                             HStack(spacing: 16) {
                                 if known { Image("Monster-" + monster.id).resizable().scaledToFit().frame(width: 100, height: 100).clipShape(RoundedRectangle(cornerRadius: 16)) }
@@ -116,13 +116,23 @@ struct MonsterDetailView: View {
         let records = monster.records(in: model.save.profile)
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                if records.isEmpty {
+                if !monster.isKnown(in: model.save.profile) {
                     ContentUnavailableView("아직 발견하지 못했습니다", systemImage: "questionmark.diamond", description: Text("실제 활동에서 관련 개체의 흔적을 찾으면 기록과 이미지가 열립니다."))
                 } else {
                     Image("Monster-" + monster.id).resizable().scaledToFit().clipShape(RoundedRectangle(cornerRadius: 22))
                     eyebrow(monster.family)
                     Text(monster.name).font(.largeTitle.bold())
                     Text(monster.description).foregroundStyle(Theme.muted)
+                    if model.unlocked("tactical-analysis"), let entry = model.fieldEncounters?.encounters.first(where: { $0.monsterID == monster.id }) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Label("연구부 전술 분석", systemImage: "scope").font(.headline)
+                            Text(entry.tactic)
+                            Text(entry.unlockHint).font(.caption).foregroundStyle(Theme.muted)
+                            ForEach(model.progressionCatalog?.equipment.filter { $0.requiredEvent == entry.id } ?? []) { item in
+                                NavigationLink(item.name) { EquipmentDetailView(item: item) }
+                            }
+                        }.card()
+                    }
                     Text("발견 기록 \(records.count)회").font(.headline)
                     if model.unlocked("analysis") {
                         Text("누적 피해 \(Int(records.reduce(0) { $0 + $1.damage })) · 토벌 \(records.filter { $0.defeated == true }.count)회").foregroundStyle(Theme.teal)

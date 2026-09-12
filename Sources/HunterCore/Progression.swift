@@ -43,6 +43,11 @@ public struct EquipmentDefinition: Codable, Identifiable {
     public var crystals: Int
     public var research: Int
     public var cores: Int
+    public var requiredEvent: String? = nil
+    public var discoveryHint: String? = nil
+    public func available(to profile: Profile) -> Bool {
+        profile.growth.level(.equipment) >= supportLevel && (requiredEvent.map { FieldDiscovery.events(in: profile).contains($0) } ?? true)
+    }
     public var supportLevel: Int
     public var hp: Double
     public var attack: Double
@@ -67,10 +72,13 @@ public struct ProgressionCatalog: Codable {
     public func validate() throws {
         guard schema == 1, !equipment.isEmpty, Set(equipment.map(\.id)).count == equipment.count,
               Set(upgrades.map(\.id)).count == upgrades.count,
-              equipment.allSatisfy({ !$0.id.isEmpty && $0.crystals >= 0 && $0.research >= 0 && $0.cores >= 0 && (1...2).contains($0.supportLevel) && $0.hp.isFinite && (0...50).contains($0.hp) && $0.attack.isFinite && (0...0.5).contains($0.attack) && $0.defense.isFinite && (0...0.3).contains($0.defense) && $0.eventBonus.isFinite && (0...0.2).contains($0.eventBonus) && (0...5).contains($0.researchBonus) }),
-              upgrades.count == Department.allCases.count,
+              equipment.allSatisfy({ !$0.id.isEmpty && $0.crystals >= 0 && $0.research >= 0 && $0.cores >= 0 && (1...3).contains($0.supportLevel) && $0.hp.isFinite && (0...50).contains($0.hp) && $0.attack.isFinite && (0...0.5).contains($0.attack) && $0.defense.isFinite && (0...0.3).contains($0.defense) && $0.eventBonus.isFinite && (0...0.2).contains($0.eventBonus) && (0...5).contains($0.researchBonus) }),
+              upgrades.count == Department.allCases.count * 2,
               Set(upgrades.map(\.department)).count == Department.allCases.count,
-              upgrades.allSatisfy({ $0.level == 2 && $0.crystals >= 0 && $0.research >= 0 }) else { throw ProgressionError.invalid }
+              upgrades.allSatisfy({ (2...3).contains($0.level) && $0.crystals >= 0 && $0.research >= 0 }) else { throw ProgressionError.invalid }
+        for department in Department.allCases {
+            guard Set(upgrades.filter { $0.department == department }.map(\.level)) == Set([2, 3]) else { throw ProgressionError.invalid }
+        }
     }
     public func unlocked(_ action: String, profile: Profile) -> Bool {
         upgrades.contains { profile.growth.level($0.department) >= $0.level && $0.unlockActions.contains(action) }
@@ -120,7 +128,7 @@ public enum Progression {
     }
     public static func buy(_ id: String, save: inout SaveState, catalog: ProgressionCatalog) throws {
         guard save.active == nil else { throw ProgressionError.activeRun }
-        guard let item = catalog.equipment.first(where: { $0.id == id }), save.profile.growth.level(.equipment) >= item.supportLevel else { throw ProgressionError.unavailable }
+        guard let item = catalog.equipment.first(where: { $0.id == id }), item.available(to: save.profile) else { throw ProgressionError.unavailable }
         guard !save.profile.growth.owned.contains(id) else { throw ProgressionError.owned }
         guard save.profile.crystals >= item.crystals, save.profile.research >= item.research, save.profile.growth.cores >= item.cores else { throw ProgressionError.insufficient }
         save.profile.crystals -= item.crystals; save.profile.research -= item.research

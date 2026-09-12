@@ -22,6 +22,7 @@ struct AssociationView: View {
                 Text("시설 확장 \(AssociationStage.upgrades(model.save.profile)) / 4 · 2개 확장 시 정식 지부, 4개 확장 시 광역 지부").font(.caption).foregroundStyle(Theme.muted)
                 NavigationLink { BossBoardView() } label: { Label("주요 보스 토벌 게시판", systemImage: "shield.checkered").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.bosses")
                 NavigationLink { StoryArchiveView() } label: { Label("협회 통신 기록", systemImage: "envelope.badge").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.stories")
+                NavigationLink { EncounterBoardView() } label: { Label("신규 개체 · 월영과 몽환", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.field-intel")
                 Text("우리의 지부를\n키워갑니다.").font(.largeTitle.bold())
                 Text("현장에서 얻은 자원으로 새로운 기능을 열어보세요.").foregroundStyle(Theme.muted)
                 ResourceStrip()
@@ -41,12 +42,12 @@ struct AssociationView: View {
                                 .buttonStyle(.borderedProminent)
                                 .disabled(model.growthLocked || model.save.profile.crystals < next.crystals || model.save.profile.research < next.research)
                         } else {
-                            Text(model.progressionCatalog?.upgrades.first { $0.department == department }?.reveal ?? "확장 완료")
+                            Text(model.progressionCatalog?.upgrades.first { $0.department == department && $0.level == level }?.reveal ?? "확장 완료")
                                 .font(.callout).foregroundStyle(Theme.teal)
                         }
                     }.card()
                 }
-                Text("이번 버전에서는 각 부서를 Lv.2까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
+                Text("이번 버전에서는 각 부서를 Lv.3까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
         }.background(Theme.ink).navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
     }
@@ -72,7 +73,7 @@ struct EquipmentView: View {
                 ForEach(model.progressionCatalog?.equipment.filter { $0.slot == slot && (!ownedOnly || model.save.profile.growth.owned.contains($0.id)) } ?? []) { item in
                     let owned = model.save.profile.growth.owned.contains(item.id)
                     let equipped = model.save.profile.growth.equipped[item.slot.rawValue] == item.id
-                    let unlocked = model.save.profile.growth.level(.equipment) >= item.supportLevel
+                    let unlocked = item.available(to: model.save.profile)
                     VStack(alignment: .leading, spacing: 12) {
                         NavigationLink { EquipmentDetailView(item: item) } label: { HStack(spacing: 14) {
                             GearArtwork(item: item)
@@ -93,7 +94,7 @@ struct EquipmentView: View {
                             Button("장비 확보") { model.buy(item.id) }.buttonStyle(.bordered)
                                 .disabled(model.growthLocked || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
                         } else {
-                            Label("장비지원부 Lv.\(item.supportLevel) 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
+                            Label("장비지원부 Lv.\(item.supportLevel)" + (item.discoveryHint.map { " · " + $0 } ?? " 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
                         }
                     }.card()
                 }

@@ -75,13 +75,14 @@ struct EquipmentDetailView: View {
                 Text("장착한 장비의 효과는 다음 활동에 적용됩니다. 활동 중에는 장비를 바꿀 수 없습니다.").foregroundStyle(Theme.muted)
                 Text("필요 자원 · 마정석 \(item.crystals) / 조사 \(item.research) / 코어 \(item.cores)").font(.callout)
                 Text("장비지원부 Lv.\(item.supportLevel)").font(.caption).foregroundStyle(Theme.muted)
+                if let hint = item.discoveryHint { Label(hint, systemImage: item.requiredEvent.map { FieldDiscovery.events(in: model.save.profile).contains($0) } == true ? "checkmark.circle" : "lock.fill").font(.caption).foregroundStyle(Theme.teal) }
                 ResourceStrip()
                 if model.save.profile.growth.owned.contains(item.id) {
                     Button(model.save.profile.growth.equipped[item.slot.rawValue] == item.id ? "장착 해제" : "장착") { model.equip(item.id) }
                         .buttonStyle(.borderedProminent).disabled(model.growthLocked)
                 } else {
                     Button("장비 확보") { model.buy(item.id) }.buttonStyle(.borderedProminent)
-                        .disabled(model.growthLocked || model.save.profile.growth.level(.equipment) < item.supportLevel || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
+                        .disabled(model.growthLocked || !item.available(to: model.save.profile) || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
                 }
             }.padding(22)
         }.background(Theme.ink).navigationTitle("장비 상세").navigationBarTitleDisplayMode(.inline)

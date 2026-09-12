@@ -90,7 +90,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.10.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("FIELD DEMO · 0.11.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -126,6 +126,15 @@ struct SetupView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     eyebrow("TODAY'S ASSIGNMENT")
                     Text(model.missions?.content(for: model.selectedMode, extended: false).missionTitle ?? "현장 의뢰").font(.largeTitle.bold())
+                    NavigationLink { EncounterBoardView() } label: { Label("신규 개체 · 월영과 몽환", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("setup.field-intel")
+                    if let entry = model.fieldEncounters?.encounters.first(where: { $0.id == model.selectedFieldDemo }) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("모의 체험 대상 · " + entry.name).font(.headline)
+                            Text("20분 모의 활동에서 해당 개체를 만나요. 실제 출현·보상에는 영향을 주지 않아요.").font(.caption)
+                            Button("선택 개체 모의 활동 시작") { model.start(simulated: true, seconds: 1200, pursuit: true, encounterDemo: entry) }.buttonStyle(.borderedProminent).disabled(model.growthLocked).accessibilityIdentifier("activity.mock.encounter")
+                            Button("모의 대상 선택 해제") { model.selectedFieldDemo = nil }.font(.caption)
+                        }.card()
+                    }
                     ForEach(RunMode.allCases, id: \.rawValue) { mode in
                         Button { model.selectedMode = mode } label: {
                             HStack {
@@ -412,7 +421,7 @@ struct SettingsView: View {
                     Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
                     Button("안내 음성 테스트") { model.audioTest() }
-                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 64개가 적용되어 있습니다.").font(.caption)
+                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 80개가 적용되어 있습니다.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
@@ -430,7 +439,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 Section("개발 상태") {
-                    Text("0.10.1 · 상황을 알려주는 오퍼레이터")
+                    Text("0.11.0 · 상황을 알려주는 오퍼레이터")
                     Text("해요체 안내 · 개체별 조우와 실제 처치 결과 · 보스 단계 음성 · 협회 통신 듣기.").font(.caption)
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }

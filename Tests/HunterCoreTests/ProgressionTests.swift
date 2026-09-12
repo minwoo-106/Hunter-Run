@@ -10,7 +10,7 @@ final class ProgressionTests: XCTestCase {
     func testCatalogsAndUnlocksAreValid() throws {
         let catalog = try catalog(); try catalog.validate()
         let missions = try load("missions.json", as: MissionCatalog.self); try missions.validate()
-        XCTAssertEqual(catalog.equipment.count, 12)
+        XCTAssertEqual(catalog.equipment.count, 20)
         XCTAssertEqual(missions.content(for: .exploration, extended: false).events.filter { $0.kind != .discovery }.count, 0)
         XCTAssertEqual(missions.content(for: .contract, extended: true).events.count, 6)
     }
@@ -53,6 +53,8 @@ final class ProgressionTests: XCTestCase {
         XCTAssertFalse(catalog.unlocked("analysis", profile: save.profile))
         try Progression.upgrade(.research, save: &save, catalog: catalog)
         XCTAssertTrue(catalog.unlocked("analysis", profile: save.profile))
+        try Progression.upgrade(.research, save: &save, catalog: catalog)
+        XCTAssertTrue(catalog.unlocked("tactical-analysis", profile: save.profile))
         let remaining = save.profile.research
         XCTAssertThrowsError(try Progression.upgrade(.research, save: &save, catalog: catalog))
         XCTAssertEqual(save.profile.research, remaining)

@@ -783,6 +783,230 @@
       "duration": 6.025,
       "sha256": "44f60116e0192307ccb433da08ca41c4dee89904312167908118ee74a0e5ca94",
       "seed_tag": "hunter-consistent-repair-v2:"
+    },
+    {
+      "key": "scout_intro",
+      "file": "scout_intro.wav",
+      "text": "다크엘프 정찰자가 활을 들었어요! 이십오 초 동안 평소 페이스로 대응해요.",
+      "seed": 3249869680,
+      "seeds": [
+        3249869680
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.229,
+      "sha256": "9dc36483e948057b595f6f1b592a16a9ced144338ad0338211f6fa4915c6f667"
+    },
+    {
+      "key": "scout_hit",
+      "file": "scout_hit.wav",
+      "text": "다크엘프 정찰자에게 피해를 줬어요! 화살의 마력이 약해졌어요.",
+      "seed": 3809210836,
+      "seeds": [
+        3809210836
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.454,
+      "sha256": "7c95059a33058a8743bb4fea2acd64af50b7a30d236208e6e1aadf07ffe60fe2"
+    },
+    {
+      "key": "scout_defeated",
+      "file": "scout_defeated.wav",
+      "text": "잘했어요! 다크엘프 정찰자를 제압했어요. 은월 장비의 단서를 챙겨둘게요.",
+      "seed": 2846295437,
+      "seeds": [
+        2846295437
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.185,
+      "sha256": "d71801246c8e97042e86d49055cf1a4a1ae24de703d3ed9fb7063a011fa42f78"
+    },
+    {
+      "key": "scout_survey",
+      "file": "scout_survey.wav",
+      "text": "다크엘프 정찰자의 흔적이에요! 편하게 이동하면 제가 기록할게요.",
+      "seed": 1577933228,
+      "seeds": [
+        1577933228
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.567,
+      "sha256": "036e9ac50d33e05d2d736c3aad7e8b72220d78d4ecb94952e448dedc67d2f39b"
+    },
+    {
+      "key": "weaver_intro",
+      "file": "weaver_intro.wav",
+      "text": "서큐버스 환영술사가 거울을 펼쳤어요! 삼십오 초 동안 일정한 페이스로 환영을 흩뜨려요.",
+      "seed": 3223971257,
+      "seeds": [
+        3223971257
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.851,
+      "sha256": "aaabb27429fb25ed3bee98d2c2358e30eb8af66fb4431cada76166c0743468d1"
+    },
+    {
+      "key": "weaver_hit",
+      "file": "weaver_hit.wav",
+      "text": "서큐버스 환영술사에게 피해를 줬어요! 거울 속 반응이 약해지고 있어요.",
+      "seed": 2367832182,
+      "seeds": [
+        2367832182
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.686,
+      "sha256": "2a82ceaf51f514bd1337d0f85a5f7b813998d0c6269da8dd829fa33d664cecd2"
+    },
+    {
+      "key": "weaver_defeated",
+      "file": "weaver_defeated.wav",
+      "text": "대단해요! 서큐버스 환영술사를 제압했어요. 환영 속 기록을 확보했어요.",
+      "seed": 23234145,
+      "seeds": [
+        23234145
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.178,
+      "sha256": "8304229c8fcc4ccf191e0e5f7092251579fd804b91b381b563926174a43e91d7"
+    },
+    {
+      "key": "weaver_survey",
+      "file": "weaver_survey.wav",
+      "text": "서큐버스의 보랏빛 거울 흔적이에요! 천천히 이동하며 함께 조사해요.",
+      "seed": 2931260845,
+      "seeds": [
+        2931260845
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.298,
+      "sha256": "0bcec472544cec39fd55edb156dba741dc6a07080c1174e3f88bb06ed4ed9eda"
+    },
+    {
+      "key": "captain_intro",
+      "file": "captain_intro.wav",
+      "text": "엘리트 다크엘프 월영대장이 나타났어요! 평소 페이스로 사백 미터를 전진하며 방진을 압박해요.",
+      "seed": 2925772491,
+      "seeds": [
+        2925772491
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.163,
+      "sha256": "95a552013ef07670439d084e636b6eb3ba81ef76e6f4007f0478fb71373255ff"
+    },
+    {
+      "key": "captain_hold",
+      "file": "captain_hold.wav",
+      "text": "월영대장의 방진이 보여요! 삼십 초 동안 평소 페이스로 견제해요.",
+      "seed": 504493471,
+      "seeds": [
+        504493471
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.524,
+      "sha256": "d0687ddcd28f564dfd62f8ca9ded7fb59acfb555def399dd59000742658a4793"
+    },
+    {
+      "key": "captain_hit",
+      "file": "captain_hit.wav",
+      "text": "월영대장의 방진에 피해를 줬어요! 은빛 보호막에 틈이 생겼어요.",
+      "seed": 1152086171,
+      "seeds": [
+        1152086171
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.425,
+      "sha256": "4560f009d6b0c9316a1a3a84f548e048e6f5c256a459435d8200340f697102be"
+    },
+    {
+      "key": "captain_defeated",
+      "file": "captain_defeated.wav",
+      "text": "잘했어요! 다크엘프 월영대장을 제압했어요. 엘리트의 기록을 챙겼어요!",
+      "seed": 1449475409,
+      "seeds": [
+        1449475409
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.735,
+      "sha256": "f01b8ad0b7730922eb118f3adf8867b1982d4ecec8ccdc654b00ff87c57deb98"
+    },
+    {
+      "key": "warden_intro",
+      "file": "warden_intro.wav",
+      "text": "서큐버스 몽환경비관이 결계를 펼쳤어요! 안전하면 십 초 가속으로 공략해요. 유지 공격도 괜찮아요.",
+      "seed": 659081790,
+      "seeds": [
+        659081790
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.156,
+      "sha256": "2ccfb7082b3a4ffe7c1c7a072e2f0cbbf9e31a5455ff59665713ae95a3d27688"
+    },
+    {
+      "key": "warden_hold",
+      "file": "warden_hold.wav",
+      "text": "몽환경비관의 결계를 삼십 초 동안 압박해요! 평소 페이스를 이어가면 돼요.",
+      "seed": 1738035528,
+      "seeds": [
+        1738035528
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.853,
+      "sha256": "79a7c95ee43210e480dcb383eb47192f3df917d17a157620d8282afb7286d56a"
+    },
+    {
+      "key": "warden_hit",
+      "file": "warden_hit.wav",
+      "text": "몽환경비관의 결계에 피해를 줬어요! 확보한 기록을 챙겨둘게요.",
+      "seed": 2093326948,
+      "seeds": [
+        2093326948
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.482,
+      "sha256": "eda6841f83172447e49ac61228200d1e919c1ca37fbad274f78a08d681320bfc"
+    },
+    {
+      "key": "warden_defeated",
+      "file": "warden_defeated.wav",
+      "text": "대단해요! 서큐버스 몽환경비관을 제압했어요. 이제 편하게 회복해요.",
+      "seed": 3342367776,
+      "seeds": [
+        3342367776
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.087,
+      "sha256": "ac0c2a43e14831008d6a1db747e60cc41ea2a6593ede1a0f06bbcf1ed52c30c5"
     }
   ],
   "references": [
