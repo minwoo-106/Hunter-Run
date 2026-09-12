@@ -1,15 +1,14 @@
-# 0.10.0 build11 · 제작 중
+# 0.10.0 build11 기술 검증 완료 · 음성4개 청취 대기
 
-- 사용자가0.9 음성4,6,11,20,24,26,28,30,33,35,43,53,54,55에서 음색 변화 보고. voice-review-0.9.json에 원본SHA 보존.
-- 24/53 비교본 A 선호 승인. 원래 승인받은1번 음성을 기준으로 통문장 합성(--whole); B 분리합성 제외.
-- 전체64개 제작/적용 완료. 새 파일은 outputs/operator-consistent-pack-010, burst_start 최종본은 operator-consistent-extra-010. 리소스 검증 통과.
-- burst_start는 ‘좋아요! 가속 공격이 이어지고 있어요.’ 최종본을 별도 제작해 적용 완료.
-- 10초 가속은 최초4초 선택 확인을 포함. 처음 안내 완료 후 판정. 가속이 시작됐다는 확인 음성에는 새 지시가 없음.
-- 양 보스3단계 혼합 패턴, 가속 미선택30초 유지, 최대2회/180초 간격/최초60초 조사, 중단 복구 남은 시간/횟수 보존.
-- 최종 로직93개 통과. Apple 빌드/UI 검사는 아직 필요.
-- 원본 기획서 기준 전체 약60% 추정. 상세 v1-progress-estimate.md.
-- 최신 배포0.9 source1346c58, Codemagic19: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f
-- PC 종료 요청은 전날1회 완료. 이번 작업에서 종료하지 않음.
-
-- 전체64개 적용 완료.33개 교체/신규(기존25개 교체+신규8개), 나머지31개 유지. burst_start 최종문구 별도 제작 적용. A 비교24/53과 SHA동일.
-- 최종 로컬93개 검사 통과. 0.10 청취 페이지 http://127.0.0.1:8769/0.10/
+- Codemagic20: https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb
+- 소스11a8285, 무료 개인 M2,10분5초. 로직93/UI9/Release/IPA ZIP/64개 음성 해시 검사 모두 통과.
+- build-0.10-manifest.json에 크기와 체크섬 기록.
+- A 방식으로 기존14개 신고 음성 및 대사수정/신규를 처리했고 총64개 적용. 가속10초/보스유지30초/최대2회/180초간격/첫60초회복 구현.
+- 빌드 중 사용자 추가 신고:28 cat_ambush,57 lord_burst2,61 burst_start,64 burst_partial. docs/voice-review-0.10.json에 신고파일 SHA 기록.
+- 같은A참조/whole, 새 seed-tag hunter-consistent-repair-v2:로 네 후보 생성 완료. outputs/operator-consistent-repair-010, repo docs/voice-audition/repair-010-candidates. PCM/SHA/길이검사 통과. Resources에는 아직 적용하지 않음.
+- 사용자에게 네 후보를 inline오디오로 제공하고 async청취질문 제출. 답변 대기 중. 나머지60개 유지.
+- 비교 페이지 http://127.0.0.1:8769/0.10-repair/ (기준1,각번호 새/이전). 전체1~64목록 http://127.0.0.1:8769/0.10/ 은 build11 파일 그대로. 이전 신고번호 선택 보존.
+- 다음: 사용자 청취 답변 반영 → 네파일 Resources/Audio와manifest 적용 → 새버전/빌드번호 갱신 →검증/개인M2빌드 → 최종 다운로드 및 설치안내 업데이트.
+- 시작안내/아이폰첫테스트는 아직0.9. 최종 음성 빌드 후 갱신할 것.
+- 전체 v1 약60% 공수추정. v1-progress-estimate.md 참고.
+- 이번 PC종료 요청 없음. 전날1회 종료요청은 이미 완료.

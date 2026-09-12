@@ -1,0 +1,65 @@
+{
+  "feedback": "User reports different voice in these four clips. Regenerate only these; preserve other clips.",
+  "clips": [
+    {
+      "number": 28,
+      "key": "cat_ambush",
+      "file": "cat_ambush.wav",
+      "text": "균열 살쾡이가 옆에서 다가와요! 가속할 필요는 없어요. 잠시 달리기를 이어가요.",
+      "seed": 1786368367,
+      "seeds": [
+        1786368367
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.366,
+      "sha256": "0b35f2b2f61ccda25a9bcc74db51944ad99488827341563c018064e5b4e351c9"
+    },
+    {
+      "number": 57,
+      "key": "lord_burst2",
+      "file": "lord_burst2.wav",
+      "text": "경계의 군주 외피에 틈이 생겼어요! 안전한 구간이면 십 초 가속으로 공략해봐요. 유지 공격을 해도 괜찮아요.",
+      "seed": 1724294379,
+      "seeds": [
+        1724294379
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 9.031,
+      "sha256": "89a8734cbcae0aff768a8745f23d1af4d0f9443fe1c00dfeabf1bedac4493ea3"
+    },
+    {
+      "number": 61,
+      "key": "burst_start",
+      "file": "burst_start.wav",
+      "text": "좋아요! 가속 공격이 이어지고 있어요.",
+      "seed": 3501829730,
+      "seeds": [
+        3501829730
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.643,
+      "sha256": "297bd4d6c62ce8bf15e789fee4457c3e2258a3f5e4cedcdb92aa2a4a888dcb9f"
+    },
+    {
+      "number": 64,
+      "key": "burst_partial",
+      "file": "burst_partial.wav",
+      "text": "여기까지도 잘했어요! 확보한 기록은 챙겨뒀어요. 이제 속도를 낮추고 편하게 회복해요.",
+      "seed": 1900830497,
+      "seeds": [
+        1900830497
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.626,
+      "sha256": "361aa375a7542b59b9dc0efd3c2b60e7ad5ea360b39b412b3125e2aba4450a39"
+    }
+  ]
+}

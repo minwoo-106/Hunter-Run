@@ -76,3 +76,6 @@
 - generate-operator-consistent.py --whole, reference docs/voice-audition/consistent-approved/run_start.wav, seed-tag hunter-consistent-v1:.
 - 지적된 14개, ‘우와’ 제거 대상, 가속 관련 새 대사만 새 참조로 제작합니다. 나머지는 이전 파일을 유지합니다. 각각의 참조 SHA는 배포 manifest의 clip 항목에 기록합니다.
 - 가설이 확정된 것으로 주장하지 않습니다. A 청취 선호를 근거로 제작 방식을 선택했으며, 전체 교체 파일에서 중간 음색 변화가 남는지는 실기기 청취 피드백이 필요합니다.
+
+## 0.10 추가 청취 피드백
+사용자가28/57/61/64에서 음색 차이를 다시 보고했습니다. 같은 A 참조와 whole 방식, seed-tag `hunter-consistent-repair-v2:`로 네 파일만 재생성해 청취 비교 중입니다. 후보는 `voice-audition/repair-010-candidates`에 보관하며 배포 리소스에 아직 적용하지 않았습니다. 나머지60개는 유지합니다.

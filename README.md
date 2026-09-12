@@ -4,19 +4,20 @@ iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
 Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
 Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
 
-## Verified build (0.9.0)
-Codemagic demo build 19 completed on 2026-09-12 KST from commit `1346c58` on Mac mini M2 in 9m 3s.
-All 84 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
-`HunterRun-0.9.0-build10-install.zip` (52.24 MB) contains `HunterRun-0.9.0-build10-unsigned.ipa`.
-Packaging verified the outer ZIP, inner IPA, executable, version/build and all 56 designed voice hashes.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4bd20f3a3b494a30e757f). [한국어 설치·첫 테스트 안내](docs/아이폰-첫테스트.md).
+## Verified technical build (0.10.0)
+Codemagic demo build 20 completed on 2026-09-12 KST from commit `11a8285` on Mac mini M2 in 10m 5s.
+All 93 core tests and 9 iPhone simulator UI tests passed. The physical-iPhone Release target compiled successfully.
+`HunterRun-0.10.0-build11-install.zip` (57,084,438 bytes) contains `HunterRun-0.10.0-build11-unsigned.ipa`.
+Packaging verified ZIP/IPA integrity, version/build, executable and all 64 bundled voice hashes.
+[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb).
+During the build, the user reported four remaining voice mismatches (28, 57, 61, 64). New candidates are prepared for listening; build11 still contains those four earlier files. Final audio update is pending that feedback.
 
 ## Added in 0.10
 - User-selected A narration method for the 14 flagged recordings and revised/new lines; no “우와” in current dialogue.
 - Optional ten-second pursuits and boss barrier attacks, with four-second intent confirmation included in those ten seconds.
 - Thirty-second steady boss alternatives, two bursts per activity, 180-second intervals and 60-second easy investigation periods.
 - Mixed burst/steady attacks in every phase of both bosses, remaining-effort/recovery UI and a 20-minute boss mock activity.
-- Pause and save recovery preserve the remaining effort and intensity budget. Local 93 core tests passed; Apple build pending.
+- Pause and save recovery preserve the remaining effort and intensity budget. All 93 core and 9 Apple UI tests passed in build20. Four voice follow-up candidates are awaiting user listening feedback.
 [0.10 field guide](docs/0.10-가속과-음성.md), [v1 progress estimate](docs/v1-progress-estimate.md).
 
 ## Added in 0.9

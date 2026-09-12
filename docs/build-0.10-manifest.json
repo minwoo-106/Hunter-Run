@@ -1,0 +1,16 @@
+{
+  "version": "0.10.0",
+  "build": 11,
+  "source": "11a8285f2e3ce7d38192e5f741772d4d0709e87a",
+  "codemagic": 20,
+  "url": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa4c902c8ff44168380fafb",
+  "core_tests": 93,
+  "ui_tests": 9,
+  "clips": 64,
+  "duration": "10m 5s",
+  "ipa_bytes": 57077448,
+  "zip_bytes": 57084438,
+  "ipa_sha256": "f030f38251f32e2aeec5e5b2a80660727a9b430a74568448cf5326969720f1dc",
+  "zip_sha256": "44931661218b557c6ba38b667ce934a50a3241474a838977e8fd11d3f8392af8",
+  "voice_followup": "User reported clips 28/57/61/64 during build. New candidates are awaiting listening feedback and are NOT bundled in build11."
+}
