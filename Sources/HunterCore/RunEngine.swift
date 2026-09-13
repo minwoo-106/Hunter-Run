@@ -44,6 +44,10 @@ public struct RunEngine {
             session.movingStreak = 0; return []
         }
         guard !session.manualPause, !session.interruption else { return [] }
+        // Also end an older restored session already at the new environment limit.
+        if let limit = session.activeTimeLimit, session.activeSeconds >= limit {
+            end(); return [.voice("run_end"), .checkpoint, .goalReached]
+        }
         let moving = (frame.movement == .walking || frame.movement == .running) && (!session.isIndoor || frame.signal == .good)
         guard moving else {
             session.movingStreak = 0
@@ -61,7 +65,7 @@ public struct RunEngine {
             session.phase = .moving
             return [.voice("resume"), .checkpoint]
         }
-        var dt = session.activityGoal.kind == .time ? min(rawDT, max(0, session.activityGoal.value - session.activeSeconds)) : rawDT
+        var dt = min(rawDT, max(0, (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds))
         var distance = session.isIndoor ? 0 : max(0, min(frame.distance, 8 * dt))
         if session.isIndoor { session.steps = (session.steps ?? 0) + min(30, max(0, frame.steps)) }
         if session.activityGoal.kind == .distance {
@@ -158,7 +162,7 @@ public struct RunEngine {
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
             if session.isIndoor { next = IndoorRules.event(next) }
             session.consumed.insert(next.id)
-            let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
+            let remaining = (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds
             if remaining < next.duration + 30 { return [.checkpoint] }
             if next.requestsAcceleration && !AccelerationRules.canOffer(session, frame: frame) {
                 next.useSteadyAlternative()
@@ -192,14 +196,16 @@ public enum Settlement {
         FieldDiscovery.record(session, profile: &profile)
         let completed = session.records.filter { $0.outcome != .neutral }.count
         let bossReport = BossCampaign.settle(session, to: &profile)
-        let xp = Int(session.activeSeconds / 10) + completed * 20 + (bossReport?.cleared == true ? 120 : 0)
-        let crystals = Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2) + (bossReport?.cleared == true ? 15 : 0)
+        let percent = session.activityEnvironment.rewardPercent
+        // Round once per currency after totaling the activity. One-time quest claims are separate.
+        let xp = (Int(session.activeSeconds / 10) + completed * 20 + (bossReport?.cleared == true ? 120 : 0)) * percent / 100
+        let crystals = (Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2) + (bossReport?.cleared == true ? 15 : 0)) * percent / 100
         let discoveries = session.records.filter { $0.kind == .discovery && $0.outcome != .neutral }.count
-        let research = completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)
+        let research = (completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)) * percent / 100
         let regularCores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
         let cores = bossReport?.cleared == true ? 2 : regularCores
         let paceReport = PaceLearning.settle(session, profile: &profile)
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps)
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)

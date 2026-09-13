@@ -151,6 +151,8 @@ public struct RunSummary: Codable, Identifiable {
     public var questID: String? = nil
     public var environment: ActivityEnvironment? = nil
     public var steps: Int? = nil
+    // Nil preserves the full-rate meaning of previously settled activity records.
+    public var rewardPercent: Int? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"

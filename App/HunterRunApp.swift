@@ -109,7 +109,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · 1.2.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("HUNTER RUN · 1.2.1").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -142,6 +142,7 @@ struct SetupView: View {
     @State private var indoorCheck = false
     @State private var indoorStartRequested = false
     private var indoor: Bool { model.selectedEnvironment.isIndoor }
+    private var stationary: Bool { model.selectedEnvironment == .indoorStationary }
     private func beginActivity() {
         let kind: GoalKind = indoor && goalKind == .distance ? .time : goalKind
         let goal = ActivityGoal(kind: kind, value: kind == .time ? Double(minutes * 60) : kind == .distance ? Double(kilometers * 1000) : 0)
@@ -158,6 +159,10 @@ struct SetupView: View {
                             ForEach(ActivityEnvironment.allCases, id: \.rawValue) { Text($0.title).tag($0) }
                         }.pickerStyle(.segmented).accessibilityIdentifier("activity.environment")
                         if indoor { Text("실내 훈련 게이트 · 워치 없이 아이폰으로 움직임을 감지해요. 시간 유지로 전투하고 같은 성장 기록을 이어가요.").font(.caption).foregroundStyle(Theme.muted) }
+                        if stationary {
+                            Text("제자리 운동 · 활동 보상 50% · 한 활동 최대 60분").font(.caption.bold()).foregroundStyle(Theme.teal).accessibilityIdentifier("stationary.policy")
+                            Text("경험치·마정석·조사 데이터에 적용해요. 일회성 의뢰 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted)
+                        }
                     }.card()
                     NavigationLink { QuestBoardView() } label: { Label("의뢰 게시판", systemImage: "list.clipboard").card() }.accessibilityIdentifier("setup.quests")
                     if let quest = model.activeQuest {
@@ -214,7 +219,7 @@ struct SetupView: View {
                             }.pickerStyle(.segmented).accessibilityIdentifier("goal.distance")
                             Text("기록된 이동 거리가 목표에 도달하면 자동으로 마칩니다. GPS 상태에 따라 실제 거리와 차이가 날 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                         } else {
-                            Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동 시간도 승급 심사 자격에 포함돼요.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
+                            Text(stationary ? "제자리 자유 활동은 움직임이 인정된 시간 60분에 자동 종료돼요. 멈추거나 일시정지한 시간은 쌓이지 않아요. 그 전에 활동을 마쳐도 확보한 성과를 저장해요." : "시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동 시간도 승급 심사 자격에 포함돼요.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
                         }
                         if !indoor { Toggle("선택적 가속 허용", isOn: $pursuit)
                         Text("추격·보스 가속은 10초씩 최대 2회, 사이에 최소 3분을 둡니다. 가속하지 않으면 추격은 조사로, 보스는 유지 공격으로 바뀝니다.").font(.caption).foregroundStyle(Theme.muted)
@@ -284,11 +289,14 @@ struct ActiveRunView: View {
                                 if run.isIndoor { metric("움직임", model.movement == .walking || model.movement == .running ? "감지 중" : "대기") }
                                 else { metric("최근 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—") }
                                 Spacer()
-                                metric("목표", run.activityGoal.label)
+                                metric("목표", run.goalLabel)
                             }
                             Text(run.isIndoor ? "움직임이 확인된 시간만 인정해요. 걸음 수는 늦게 갱신될 수 있어요." : "최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
-                            if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
+                            if run.activityGoal.kind != .free || run.activeTimeLimit != nil { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
+                            if run.activityEnvironment == .indoorStationary {
+                                Text("제자리 운동 보상 50% · 자동 종료까지 \(clock(max(0, (run.activeTimeLimit ?? 3600) - run.activeSeconds)))").font(.caption).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.stationary-limit")
+                            }
                             if AccelerationRules.isRecovering(run) {
                                 Text(run.intensityCount >= 2 ? "회복 이동 · 이번 활동의 가속을 마쳤어요" : "회복 이동 · 다음 가속까지 \(max(0, Int(ceil(180 - (run.activeSeconds - run.lastIntensityAt)))))초")
                                     .font(.caption).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.recovery")
@@ -349,6 +357,7 @@ struct ActiveRunView: View {
                 } else if let summary = model.lastSummary {
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
                     Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
+                    if summary.rewardPercent == 50 { Text("제자리 운동 보상 50%가 적용됐어요. 의뢰 완료 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted) }
                     if let boss = summary.majorBoss { BossReportView(report: boss) }
                     Text("장비 보관함과 지부 관리에서 획득한 자원을 사용할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                 }
@@ -504,7 +513,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 GameSection("앱 정보") {
-                    Text("Hunter Run · 1.2.0")
+                    Text("Hunter Run · 1.2.1")
                     Text("당신의 발걸음으로 이어지는 지부의 이야기").font(.caption)
                     NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }

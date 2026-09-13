@@ -3,6 +3,8 @@ import Foundation
 public enum ActivityEnvironment: String, Codable, CaseIterable {
     case outdoor, indoorStationary, indoorTreadmill
     public var isIndoor: Bool { self != .outdoor }
+    public var rewardPercent: Int { self == .indoorStationary ? 50 : 100 }
+    public var maximumActiveSeconds: Double? { self == .indoorStationary ? 3600 : nil }
     public var title: String {
         switch self { case .outdoor: return "야외"; case .indoorStationary: return "제자리 운동"; case .indoorTreadmill: return "러닝머신" }
     }

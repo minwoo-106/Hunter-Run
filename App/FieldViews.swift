@@ -135,6 +135,7 @@ struct RunDetailView: View {
                 if !run.activityEnvironment.isIndoor, let seconds = run.runningSeconds { Text("달리기 \(clock(seconds)) · 걷기 \(clock(max(0, run.seconds - seconds)))").foregroundStyle(Theme.muted) }
                 Text("EXP +\(run.xp) · 마정석 +\(run.crystals)").font(.headline).foregroundStyle(Theme.teal)
                 if let research = run.research { Text("조사 데이터 +\(research) · 코어 +\(run.cores ?? 0)").foregroundStyle(Theme.teal) }
+                if run.rewardPercent == 50 { Text("제자리 운동 활동 보상 50% 적용").font(.caption).foregroundStyle(Theme.muted) }
                 if let boss = run.majorBoss { BossReportView(report: boss) }
                 if let report = run.paceReport { PaceFeedbackView(report: report) }
                 else { Text(run.activityEnvironment.isIndoor ? "실내 기록은 야외 페이스 학습에 반영하지 않아요." : "이전 버전의 기록에는 페이스 관측 보고가 없습니다.").font(.caption).foregroundStyle(Theme.muted) }
@@ -162,6 +163,7 @@ struct FieldGuideView: View {
                 guide("03 · 멈춰도 괜찮습니다", "신호 대기처럼 잠깐 멈춘 동안에는 판정도 멈춥니다. 직접 일시정지했다면 ‘계속’을 눌러 재개하세요. 화면을 보지 않아도 음성으로 사건을 안내합니다.")
                 guide("04 · 보상에서 성장으로", "헌터의 장비 보관함에서 장비를 확보하고 장착하세요. 하단 오른쪽 협회 관리에서 부서를 확장하면 새로운 기능이 열립니다. 등급은 헌터의 협회 평가에서 심사합니다.")
                 guide("05 · 게이트와 승급", "D급은 Lv.2·누적 활동 60분·기초 조사와 전용 심사 토벌이 필요해요. 관측부 Lv.2도 갖추면 일반 게이트가 열려요. 자유 활동 시간도 심사 자격에 포함되며, 다음 등급의 정확한 조건은 협회 평가에서 확인할 수 있어요.")
+                guide("제자리 운동 보상과 시간", "제자리 운동만 활동 경험치·마정석·조사 데이터가 50%예요. 각각 합산한 뒤 소수점은 버려요. 자유 모드도 한 활동에서 인정된 운동 시간 60분에 자동 종료돼요. 의뢰 완료 보상·핵심 재료·성장 조건은 유지하며, 실외와 러닝머신의 보상과 자유 활동 시간은 제한하지 않아요.")
                 guide("06 · 기록과 복구", "앱이 중단되면 홈에서 활동을 복구할 수 있습니다. 홈 상단 설정에서 저장 파일을 백업하고, 헌터에서 지난 활동의 사건과 보상을 확인하세요.")
             }.padding(22)
         }.labyrinthScreen().navigationTitle("활동과 성장 가이드").navigationBarTitleDisplayMode(.inline)

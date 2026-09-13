@@ -30,7 +30,20 @@ public struct ActivityGoal: Codable, Equatable {
 
 public extension RunSession {
     var activityGoal: ActivityGoal { goal ?? ActivityGoal(kind: .time, value: targetSeconds) }
+    /// A free goal still respects the environment's session cap. Pauses do not spend it.
+    var activeTimeLimit: Double? {
+        let target = activityGoal.kind == .time ? activityGoal.value : nil
+        guard let maximum = activityEnvironment.maximumActiveSeconds else { return target }
+        return min(target ?? maximum, maximum)
+    }
+    var goalLabel: String {
+        if activityEnvironment == .indoorStationary {
+            return activityGoal.kind == .free ? "자유 · 최대 60분" : "\(Int((activeTimeLimit ?? 3600) / 60))분"
+        }
+        return activityGoal.label
+    }
     var reachedGoal: Bool {
+        if let limit = activeTimeLimit { return activeSeconds >= limit }
         switch activityGoal.kind {
         case .time: return activeSeconds >= activityGoal.value
         case .distance: return distance >= activityGoal.value
@@ -38,6 +51,7 @@ public extension RunSession {
         }
     }
     var goalProgress: Double {
+        if let limit = activeTimeLimit { return min(1, activeSeconds / max(1, limit)) }
         switch activityGoal.kind {
         case .time: return min(1, activeSeconds / max(1, activityGoal.value))
         case .distance: return min(1, distance / max(1, activityGoal.value))
@@ -45,7 +59,7 @@ public extension RunSession {
         }
     }
     // Distance/free sessions schedule recurring patrols by active time, never speed.
-    var patrolDuration: Double { activityGoal.kind == .time ? activityGoal.value : 1200 }
+    var patrolDuration: Double { activityGoal.kind == .time ? (activeTimeLimit ?? activityGoal.value) : 1200 }
     var patrolCycle: Int { activityGoal.kind == .time ? 0 : Int(activeSeconds / patrolDuration) }
 }
 
