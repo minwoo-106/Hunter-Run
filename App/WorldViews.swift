@@ -45,17 +45,17 @@ struct BossBoardView: View {
                         BossHPView(name: "\(state.round)회차 · 누적 토벌 \(state.clears)회", remaining: state.remainingHP, maximum: state.maximumHP, phase: encounter.phaseName)
                         if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기 진행 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
                         if state.remainingHP > 0 {
-                            Button("토벌 활동 준비") { model.prepareBoss(boss) }.buttonStyle(.borderedProminent).disabled(!unlocked || model.growthLocked)
+                            Button("토벌 활동 준비") { model.prepareBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
                         } else {
-                            Button("새 토벌 회차 열기") { model.restartBoss(boss) }.buttonStyle(.borderedProminent).disabled(!unlocked || model.growthLocked)
+                            Button("새 토벌 회차 열기") { model.restartBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
                         }
                         if AppModel.testHarness {
-                            Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true) }.buttonStyle(.bordered).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
+                            Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true) }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
                         }
                     }.card()
                 }
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("주요 보스 토벌").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("주요 보스 토벌").navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -64,12 +64,12 @@ struct BossSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("게이트 임무 선택").font(.headline)
-            Button { model.selectedBoss = nil } label: { Label("일반 게이트", systemImage: model.selectedBoss == nil ? "checkmark.circle.fill" : "circle") }.buttonStyle(.bordered)
+            Button { model.selectedBoss = nil } label: { Label("일반 게이트", systemImage: model.selectedBoss == nil ? "checkmark.circle.fill" : "circle") }.buttonStyle(GameButtonStyle())
             ForEach(model.world?.bosses ?? []) { boss in
                 let available = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
                 Button { model.selectedBoss = boss.id } label: {
                     HStack { Image(systemName: model.selectedBoss == boss.id ? "checkmark.circle.fill" : "circle"); Text(boss.name); Spacer(); if !available { Image(systemName: "lock.fill") } }
-                }.buttonStyle(.bordered).disabled(!available)
+                }.buttonStyle(GameButtonStyle()).disabled(!available)
                 if model.selectedBoss == boss.id {
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     BossHPView(name: boss.name, remaining: state.remainingHP, maximum: state.maximumHP, phase: BossEncounter(definition: boss, state: state).phaseName)
@@ -95,7 +95,7 @@ struct CodexView: View {
                     }.pickerStyle(.segmented)
                     if category == 0 {
                     Text("흔적을 조사하거나 개체와 조우하면 도감이 열려요. 연구부를 확장하면 전투 기록을 분석할 수 있어요.").foregroundStyle(Theme.muted)
-                    Button("현장 사건 기록 보기") { archive = true }.buttonStyle(.bordered)
+                    Button("현장 사건 기록 보기") { archive = true }.buttonStyle(GameButtonStyle())
                     ForEach(model.world?.monsters ?? []) { monster in
                         let records = monster.records(in: model.save.profile)
                         let known = monster.isKnown(in: model.save.profile)
@@ -112,7 +112,7 @@ struct CodexView: View {
                     else if category == 2 { ActivityArchiveView() }
                     else { MaterialArchiveView() }
                 }.padding(20)
-            }.background(Theme.ink).navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
+            }.labyrinthScreen().navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }
         .sheet(isPresented: $archive) { FieldArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { archive = false } } } }
     }
@@ -149,6 +149,6 @@ struct MonsterDetailView: View {
                     } else { Label("연구부 Lv.2에서 전투 분석 해금", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
                 }
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("개체 기록").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("개체 기록").navigationBarTitleDisplayMode(.inline)
     }
 }

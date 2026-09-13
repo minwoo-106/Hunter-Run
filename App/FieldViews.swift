@@ -79,13 +79,13 @@ struct EquipmentDetailView: View {
                 ResourceStrip()
                 if model.save.profile.growth.owned.contains(item.id) {
                     Button(model.save.profile.growth.equipped[item.slot.rawValue] == item.id ? "장착 해제" : "장착") { model.equip(item.id) }
-                        .buttonStyle(.borderedProminent).disabled(model.growthLocked)
+                        .buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked)
                 } else {
-                    Button("장비 확보") { model.buy(item.id) }.buttonStyle(.borderedProminent)
+                    Button("장비 확보") { model.buy(item.id) }.buttonStyle(GameButtonStyle(primary: true))
                         .disabled(model.growthLocked || !item.available(to: model.save.profile) || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
                 }
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("장비 상세").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("장비 상세").navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -117,7 +117,7 @@ struct HistoryView: View {
                     }.buttonStyle(.plain)
                 }
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("활동 기록").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("활동 기록").navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -146,7 +146,7 @@ struct RunDetailView: View {
                     }.card()
                 }
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("활동 상세").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("활동 상세").navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -162,7 +162,7 @@ struct FieldGuideView: View {
                 guide("05 · 게이트와 승급", "D급은 Lv.2·누적 활동 60분·기초 조사와 전용 심사 토벌이 필요해요. 관측부 Lv.2도 갖추면 일반 게이트가 열려요. 자유 활동 시간도 심사 자격에 포함되며, 다음 등급의 정확한 조건은 협회 평가에서 확인할 수 있어요.")
                 guide("06 · 기록과 복구", "앱이 중단되면 홈에서 활동을 복구할 수 있습니다. 홈 상단 설정에서 저장 파일을 백업하고, 헌터에서 지난 활동의 사건과 보상을 확인하세요.")
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("활동과 성장 가이드").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("활동과 성장 가이드").navigationBarTitleDisplayMode(.inline)
     }
     private func guide(_ title: String, _ body: String) -> some View {
         VStack(alignment: .leading, spacing: 10) { Text(title).font(.headline); Text(body).foregroundStyle(Theme.muted) }.card()

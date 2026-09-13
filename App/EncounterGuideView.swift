@@ -15,7 +15,7 @@ struct EncounterGuideView: View {
                 entry("보스 · 신호원 안정화", "diamond", "장비와 성장에 따라 게임 피해가 달라집니다. 장비가 좋아져도 더 빠른 달리기를 요구하지 않습니다.")
                 Text("탐험은 조사 중심, 의뢰와 게이트는 전투가 섞입니다. 전투 시작 시 걷고 있거나 GPS가 불안정하면 조사로 전환하며, 전투 도중 신호가 불안정해지면 피해 없이 중립 종료합니다. 활동을 마칠 때 진행 중이던 사건도 중립 종료됩니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("현장 사건 안내").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("현장 사건 안내").navigationBarTitleDisplayMode(.inline)
     }
     private func entry(_ title: String, _ icon: String, _ detail: String) -> some View {
         VStack(alignment: .leading, spacing: 10) {

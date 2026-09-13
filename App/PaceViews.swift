@@ -31,11 +31,11 @@ struct PaceProfileView: View {
                         HStack { Text("최근 \(index + 1)번째"); Spacer(); Text(learnedPaceText(speed)).foregroundStyle(Theme.teal) }
                     }
                 }
-                Button("학습 기준 초기화") { confirmReset = true }.buttonStyle(.bordered)
+                Button("학습 기준 초기화") { confirmReset = true }.buttonStyle(GameButtonStyle())
                     .disabled(model.growthLocked || model.save.profile.paceMemory == nil).accessibilityIdentifier("pace.reset")
                 Text("초기화하면 다음 실제 활동부터 다시 학습합니다. 활동 기록·장비·자원은 유지됩니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("활동 기준").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("활동 기준").navigationBarTitleDisplayMode(.inline)
             .confirmationDialog("학습한 페이스 기준을 초기화할까요?", isPresented: $confirmReset, titleVisibility: .visible) {
                 Button("학습 기준 초기화", role: .destructive) { model.resetPaceMemory() }
             }

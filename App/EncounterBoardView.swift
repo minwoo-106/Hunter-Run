@@ -20,7 +20,7 @@ struct EncounterBoardView: View {
                             Text(entry.tactic).foregroundStyle(Theme.muted)
                         } else { Text("상세 공략은 연구부 Lv.3에서 분석해요.").font(.callout).foregroundStyle(Theme.muted) }
                         if FieldDiscovery.events(in: model.save.profile).contains(entry.event.id) { Label("실제 발견 기록 등록됨", systemImage: "book.closed.fill").foregroundStyle(Theme.teal) }
-                        if AppModel.testHarness { Button("이 개체 모의 활동 준비") { model.prepareFieldDemo(entry); dismiss() }.buttonStyle(.borderedProminent).disabled(model.growthLocked).accessibilityIdentifier("encounter.demo." + entry.id) }
+                        if AppModel.testHarness { Button("이 개체 모의 활동 준비") { model.prepareFieldDemo(entry); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked).accessibilityIdentifier("encounter.demo." + entry.id) }
                         let gear = model.progressionCatalog?.equipment.filter { $0.requiredEvent == entry.event.id } ?? []
                         ForEach(gear) { item in
                             NavigationLink { EquipmentDetailView(item: item) } label: {
@@ -31,6 +31,6 @@ struct EncounterBoardView: View {
                 }
                 Text("협회 자료를 열람한 뒤 현장에서 발견하면 도감에 기록돼요.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("신규 개체 정보").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("신규 개체 정보").navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -11,7 +11,7 @@
 <key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
 <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
 <key>LSRequiresIPhoneOS</key><true/>
-<key>UILaunchScreen</key><dict/>
+<key>UILaunchScreen</key><dict><key>UIImageName</key><string>LabyrinthEntrance</string><key>UIImageRespectsSafeAreaInsets</key><false/><key>UIColorName</key><string>LaunchInk</string></dict>
 <key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string></array>
 <key>UIBackgroundModes</key><array><string>location</string><string>audio</string></array>
 <key>NSLocationWhenInUseUsageDescription</key><string>활동 중 이동 거리와 페이스를 측정합니다. 화면을 잠근 동안에도 시작한 활동의 기록을 이어갑니다.</string>
@@ -19,4 +19,3 @@
 <key>UIFileSharingEnabled</key><false/>
 <key>LSSupportsOpeningDocumentsInPlace</key><true/>
 </dict></plist>
-

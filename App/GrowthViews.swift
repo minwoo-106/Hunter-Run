@@ -41,7 +41,7 @@ struct AssociationView: View {
                             if let rank = next.requiredRank { Text("\(rank)급부터 확장 가능").font(.caption).foregroundStyle(Theme.teal) }
                             Text("마정석 \(next.crystals) · 조사 데이터 \(next.research)").font(.caption)
                             Button("시설 확장") { model.upgrade(department) }
-                                .buttonStyle(.borderedProminent)
+                                .buttonStyle(GameButtonStyle(primary: true))
                                 .disabled(model.growthLocked || !next.available(to: model.save.profile) || model.save.profile.crystals < next.crystals || model.save.profile.research < next.research)
                         } else {
                             Text(model.progressionCatalog?.upgrades.first { $0.department == department && $0.level == level }?.reveal ?? "확장 완료")
@@ -51,7 +51,7 @@ struct AssociationView: View {
                 }
                 Text("이번 버전에서는 각 부서를 Lv.3까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
     }
 }
 struct EquipmentView: View {
@@ -89,11 +89,11 @@ struct EquipmentView: View {
                         } }.buttonStyle(.plain).accessibilityIdentifier("gear." + item.id)
                         if owned {
                             Button(equipped ? "장착 해제" : "장착") { model.equip(item.id) }
-                                .buttonStyle(.borderedProminent).disabled(model.growthLocked)
+                                .buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked)
                             if equipped { Label("장착 중", systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(Theme.teal) }
                         } else if unlocked {
                             Text("마정석 \(item.crystals) · 조사 \(item.research) · 코어 \(item.cores)").font(.caption)
-                            Button("장비 확보") { model.buy(item.id) }.buttonStyle(.bordered)
+                            Button("장비 확보") { model.buy(item.id) }.buttonStyle(GameButtonStyle())
                                 .disabled(model.growthLocked || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
                         } else {
                             Label("장비지원부 Lv.\(item.supportLevel)" + (item.requiredRank.map { " · " + $0 + "급" } ?? "") + (item.discoveryHint.map { " · " + $0 } ?? " 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
@@ -102,7 +102,7 @@ struct EquipmentView: View {
                 }
                 Text("장비 효과는 다음 활동 시작 시 적용됩니다. 신발은 게임 피해량만 보정하며 실제 목표 속도를 바꾸지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("장비 보관함").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("장비 보관함").navigationBarTitleDisplayMode(.inline)
     }
 }
 struct RankView: View {
@@ -121,7 +121,7 @@ struct RankView: View {
                         requirement("누적 활동 시간(분)", Progression.activityMinutes(model.save.profile), requirements.runs * 20)
                         requirement("고위험 게이트 보스 토벌", Progression.gateClears(model.save.profile), requirements.gates)
                     }.card()
-                    Button("승급 평가 받기") { model.promote() }.buttonStyle(.borderedProminent)
+                    Button("승급 평가 받기") { model.promote() }.buttonStyle(GameButtonStyle(primary: true))
                         .disabled(model.growthLocked || !Progression.canPromote(model.save.profile))
                     if model.save.profile.journey?.completedQuests.contains("exam-" + next) != true {
                         NavigationLink { QuestBoardView() } label: { Label("전용 승급 심사 확인", systemImage: "shield.checkered") }
@@ -129,7 +129,7 @@ struct RankView: View {
                     }
                 } else { Text("최고 등급에 도달했습니다.").foregroundStyle(Theme.teal) }
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("협회 평가").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("협회 평가").navigationBarTitleDisplayMode(.inline)
     }
     private func requirement(_ label: String, _ value: Int, _ target: Int) -> some View {
         HStack { Image(systemName: value >= target ? "checkmark.circle.fill" : "circle").foregroundStyle(value >= target ? Theme.teal : Theme.muted); Text(label); Spacer(); Text("\(value) / \(target)").monospacedDigit() }.font(.callout)

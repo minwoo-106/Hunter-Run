@@ -19,9 +19,11 @@ xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
+mkdir -p build/ui-review
+xcrun xcresulttool export attachments --path build/Layout.xcresult --output-path build/ui-review || true
 # Keep a directly downloadable screenshot even when the assertion fails.
 xcrun simctl terminate "$DEVICE_ID" com.hunterrun.demo || true
-xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-welcome --ui-testing-silent-audio || true
+xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
@@ -70,9 +72,13 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen \
     -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory \
     -only-testing:HunterRunUITests/HomeLayoutTests/testLargeTextKeepsStoryAndSettingsReachable \
+    -only-testing:HunterRunUITests/LabyrinthLayoutTests/testLargeTextConversationCanReadAndChoose \
+    -only-testing:HunterRunUITests/LabyrinthLayoutTests/testOperatorReplyAndMemoriesStayReachable \
     CODE_SIGNING_ALLOWED=NO test-without-building 2>&1 | tee build/small-layout-log.txt || status=$?
-  xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-welcome --ui-testing-silent-audio || true
+  xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
   xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-layout.png || true
+  mkdir -p build/ui-review-small
+  xcrun xcresulttool export attachments --path build/Small-layout.xcresult --output-path build/ui-review-small || true
 fi
 fi
 exit "$status"

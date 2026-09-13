@@ -30,7 +30,7 @@ workflows:
       - build/Small-layout.xcresult
       - build/portrait-checks/*.png
   ios-demo:
-    name: Hunter Run 1.0 - personal installation
+    name: Hunter Run 1.1 - labyrinth interface
     instance_type: mac_mini_m2
     max_build_duration: 30
     triggering:
@@ -68,6 +68,10 @@ workflows:
       - build/HunterRun-*-install.zip
       - build/HunterRun-*-unsigned.ipa
       - build/HunterRun-*-manifest.json
+      - build/ui-review/*.png
+      - build/ui-review/*.json
+      - build/ui-review-small/*.png
+      - build/ui-review-small/*.json
       - build-log.txt
       - build/Home-layout.png
       - build/layout-log.txt

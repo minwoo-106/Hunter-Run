@@ -31,7 +31,7 @@ struct LegacyStoryArchiveView: View {
                     }.buttonStyle(.plain).accessibilityIdentifier("story." + entry.id)
                 }
             }.padding(20)
-        }.background(Theme.ink).navigationTitle("협회 통신 기록").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("협회 통신 기록").navigationBarTitleDisplayMode(.inline)
     }
 }
 struct StoryDetailView: View {
@@ -49,10 +49,10 @@ struct StoryDetailView: View {
                         Text(paragraph).font(.body).lineSpacing(7).fixedSize(horizontal: false, vertical: true)
                     }
                     Button { model.playDispatch(entry) } label: { Label("오퍼레이터 통신 듣기", systemImage: "play.circle.fill") }
-                        .buttonStyle(.bordered).disabled(model.growthLocked).accessibilityIdentifier("story.listen")
+                        .buttonStyle(GameButtonStyle()).disabled(model.growthLocked).accessibilityIdentifier("story.listen")
                     Text("이 기록의 핵심 내용을 오퍼레이터 목소리로 들어요.").font(.caption).foregroundStyle(Theme.muted)
                     Button((model.save.profile.readStories ?? []).contains(entry.id) ? "확인한 기록입니다" : "기록 확인 완료") { model.readStory(entry.id) }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(GameButtonStyle(primary: true))
                         .disabled(model.growthLocked || (model.save.profile.readStories ?? []).contains(entry.id))
                         .accessibilityIdentifier("story.read")
                 } else {
@@ -62,7 +62,7 @@ struct StoryDetailView: View {
                     Text("이전 기록의 조건을 차례로 달성하면 열립니다. 이미 확보한 실제 활동과 시설 성장도 반영됩니다.").font(.callout)
                 }
             }.padding(22)
-        }.background(Theme.ink).navigationTitle("통신 내용").navigationBarTitleDisplayMode(.inline)
+        }.labyrinthScreen().navigationTitle("통신 내용").navigationBarTitleDisplayMode(.inline)
         .onDisappear { model.stopAudioPreview() }
     }
 }
@@ -100,21 +100,21 @@ struct WelcomeView: View {
                         welcomeItem("통신 기록과 도감", "발견한 개체와 지부의 이야기가 쌓입니다. 다음 해금 조건은 협회 통신 기록에서 확인하세요.")
                     default:
                         welcomeItem("위치와 동작", "위치는 거리·페이스 측정, 동작은 걷기·달리기 구분에 사용합니다. 동작 권한은 활동을 시작할 때 요청합니다.")
-                        Button("위치 권한 확인") { model.authorize() }.buttonStyle(.bordered)
+                        Button("위치 권한 확인") { model.authorize() }.buttonStyle(GameButtonStyle())
                         Text(model.permissionText).font(.caption).foregroundStyle(Theme.muted)
                         welcomeItem("소리 확인", "실제 활동을 시작하면 협회 BGM이 멈추고 안내 음성을 듣습니다. 스피커 또는 이어폰으로 아래 미리 듣기로 확인하세요.")
-                        Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(.bordered)
+                        Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
                         Text("권한과 소리는 나중에 활동 준비와 메뉴에서도 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                     }
                     HStack {
-                        if page > 0 { Button("이전") { page -= 1 }.buttonStyle(.bordered) }
+                        if page > 0 { Button("이전") { page -= 1 }.buttonStyle(GameButtonStyle()) }
                         Spacer()
                         Button(page == 3 ? "협회로 들어가기" : "다음") {
                             if page == 3 { model.completeWelcome() } else { page += 1 }
-                        }.buttonStyle(.borderedProminent).accessibilityIdentifier("welcome.next")
+                        }.buttonStyle(GameButtonStyle(primary: true)).accessibilityIdentifier("welcome.next")
                     }
                 }.padding(22)
-            }.background(Theme.ink)
+            }.labyrinthScreen()
                 .navigationTitle("첫 이용 안내").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("건너뛰기") { model.completeWelcome() }.accessibilityIdentifier("welcome.skip") } }
         }.interactiveDismissDisabled()

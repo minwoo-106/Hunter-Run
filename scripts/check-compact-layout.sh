@@ -26,7 +26,7 @@ xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory \
   -only-testing:HunterRunUITests/HomeLayoutTests/testLargeTextKeepsStoryAndSettingsReachable \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/small-layout-log.txt || status=$?
-xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-welcome --ui-testing-silent-audio || true
+xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
 sleep 2
 xcrun simctl io "$DEVICE_ID" screenshot build/Small-layout.png || true
 exit "$status"

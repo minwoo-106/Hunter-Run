@@ -3,7 +3,7 @@ import XCTest
 final class HomeLayoutTests: XCTestCase {
     @MainActor private func application(silent: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing-skip-welcome", "--ui-testing-simulations", "--ui-testing-save", UUID().uuidString]
+        app.launchArguments = ["--ui-testing-skip-title", "--ui-testing-skip-welcome", "--ui-testing-simulations", "--ui-testing-save", UUID().uuidString]
         if silent { app.launchArguments.append("--ui-testing-silent-audio") }
         return app
     }

@@ -36,8 +36,8 @@ struct ActivityArchiveView: View {
                     .font(.callout)
             }.card()
         }
-        NavigationLink("주요 보스 조사 현황") { BossBoardView() }.buttonStyle(.bordered)
-        NavigationLink("의뢰와 승급 심사") { QuestBoardView() }.buttonStyle(.bordered)
+        NavigationLink("주요 보스 조사 현황") { BossBoardView() }.buttonStyle(GameButtonStyle())
+        NavigationLink("의뢰와 승급 심사") { QuestBoardView() }.buttonStyle(GameButtonStyle())
     }
 }
 struct MaterialArchiveView: View {
