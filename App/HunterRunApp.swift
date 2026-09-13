@@ -109,7 +109,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · 1.1.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("HUNTER RUN · 1.2.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -139,11 +139,26 @@ struct SetupView: View {
     @AppStorage("activityGoalKind") private var goalKind: GoalKind = .time
     @AppStorage("activityKilometers") private var kilometers = 3
     @AppStorage("activityAcceleration") private var pursuit = false
+    @State private var indoorCheck = false
+    @State private var indoorStartRequested = false
+    private var indoor: Bool { model.selectedEnvironment.isIndoor }
+    private func beginActivity() {
+        let kind: GoalKind = indoor && goalKind == .distance ? .time : goalKind
+        let goal = ActivityGoal(kind: kind, value: kind == .time ? Double(minutes * 60) : kind == .distance ? Double(kilometers * 1000) : 0)
+        model.start(simulated: false, seconds: kind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal, environment: model.selectedEnvironment)
+    }
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     eyebrow("TODAY'S ASSIGNMENT")
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("활동 장소").font(.headline)
+                        Picker("활동 장소", selection: $model.selectedEnvironment) {
+                            ForEach(ActivityEnvironment.allCases, id: \.rawValue) { Text($0.title).tag($0) }
+                        }.pickerStyle(.segmented).accessibilityIdentifier("activity.environment")
+                        if indoor { Text("실내 훈련 게이트 · 워치 없이 아이폰으로 움직임을 감지해요. 시간 유지로 전투하고 같은 성장 기록을 이어가요.").font(.caption).foregroundStyle(Theme.muted) }
+                    }.card()
                     NavigationLink { QuestBoardView() } label: { Label("의뢰 게시판", systemImage: "list.clipboard").card() }.accessibilityIdentifier("setup.quests")
                     if let quest = model.activeQuest {
                         VStack(alignment: .leading, spacing: 10) {
@@ -175,18 +190,18 @@ struct SetupView: View {
                     if model.activeQuest != nil { Text("선택한 의뢰에 맞는 활동으로 준비했어요. 모드를 바꾸려면 위에서 일반 활동으로 변경해주세요.").font(.caption).foregroundStyle(Theme.muted) }
                     if model.selectedMode == .gate && model.activeQuest == nil { BossSelectionView() }
                     Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
-                    NavigationLink { PaceProfileView() } label: {
+                    if !indoor { NavigationLink { PaceProfileView() } label: {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("나의 활동 기준").font(.headline)
                             Text(learnedPaceText(model.save.profile.paceMemory?.reference)).foregroundStyle(Theme.teal)
                         }.card()
-                    }.buttonStyle(.plain).accessibilityIdentifier("setup.pace")
+                    }.buttonStyle(.plain).accessibilityIdentifier("setup.pace") }
                     HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
                     NavigationLink { EncounterGuideView() } label: { Label("현장 사건 안내", systemImage: "waveform") }.accessibilityIdentifier("setup.encounters")
                     VStack(alignment: .leading, spacing: 14) {
                         Text("활동 목표").font(.headline)
                         Picker("목표 종류", selection: $goalKind) {
-                            ForEach(GoalKind.allCases, id: \.rawValue) { Text($0.title).tag($0) }
+                            ForEach(GoalKind.allCases.filter { !indoor || $0 != .distance }, id: \.rawValue) { Text($0.title).tag($0) }
                         }.pickerStyle(.segmented).accessibilityIdentifier("goal.kind")
                         if goalKind == .time {
                             Picker("목표 시간", selection: $minutes) {
@@ -201,27 +216,28 @@ struct SetupView: View {
                         } else {
                             Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동 시간도 승급 심사 자격에 포함돼요.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
                         }
-                        Toggle("선택적 가속 허용", isOn: $pursuit)
+                        if !indoor { Toggle("선택적 가속 허용", isOn: $pursuit)
                         Text("추격·보스 가속은 10초씩 최대 2회, 사이에 최소 3분을 둡니다. 가속하지 않으면 추격은 조사로, 보스는 유지 공격으로 바뀝니다.").font(.caption).foregroundStyle(Theme.muted)
+                        } else { Text("실내에서는 가속과 거리 조건 대신 30초 움직임 유지로 대응해요. 걷기도 인정하며 멈추면 전투도 기다려요.").font(.caption).foregroundStyle(Theme.muted) }
                     }.card()
                     VStack(alignment: .leading, spacing: 12) {
-                        Label(model.permissionText, systemImage: "location")
+                        if !indoor { Label(model.permissionText, systemImage: "location")
                         Text("GPS 품질은 활동 시작 후 확인됩니다. 신호가 약하면 속도 판정을 제한합니다.").font(.caption).foregroundStyle(Theme.muted)
                         Button("위치 권한 확인") { model.authorize() }.buttonStyle(GameButtonStyle())
+                        } else { Label("실내는 GPS 없이 진행해요", systemImage: "figure.walk.motion").accessibilityIdentifier("indoor.no-gps") }
                         Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
                     }.card()
                     Button {
-                        let goal = ActivityGoal(kind: goalKind, value: goalKind == .time ? Double(minutes * 60) : goalKind == .distance ? Double(kilometers * 1000) : 0)
-                        model.start(simulated: false, seconds: goalKind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal)
-                    } label: { Label(model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
+                        if indoor { indoorCheck = true } else { beginActivity() }
+                    } label: { Label(indoor ? "움직임 확인 후 입장" : model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
                         .buttonStyle(GameButtonStyle(primary: true)).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
-                    Text("활동 중에는 화면을 자동으로 끄지 않습니다. 전원 버튼으로 직접 잠글 수 있으며, 종료하면 원래 자동 잠금 설정으로 돌아갑니다.").font(.caption).foregroundStyle(Theme.muted)
+                    Text(indoor ? "실내 활동 중에는 화면을 유지해요. 직접 잠그거나 다른 앱으로 이동하면 일시정지하며, 돌아와 재개할 수 있어요." : "활동 중에는 화면을 자동으로 끄지 않습니다. 전원 버튼으로 직접 잠글 수 있으며, 종료하면 원래 자동 잠금 설정으로 돌아갑니다.").font(.caption).foregroundStyle(Theme.muted)
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
                     if AppModel.testHarness {
                     Divider()
                     Text("실내에서 먼저 확인").font(.headline)
                     Text("가짜 센서로 같은 게임 엔진을 실행합니다. 모의 기록과 보상은 실제 성장에 반영되지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
-                    Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true) }.buttonStyle(GameButtonStyle()).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
+                    Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true, environment: model.selectedEnvironment) }.buttonStyle(GameButtonStyle()).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
                     Button("20분 의뢰 모의 활동 · 장기전 포함") {
                         model.selectedBoss = nil; model.selectedMode = .contract
                         model.start(simulated: true, seconds: 1200, pursuit: true)
@@ -236,6 +252,11 @@ struct SetupView: View {
                 }.padding(22)
             }.labyrinthScreen().navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
         }
+        .onChange(of: model.selectedEnvironment) { _, value in if value.isIndoor && goalKind == .distance { goalKind = .time } }
+        .fullScreenCover(isPresented: $indoorCheck, onDismiss: {
+            if indoorStartRequested { indoorStartRequested = false; beginActivity() }
+            model.stopIndoorCheck()
+        }) { IndoorCheckView { indoorStartRequested = true } }
     }
 }
 struct ActiveRunView: View {
@@ -255,16 +276,17 @@ struct ActiveRunView: View {
                                 Text(stateName(run)).font(.caption.bold()).foregroundStyle(Theme.teal)
                             }
                             Text((run.mode ?? .contract).activityTitle(boss: run.boss != nil)).font(.title2.bold())
-                            Text(String(format: "%.2f", run.distance / 1000)).font(.system(size: 64, weight: .light, design: .rounded)).minimumScaleFactor(0.65)
-                            Text("KILOMETERS").font(.caption.monospaced()).foregroundStyle(Theme.muted)
+                            Text(run.isIndoor ? clock(run.activeSeconds) : String(format: "%.2f", run.distance / 1000)).font(.system(size: 64, weight: .light, design: .rounded)).minimumScaleFactor(0.65)
+                            Text(run.isIndoor ? "실내 · " + run.activityEnvironment.title : "KILOMETERS").font(.caption.monospaced()).foregroundStyle(Theme.muted)
                             HStack {
-                                metric("활동시간", clock(run.activeSeconds))
+                                metric(run.isIndoor ? "걸음 수" : "활동시간", run.isIndoor ? "\(run.steps ?? 0)" : clock(run.activeSeconds))
                                 Spacer()
-                                metric("최근 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—")
+                                if run.isIndoor { metric("움직임", model.movement == .walking || model.movement == .running ? "감지 중" : "대기") }
+                                else { metric("최근 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—") }
                                 Spacer()
                                 metric("목표", run.activityGoal.label)
                             }
-                            Text("최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
+                            Text(run.isIndoor ? "움직임이 확인된 시간만 인정해요. 걸음 수는 늦게 갱신될 수 있어요." : "최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
                             if run.activityGoal.kind != .free { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
                             if AccelerationRules.isRecovering(run) {
@@ -276,6 +298,7 @@ struct ActiveRunView: View {
                                 eyebrow("OPERATOR")
                                 Text(run.event?.template.title ?? (run.phase == .calibrating ? "신호를 확인하고 있어요" : "주변을 살펴보고 있어요")).font(.title2.bold())
                                 Text(model.operatorCaption ?? eventMessage(run)).foregroundStyle(Theme.muted).accessibilityIdentifier("activity.caption")
+                                if run.isIndoor { Text(eventMessage(run)).font(.headline).foregroundStyle(Theme.teal) }
                                 if let event = run.event {
                                     if event.template.burstSeconds != nil {
                                         Text(event.stage == .armed ? "가속 선택 대기 · 평소 페이스면 유지/조사로 전환" : event.stage == .briefing ? "안내 후 시작해요" : "가속 남은 시간 · \(max(0, Int(ceil((event.template.burstSeconds ?? 10) - event.elapsed))))초")
@@ -286,7 +309,7 @@ struct ActiveRunView: View {
                                 }
                             }.card()
                             HStack {
-                                Label(signalName(model.signal), systemImage: "antenna.radiowaves.left.and.right")
+                                Label(run.isIndoor ? (model.signal == .good ? "움직임 감지 중" : "움직임을 기다려요") : signalName(model.signal), systemImage: run.isIndoor ? "waveform.path" : "antenna.radiowaves.left.and.right")
                                 Spacer()
                                 Text("HP \(Int(run.hp))").monospacedDigit()
                             }.font(.caption).foregroundStyle(Theme.muted)
@@ -315,7 +338,7 @@ struct ActiveRunView: View {
             VStack(alignment: .leading, spacing: 22) {
                 eyebrow(run.simulated ? "SIMULATION COMPLETE" : "MISSION REPORT")
                 Text("활동 보고").font(.largeTitle.bold())
-                HStack { metric("거리", String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
+                HStack { metric(run.isIndoor ? "실내 걸음 수" : "거리", run.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
                 Text(run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.").foregroundStyle(Theme.muted)
                 if let report = run.simulated ? PaceLearning.report(run, memory: nil) : model.lastSummary?.paceReport { PaceFeedbackView(report: report, simulated: run.simulated) }
                 ForEach(run.records) { record in
@@ -354,6 +377,10 @@ struct ActiveRunView: View {
         }.card()
     }
     private func eventMessage(_ run: RunSession) -> String {
+        if run.isIndoor {
+            guard let event = run.event else { return "편하게 움직이며 훈련 게이트를 조사해요." }
+            return event.template.kind == .discovery ? "움직이는 동안 흔적을 조사해요." : "움직임 유지 · 남은 \(max(0, Int(ceil(event.template.duration - event.elapsed))))초"
+        }
         guard let event = run.event else { return "편안한 페이스로 함께 이동해요. 잠시 멈춰도 괜찮아요!" }
         if event.stage == .briefing { return "지금 필요한 행동을 안내하고 있어요." }
         if event.stage == .armed { return event.template.kind == .boss ? "안전하면 가속 공격을 선택해요. 아니면 유지 공격으로 이어가요." : "안전하면 가속해도 좋아요. 아니면 흔적을 함께 조사해요." }
@@ -386,7 +413,7 @@ struct HunterView: View {
                         NavigationLink { RunDetailView(run: run) } label: { VStack(alignment: .leading, spacing: 8) {
                             Text(run.date, style: .date)
                             Text(run.mode?.title ?? "헌터 의뢰").font(.caption).foregroundStyle(Theme.teal)
-                            Text(String(format: "%.2f km", run.distance / 1000) + " · " + clock(run.seconds)).font(.title3)
+                            Text(run.activityMeasure + " · " + clock(run.seconds)).font(.title3)
                             Text("EXP +\(run.xp)").foregroundStyle(Theme.teal)
                         }.card() }.buttonStyle(.plain)
                     }
@@ -477,7 +504,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 GameSection("앱 정보") {
-                    Text("Hunter Run · 1.1.0")
+                    Text("Hunter Run · 1.2.0")
                     Text("당신의 발걸음으로 이어지는 지부의 이야기").font(.caption)
                     NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }

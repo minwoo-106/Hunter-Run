@@ -12,8 +12,10 @@ public struct SensorFrame {
     public var distance: Double
     public var movement: Movement
     public var signal: Signal
-    public init(timestamp: TimeInterval, speed: Double, distance: Double, movement: Movement, signal: Signal) {
+    public var steps: Int
+    public init(timestamp: TimeInterval, speed: Double, distance: Double, movement: Movement, signal: Signal, steps: Int = 0) {
         self.timestamp = timestamp; self.speed = speed; self.distance = distance; self.movement = movement; self.signal = signal
+        self.steps = steps
     }
 }
 public struct MissionTemplate: Codable, Identifiable {
@@ -121,6 +123,8 @@ public struct RunSession: Codable, Identifiable {
     public var paceCooldownUntil: Double? = nil
     public var directorVersion: Int? = nil
     public var questID: String? = nil
+    public var environment: ActivityEnvironment? = nil
+    public var steps: Int? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -145,6 +149,8 @@ public struct RunSummary: Codable, Identifiable {
     public var majorBoss: BossReport? = nil
     public var paceReport: PaceReport? = nil
     public var questID: String? = nil
+    public var environment: ActivityEnvironment? = nil
+    public var steps: Int? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"

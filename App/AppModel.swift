@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import CoreLocation
+import CoreMotion
 import UIKit
 
 @MainActor final class AppModel: ObservableObject {
@@ -27,6 +28,11 @@ import UIKit
     @Published var selectedFieldDemo: String?
     @Published var selectedBoss: String?
     @Published var selectedMode: RunMode = .contract
+    @Published var selectedEnvironment: ActivityEnvironment = .outdoor
+    @Published var indoorCheckActive = false
+    @Published var indoorDetected = false
+    @Published var indoorCheckMessage = "아이폰을 들거나 몸에 지니고 편하게 움직여보세요."
+    private var indoorCheckTimer: Timer?
     @Published var mockMovement: Movement = .running
     @Published var mockSignal: Signal = .good
     @Published var mockSpeed = 2.6
@@ -67,6 +73,10 @@ import UIKit
     }
     func sceneChanged(active: Bool) {
         sceneActive = active
+        if !active {
+            if engine?.session.isIndoor == true && engine?.session.phase != .finished { pause() }
+            if indoorCheckActive { sensor.stop() }
+        } else if indoorCheckActive { sensor.start(environment: selectedEnvironment) }
         if active { lobbyMusic.allowPlayback() }
         refreshLobbyMusic()
         refreshActivityDisplay()
@@ -243,14 +253,38 @@ import UIKit
         }
     }
     func authorize() { sensor.requestPermission() }
-    func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil, encounterDemo: FieldEncounter? = nil) {
+    func beginIndoorCheck() {
+        guard engine == nil, !recoverable else { return }
+        stopIndoorCheck(); indoorCheckActive = true; indoorDetected = false
+        sensor.start(environment: selectedEnvironment)
+        indoorCheckTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self, self.indoorCheckActive else { return }
+                let status = CMPedometer.authorizationStatus()
+                self.indoorDetected = self.sensor.frame(at: Date()).signal == .good
+                self.indoorCheckMessage = status == .denied || status == .restricted ? "설정에서 Hunter Run의 동작 및 피트니스 권한을 허용해주세요." :
+                    !self.sensor.indoorAvailable ? "이 기기에서는 운동 센서를 사용할 수 없어요." :
+                    self.indoorDetected ? "움직임이 잘 감지돼요. 실내 활동을 시작할 수 있어요." : "아이폰을 손에 들거나 주머니에 넣고 몇 초간 움직여보세요."
+            }
+        }
+    }
+    func stopIndoorCheck() {
+        indoorCheckTimer?.invalidate(); indoorCheckTimer = nil; indoorCheckActive = false
+        if engine == nil { sensor.stop() }
+    }
+    func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil, encounterDemo: FieldEncounter? = nil, environment: ActivityEnvironment = .outdoor) {
         guard !simulated || Self.testHarness else { return }
         guard isReady, let content, engine == nil, save.active == nil else { return }
-        if !simulated && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
+        if !simulated && !environment.isIndoor && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
         }
         guard simulated || encounterDemo == nil else { return }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
+        guard !environment.isIndoor || requested.kind != .distance else { notice = "실내 활동은 시간 또는 자유 목표로 진행해요."; return }
+        if !simulated && environment.isIndoor {
+            guard sensor.indoorAvailable, CMPedometer.authorizationStatus() != .denied, CMPedometer.authorizationStatus() != .restricted,
+                  indoorCheckActive, sensor.frame(at: Date()).signal == .good else { notice = "먼저 실내 움직임 확인을 진행해주세요."; return }
+        }
         guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
         let quest = simulated ? nil : activeQuest
         guard quest == nil || quest!.available(save.profile) else { notice = "의뢰 조건을 다시 확인해주세요."; return }
@@ -258,6 +292,8 @@ import UIKit
         guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
         var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
+        session.environment = environment; session.steps = environment.isIndoor ? 0 : nil
+        if environment.isIndoor { session.allowPursuit = false; session.paceObservation = nil }
         session.questID = quest?.id
         if let definition = quest?.boss {
             session.mode = .gate
@@ -280,14 +316,15 @@ import UIKit
         if simulated, let encounterDemo { mission = encounterDemo.preview; mockRate = 10 }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
-        session.learnedReference = simulated ? nil : save.profile.paceMemory?.reference
+        session.learnedReference = simulated || environment.isIndoor ? nil : save.profile.paceMemory?.reference
         session.goal = requested
         session.directorVersion = 2
         session.missionSnapshot = mission
+        stopIndoorCheck()
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
         lastSummary = nil; lastDemo = nil; resultSaved = true; notice = nil; showRun = true
-        if !simulated { sensor.start() }
+        if !simulated { sensor.start(environment: environment) }
         persist()
         beginTimer()
         playOperator(quest?.promotion != nil ? "exam_start" : quest != nil ? "quest_start" : "run_start")
@@ -337,8 +374,9 @@ import UIKit
             }
         }
     }
-    func pause() { engine?.pause(true); displayedPace.reset(); currentSpeed = 0; audio.stop(); operatorCaption = voiceLines["pause"]; persist() }
+    func pause() { engine?.pause(true); if engine?.session.isIndoor == true { sensor.stop() }; displayedPace.reset(); currentSpeed = 0; audio.stop(); operatorCaption = voiceLines["pause"]; persist() }
     func resume() {
+        if let run = engine?.session, run.isIndoor && !run.simulated { sensor.start(environment: run.activityEnvironment) }
         displayedPace.reset(); currentSpeed = 0
         engine?.pause(false)
         if let event = engine?.session.event, event.stage == .briefing {
@@ -352,6 +390,7 @@ import UIKit
         testingAudio = false
         guard engine != nil else { return }
         engine?.interrupt(true); engine?.interrupt(false)
+        if engine?.session.isIndoor == true { sensor.stop() }
         displayedPace.reset(); currentSpeed = 0
         notice = "통화 또는 이어폰 변경으로 일시정지했습니다. 안전한 곳에서 재개해주세요."
         persist()
@@ -382,7 +421,7 @@ import UIKit
         if run.phase == .finished { finish(); showRun = true; return }
         engine?.restorePaused(); recoverable = false; showRun = true
         mockTime = Date().timeIntervalSince1970
-        if !run.simulated { sensor.start() }
+        if !run.simulated && !run.isIndoor { sensor.start(environment: run.activityEnvironment) }
         beginTimer(); persist()
     }
     func endRecovered() { recover(); finish() }
@@ -425,7 +464,7 @@ import UIKit
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
     func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
     private func playOperator(_ key: String, completion: (() -> Void)? = nil) {
-        let clip = voiceVariants.select(key, catalog: variantCatalog)
+        let clip = voiceVariants.select(key == "indoor_hold" ? "resume" : key, catalog: variantCatalog)
         operatorCaption = voiceLines[clip]
         audio.play(clip, completion: completion)
     }

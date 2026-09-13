@@ -15,7 +15,7 @@
 <key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string></array>
 <key>UIBackgroundModes</key><array><string>location</string><string>audio</string></array>
 <key>NSLocationWhenInUseUsageDescription</key><string>활동 중 이동 거리와 페이스를 측정합니다. 화면을 잠근 동안에도 시작한 활동의 기록을 이어갑니다.</string>
-<key>NSMotionUsageDescription</key><string>걷기·달리기·정지를 구분하고 GPS가 불안정할 때 걸음 측정으로 보조합니다.</string>
+<key>NSMotionUsageDescription</key><string>걷기·달리기를 구분하고 실내 활동의 걸음과 반복 움직임을 감지합니다. 운동 정보는 기기 안에서 처리합니다.</string>
 <key>UIFileSharingEnabled</key><false/>
 <key>LSSupportsOpeningDocumentsInPlace</key><true/>
 </dict></plist>

@@ -174,7 +174,7 @@ struct LaunchGateView: View {
                             Rectangle().frame(width: 34, height: 1)
                             Text("미궁 너머의 기록").font(.subheadline).tracking(3)
                             Rectangle().frame(width: 34, height: 1)
-                        }.foregroundStyle(Labyrinth.gold)
+                        }.foregroundStyle(Labyrinth.parchment).shadow(color: .black, radius: 4, y: 2)
                         Spacer(minLength: 80)
                         Spacer(minLength: 30)
                         Button {
@@ -188,7 +188,7 @@ struct LaunchGateView: View {
                         }.buttonStyle(.plain).foregroundStyle(Labyrinth.parchment).accessibilityIdentifier("title.enter")
                         // Keep access to settings / backup recovery even when a save or catalog fails validation.
                         if !model.isReady { Text("기록을 확인해야 해요. 계속해서 안내를 확인해주세요.").font(.caption).multilineTextAlignment(.center) }
-                        Text("HUNTER RUN  ·  1.1.0").font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
+                        Text("HUNTER RUN  ·  1.2.0").font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
                     }.padding(.horizontal, 24).padding(.bottom, 24)
                 }.contentShape(Rectangle()).onTapGesture { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) { entered = true } }
             }.onAppear { model.refreshLobbyMusic() }

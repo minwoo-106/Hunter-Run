@@ -16,14 +16,21 @@ xcrun simctl boot "$DEVICE_ID" || true
 xcrun simctl bootstatus "$DEVICE_ID" -b
 status=0
 UI_SCOPE=()
-if [ "${1:-}" = "labyrinth" ]; then
-  # 1.1 is a presentation-only change. Keep default invocations as the full suite.
+if [ "${1:-}" = "labyrinth" ] || [ "${1:-}" = "indoor" ]; then
+  # Focused changed paths; default invocations still run the complete suite.
   UI_SCOPE=(
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
     -only-testing:HunterRunUITests/HomeLayoutTests/testEquipmentArtworkDetailsAndHistory
     -only-testing:HunterRunUITests/HomeLayoutTests/testStoryCursorChoicesAndLockedChapters
     -only-testing:HunterRunUITests/LabyrinthLayoutTests
   )
+  if [ "${1:-}" = "indoor" ]; then
+    UI_SCOPE+=(
+      -only-testing:HunterRunUITests/IndoorLayoutTests
+      -only-testing:HunterRunUITests/HomeLayoutTests/testGoalSelectionAndCentralNavigation
+      -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
+    )
+  fi
 fi
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
@@ -85,6 +92,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
     -only-testing:HunterRunUITests/HomeLayoutTests/testLargeTextKeepsStoryAndSettingsReachable \
     -only-testing:HunterRunUITests/LabyrinthLayoutTests/testLargeTextConversationCanReadAndChoose \
     -only-testing:HunterRunUITests/LabyrinthLayoutTests/testOperatorReplyAndMemoriesStayReachable \
+    -only-testing:HunterRunUITests/IndoorLayoutTests/testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration \
     CODE_SIGNING_ALLOWED=NO test-without-building 2>&1 | tee build/small-layout-log.txt || status=$?
   xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
   xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-layout.png || true

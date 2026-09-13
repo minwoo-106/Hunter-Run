@@ -70,7 +70,7 @@ public enum PaceLearning {
     }
     /// Settlement owns the run-ID idempotence guard.
     public static func settle(_ session: RunSession, profile: inout Profile) -> PaceReport? {
-        guard session.phase == .finished, !session.simulated else { return nil }
+        guard session.phase == .finished, !session.simulated, !session.isIndoor else { return nil }
         if let sample = session.paceObservation, sample.isValid, sample.stableSeconds >= 300, let speed = sample.median {
             var memory = profile.paceMemory ?? PaceMemory(); memory.include(speed); profile.paceMemory = memory
         }

@@ -29,20 +29,25 @@ final class LabyrinthLayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 10)); app.buttons["home.operator"].tap()
         XCTAssertTrue(app.staticTexts["operator.reply"].waitForExistence(timeout: 5))
         capture(app, "Labyrinth-conversation")
+        XCTAssertFalse(app.buttons["잠깐 쉬어요"].exists)
+        app.buttons["operator.continue"].tap()
         let rest = app.buttons["잠깐 쉬어요"]
         for _ in 0..<6 { if rest.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(rest.isHittable); rest.tap()
+        XCTAssertFalse(rest.exists, "Choices should disappear while the operator replies")
         XCTAssertTrue(app.staticTexts["operator.reply"].isHittable, "Reply must scroll back into view after a choice")
         let memories = app.buttons["operator.memories"]
         XCTAssertTrue(memories.isHittable); memories.tap()
         XCTAssertTrue(app.staticTexts["함께 나눌 이야기"].waitForExistence(timeout: 5))
         capture(app, "Labyrinth-memories")
+        app.buttons["이전"].tap()
         app.buttons["닫기"].tap()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 5))
     }
     @MainActor func testLargeTextConversationCanReadAndChoose() {
         let app = app(largeText: true); app.launch()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 10)); app.buttons["home.operator"].tap()
+        app.buttons["operator.continue"].tap()
         let rest = app.buttons["잠깐 쉬어요"]
         let panel = app.scrollViews.firstMatch
         for _ in 0..<16 {

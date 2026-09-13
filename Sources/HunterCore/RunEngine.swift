@@ -44,7 +44,7 @@ public struct RunEngine {
             session.movingStreak = 0; return []
         }
         guard !session.manualPause, !session.interruption else { return [] }
-        let moving = frame.movement == .walking || frame.movement == .running
+        let moving = (frame.movement == .walking || frame.movement == .running) && (!session.isIndoor || frame.signal == .good)
         guard moving else {
             session.movingStreak = 0
             session.stationarySeconds += rawDT
@@ -62,7 +62,8 @@ public struct RunEngine {
             return [.voice("resume"), .checkpoint]
         }
         var dt = session.activityGoal.kind == .time ? min(rawDT, max(0, session.activityGoal.value - session.activeSeconds)) : rawDT
-        var distance = max(0, min(frame.distance, 8 * dt))
+        var distance = session.isIndoor ? 0 : max(0, min(frame.distance, 8 * dt))
+        if session.isIndoor { session.steps = (session.steps ?? 0) + min(30, max(0, frame.steps)) }
         if session.activityGoal.kind == .distance {
             let remaining = max(0, session.activityGoal.value - session.distance)
             if distance > remaining { dt *= remaining / distance; distance = remaining }
@@ -70,8 +71,9 @@ public struct RunEngine {
         session.activeSeconds += dt
         if frame.movement == .running { session.runningSeconds += dt }
         session.distance += distance
-        let stable = frame.movement == .running && frame.signal == .good && frame.speed >= 1 && frame.speed <= 6
-        session.paceObservation?.observe(speed: frame.speed, seconds: dt, goodSignal: frame.signal == .good,
+        let stable = !session.isIndoor && frame.movement == .running && frame.signal == .good && frame.speed >= 1 && frame.speed <= 6
+        let outdoorSignal = !session.isIndoor && frame.signal == .good
+        session.paceObservation?.observe(speed: frame.speed, seconds: dt, goodSignal: outdoorSignal,
             eligible: stable && session.event == nil && session.activeSeconds >= (session.paceCooldownUntil ?? 0))
         if stable && session.event == nil && session.activeSeconds < session.calibrationSeconds {
             session.baselineSamples.append(frame.speed)
@@ -96,7 +98,7 @@ public struct RunEngine {
                 // No evaluation under uncertain sensor evidence. Switch to a neutral route.
                 closeEvent(.neutral); return [.voice("signal"), .checkpoint]
             }
-            if requiresRunning && frame.movement != .running { return cues }
+            if requiresRunning && !session.isIndoor && frame.movement != .running { return cues }
             if event.stage == .armed {
                 event.elapsed += dt
                 if frame.speed >= event.baseline * 1.08 { event.pushing += dt } else { event.pushing = 0 }
@@ -123,7 +125,7 @@ public struct RunEngine {
             let eventDT = event.template.burstSeconds.map { min(dt, max(0, $0 - event.elapsed)) } ?? dt
             event.elapsed += eventDT; event.evaluatedSeconds += eventDT
             let threshold = event.template.requestsAcceleration ? 1.08 : event.template.kind == .endurance ? 0.75 : 0.85
-            let qualified = event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
+            let qualified = session.isIndoor || event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
             if qualified { event.qualified += eventDT }
             if event.template.kind == .endurance { event.traveledDistance = (event.traveledDistance ?? 0) + distance }
             session.event = event
@@ -154,6 +156,7 @@ public struct RunEngine {
         let patrolContent = session.boss?.content ?? content
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
+            if session.isIndoor { next = IndoorRules.event(next) }
             session.consumed.insert(next.id)
             let remaining = session.activityGoal.kind == .time ? session.activityGoal.value - session.activeSeconds : Double.greatestFiniteMagnitude
             if remaining < next.duration + 30 { return [.checkpoint] }
@@ -163,7 +166,7 @@ public struct RunEngine {
             if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || AccelerationRules.needsEasyMovement(session) || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
                 next.kind = .discovery; next.burstSeconds = nil; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
             }
-            if next.kind != .discovery && (frame.movement != .running || frame.signal != .good) {
+            if next.kind != .discovery && ((!session.isIndoor && frame.movement != .running) || frame.signal != .good) {
                 next.kind = .discovery; next.burstSeconds = nil; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
             }
             if next.id.hasPrefix("major-strike"), let boss = session.boss {
@@ -196,7 +199,7 @@ public enum Settlement {
         let regularCores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
         let cores = bossReport?.cleared == true ? 2 : regularCores
         let paceReport = PaceLearning.settle(session, profile: &profile)
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID)
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)

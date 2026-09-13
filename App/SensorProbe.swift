@@ -6,6 +6,14 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     let location = CLLocationManager()
     let motion = CMMotionActivityManager()
     let pedometer = CMPedometer()
+    let deviceMotion = CMMotionManager()
+    private var environment: ActivityEnvironment = .outdoor
+    private var indoor = IndoorMovementTracker()
+    private var totalSteps = 0
+    private var pendingSteps = 0
+    private var stepCallbackAt = Date()
+    private var generation = UUID()
+    var indoorAvailable: Bool { CMPedometer.isStepCountingAvailable() || deviceMotion.isDeviceMotionAvailable }
     var onUpdate: (() -> Void)?
     private(set) var permission: CLAuthorizationStatus = .notDetermined
     private(set) var motionPermission: CMAuthorizationStatus = .notDetermined
@@ -33,16 +41,29 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         location.pausesLocationUpdatesAutomatically = false
     }
     func requestPermission() { location.requestWhenInUseAuthorization() }
-    func start() {
+    func start(environment: ActivityEnvironment = .outdoor) {
+        stop()
+        self.environment = environment
+        let token = UUID(); generation = token
+        indoor.reset(); totalSteps = 0; pendingSteps = 0; stepCallbackAt = Date()
         active = true; latestFix = nil; velocity.reset(); pendingDistance = 0
         stepsDistance = 0; pendingStepsDistance = 0; stepsAt = .distantPast; motionAt = .distantPast
         motionValue = .unknown; speed = 0; signal = .unavailable
-        location.allowsBackgroundLocationUpdates = true
-        location.showsBackgroundLocationIndicator = true
-        location.startUpdatingLocation()
+        if !environment.isIndoor {
+            location.allowsBackgroundLocationUpdates = true
+            location.showsBackgroundLocationIndicator = true
+            location.startUpdatingLocation()
+        } else if deviceMotion.isDeviceMotionAvailable {
+            deviceMotion.deviceMotionUpdateInterval = 1.0 / 25
+            deviceMotion.startDeviceMotionUpdates(to: .main) { [weak self] data, _ in
+                guard let self, self.active, self.generation == token, let data else { return }
+                let a = data.userAcceleration
+                self.indoor.observeAcceleration(sqrt(a.x * a.x + a.y * a.y + a.z * a.z), at: Date().timeIntervalSince1970)
+            }
+        }
         if CMMotionActivityManager.isActivityAvailable() {
             motion.startActivityUpdates(to: .main) { [weak self] activity in
-                guard let self, let activity else { return }
+                guard let self, self.active, self.generation == token, let activity else { return }
                 self.motionAt = activity.startDate
                 if activity.confidence == .high && (activity.automotive || activity.cycling) { self.motionValue = .vehicle }
                 else if activity.confidence != .low && activity.running { self.motionValue = .running }
@@ -55,9 +76,17 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         if CMPedometer.isStepCountingAvailable() {
             pedometer.startUpdates(from: Date()) { [weak self] data, error in
                 DispatchQueue.main.async {
-                    guard let self, self.active else { return }
+                    guard let self, self.active, self.generation == token else { return }
                     self.motionPermission = CMPedometer.authorizationStatus()
                     guard let data else { return }
+                    let count = data.numberOfSteps.intValue
+                    let added = max(0, count - self.totalSteps)
+                    self.pendingSteps += added; self.totalSteps = count
+                    let now = Date()
+                    if now.timeIntervalSince(data.endDate) <= 3 {
+                        self.indoor.observeSteps(count: added, elapsed: now.timeIntervalSince(self.stepCallbackAt), at: now.timeIntervalSince1970)
+                    }
+                    self.stepCallbackAt = now
                     let total = data.distance?.doubleValue ?? self.stepsDistance
                     self.pendingStepsDistance += max(0, total - self.stepsDistance)
                     self.stepsDistance = total; self.stepsAt = data.endDate
@@ -68,6 +97,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     }
     func stop() {
         active = false; location.stopUpdatingLocation(); motion.stopActivityUpdates(); pedometer.stopUpdates()
+        generation = UUID(); deviceMotion.stopDeviceMotionUpdates(); indoor.reset(); pendingSteps = 0
         location.allowsBackgroundLocationUpdates = false
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -98,6 +128,15 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         onUpdate?()
     }
     func frame(at date: Date) -> SensorFrame {
+        if environment.isIndoor {
+            let denied = CMPedometer.authorizationStatus() == .denied || CMPedometer.authorizationStatus() == .restricted
+            let vehicle = date.timeIntervalSince(motionAt) <= 15 && motionValue == .vehicle
+            let moving = active && !denied && !vehicle && indoor.isMoving(at: date.timeIntervalSince1970)
+            movement = vehicle ? .vehicle : moving ? .walking : .stationary
+            signal = moving ? .good : .unavailable; speed = 0
+            let steps = pendingSteps; pendingSteps = 0
+            return SensorFrame(timestamp: date.timeIntervalSince1970, speed: 0, distance: 0, movement: movement, signal: signal, steps: steps)
+        }
         let freshFix = latestFix.map { date.timeIntervalSince($0.timestamp) <= 5 } ?? false
         let freshMotion = date.timeIntervalSince(motionAt) <= 15
         let freshSteps = date.timeIntervalSince(stepsAt) <= 8
