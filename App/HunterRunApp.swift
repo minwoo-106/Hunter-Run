@@ -87,7 +87,7 @@ struct HomeView: View {
                             }.buttonStyle(.plain).accessibilityLabel("설정").accessibilityIdentifier("home.settings")
                         }
                     }
-                    Button { model.showOperator = true } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180) }
+                    Button { model.showOperator = true } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {
@@ -305,6 +305,7 @@ struct ActiveRunView: View {
                 }
             }
         }
+        .environment(\.labyrinthStyle, true)
         .confirmationDialog("확보한 기록과 보상을 저장하고 종료할까요?", isPresented: $confirmEnd, titleVisibility: .visible) {
             Button("저장하고 종료") { model.finish() }
         }

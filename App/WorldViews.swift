@@ -114,7 +114,7 @@ struct CodexView: View {
                 }.padding(20)
             }.labyrinthScreen().navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }
-        .sheet(isPresented: $archive) { FieldArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { archive = false } } } }
+        .fullScreenCover(isPresented: $archive) { FieldArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { archive = false }.buttonStyle(GameControlStyle()) } } }
     }
 }
 

@@ -12,8 +12,7 @@ struct RelicShape: Shape {
     func path(in rect: CGRect) -> Path {
         let c = min(cut, min(rect.width, rect.height) / 3)
         return Path { p in
-            p.move(to: CGPoint(x: rect.minX + c, y: rect.minY))
-            p.addLines([CGPoint(x: rect.maxX, y: rect.minY), CGPoint(x: rect.maxX, y: rect.maxY - c),
+            p.addLines([CGPoint(x: rect.minX + c, y: rect.minY), CGPoint(x: rect.maxX, y: rect.minY), CGPoint(x: rect.maxX, y: rect.maxY - c),
                         CGPoint(x: rect.maxX - c, y: rect.maxY), CGPoint(x: rect.minX, y: rect.maxY),
                         CGPoint(x: rect.minX, y: rect.minY + c)])
             p.closeSubpath()

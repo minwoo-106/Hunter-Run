@@ -1,6 +1,7 @@
 import XCTest
 
 final class LabyrinthLayoutTests: XCTestCase {
+    override func setUp() { super.setUp(); continueAfterFailure = false }
     @MainActor private func app(skipTitle: Bool = true, largeText: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing-skip-welcome", "--ui-testing-silent-audio", "--ui-testing-save", UUID().uuidString]
@@ -63,6 +64,7 @@ final class LabyrinthLayoutTests: XCTestCase {
         for _ in 0..<5 { if story.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         capture(app, "Labyrinth-archive"); XCTAssertTrue(story.isHittable); story.tap()
         XCTAssertTrue(app.staticTexts["dialogue.text"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-story")
+        app.buttons["이전"].tap()
         app.buttons["닫기"].tap(); app.buttons["nav.0"].tap(); app.buttons["home.settings"].tap()
         XCTAssertTrue(app.navigationBars["설정"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-settings")
     }

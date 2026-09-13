@@ -216,7 +216,7 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Equipment illustration"; shot.lifetime = .keepAlways; add(shot)
         openSettings(app)
         let guide = app.buttons["활동과 성장 가이드"]
-        for _ in 0..<5 { if guide.isHittable { break }; app.swipeUp() }
+        for _ in 0..<12 { if guide.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(guide.isHittable); guide.tap()
         XCTAssertTrue(app.staticTexts["01 · 나에게 맞는 활동"].waitForExistence(timeout: 5))
     }
