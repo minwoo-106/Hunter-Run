@@ -218,6 +218,9 @@ struct ConversationStage<Content: View>: View {
                     }.frame(height: portraitHeight, alignment: .top).clipped().overlay(alignment: .bottom) {
                         LinearGradient(colors: [.clear, Theme.ink], startPoint: .top, endPoint: .bottom).frame(height: 45).allowsHitTesting(false)
                     }.accessibilityIdentifier("conversation.portrait")
+                        // Clipping changes drawing, not SwiftUI hit testing. The full portrait
+                        // extends behind the dialogue on compact screens; it is decorative here.
+                        .allowsHitTesting(false)
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(alignment: .leading, spacing: 17) {

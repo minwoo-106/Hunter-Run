@@ -44,7 +44,13 @@ final class LabyrinthLayoutTests: XCTestCase {
         let app = app(largeText: true); app.launch()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 10)); app.buttons["home.operator"].tap()
         let rest = app.buttons["잠깐 쉬어요"]
-        for _ in 0..<12 { if rest.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        let panel = app.scrollViews.firstMatch
+        for _ in 0..<16 {
+            if rest.isHittable { break }
+            panel.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.7))
+                .press(forDuration: 0.1, thenDragTo: panel.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4)))
+        }
+        capture(app, "Labyrinth-large-text-choice-access")
         XCTAssertTrue(rest.isHittable); rest.tap()
         let reply = app.staticTexts["operator.reply"]
         XCTAssertTrue(reply.exists)
