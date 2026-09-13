@@ -1,4 +1,12 @@
-# Hunter Run 1.0.0
+# Hunter Run 1.1.0
+
+Labyrinth interface release, built as 1.1.0/build19 by Codemagic build30 from `2097d25` on 2026-09-13. Adds a tap-to-enter title screen, portrait dialogue stages, and a shared dungeon visual treatment for non-home screens while preserving the home composition and game data.
+
+[Download 1.1.0 from build30](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa68faa688764aa17be37ce?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.1-release.md) · [Verification record](docs/release-110-verification.json)
+
+119 core tests, content validation, seven focused iPhone 17 Pro UI tests and five 375×667 compact UI tests passed. The downloaded installer passed ZIP/IPA, arm64, launch-image and all 113 voice hash checks. Install `HunterRun-1.1.0-build19-unsigned.ipa` through AltStore; updating the existing app preserves progress. UI testing here is simulator-based.
+
+## 1.0 release record
 
 Native iPhone walking/running RPG. Version 1.0.0/build14 was compiled and packaged by Codemagic build25 from `edf84fc` on 2026-09-13. The downloaded installer passed archive, arm64 executable, story/content and all 113 voice hash checks.
 

@@ -1,0 +1,12 @@
+{
+  "version": "1.1.0",
+  "build": "19",
+  "architecture": "arm64",
+  "stories": 28,
+  "clips": 113,
+  "monsters": 17,
+  "equipment": 32,
+  "bytes": 138052433,
+  "file": "HunterRun-1.1.0-build19-install.zip",
+  "sha256": "0f0003ea22718fd4def11c785881683f8803c1c4d0c6077e9786b2e65274eb24"
+}
