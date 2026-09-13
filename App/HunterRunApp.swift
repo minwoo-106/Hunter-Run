@@ -482,7 +482,7 @@ struct SettingsView: View {
                     NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }
                 }.padding(20)
-            }.labyrinthScreen().buttonStyle(GameButtonStyle()).navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.buttonStyle(GameControlStyle()).accessibilityIdentifier("settings.close") } }
+            }.labyrinthScreen().buttonStyle(GameButtonStyle()).navigationTitle("설정").navigationBarTitleDisplayMode(.inline).toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.buttonStyle(GameControlStyle()).accessibilityIdentifier("settings.close") } }
         }
         .onDisappear { model.stopAudioPreview() }
         .confirmationDialog("모든 활동·장비·이야기 진행도를 초기화할까요?", isPresented: $confirmReset, titleVisibility: .visible) {

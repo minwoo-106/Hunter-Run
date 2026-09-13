@@ -86,6 +86,7 @@ extension View {
             .tint(Labyrinth.gold).foregroundStyle(Labyrinth.parchment)
             .toolbarBackground(Theme.ink.opacity(0.92), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
 
@@ -230,6 +231,7 @@ struct ConversationStage<Content: View>: View {
             }
         }.environment(\.labyrinthStyle, true).foregroundStyle(Labyrinth.parchment).tint(Labyrinth.gold)
             .toolbarBackground(Theme.ink, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
 

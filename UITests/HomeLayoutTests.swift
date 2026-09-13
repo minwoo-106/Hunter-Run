@@ -216,7 +216,16 @@ final class HomeLayoutTests: XCTestCase {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Equipment illustration"; shot.lifetime = .keepAlways; add(shot)
         openSettings(app)
         let guide = app.buttons["활동과 성장 가이드"]
-        for _ in 0..<12 { if guide.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        let settingsScroll = app.scrollViews.firstMatch
+        for _ in 0..<12 {
+            if guide.isHittable { break }
+            // Start in the empty gutter; an audio slider legitimately owns a drag
+            // that starts on its thumb/track in the middle of the settings panel.
+            settingsScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.04, dy: 0.82))
+                .press(forDuration: 0.05, thenDragTo: settingsScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.04, dy: 0.2)))
+        }
+        print("SETTINGS guide=\(guide.frame) viewport=\(settingsScroll.frame)")
+        let settingsShot = XCTAttachment(screenshot: app.screenshot()); settingsShot.name = "Settings guide access"; settingsShot.lifetime = .keepAlways; add(settingsShot)
         XCTAssertTrue(guide.isHittable); guide.tap()
         XCTAssertTrue(app.staticTexts["01 · 나에게 맞는 활동"].waitForExistence(timeout: 5))
     }
