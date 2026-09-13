@@ -1,0 +1,20 @@
+{
+  "version": "1.2.2",
+  "build": "23",
+  "architecture": "arm64",
+  "stories": 28,
+  "clips": 113,
+  "monsters": 17,
+  "equipment": 32,
+  "bytes": 138138117,
+  "file": "HunterRun-1.2.2-build23-install.zip",
+  "sha256": "581a4df28cb6aa95999124e8904fdc6466bd7dff6c1ce4dbd18443560bdc9e39",
+  "sourceCommit": "83b5369",
+  "codemagicBuild": 34,
+  "buildDurationSeconds": 780,
+  "coreTestsPassed": 140,
+  "primaryUITestsPassed": 5,
+  "compactUITestsPassed": 3,
+  "physicalIndoorMotionVerified": false,
+  "launchImageVerified": true
+}

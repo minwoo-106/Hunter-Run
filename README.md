@@ -2,9 +2,9 @@
 
 Unified indoor running with 50% activity rewards and a shared daily 60-minute active-time limit. The day resets at Korean midnight; outdoor free activity remains unrestricted.
 
-[Policy and compatibility](docs/1.2.2-policy.md)
+[Download 1.2.2 from build34](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa6b0b5688764aa17be873e?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.2.2-release.md) · [Policy](docs/1.2.2-policy.md) · [Verification](docs/release-122-verification.json) · [후속 확장 제안](docs/outdoor-next-direction.md)
 
-Local validation: 140 core tests pass, content/audio assets validate, and Swift app/UI source parses. Cloud release compilation and device-layout checks are pending.
+Verified 1.2.2/build23 from source `83b5369`: Codemagic build34 succeeded in 13 minutes. 140 core tests, five iPhone 17 Pro UI checks and three compact-screen checks passed. The downloaded installer passed ZIP/IPA, arm64, launch-image and 113 audio hash verification. Install over the existing app to retain progress. Physical movement sensitivity uses the existing indoor sensor implementation.
 
 ## 1.2.0 release record
 
@@ -204,4 +204,3 @@ Saves are local, with atomic writes and a previous valid snapshot.
 Mock sessions cannot grant real rewards. Exact raw coordinates are not saved.
 Save import replaces progress and requires confirmation in the UI.
 Do not place personal saves, signing credentials, or tokens in this repository.
-
