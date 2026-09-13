@@ -17,3 +17,5 @@ Non-home screens use a shared dark-stone backdrop, antique-gold borders, cut-cor
 ## Validation
 
 Content validation and Swift syntax checks passed before cloud submission. The cloud workflow runs the existing core suite, iPhone UI suite, new title/conversation/menu checks, and compact-screen checks. Test screenshots are exported to `build/ui-review` and `build/ui-review-small` for visual inspection. Final cloud and artifact verification results are recorded in the release notes after completion.
+
+Initial build26 captured a transparent home-portrait hit target that remained on the home screen when tapped. An explicit rectangular content shape fixes the hit area without changing home artwork or layout. The same UI test taps the original `home.operator` target and verifies the real reply and relationship archive, including accessibility text size. The first screenshots also exposed an open subpath in the decorative panel geometry; the outline now uses a single closed polygon. Guide scrolling and the two-level story return in the visual tour match the new screen structure.

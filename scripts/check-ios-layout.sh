@@ -15,9 +15,20 @@ PY
 xcrun simctl boot "$DEVICE_ID" || true
 xcrun simctl bootstatus "$DEVICE_ID" -b
 status=0
+UI_SCOPE=()
+if [ "${1:-}" = "labyrinth" ]; then
+  # 1.1 is a presentation-only change. Keep default invocations as the full suite.
+  UI_SCOPE=(
+    -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testEquipmentArtworkDetailsAndHistory
+    -only-testing:HunterRunUITests/HomeLayoutTests/testStoryCursorChoicesAndLockedChapters
+    -only-testing:HunterRunUITests/LabyrinthLayoutTests
+  )
+fi
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
+  "${UI_SCOPE[@]}" \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
 mkdir -p build/ui-review
 xcrun xcresulttool export attachments --path build/Layout.xcresult --output-path build/ui-review || true

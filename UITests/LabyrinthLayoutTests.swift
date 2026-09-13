@@ -2,10 +2,13 @@ import XCTest
 
 final class LabyrinthLayoutTests: XCTestCase {
     override func setUp() { super.setUp(); continueAfterFailure = false }
-    @MainActor private func app(skipTitle: Bool = true, largeText: Bool = false) -> XCUIApplication {
+    @MainActor private func app(skipTitle: Bool = true, largeText: Bool = false, motion: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing-skip-welcome", "--ui-testing-silent-audio", "--ui-testing-save", UUID().uuidString]
         if skipTitle { app.launchArguments.append("--ui-testing-skip-title") }
+        // Layout checks need a stable idle frame. The real portrait-tap test and separate
+        // Metal render checks keep motion enabled, so input while animating is still covered.
+        if !motion { app.launchArguments += ["-operatorMotionEnabled", "NO"] }
         if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         return app
     }
@@ -22,7 +25,7 @@ final class LabyrinthLayoutTests: XCTestCase {
         XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 5)); XCTAssertFalse(enter.exists)
     }
     @MainActor func testOperatorReplyAndMemoriesStayReachable() {
-        let app = app(); app.launch()
+        let app = app(motion: true); app.launch()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 10)); app.buttons["home.operator"].tap()
         XCTAssertTrue(app.staticTexts["operator.reply"].waitForExistence(timeout: 5))
         capture(app, "Labyrinth-conversation")
