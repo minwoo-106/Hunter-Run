@@ -18,12 +18,13 @@ struct OperatorConversationView: View {
                 Text(choosing ? "당신의 대답" : "터치해 계속").font(.caption2).foregroundStyle(Theme.muted)
             }
             Button {
+                guard !choosing else { return }
                 withAnimation(.easeOut(duration: 0.18)) { choosing = true }
             } label: {
                 Text(line ?? greeting).font(.title3).lineSpacing(7).fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, minHeight: 85, alignment: .topLeading).contentShape(Rectangle())
-                    .accessibilityIdentifier("operator.reply")
-            }.buttonStyle(.plain).disabled(choosing).accessibilityIdentifier("operator.continue")
+                    .foregroundStyle(Labyrinth.parchment)
+            }.buttonStyle(.plain).accessibilityIdentifier("operator.continue")
             if choosing { choices }
             else { HStack { Spacer(); Image(systemName: "chevron.down").font(.caption).foregroundStyle(Labyrinth.gold) }.allowsHitTesting(false) }
         }.navigationTitle("").navigationBarTitleDisplayMode(.inline)

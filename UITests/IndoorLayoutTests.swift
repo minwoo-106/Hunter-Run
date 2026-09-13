@@ -16,6 +16,10 @@ final class IndoorLayoutTests: XCTestCase {
         }
         XCTAssertTrue(element.isHittable)
     }
+    @MainActor private func allowMotionPrompt(_ app: XCUIApplication) {
+        let alert = app.alerts.firstMatch
+        if alert.waitForExistence(timeout: 2), alert.buttons["Allow"].exists { alert.buttons["Allow"].tap() }
+    }
     @MainActor func testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration() {
         let app = app(); XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
         app.segmentedControls["activity.environment"].buttons["제자리 운동"].tap()
@@ -27,6 +31,7 @@ final class IndoorLayoutTests: XCTestCase {
         XCTAssertFalse(app.buttons["위치 권한 확인"].exists)
         app.buttons["activity.start"].tap()
         XCTAssertTrue(app.staticTexts["실내 훈련 게이트"].waitForExistence(timeout: 5))
+        allowMotionPrompt(app)
         XCTAssertFalse(app.buttons["indoor.start"].isEnabled, "A stationary simulator cannot pass the real sensor check")
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Indoor-sensor-check"; shot.lifetime = .keepAlways; add(shot)
     }
@@ -35,6 +40,8 @@ final class IndoorLayoutTests: XCTestCase {
         app.segmentedControls["activity.environment"].buttons["러닝머신"].tap()
         reach(app.buttons["activity.mock"], in: app); app.buttons["activity.mock"].tap()
         XCTAssertTrue(app.staticTexts["실내 · 러닝머신"].waitForExistence(timeout: 5))
+        allowMotionPrompt(app)
+        if app.buttons["계속"].exists { reach(app.buttons["계속"], in: app); app.buttons["계속"].tap() }
         XCTAssertFalse(app.staticTexts["KILOMETERS"].exists)
         XCTAssertFalse(app.staticTexts["최근 페이스"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Indoor-activity"; shot.lifetime = .keepAlways; add(shot)

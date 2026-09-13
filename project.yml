@@ -21,7 +21,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hunterrun.demo
         MARKETING_VERSION: "1.2.0"
-        CURRENT_PROJECT_VERSION: 20
+        CURRENT_PROJECT_VERSION: 21
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Config/Info.plist
         CODE_SIGNING_ALLOWED: NO

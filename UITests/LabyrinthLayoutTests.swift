@@ -27,7 +27,8 @@ final class LabyrinthLayoutTests: XCTestCase {
     @MainActor func testOperatorReplyAndMemoriesStayReachable() {
         let app = app(motion: true); app.launch()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 10)); app.buttons["home.operator"].tap()
-        XCTAssertTrue(app.staticTexts["operator.reply"].waitForExistence(timeout: 5))
+        let reply = app.buttons["operator.continue"]
+        XCTAssertTrue(reply.waitForExistence(timeout: 5)); XCTAssertFalse(reply.label.isEmpty)
         capture(app, "Labyrinth-conversation")
         XCTAssertFalse(app.buttons["잠깐 쉬어요"].exists)
         app.buttons["operator.continue"].tap()
@@ -35,7 +36,8 @@ final class LabyrinthLayoutTests: XCTestCase {
         for _ in 0..<6 { if rest.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(rest.isHittable); rest.tap()
         XCTAssertFalse(rest.exists, "Choices should disappear while the operator replies")
-        XCTAssertTrue(app.staticTexts["operator.reply"].isHittable, "Reply must scroll back into view after a choice")
+        XCTAssertTrue(reply.isHittable, "Reply must scroll back into view after a choice")
+        XCTAssertTrue(reply.label.contains("보고서는 잠깐 덮어둘게요."))
         let memories = app.buttons["operator.memories"]
         XCTAssertTrue(memories.isHittable); memories.tap()
         XCTAssertTrue(app.staticTexts["함께 나눌 이야기"].waitForExistence(timeout: 5))
@@ -57,8 +59,8 @@ final class LabyrinthLayoutTests: XCTestCase {
         }
         capture(app, "Labyrinth-large-text-choice-access")
         XCTAssertTrue(rest.isHittable); rest.tap()
-        let reply = app.staticTexts["operator.reply"]
-        XCTAssertTrue(reply.exists)
+        let reply = app.buttons["operator.continue"]
+        XCTAssertTrue(reply.exists); XCTAssertTrue(reply.label.contains("보고서는 잠깐 덮어둘게요."))
         let screen = app.windows.firstMatch.frame
         XCTAssertGreaterThanOrEqual(reply.frame.minX, screen.minX)
         XCTAssertLessThanOrEqual(reply.frame.maxX, screen.maxX)
