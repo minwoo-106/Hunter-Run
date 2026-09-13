@@ -65,6 +65,7 @@ final class LabyrinthLayoutTests: XCTestCase {
         capture(app, "Labyrinth-archive"); XCTAssertTrue(story.isHittable); story.tap()
         XCTAssertTrue(app.staticTexts["dialogue.text"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-story")
         app.buttons["이전"].tap()
+        app.navigationBars.buttons.element(boundBy: 0).tap()
         app.buttons["닫기"].tap(); app.buttons["nav.0"].tap(); app.buttons["home.settings"].tap()
         XCTAssertTrue(app.navigationBars["설정"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-settings")
     }
