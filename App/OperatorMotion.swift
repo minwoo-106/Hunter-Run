@@ -9,13 +9,14 @@ struct OperatorPortrait: View {
     @State private var origin = Date()
     var active = true
     var expression = "calm"
+    var inspectionTime: Double? = nil
     private var animate: Bool { active && scenePhase == .active && motionEnabled && !reduceMotion }
     var body: some View {
         GeometryReader { geometry in
             let width = min(geometry.size.width, geometry.size.height * 2 / 3)
             let height = width * 1.5
             TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !animate)) { context in
-                let time = animate ? context.date.timeIntervalSince(origin) : 0
+                let time = inspectionTime ?? (animate ? context.date.timeIntervalSince(origin) : 0)
                 ZStack {
                     Image("OperatorCutout").resizable().scaledToFit()
                     if ["smile", "playful", "thoughtful", "worried", "relieved"].contains(expression) {
@@ -46,6 +47,22 @@ struct OperatorPortrait: View {
         return 0
     }
 }
+
+#if DEBUG && targetEnvironment(simulator)
+/// Simulator-only render inspection. There is no entry point in iPhone builds.
+struct OperatorVisualCheckView: View {
+    private let arguments = ProcessInfo.processInfo.arguments
+    private func value(_ flag: String, fallback: String) -> String {
+        guard let index = arguments.firstIndex(of: flag), index + 1 < arguments.count else { return fallback }
+        return arguments[index + 1]
+    }
+    var body: some View {
+        OperatorPortrait(expression: value("--expression", fallback: "calm"),
+                         inspectionTime: Double(value("--time", fallback: "0")) ?? 0)
+            .background(Color(red: 0.035, green: 0.065, blue: 0.09)).ignoresSafeArea()
+    }
+}
+#endif
 
 private struct OperatorFace: Shape {
     func path(in rect: CGRect) -> Path {

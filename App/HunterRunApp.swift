@@ -6,12 +6,21 @@ import UniformTypeIdentifiers
     @Environment(\.scenePhase) private var scenePhase
     var body: some Scene {
         WindowGroup {
-            RootView().environmentObject(model).preferredColorScheme(.dark)
+            content.environmentObject(model).preferredColorScheme(.dark)
                 .onChange(of: scenePhase) { _, phase in
                     model.sceneChanged(active: phase == .active)
                     if phase != .active { model.persist() }
                 }
         }
+    }
+    @ViewBuilder private var content: some View {
+#if DEBUG && targetEnvironment(simulator)
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
+            OperatorVisualCheckView()
+        } else { RootView() }
+#else
+        RootView()
+#endif
     }
 }
 enum Theme {

@@ -12,6 +12,7 @@ workflows:
             brew install xcodegen
           fi
           xcodegen generate
+          xcodebuild -downloadComponent MetalToolchain
       - name: Check home layout in iPhone simulator
         script: bash scripts/check-ios-layout.sh
     artifacts:
@@ -21,6 +22,7 @@ workflows:
       - build/Small-layout.png
       - build/small-layout-log.txt
       - build/Small-layout.xcresult
+      - build/portrait-checks/*.png
   ios-demo:
     name: Hunter Run 1.0 - personal installation
     instance_type: mac_mini_m2
@@ -44,6 +46,7 @@ workflows:
             brew install xcodegen
           fi
           xcodegen generate
+          xcodebuild -downloadComponent MetalToolchain
       - name: Compile iPhone app
         script: |
           set -euo pipefail
@@ -66,3 +69,4 @@ workflows:
       - build/Small-layout.png
       - build/small-layout-log.txt
       - build/Small-layout.xcresult
+      - build/portrait-checks/*.png

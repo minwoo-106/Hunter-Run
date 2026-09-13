@@ -23,6 +23,18 @@ xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-welcome --
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
+mkdir -p build/portrait-checks
+for expression in calm smile playful thoughtful worried relieved; do
+  xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression "$expression" --time 0
+  sleep 1
+  xcrun simctl io "$DEVICE_ID" screenshot "build/portrait-checks/$expression.png"
+done
+xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression calm --time 3.88
+sleep 1
+xcrun simctl io "$DEVICE_ID" screenshot build/portrait-checks/blink.png
+xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression calm --time 1.3
+sleep 1
+xcrun simctl io "$DEVICE_ID" screenshot build/portrait-checks/breath.png
 SMALL_DEVICE_ID=$(python3 - <<'PY'
 import json
 with open('build/simulators.json') as source:
