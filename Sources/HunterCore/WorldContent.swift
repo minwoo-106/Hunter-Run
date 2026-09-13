@@ -25,6 +25,7 @@ public struct BossDefinition: Codable, Identifiable {
     public var requiredRank: String
     public var maximumHP: Double
     public var phases: [GameContent]
+    public var requiredMain: String? = nil
     public func validate() throws {
         guard !id.isEmpty, Progression.ranks.contains(requiredRank), maximumHP.isFinite,
               (100...100000).contains(maximumHP), phases.count == 3 else { throw ProgressionError.invalid }
@@ -36,6 +37,7 @@ public struct BossDefinition: Codable, Identifiable {
     public func available(to profile: Profile, catalog: ProgressionCatalog) -> Bool {
         let rank = Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0
         return rank >= (Progression.ranks.firstIndex(of: requiredRank) ?? Int.max) && catalog.unlocked("gate", profile: profile)
+            && (requiredMain.map { profile.journey?.unlocked.contains($0) == true || profile.bosses?[id] != nil } ?? true)
     }
 }
 
@@ -123,7 +125,12 @@ public enum BossCampaign {
 
 public enum AssociationStage {
     public static func upgrades(_ profile: Profile) -> Int { Department.allCases.filter { profile.growth.level($0) >= 2 }.count }
-    public static func level(_ profile: Profile) -> Int { let count = upgrades(profile); return count >= 4 ? 2 : count >= 2 ? 1 : 0 }
-    public static func name(_ profile: Profile) -> String { ["임시 지부", "정식 관측 지부", "광역 작전 지부"][level(profile)] }
-    public static func artwork(_ profile: Profile) -> String { ["AssociationOffice", "AssociationOperational", "AssociationAdvanced"][level(profile)] }
+    public static func level(_ profile: Profile) -> Int {
+        let advanced = Department.allCases.filter { profile.growth.level($0) >= 3 }.count
+        if advanced == 4 { return 4 }
+        if advanced >= 2 { return 3 }
+        let count = upgrades(profile); return count >= 4 ? 2 : count >= 2 ? 1 : 0
+    }
+    public static func name(_ profile: Profile) -> String { ["임시 지부", "정식 관측 지부", "광역 작전 지부", "심층 연구 지부", "중앙 연계 지부"][level(profile)] }
+    public static func artwork(_ profile: Profile) -> String { ["AssociationOffice", "AssociationOperational", "AssociationAdvanced", "AssociationResearch", "AssociationBeacon"][level(profile)] }
 }

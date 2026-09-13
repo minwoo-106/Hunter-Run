@@ -39,11 +39,16 @@ struct RootView: View {
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic(); model.refreshActivityDisplay() }
         .onChange(of: model.engine?.session.phase) { _, _ in model.refreshActivityDisplay() }
-        .sheet(isPresented: $model.showWelcome) { WelcomeView() }
+        .sheet(isPresented: $model.showWelcome, onDismiss: {
+            if model.startStoryAfterWelcome { model.startStoryAfterWelcome = false; model.showStories = true }
+        }) {
+            if model.save.profile.journey?.registered == true { WelcomeView() } else { RegistrationView() }
+        }
         .sheet(isPresented: $model.showSettings, onDismiss: {
             if model.replayWelcomeAfterSettings { model.replayWelcomeAfterSettings = false; model.showWelcome = true }
         }) { SettingsView() }
         .sheet(isPresented: $model.showStories) { NavigationStack { StoryArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showStories = false } } } } }
+        .sheet(isPresented: $model.showOperator) { NavigationStack { OperatorConversationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showOperator = false } } } } }
         .sheet(isPresented: $model.showAssociation) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showAssociation = false } } } } }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
@@ -73,11 +78,16 @@ struct HomeView: View {
                             }.buttonStyle(.plain).accessibilityLabel("설정").accessibilityIdentifier("home.settings")
                         }
                     }
-                    Spacer(minLength: 60)
+                    Button { model.showOperator = true } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180) }
+                        .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
+                    Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("오셨네요! 오늘도 함께해요.").font(.headline).accessibilityIdentifier("home.greeting")
+                        Button { model.showOperator = true } label: {
+                            Text((model.narratives?.tier(model.save.profile) ?? 1) > 2 ? "잘 오셨어요. 오늘은 어떤 이야기부터 할까요?" : "오셨네요! 오늘도 함께해요.").font(.headline)
+                        }.buttonStyle(.plain).accessibilityIdentifier("home.greeting")
                         Button { model.showStories = true } label: {
-                            Text(StoryProgress.unread(model.save.profile).isEmpty ? "협회 통신 기록 · 우리 지부의 이야기를 다시 볼까요?" : "새 협회 통신 \(StoryProgress.unread(model.save.profile).count)건 · 눌러서 확인").font(.subheadline).foregroundStyle(Theme.muted)
+                            let unread = (model.narratives?.main ?? []).filter { model.save.profile.journey?.unlocked.contains($0.id) == true && model.save.profile.journey?.completed.contains($0.id) != true }.count
+                            Label(unread > 0 ? "스토리 · 새 이야기 \(unread)편" : "스토리 · 우리 지부의 기록", systemImage: "book.closed").font(.subheadline).foregroundStyle(Theme.teal)
                         }.buttonStyle(.plain).accessibilityIdentifier("home.stories")
                     }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
                     if model.recoverable {
@@ -90,7 +100,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("FIELD DEMO · 0.11.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("HUNTER RUN · 1.0.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -101,7 +111,7 @@ struct HomeView: View {
                         Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill()
                             .frame(width: geo.size.width, height: geo.size.height).clipped()
                             .ignoresSafeArea(edges: .top)
-                        Image("OperatorCutout").resizable().scaledToFit()
+                        OperatorPortrait(active: model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings && !model.showAssociation && !model.showRun && !model.showWelcome)
                             .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
                             .offset(y: -geo.size.height * 0.015)
                         LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
@@ -116,18 +126,26 @@ struct HomeView: View {
 }
 struct SetupView: View {
     @EnvironmentObject var model: AppModel
-    @State private var minutes = 20
-    @State private var goalKind: GoalKind = .time
-    @State private var kilometers = 3
-    @State private var pursuit = false
+    @AppStorage("activityMinutes") private var minutes = 20
+    @AppStorage("activityGoalKind") private var goalKind: GoalKind = .time
+    @AppStorage("activityKilometers") private var kilometers = 3
+    @AppStorage("activityAcceleration") private var pursuit = false
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     eyebrow("TODAY'S ASSIGNMENT")
+                    NavigationLink { QuestBoardView() } label: { Label("의뢰 게시판", systemImage: "list.clipboard").card() }.accessibilityIdentifier("setup.quests")
+                    if let quest = model.activeQuest {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("선택 의뢰 · " + quest.title).font(.headline).foregroundStyle(Theme.teal)
+                            Text(quest.detail).font(.caption)
+                            Button("일반 활동으로 변경") { model.selectQuest(nil) }.buttonStyle(.bordered)
+                        }.card()
+                    }
                     Text(model.missions?.content(for: model.selectedMode, extended: false).missionTitle ?? "현장 의뢰").font(.largeTitle.bold())
-                    NavigationLink { EncounterBoardView() } label: { Label("신규 개체 · 월영과 몽환", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("setup.field-intel")
-                    if let entry = model.fieldEncounters?.encounters.first(where: { $0.id == model.selectedFieldDemo }) {
+                    NavigationLink { EncounterBoardView() } label: { Label("현장 개체 조사", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("setup.field-intel")
+                    if AppModel.testHarness, let entry = model.fieldEncounters?.encounters.first(where: { $0.id == model.selectedFieldDemo }) {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("모의 체험 대상 · " + entry.name).font(.headline)
                             Text("20분 모의 활동에서 해당 개체를 만나요. 실제 출현·보상에는 영향을 주지 않아요.").font(.caption)
@@ -171,7 +189,7 @@ struct SetupView: View {
                             }.pickerStyle(.segmented).accessibilityIdentifier("goal.distance")
                             Text("기록된 이동 거리가 목표에 도달하면 자동으로 마칩니다. GPS 상태에 따라 실제 거리와 차이가 날 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                         } else {
-                            Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동은 승급의 목표 완료 횟수에는 포함되지 않습니다.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
+                            Text("시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동 시간도 승급 심사 자격에 포함돼요.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
                         }
                         Toggle("선택적 가속 허용", isOn: $pursuit)
                         Text("추격·보스 가속은 10초씩 최대 2회, 사이에 최소 3분을 둡니다. 가속하지 않으면 추격은 조사로, 보스는 유지 공격으로 바뀝니다.").font(.caption).foregroundStyle(Theme.muted)
@@ -180,7 +198,7 @@ struct SetupView: View {
                         Label(model.permissionText, systemImage: "location")
                         Text("GPS 품질은 활동 시작 후 확인됩니다. 신호가 약하면 속도 판정을 제한합니다.").font(.caption).foregroundStyle(Theme.muted)
                         Button("위치 권한 확인") { model.authorize() }.buttonStyle(.bordered)
-                        Button("음성 · 음악 혼합 테스트") { model.audioTest() }.buttonStyle(.bordered)
+                        Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(.bordered)
                     }.card()
                     Button {
                         let goal = ActivityGoal(kind: goalKind, value: goalKind == .time ? Double(minutes * 60) : goalKind == .distance ? Double(kilometers * 1000) : 0)
@@ -189,6 +207,7 @@ struct SetupView: View {
                         .buttonStyle(.borderedProminent).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
                     Text("활동 중에는 화면을 자동으로 끄지 않습니다. 전원 버튼으로 직접 잠글 수 있으며, 종료하면 원래 자동 잠금 설정으로 돌아갑니다.").font(.caption).foregroundStyle(Theme.muted)
                     Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
+                    if AppModel.testHarness {
                     Divider()
                     Text("실내에서 먼저 확인").font(.headline)
                     Text("가짜 센서로 같은 게임 엔진을 실행합니다. 모의 기록과 보상은 실제 성장에 반영되지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
@@ -203,6 +222,7 @@ struct SetupView: View {
                         }.buttonStyle(.bordered).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.boss")
                     }
                     Text("긴 모의 활동에서는 진행 속도를 10배로 바꿔 장기전과 기습 대응을 빠르게 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
+                    }
                 }.padding(22)
             }.background(Theme.ink).navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
         }
@@ -269,7 +289,7 @@ struct ActiveRunView: View {
                                 Button("일시정지") { model.pause() }.buttonStyle(.borderedProminent)
                             }
                             Button("활동 종료") { confirmEnd = true }.buttonStyle(.bordered)
-                            if run.simulated { mockControls }
+                            if AppModel.testHarness && run.simulated { mockControls }
                         }.padding(24)
                     }
                 }
@@ -406,28 +426,38 @@ struct SettingsView: View {
     @State private var exported: URL?
     @State private var pendingImport: URL?
     @State private var confirmImport = false
+    @State private var confirmReset = false
+    @AppStorage("operatorMotionEnabled") private var operatorMotion = true
     var body: some View {
         NavigationStack {
             Form {
                 Section("헌터 등록") {
-                    TextField("헌터명", text: Binding(get: { model.save.profile.name }, set: { model.nameChanged($0) }))
+                    Text("헌터 · " + model.save.profile.name)
+                    NavigationLink("두 사람의 이름 변경") { RenamePartnersView() }
+                    Toggle("오퍼레이터 움직임", isOn: $operatorMotion)
                 }
                 Section("협회 BGM") {
                     Toggle("협회 배경음악", isOn: $model.homeMusicEnabled).onChange(of: model.homeMusicEnabled) { _, _ in model.applyHomeMusic() }
                     Slider(value: $model.homeMusicVolume, in: 0...1).accessibilityLabel("협회 BGM 음량").onChange(of: model.homeMusicVolume) { _, _ in model.applyHomeMusic() }
-                    Text(model.musicNotice ?? "활동 준비 화면까지 BGM이 이어집니다. 실제 또는 모의 활동을 시작하면 멈춥니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
+                    Text(model.musicNotice ?? "활동 준비 화면까지 BGM이 이어집니다. 활동을 시작하면 멈춥니다. 다른 앱의 음악이 재생 중이면 쉬어갑니다.").font(.caption)
                 }
                 Section("오디오") {
-                    Slider(value: $model.voiceVolume, in: 0.2...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
+                    Slider(value: $model.voiceVolume, in: 0...1).onChange(of: model.voiceVolume) { _, _ in model.applyAudio() }
                     Toggle("안내 중 외부 음악 낮추기", isOn: $model.ducking).onChange(of: model.ducking) { _, _ in model.applyAudio() }
-                    Button("안내 음성 테스트") { model.audioTest() }
-                    Text("오퍼레이터 · 밝고 다정한 목소리. 새 음색으로 미리 제작한 한국어 합성 안내 80개가 적용되어 있습니다.").font(.caption)
+                    Button("안내 음성 미리 듣기") { model.audioTest() }
+                    Text("오퍼레이터 · 밝고 다정한 목소리. 상황별 한국어 안내가 오프라인으로 재생돼요.").font(.caption)
                 }
                 Section("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
                     if let exported { ShareLink("백업 공유·저장", item: exported) }
                     Button("백업 불러오기") { importing = true }
                     Text("불러오면 현재 진행도가 선택한 백업으로 교체됩니다. 먼저 백업을 저장해주세요.").font(.caption)
+                    Button("진행도 초기화", role: .destructive) { confirmReset = true }.disabled(model.growthLocked)
+                }
+                Section("효과음과 진동") {
+                    Slider(value: $model.effectsVolume, in: 0...1).accessibilityLabel("효과음 음량").onChange(of: model.effectsVolume) { _, _ in model.applyFeedbackSettings() }
+                    Toggle("버튼 진동", isOn: $model.hapticsEnabled).onChange(of: model.hapticsEnabled) { _, _ in model.applyFeedbackSettings() }
+                    Button("효과음 미리 듣기") { model.interfaceFeedback("ui-reward") }
                 }
                 Section("진단") {
                     if let url = model.diagnostics() { ShareLink("진단 정보 내보내기", item: url) }
@@ -438,13 +468,17 @@ struct SettingsView: View {
                     NavigationLink("협회 통신 기록") { StoryArchiveView() }.accessibilityIdentifier("settings.stories")
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
-                Section("개발 상태") {
-                    Text("0.11.0 · 상황을 알려주는 오퍼레이터")
-                    Text("해요체 안내 · 개체별 조우와 실제 처치 결과 · 보스 단계 음성 · 협회 통신 듣기.").font(.caption)
+                Section("앱 정보") {
+                    Text("Hunter Run · 1.0.0")
+                    Text("당신의 발걸음으로 이어지는 지부의 이야기").font(.caption)
+                    NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }
             }.navigationTitle("설정").toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showSettings = false }.accessibilityIdentifier("settings.close") } }
         }
         .onDisappear { model.stopAudioPreview() }
+        .confirmationDialog("모든 활동·장비·이야기 진행도를 초기화할까요?", isPresented: $confirmReset, titleVisibility: .visible) {
+            Button("진행도 초기화", role: .destructive) { model.resetProgress() }
+        } message: { Text("이 기기의 진행도와 자동 복구 사본이 초기화돼요. 보관하려면 먼저 백업 파일을 저장해주세요.") }
         .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
             if case .success(let url) = result { pendingImport = url; confirmImport = true }
         }

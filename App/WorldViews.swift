@@ -49,8 +49,9 @@ struct BossBoardView: View {
                         } else {
                             Button("새 토벌 회차 열기") { model.restartBoss(boss) }.buttonStyle(.borderedProminent).disabled(!unlocked || model.growthLocked)
                         }
-                        Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true) }.buttonStyle(.bordered).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
-                        Text("모의 체험은 실제 HP·자원·해금 상태에 영향을 주지 않습니다.").font(.caption2).foregroundStyle(Theme.muted)
+                        if AppModel.testHarness {
+                            Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true) }.buttonStyle(.bordered).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
+                        }
                     }.card()
                 }
             }.padding(20)
@@ -72,7 +73,7 @@ struct BossSelectionView: View {
                 if model.selectedBoss == boss.id {
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     BossHPView(name: boss.name, remaining: state.remainingHP, maximum: state.maximumHP, phase: BossEncounter(definition: boss, state: state).phaseName)
-                    if !available { Text("실제 토벌은 \(boss.requiredRank)급과 관측부 Lv.2가 필요합니다. 아래 3분 모의 활동으로 먼저 체험할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted) }
+                    if !available { Text("토벌은 \(boss.requiredRank)급과 관측부 Lv.2가 필요합니다.").font(.caption).foregroundStyle(Theme.muted) }
                 }
             }
         }.card().accessibilityIdentifier("boss.selection")
@@ -82,13 +83,18 @@ struct BossSelectionView: View {
 struct CodexView: View {
     @EnvironmentObject var model: AppModel
     @State private var archive = false
+    @State private var category = 0
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     eyebrow("CREATURE ARCHIVE")
-                    Text("균열 너머의 존재들").font(.largeTitle.bold())
-                    Text("흔적을 조사하거나 개체와 조우하면 도감이 열립니다. 연구부를 확장하면 전투 기록을 분석할 수 있습니다.").foregroundStyle(Theme.muted)
+                    Text("지부의 관측 도감").font(.largeTitle.bold())
+                    Picker("도감 분류", selection: $category) {
+                        Text("개체").tag(0); Text("장비").tag(1); Text("활동").tag(2); Text("재료").tag(3)
+                    }.pickerStyle(.segmented)
+                    if category == 0 {
+                    Text("흔적을 조사하거나 개체와 조우하면 도감이 열려요. 연구부를 확장하면 전투 기록을 분석할 수 있어요.").foregroundStyle(Theme.muted)
                     Button("현장 사건 기록 보기") { archive = true }.buttonStyle(.bordered)
                     ForEach(model.world?.monsters ?? []) { monster in
                         let records = monster.records(in: model.save.profile)
@@ -102,6 +108,9 @@ struct CodexView: View {
                             }.card()
                         }.buttonStyle(.plain).accessibilityIdentifier("monster." + monster.id)
                     }
+                    } else if category == 1 { EquipmentArchiveView() }
+                    else if category == 2 { ActivityArchiveView() }
+                    else { MaterialArchiveView() }
                 }.padding(20)
             }.background(Theme.ink).navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }

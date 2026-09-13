@@ -115,6 +115,66 @@
         "succubus-warden"
       ],
       "bossID": null
+    },
+    {
+      "id": "mirror-moth",
+      "name": "거울 날개 나방",
+      "family": "잔향 개체",
+      "description": "거울 날개를 접어 같은 자리에 다른 잔향을 비추는 개체예요.",
+      "eventIDs": [
+        "mirror-moth"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "ash-boar",
+      "name": "재갑 멧돼지",
+      "family": "잔향 개체",
+      "description": "재와 돌로 된 외피를 두른 야수예요. 짧고 일정한 대응으로 돌진을 흘려보낼 수 있어요.",
+      "eventIDs": [
+        "ash-boar"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "lost-sentinel",
+      "name": "유실 감시체",
+      "family": "잔향 개체",
+      "description": "초기 감시자와 같은 계열의 불완전한 구조체예요. 핵심 일부를 잃어 상대하기 쉬워졌어요.",
+      "eventIDs": [
+        "lost-sentinel"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "hollow-knight",
+      "name": "공백 기사",
+      "family": "엘리트 구조체",
+      "description": "비어 있는 갑옷을 잔향으로 묶은 엘리트예요. 긴 공방에서 외피가 약해져요.",
+      "eventIDs": [
+        "hollow-knight"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "fallen-fairy",
+      "name": "타락한 요정",
+      "family": "잔향 개체",
+      "description": "검은 꽃잎과 보랏빛 날개를 두른 요정이에요. 일정한 리듬으로 날개의 환영을 흩뜨려요.",
+      "eventIDs": [
+        "fallen-fairy"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "veil-witch",
+      "name": "장막의 마녀",
+      "family": "엘리트 구조체",
+      "description": "달빛 장막을 엮는 마녀예요. 짧은 가속으로 틈을 공략하거나 유지 대응으로 장막을 걷어낼 수 있어요.",
+      "eventIDs": [
+        "veil-witch"
+      ],
+      "bossID": null
     }
   ],
   "bosses": [
@@ -284,7 +344,8 @@
             }
           ]
         }
-      ]
+      ],
+      "requiredMain": "M10"
     },
     {
       "id": "void-librarian",
@@ -452,7 +513,8 @@
             }
           ]
         }
-      ]
+      ],
+      "requiredMain": "M14"
     }
   ]
 }

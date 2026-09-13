@@ -1007,6 +1007,468 @@
       "sample_rate": 24000,
       "duration": 5.087,
       "sha256": "ac0c2a43e14831008d6a1db747e60cc41ea2a6593ede1a0f06bbcf1ed52c30c5"
+    },
+    {
+      "key": "mirror-moth_intro",
+      "file": "mirror-moth_intro.wav",
+      "text": "거울 날개 나방이 나타났어요! 삼십 초 동안 편안한 달리기를 이어가면 날개의 잔향을 흩뜨릴 수 있어요.",
+      "seed": 3135806636,
+      "seeds": [
+        3135806636
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.333,
+      "sha256": "3b229c781f44c2e53d5339e9947775204930f773b20dc4b9c8131cdbbee3a906"
+    },
+    {
+      "key": "mirror-moth_survey",
+      "file": "mirror-moth_survey.wav",
+      "text": "거울 날개 나방의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 4132048168,
+      "seeds": [
+        4132048168
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.111,
+      "sha256": "0e390900dda98c483d919f4738582ea236002af5c8ea91ac575edfb34cd43a40"
+    },
+    {
+      "key": "mirror-moth_defeated",
+      "file": "mirror-moth_defeated.wav",
+      "text": "잘했어요! 거울 날개 나방의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 2658851561,
+      "seeds": [
+        2658851561
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.209,
+      "sha256": "6d1e4a5651cc69609544e38c03ead42042910b3169c08fc4aee1b635c7f8843d"
+    },
+    {
+      "key": "mirror-moth_hit",
+      "file": "mirror-moth_hit.wav",
+      "text": "좋아요! 거울 날개 나방에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 90886326,
+      "seeds": [
+        90886326
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.141,
+      "sha256": "854c70245bd5d7fcad17c1bc48fa67da8c8f90dddcfdc3bcd8479235aefac520"
+    },
+    {
+      "key": "ash-boar_intro",
+      "file": "ash-boar_intro.wav",
+      "text": "재갑 멧돼지가 다가와요! 더 빨라질 필요는 없어요. 잠시 일정한 달리기를 이어가요.",
+      "seed": 295692715,
+      "seeds": [
+        295692715
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.706,
+      "sha256": "efc6a333a102d5bee98a4765824afbca273f8733a8a9888a7ff0f80e6f97cb5c"
+    },
+    {
+      "key": "ash-boar_survey",
+      "file": "ash-boar_survey.wav",
+      "text": "재갑 멧돼지의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 4104306111,
+      "seeds": [
+        4104306111
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.373,
+      "sha256": "543b2a799c51e4e73fa7d81de2475e194dec23e30e02bb6447841cda2c44cb9b"
+    },
+    {
+      "key": "ash-boar_defeated",
+      "file": "ash-boar_defeated.wav",
+      "text": "잘했어요! 재갑 멧돼지의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 1557316687,
+      "seeds": [
+        1557316687
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.269,
+      "sha256": "d9013a2c1feaed7e1844402d5787c33f322f861f9464dfbd91c29cdd456be15d"
+    },
+    {
+      "key": "ash-boar_hit",
+      "file": "ash-boar_hit.wav",
+      "text": "좋아요! 재갑 멧돼지에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 2845343261,
+      "seeds": [
+        2845343261
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.185,
+      "sha256": "d3e9d6408454d72cc3f43e1d9ab257b4d6ed3f3455ea6b00514caf57e69a5f77"
+    },
+    {
+      "key": "lost-sentinel_intro",
+      "file": "lost-sentinel_intro.wav",
+      "text": "유실 감시체를 발견했어요! 전에 상대했던 감시자와 닮았네요. 삼십 초 동안 차분하게 대응해요.",
+      "seed": 1424983040,
+      "seeds": [
+        1424983040
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 8.584,
+      "sha256": "bb708f33e4dfab7a4c85a3b595a8942a4b249377fe253a02ec990474de437eb7"
+    },
+    {
+      "key": "lost-sentinel_survey",
+      "file": "lost-sentinel_survey.wav",
+      "text": "유실 감시체의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 378351277,
+      "seeds": [
+        378351277
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.347,
+      "sha256": "099c891bdb2b298708af00d2813c376263c1e2d31092b3ac7e84448ca4f5e976"
+    },
+    {
+      "key": "lost-sentinel_defeated",
+      "file": "lost-sentinel_defeated.wav",
+      "text": "잘했어요! 유실 감시체의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 3630377143,
+      "seeds": [
+        3630377143
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.588,
+      "sha256": "426bad432c4b77ed9037be285bf0696b94fd9bc7e3aded24c510564d32603aca"
+    },
+    {
+      "key": "lost-sentinel_hit",
+      "file": "lost-sentinel_hit.wav",
+      "text": "좋아요! 유실 감시체에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 1855327462,
+      "seeds": [
+        1855327462
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.013,
+      "sha256": "23d48f55c4b85cf4d0ca48fc1fb6cee100a4fffec1d5ddc60bd528cd41ef30b3"
+    },
+    {
+      "key": "hollow-knight_intro",
+      "file": "hollow-knight_intro.wav",
+      "text": "공백 기사가 길을 막고 있어요! 사백 미터 동안 편안한 페이스로 공방을 이어가요.",
+      "seed": 2325701619,
+      "seeds": [
+        2325701619
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.225,
+      "sha256": "66d926642ddb6a4573c21bc7419ead9e689b8025cee33f6a9d56342c828830b8"
+    },
+    {
+      "key": "hollow-knight_survey",
+      "file": "hollow-knight_survey.wav",
+      "text": "공백 기사의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 2815050137,
+      "seeds": [
+        2815050137
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.76,
+      "sha256": "15f8fb7a89bf040977ec863bb8f42d63895d5c4229ae7cdc94ecc824a88d30c1"
+    },
+    {
+      "key": "hollow-knight_defeated",
+      "file": "hollow-knight_defeated.wav",
+      "text": "잘했어요! 공백 기사의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 4254249230,
+      "seeds": [
+        4254249230
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.435,
+      "sha256": "9eb2debae5e690d5950ff50bf804c8e4b786432961c88ee0ba5c0fb0929492ba"
+    },
+    {
+      "key": "hollow-knight_hit",
+      "file": "hollow-knight_hit.wav",
+      "text": "좋아요! 공백 기사에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 3998792270,
+      "seeds": [
+        3998792270
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.946,
+      "sha256": "dc464187a234938737318f88a75bb3e608bd98bfe738e8810b8b7f1a52d437ae"
+    },
+    {
+      "key": "hollow-knight_short",
+      "file": "hollow-knight_short.wav",
+      "text": "공백 기사가 나타났어요! 이번에는 짧은 공방이에요. 삼십 초 동안 달리기를 이어가요.",
+      "seed": 920069966,
+      "seeds": [
+        920069966
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.584,
+      "sha256": "18883d52dc067f9682a9f872d398d4618b225c71cbbd9aa6b5c98357b23683c0"
+    },
+    {
+      "key": "quest_start",
+      "file": "quest_start.wav",
+      "text": "선택한 의뢰를 시작해요! 오늘 모은 표본과 시간은 다음 활동으로 이어져요.",
+      "seed": 4183003824,
+      "seeds": [
+        4183003824
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.914,
+      "sha256": "68207d311f8e6dcd1e07b05b32c38f111021454ad515214305e383b0412c1fc2"
+    },
+    {
+      "key": "quest_complete",
+      "file": "quest_complete.wav",
+      "text": "잘했어요! 의뢰에 필요한 기록을 모두 모았어요. 돌아가서 보상을 확인해요.",
+      "seed": 3380747069,
+      "seeds": [
+        3380747069
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.908,
+      "sha256": "e198431dae9775fecfe08d6db5c831dc470cd44631b5bf393dc3319012afb7c5"
+    },
+    {
+      "key": "exam_start",
+      "file": "exam_start.wav",
+      "text": "승급 심사를 시작해요! 제가 관측을 맡을게요. 평소 페이스로 차근차근 대응해요.",
+      "seed": 989392884,
+      "seeds": [
+        989392884
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.468,
+      "sha256": "c45d7d65c0546eef1c910e0900ccf92aadf403807c6381339170235320d0a659"
+    },
+    {
+      "key": "exam_pass",
+      "file": "exam_pass.wav",
+      "text": "축하해요! 심사 대상의 반응이 완전히 멈췄어요. 새로운 등급을 받을 준비가 됐어요!",
+      "seed": 2052390442,
+      "seeds": [
+        2052390442
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.54,
+      "sha256": "1bd79e20f073d0b9cd940fcf0ae75117f89ab88f5018ae2dd554a8aec1ce8e44"
+    },
+    {
+      "key": "story_welcome",
+      "file": "story_welcome.wav",
+      "text": "안녕하세요! 오늘부터 함께할 전담 오퍼레이터예요. 저희 지부에서 첫 기록을 시작해봐요.",
+      "seed": 2118585312,
+      "seeds": [
+        2118585312
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.111,
+      "sha256": "174176806a1fee20d69cdb0290ecba29ff109eda058030dea9f548a92a5155a5"
+    },
+    {
+      "key": "story_return",
+      "file": "story_return.wav",
+      "text": "잘 다녀오셨어요. 오늘 함께 남긴 기록은 제가 잘 간직해둘게요.",
+      "seed": 1878666883,
+      "seeds": [
+        1878666883
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.432,
+      "sha256": "b579cddffb9103a4537a64c044ab11d88eb5ba59824d57384f1c152eefd876ef"
+    },
+    {
+      "key": "bond_greeting",
+      "file": "bond_greeting.wav",
+      "text": "부르셨어요? 좋아요. 잠깐 쉬면서 이야기해요.",
+      "seed": 1293331980,
+      "seeds": [
+        1293331980
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.805,
+      "sha256": "85d9026a6d986e979dcf735d750788c48dbd98024f8d2645845459e3972c00eb"
+    },
+    {
+      "key": "fallen-fairy_intro",
+      "file": "fallen-fairy_intro.wav",
+      "text": "타락한 요정이 환영을 펼쳤어요! 삼십 초 동안 일정한 달리기로 날개의 마력을 흩뜨려요.",
+      "seed": 1554929078,
+      "seeds": [
+        1554929078
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.12,
+      "sha256": "34b309efafac3abeeb020d5c0ff308d462c9f001d8a3747e74eea6a3101920f1"
+    },
+    {
+      "key": "fallen-fairy_survey",
+      "file": "fallen-fairy_survey.wav",
+      "text": "타락한 요정의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 1345101374,
+      "seeds": [
+        1345101374
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.874,
+      "sha256": "2b201050ec7d405af59203bbbed4f5ae0794834edaabc26a473fb890c2c9e050"
+    },
+    {
+      "key": "fallen-fairy_defeated",
+      "file": "fallen-fairy_defeated.wav",
+      "text": "잘했어요! 타락한 요정의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 1137678841,
+      "seeds": [
+        1137678841
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.596,
+      "sha256": "684c81b61e0798e6d271917370a33a5edc36750ca0cce7137da5dac74e9adf01"
+    },
+    {
+      "key": "fallen-fairy_hit",
+      "file": "fallen-fairy_hit.wav",
+      "text": "좋아요! 타락한 요정에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 3704661592,
+      "seeds": [
+        3704661592
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.178,
+      "sha256": "7a488561156961622808a6abc9103b4820f512c8e98f4ae869bc4cd58e261051"
+    },
+    {
+      "key": "veil-witch_intro",
+      "file": "veil-witch_intro.wav",
+      "text": "장막의 마녀가 나타났어요! 안전한 구간이면 십 초 가속으로 틈을 공략해요. 유지 대응도 괜찮아요.",
+      "seed": 2491551515,
+      "seeds": [
+        2491551515
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.803,
+      "sha256": "ac023dfbf8ec2514dd043b041fa2c79b06a3d043b1d70feb2183444e3fa6b606"
+    },
+    {
+      "key": "veil-witch_survey",
+      "file": "veil-witch_survey.wav",
+      "text": "장막의 마녀의 흔적을 찾았어요! 지금처럼 이동하면 제가 표본을 살펴볼게요.",
+      "seed": 749296336,
+      "seeds": [
+        749296336
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.24,
+      "sha256": "4abeb10f9b093f9d69dc034fe6551ffb2d135f59890b5775b2855bf040da58d8"
+    },
+    {
+      "key": "veil-witch_defeated",
+      "file": "veil-witch_defeated.wav",
+      "text": "잘했어요! 장막의 마녀의 반응이 완전히 멈췄어요. 토벌 기록을 남겨둘게요.",
+      "seed": 4065912756,
+      "seeds": [
+        4065912756
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.548,
+      "sha256": "0d7fd1a809743720c4d9851ed6db72fb91215de834419004c5c305e1fdf1ff69"
+    },
+    {
+      "key": "veil-witch_hit",
+      "file": "veil-witch_hit.wav",
+      "text": "좋아요! 장막의 마녀에게 피해를 줬어요. 남은 반응을 확인해볼게요.",
+      "seed": 1210267084,
+      "seeds": [
+        1210267084
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.261,
+      "sha256": "096bc06b26a6c6dbb96d243cec09e41eb3d75dc4eaf9513137a8deda3e755995"
+    },
+    {
+      "key": "veil-witch_steady",
+      "file": "veil-witch_steady.wav",
+      "text": "마녀의 장막을 차근차근 걷어내요. 삼십 초 동안 편안한 달리기를 이어가요.",
+      "seed": 160995189,
+      "seeds": [
+        160995189
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.851,
+      "sha256": "60c5c8c699b6cf97b474145bf5df2a75b218af34d1d95a750a2b849f5e2dc42a"
     }
   ],
   "references": [

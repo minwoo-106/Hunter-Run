@@ -104,6 +104,60 @@
       "bossID": null,
       "defeated": "warden_defeated",
       "hit": "warden_hit"
+    },
+    {
+      "id": "mirror-moth",
+      "eventIDs": [
+        "mirror-moth"
+      ],
+      "bossID": null,
+      "defeated": "mirror-moth_defeated",
+      "hit": "mirror-moth_hit"
+    },
+    {
+      "id": "ash-boar",
+      "eventIDs": [
+        "ash-boar"
+      ],
+      "bossID": null,
+      "defeated": "ash-boar_defeated",
+      "hit": "ash-boar_hit"
+    },
+    {
+      "id": "lost-sentinel",
+      "eventIDs": [
+        "lost-sentinel"
+      ],
+      "bossID": null,
+      "defeated": "lost-sentinel_defeated",
+      "hit": "lost-sentinel_hit"
+    },
+    {
+      "id": "hollow-knight",
+      "eventIDs": [
+        "hollow-knight"
+      ],
+      "bossID": null,
+      "defeated": "hollow-knight_defeated",
+      "hit": "hollow-knight_hit"
+    },
+    {
+      "id": "fallen-fairy",
+      "eventIDs": [
+        "fallen-fairy"
+      ],
+      "bossID": null,
+      "defeated": "fallen-fairy_defeated",
+      "hit": "fallen-fairy_hit"
+    },
+    {
+      "id": "veil-witch",
+      "eventIDs": [
+        "veil-witch"
+      ],
+      "bossID": null,
+      "defeated": "veil-witch_defeated",
+      "hit": "veil-witch_hit"
     }
   ]
 }

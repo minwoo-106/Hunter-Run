@@ -4,6 +4,13 @@ import CoreLocation
 import UIKit
 
 @MainActor final class AppModel: ObservableObject {
+    static var testHarness: Bool {
+        #if DEBUG && targetEnvironment(simulator)
+        return ProcessInfo.processInfo.arguments.contains("--ui-testing-simulations")
+        #else
+        return false
+        #endif
+    }
     @Published var save = SaveState()
     @Published var engine: RunEngine?
     @Published var notice: String?
@@ -15,6 +22,8 @@ import UIKit
     var replayWelcomeAfterSettings = false
     @Published var showWelcome = false
     @Published var showStories = false
+    @Published var showOperator = false
+    var startStoryAfterWelcome = false
     @Published var selectedFieldDemo: String?
     @Published var selectedBoss: String?
     @Published var selectedMode: RunMode = .contract
@@ -30,15 +39,18 @@ import UIKit
     @Published var isReady = false
     @Published var lastSummary: RunSummary?
     @Published var lastDemo: RunSession?
-    @Published var voiceVolume = 0.85
-    @Published var ducking = true
+    @Published var voiceVolume = UserDefaults.standard.object(forKey: "voiceVolume") as? Double ?? 0.85
+    @Published var ducking = UserDefaults.standard.object(forKey: "voiceDucking") as? Bool ?? true
     @Published var homeMusicEnabled = (UserDefaults.standard.object(forKey: "homeMusicEnabled") == nil ? true : UserDefaults.standard.bool(forKey: "homeMusicEnabled"))
     @Published var homeMusicVolume = UserDefaults.standard.object(forKey: "homeMusicVolume") as? Double ?? 0.45
     @Published var musicNotice: String?
+    @Published var effectsVolume = UserDefaults.standard.object(forKey: "effectsVolume") as? Double ?? 0.35
+    @Published var hapticsEnabled = UserDefaults.standard.object(forKey: "hapticsEnabled") as? Bool ?? true
     let lobbyMusic = LobbyMusicPlayer()
     private var sceneActive = true
     private var testingAudio = false
     var canStartReal: Bool {
+        if let quest = activeQuest { return isReady && !recoverable && quest.available(save.profile) }
         guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
         guard selectedMode == .gate, let id = selectedBoss else { return true }
         guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog else { return false }
@@ -76,6 +88,7 @@ import UIKit
     private let voiceLines: [String: String] = AppModel.resource("audio-lines") ?? [:]
     private let variantCatalog: [String: [String]] = AppModel.resource("audio-variants") ?? [:]
     let narration: NarrationCatalog? = AppModel.resource("narration")
+    let narratives: NarrativeCatalog? = AppModel.resource("narrative")
     private var narrationReady: Bool {
         guard let narration else { return false }
         return (try? narration.validate()) != nil && !voiceLines.isEmpty
@@ -92,6 +105,29 @@ import UIKit
     let world: WorldContent?
     var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
     var growthLocked: Bool { engine != nil || save.active != nil || recoverable || !isReady }
+    var activeQuest: QuestDefinition? {
+        guard let quest = Quests.entry(save.profile.journey?.selectedQuest), save.profile.journey?.completedQuests.contains(quest.id) != true else { return nil }
+        return quest
+    }
+    func interfaceFeedback(_ key: String = "ui-select") {
+        guard engine == nil, !testingAudio else { return }
+        lobbyMusic.playEffect(key, volume: Float(effectsVolume))
+        if hapticsEnabled { UISelectionFeedbackGenerator().selectionChanged() }
+    }
+    func applyFeedbackSettings() {
+        UserDefaults.standard.set(effectsVolume, forKey: "effectsVolume")
+        UserDefaults.standard.set(hapticsEnabled, forKey: "hapticsEnabled")
+    }
+    func selectQuest(_ id: String?) {
+        guard !growthLocked else { return }
+        var candidate = save
+        do {
+            try Quests.select(id, save: &candidate); try repository.write(candidate); save = candidate
+            selectedBoss = nil; selectedMode = activeQuest?.promotion == nil ? .contract : .gate
+            if id != nil { selectedTab = 2; showAssociation = false }
+        } catch { notice = "지금 선택할 수 없는 의뢰예요." }
+    }
+    func claimQuest(_ id: String) { changeGrowth { save, _ in try Quests.claim(id, save: &save); return "의뢰 보상을 받았어요!" } }
     func unlocked(_ action: String) -> Bool { progressionCatalog?.unlocked(action, profile: save.profile) ?? false }
     func modeAllowed(_ mode: RunMode) -> Bool {
         guard let progressionCatalog else { return false }
@@ -102,8 +138,16 @@ import UIKit
     private var mockTime: Double = 0
     @Published var resultSaved = true
     private var saveBlocked = false
+    private var announcedResult: UUID?
     init() {
-        let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("HunterRun")
+        var directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("HunterRun")
+        #if DEBUG && targetEnvironment(simulator)
+        let arguments = ProcessInfo.processInfo.arguments
+        if let flag = arguments.firstIndex(of: "--ui-testing-save"), flag + 1 < arguments.count,
+           let identifier = UUID(uuidString: arguments[flag + 1]) {
+            directory = FileManager.default.temporaryDirectory.appendingPathComponent("HunterRunUITests").appendingPathComponent(identifier.uuidString)
+        }
+        #endif
         repository = SaveRepository(directory: directory)
         if let url = Bundle.main.url(forResource: "mission", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(GameContent.self, from: data),
@@ -120,12 +164,18 @@ import UIKit
            (try? decoded.validate()) != nil { world = decoded } else { world = nil }
         let encountersReady = fieldEncounters.map { (try? $0.validate()) != nil } ?? false
         let existingSave = repository.hasStoredSave
-        do { save = try repository.load(); recoverable = save.active != nil }
+        do {
+            save = try repository.load()
+            if save.active?.simulated == true && !Self.testHarness { save.active = nil; try repository.write(save) }
+            recoverable = save.active != nil
+        }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
         if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
         isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
-        showWelcome = isReady && (!existingSave || save.profile.introductionSeen == false)
+        if let narratives, (try? narratives.validate()) != nil { narratives.refresh(&save.profile) }
+        else { isReady = false; notice = "이야기 자료를 읽지 못했어요. 앱 파일을 확인해주세요." }
+        showWelcome = isReady && !recoverable && (!existingSave || save.profile.introductionSeen == false || save.profile.journey?.registered != true)
         #if targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-welcome") { showWelcome = false }
         #endif
@@ -149,7 +199,7 @@ import UIKit
     func completeWelcome() {
         guard !saveBlocked else { return }
         var candidate = save; candidate.profile.introductionSeen = true
-        do { try repository.write(candidate); save = candidate; showWelcome = false }
+        do { try repository.write(candidate); save = candidate; startStoryAfterWelcome = !(candidate.profile.journey?.completed.contains("M01") ?? false); showWelcome = false }
         catch { notice = "안내 확인을 저장하지 못했습니다. 다시 시도해주세요." }
     }
     func resetPaceMemory() {
@@ -165,6 +215,26 @@ import UIKit
         do { try repository.write(candidate); save = candidate }
         catch { notice = "읽음 표시를 저장하지 못했습니다. 다시 시도해주세요." }
     }
+    func updateJourney(_ operation: (NarrativeCatalog, inout Profile) throws -> Void) {
+        guard !growthLocked, let narratives else { return }
+        var candidate = save
+        do {
+            try operation(narratives, &candidate.profile)
+            narratives.refresh(&candidate.profile)
+            try repository.write(candidate); save = candidate
+        } catch { notice = "변경을 저장하지 못했어요. 입력과 저장 공간을 확인하고 다시 시도해주세요." }
+    }
+    func registerNames(hunter: String, operatorName: String) {
+        updateJourney { catalog, profile in try catalog.register(hunter: hunter, operatorName: operatorName, profile: &profile) }
+    }
+    func beginDialogue(_ id: String) { updateJourney { try $0.begin(id, profile: &$1) } }
+    func advanceDialogue(_ choice: String? = nil) { updateJourney { _ = try $0.advance(choice: choice, profile: &$1) } }
+    func rememberPreference(_ key: String, value: String) {
+        let allowed = ["drink": ["warm", "cool", "flexible"], "relationshipPreference": ["closer", "partnership", "undecided"]]
+        guard allowed[key]?.contains(value) == true else { return }
+        if key == "relationshipPreference", save.profile.journey?.completed.contains("R11") != true { return }
+        updateJourney { _, profile in profile.journey?.memories[key] = value }
+    }
     func updatePermissions() {
         switch sensor.permission {
         case .authorizedAlways, .authorizedWhenInUse: permissionText = sensor.precision ? "위치 허용" : "정확한 위치 꺼짐"
@@ -174,6 +244,7 @@ import UIKit
     }
     func authorize() { sensor.requestPermission() }
     func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil, encounterDemo: FieldEncounter? = nil) {
+        guard !simulated || Self.testHarness else { return }
         guard isReady, let content, engine == nil, save.active == nil else { return }
         if !simulated && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
@@ -181,10 +252,19 @@ import UIKit
         guard simulated || encounterDemo == nil else { return }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
         guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
-        guard (simulated || modeAllowed(selectedMode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
-        var mission = missions?.content(for: selectedMode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
-        var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: selectedMode, loadout: stats)
-        if selectedMode == .gate, let id = selectedBoss {
+        let quest = simulated ? nil : activeQuest
+        guard quest == nil || quest!.available(save.profile) else { notice = "의뢰 조건을 다시 확인해주세요."; return }
+        let mode: RunMode = quest == nil ? selectedMode : quest?.promotion == nil ? .contract : .gate
+        guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
+        var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
+        var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
+        session.questID = quest?.id
+        if let definition = quest?.boss {
+            session.mode = .gate
+            let state = BossCampaign.state(definition, profile: save.profile)
+            guard state.remainingHP > 0 else { notice = "심사 토벌을 완료했어요. 헌터 화면에서 결과를 확인해주세요."; return }
+            session.boss = BossEncounter(definition: definition, state: state); mission = session.boss!.content
+        } else if quest == nil && selectedMode == .gate, let id = selectedBoss {
             guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog,
                   (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "주요 보스 토벌 조건을 확인해주세요."; return }
             let state = simulated ? BossState(maximumHP: boss.maximumHP) : BossCampaign.state(boss, profile: save.profile)
@@ -195,6 +275,8 @@ import UIKit
         if session.boss == nil, let catalog = progressionCatalog, let fieldEncounters {
             mission = fieldEncounters.populate(mission, mode: selectedMode, profile: save.profile, catalog: catalog)
         }
+        applyAudio()
+        if let quest, session.boss == nil { mission = quest.mission(from: mission) }
         if simulated, let encounterDemo { mission = encounterDemo.preview; mockRate = 10 }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
@@ -208,7 +290,7 @@ import UIKit
         if !simulated { sensor.start() }
         persist()
         beginTimer()
-        playOperator("run_start")
+        playOperator(quest?.promotion != nil ? "exam_start" : quest != nil ? "quest_start" : "run_start")
     }
     private func beginTimer() {
         timer?.invalidate()
@@ -237,6 +319,7 @@ import UIKit
             case .checkpoint: persist()
             case .goalReached: finish()
             case .voice(let key):
+                if key == "run_end" { continue } // Finish announces only after the result is saved.
                 let id = current.session.event?.template.id
                 let rebrief = key == "resume" && current.session.event?.stage == .briefing
                 let logicalKey = rebrief ? (current.session.event?.instructionAudio ?? key) : key
@@ -275,16 +358,20 @@ import UIKit
     }
     func finish() {
         guard engine != nil else { return }
-        let manualEnd = engine?.session.phase != .finished
         engine?.end(); sensor.stop(); timer?.invalidate(); timer = nil
-        if manualEnd { playOperator("run_end") }
         guard let run = engine?.session else { return }
         if run.simulated { lastDemo = run }
         else if let summary = Settlement.apply(run, to: &save.profile) { lastSummary = summary }
+        if !run.simulated { narratives?.refresh(&save.profile) }
         save.active = nil
         do { try repository.write(save); lastSaveAt = Date(); resultSaved = true; notice = nil }
         catch { resultSaved = false; notice = "결과 저장에 실패했습니다. 앱을 종료하지 말고 다시 저장해주세요."; return }
         recoverable = false
+        if announcedResult != run.id {
+            announcedResult = run.id
+            let questDone = run.questID.map { save.profile.journey?.completedQuests.contains($0) == true } ?? false
+            playOperator(questDone ? (run.boss != nil ? "exam_pass" : "quest_complete") : "run_end")
+        }
     }
     func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
     func recover() {
@@ -316,8 +403,9 @@ import UIKit
         var candidate = save
         do {
             let message = try operation(&candidate, progressionCatalog)
+            narratives?.refresh(&candidate.profile)
             try repository.write(candidate)
-            save = candidate; notice = message
+            save = candidate; notice = message; interfaceFeedback("ui-reward")
         } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다." }
     }
     func prepareFieldDemo(_ encounter: FieldEncounter) {
@@ -354,7 +442,15 @@ import UIKit
             DispatchQueue.main.async { self?.testingAudio = false; self?.refreshLobbyMusic() }
         }
     }
-    func applyAudio() { audio.ducking = ducking; audio.volume = Float(voiceVolume) }
+    func applyAudio() {
+        UserDefaults.standard.set(voiceVolume, forKey: "voiceVolume"); UserDefaults.standard.set(ducking, forKey: "voiceDucking")
+        audio.ducking = ducking; audio.volume = Float(voiceVolume)
+    }
+    func playStorySummary(_ id: String) {
+        let key = ["M01": "story_welcome", "M06": "exam_pass", "M13": "exam_pass", "M16": "story_return"][id]
+        guard let key, save.profile.journey?.unlocked.contains(id) == true else { return }
+        previewAudio(key)
+    }
     func stopAudioPreview() {
         guard testingAudio, engine == nil else { return }
         audio.stop(); testingAudio = false; refreshLobbyMusic()
@@ -371,16 +467,37 @@ import UIKit
         let granted = url.startAccessingSecurityScopedResource()
         defer { if granted { url.stopAccessingSecurityScopedResource() } }
         do {
-            let imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
+            var imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
+            if imported.active?.simulated == true && !Self.testHarness { imported.active = nil }
+            narratives?.refresh(&imported.profile)
+            if let cursor = imported.profile.journey?.cursor,
+               narratives?.scene(cursor.sceneID)?.node(cursor.nodeID) == nil {
+                imported.profile.journey?.cursor = nil
+            }
             try repository.write(imported); save = imported
-            saveBlocked = false; isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady; recoverable = save.active != nil
+            saveBlocked = false
+            isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady
+                && fieldEncounters.map { (try? $0.validate()) != nil } == true
+                && narratives.map { (try? $0.validate()) != nil } == true
+            recoverable = save.active != nil; selectedBoss = nil; selectedFieldDemo = nil; lastSummary = nil
+            notice = "백업을 불러왔어요."
         } catch { notice = "호환되는 Hunter Run 백업 파일이 아닙니다." }
+    }
+    func resetProgress() {
+        guard engine == nil, save.active == nil else { notice = "진행 중인 활동을 먼저 마쳐주세요."; return }
+        do {
+            save = try repository.reset(); narratives?.refresh(&save.profile)
+            saveBlocked = false; recoverable = false; selectedBoss = nil; selectedFieldDemo = nil
+            selectedMode = .contract; lastSummary = nil; lastDemo = nil; selectedTab = 0
+            showSettings = false; showWelcome = true
+            notice = nil
+        } catch { notice = "진행도를 초기화하지 못했어요. 저장 공간을 확인해주세요." }
     }
     func diagnostics() -> URL? {
         let run = engine?.session
         let report = """
-        Hunter Run 0.11.0 operator voice and artwork
+        Hunter Run 1.0.0
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)

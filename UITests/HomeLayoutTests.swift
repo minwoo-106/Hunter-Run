@@ -3,7 +3,7 @@ import XCTest
 final class HomeLayoutTests: XCTestCase {
     @MainActor private func application(silent: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing-skip-welcome"]
+        app.launchArguments = ["--ui-testing-skip-welcome", "--ui-testing-simulations", "--ui-testing-save", UUID().uuidString]
         if silent { app.launchArguments.append("--ui-testing-silent-audio") }
         return app
     }
@@ -25,45 +25,46 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["닫기"].tap()
     }
 
-    @MainActor func testStoryReadingLocksAndWelcomeReplay() {
+    @MainActor func testStoryCursorChoicesAndLockedChapters() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10))
-        app.buttons["nav.3"].tap()
+        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10)); app.buttons["nav.3"].tap()
         let archive = app.buttons["association.stories"]
         XCTAssertTrue(archive.waitForExistence(timeout: 5)); archive.tap()
-        app.buttons["story.arrival"].tap()
-        let read = app.buttons["story.read"]
-        for _ in 0..<6 { if read.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-        XCTAssertTrue(read.isHittable)
-        let listen = app.buttons["story.listen"]
-        XCTAssertTrue(listen.isHittable); XCTAssertTrue(listen.isEnabled); listen.tap()
-        if read.isEnabled { read.tap() }
-        XCTAssertFalse(read.isEnabled)
-        app.navigationBars.buttons.element(boundBy: 0).tap()
-        app.buttons["story.signal"].tap()
-        XCTAssertTrue(app.staticTexts["story.locked"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["story.listen"].exists)
-        app.navigationBars.buttons.element(boundBy: 0).tap()
-        app.navigationBars.buttons.element(boundBy: 0).tap()
-        XCTAssertTrue(app.buttons["닫기"].waitForExistence(timeout: 5))
-        app.buttons["닫기"].tap()
-        openSettings(app)
-        let welcome = app.buttons["settings.welcome"]
-        for _ in 0..<6 { if welcome.isHittable { break }; app.swipeUp() }
-        XCTAssertTrue(welcome.isHittable); welcome.tap()
-        XCTAssertTrue(app.buttons["welcome.skip"].waitForExistence(timeout: 5))
-        for _ in 0..<3 {
-            let next = app.buttons["welcome.next"]
-            for _ in 0..<4 { if next.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-            XCTAssertTrue(next.isHittable); next.tap()
-            XCTAssertTrue(app.buttons["welcome.skip"].exists)
+        let story = app.buttons["story.M01"]
+        for _ in 0..<4 { if story.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(story.isHittable); story.tap()
+        XCTAssertTrue(app.staticTexts["dialogue.text"].waitForExistence(timeout: 5))
+        for _ in 0..<30 {
+            if app.staticTexts["이야기를 간직했어요"].exists { break }
+            let choice = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "dialogue.choice.")).firstMatch
+            let advance = choice.exists ? choice : app.buttons["dialogue.next"]
+            for _ in 0..<4 { if advance.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+            XCTAssertTrue(advance.isHittable); advance.tap()
         }
-        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Welcome permissions"; shot.lifetime = .keepAlways; add(shot)
-        app.buttons["welcome.skip"].tap()
-        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 5)); app.buttons["nav.0"].tap()
-        app.terminate(); app.launchArguments.removeAll { $0 == "--ui-testing-skip-welcome" }; app.launch()
-        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["welcome.skip"].exists)
+        XCTAssertTrue(app.staticTexts["이야기를 간직했어요"].exists)
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Story completion"; shot.lifetime = .keepAlways; add(shot)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.staticTexts["story.counts"].exists)
+        XCTAssertFalse(app.buttons["story.M02"].exists)
+    }
+    @MainActor func testProductionEntryHasNoSimulationButtons() {
+        let app = application(); app.launchArguments.removeAll { $0 == "--ui-testing-simulations" }; app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        for _ in 0..<8 { app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(app.buttons["activity.start"].exists)
+        XCTAssertFalse(app.buttons["activity.mock"].exists)
+        XCTAssertFalse(app.buttons["activity.mock.boss"].exists)
+        XCTAssertFalse(app.buttons["activity.mock.encounter"].exists)
+    }
+    @MainActor func testFirstRegistrationAcceptsCustomNamesAndOpensStory() {
+        let app = application(); app.launchArguments.removeAll { $0 == "--ui-testing-skip-welcome" }; app.launch()
+        let hunter = app.textFields["registration.hunter"]
+        XCTAssertTrue(hunter.waitForExistence(timeout: 10)); hunter.tap(); hunter.typeText("Nova")
+        let confirm = app.buttons["registration.confirm"]
+        for _ in 0..<5 { if confirm.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(confirm.isEnabled); confirm.tap()
+        XCTAssertTrue(app.buttons["welcome.skip"].waitForExistence(timeout: 5)); app.buttons["welcome.skip"].tap()
+        XCTAssertTrue(app.staticTexts["story.counts"].waitForExistence(timeout: 5))
     }
 
     @MainActor func testActivityNamingAndPaceProfile() {

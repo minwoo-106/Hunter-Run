@@ -8,7 +8,7 @@
       "elite": false,
       "requiredRank": "E",
       "requiredAction": null,
-      "unlockHint": "헌터 의뢰에서 출현 · 탐험에서 흔적 조사",
+      "unlockHint": "헌터 의뢰에서 출현 · 탐험에서 흔적 조사 · 지부 조사 진행",
       "tactic": "기습을 받으면 25초 동안 평소 페이스를 유지해 화살의 마력을 흩뜨려요.",
       "slots": {
         "contract": "beast",
@@ -32,7 +32,8 @@
         "duration": 30,
         "hp": 0,
         "audio": "scout_survey"
-      }
+      },
+      "requiredMain": "M06"
     },
     {
       "id": "succubus-weaver",
@@ -41,7 +42,7 @@
       "elite": false,
       "requiredRank": "E",
       "requiredAction": "analysis",
-      "unlockHint": "연구부 Lv.2 · 의뢰·게이트·탐험",
+      "unlockHint": "연구부 Lv.2 · 의뢰·게이트·탐험 · 지부 조사 진행",
       "tactic": "35초 동안 일정한 페이스를 유지하면 거울 환영이 흐려져요. 더 빨라질 필요는 없어요.",
       "slots": {
         "contract": "contract-endurance",
@@ -65,7 +66,8 @@
         "duration": 35,
         "hp": 0,
         "audio": "weaver_survey"
-      }
+      },
+      "requiredMain": "M07"
     },
     {
       "id": "dark-elf-captain",
@@ -74,7 +76,7 @@
       "elite": true,
       "requiredRank": "D",
       "requiredAction": "elite-signal",
-      "unlockHint": "D급 + 관측부 Lv.3 · 의뢰·게이트",
+      "unlockHint": "D급 + 관측부 Lv.3 · 의뢰·게이트 · 지부 조사 진행",
       "tactic": "400m 장기전으로 월영 방진을 압박해요. 짧은 목표에서는 30초 유지 공격으로 바뀌어요.",
       "slots": {
         "contract": "beast",
@@ -91,7 +93,8 @@
         "targetDistance": 400,
         "shortAudio": "captain_hold"
       },
-      "survey": null
+      "survey": null,
+      "requiredMain": "M10"
     },
     {
       "id": "succubus-warden",
@@ -100,7 +103,7 @@
       "elite": true,
       "requiredRank": "D",
       "requiredAction": "elite-contract",
-      "unlockHint": "D급 + 의뢰부 Lv.3 · 의뢰·게이트",
+      "unlockHint": "D급 + 의뢰부 Lv.3 · 의뢰·게이트 · 지부 조사 진행",
       "tactic": "결계에 10초 가속 공격을 선택하거나, 30초 유지 공격으로 맞서요. 가속 횟수와 회복 제한은 그대로예요.",
       "slots": {
         "contract": "contract-endurance",
@@ -117,7 +120,216 @@
         "burstSeconds": 10,
         "steadyAudio": "warden_hold"
       },
-      "survey": null
+      "survey": null,
+      "requiredMain": "M11"
+    },
+    {
+      "id": "mirror-moth",
+      "monsterID": "mirror-moth",
+      "name": "거울 날개 나방",
+      "elite": false,
+      "requiredRank": "D",
+      "requiredAction": null,
+      "unlockHint": "D급 이상 · 지부 조사 진행",
+      "tactic": "거울 날개를 접어 같은 자리에 다른 잔향을 비추는 개체예요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "mirror-moth",
+        "title": "거울 날개 나방 대응",
+        "kind": "maintain",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 65,
+        "audio": "mirror-moth_intro"
+      },
+      "survey": {
+        "id": "mirror-moth",
+        "title": "거울 날개 나방 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "mirror-moth_survey"
+      },
+      "requiredMain": "M08"
+    },
+    {
+      "id": "ash-boar",
+      "monsterID": "ash-boar",
+      "name": "재갑 멧돼지",
+      "elite": false,
+      "requiredRank": "D",
+      "requiredAction": null,
+      "unlockHint": "D급 이상 · 지부 조사 진행",
+      "tactic": "재와 돌로 된 외피를 두른 야수예요. 짧고 일정한 대응으로 돌진을 흘려보낼 수 있어요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "ash-boar",
+        "title": "재갑 멧돼지 대응",
+        "kind": "ambush",
+        "startFraction": 0.3,
+        "duration": 25,
+        "hp": 70,
+        "audio": "ash-boar_intro"
+      },
+      "survey": {
+        "id": "ash-boar",
+        "title": "재갑 멧돼지 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "ash-boar_survey"
+      },
+      "requiredMain": "M06"
+    },
+    {
+      "id": "lost-sentinel",
+      "monsterID": "lost-sentinel",
+      "name": "유실 감시체",
+      "elite": false,
+      "requiredRank": "C",
+      "requiredAction": null,
+      "unlockHint": "C급 이상 · 지부 조사 진행",
+      "tactic": "초기 감시자와 같은 계열의 불완전한 구조체예요. 핵심 일부를 잃어 상대하기 쉬워졌어요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "lost-sentinel",
+        "title": "유실 감시체 대응",
+        "kind": "maintain",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 45,
+        "audio": "lost-sentinel_intro"
+      },
+      "survey": {
+        "id": "lost-sentinel",
+        "title": "유실 감시체 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "lost-sentinel_survey"
+      },
+      "requiredMain": "M13"
+    },
+    {
+      "id": "hollow-knight",
+      "monsterID": "hollow-knight",
+      "name": "공백 기사",
+      "elite": true,
+      "requiredRank": "B",
+      "requiredAction": "elite-signal",
+      "unlockHint": "B급 이상 · 관측부 Lv.3 · 지부 조사 진행",
+      "tactic": "비어 있는 갑옷을 잔향으로 묶은 엘리트예요. 긴 공방에서 외피가 약해져요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "hollow-knight",
+        "title": "공백 기사 대응",
+        "kind": "endurance",
+        "startFraction": 0.3,
+        "duration": 240,
+        "hp": 130,
+        "audio": "hollow-knight_intro",
+        "targetDistance": 400,
+        "shortAudio": "hollow-knight_short"
+      },
+      "survey": {
+        "id": "hollow-knight",
+        "title": "공백 기사 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "hollow-knight_survey"
+      },
+      "requiredMain": "M16"
+    },
+    {
+      "id": "fallen-fairy",
+      "monsterID": "fallen-fairy",
+      "name": "타락한 요정",
+      "elite": false,
+      "requiredRank": "D",
+      "requiredAction": null,
+      "unlockHint": "D급 이상 · 지부 조사 진행",
+      "tactic": "검은 꽃잎과 보랏빛 날개를 두른 요정이에요. 일정한 리듬으로 날개의 환영을 흩뜨려요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "fallen-fairy",
+        "title": "타락한 요정 대응",
+        "kind": "maintain",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 60,
+        "audio": "fallen-fairy_intro"
+      },
+      "survey": {
+        "id": "fallen-fairy",
+        "title": "타락한 요정 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "fallen-fairy_survey"
+      },
+      "requiredMain": "M06"
+    },
+    {
+      "id": "veil-witch",
+      "monsterID": "veil-witch",
+      "name": "장막의 마녀",
+      "elite": true,
+      "requiredRank": "C",
+      "requiredAction": "elite-signal",
+      "unlockHint": "C급 이상 · 관측부 Lv.3 · 지부 조사 진행",
+      "tactic": "달빛 장막을 엮는 마녀예요. 짧은 가속으로 틈을 공략하거나 유지 대응으로 장막을 걷어낼 수 있어요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "veil-witch",
+        "title": "장막의 마녀 대응",
+        "kind": "boss",
+        "startFraction": 0.3,
+        "duration": 10,
+        "hp": 125,
+        "audio": "veil-witch_intro",
+        "burstSeconds": 10,
+        "steadyAudio": "veil-witch_steady"
+      },
+      "survey": {
+        "id": "veil-witch",
+        "title": "장막의 마녀 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "veil-witch_survey"
+      },
+      "requiredMain": "M10"
     }
   ]
 }

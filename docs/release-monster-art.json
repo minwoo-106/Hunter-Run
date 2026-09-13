@@ -1,0 +1,23 @@
+{
+  "method": "builtin image_gen",
+  "style": "Single premium Korean anime fantasy RPG monster, navy-black scene, cyan/violet material accents, 1024 square centered creature, no text/border/UI.",
+  "assets": [
+    {
+      "id": "mirror-moth",
+      "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-1c1cbe3b-1992-43a5-8303-af30cf4259c4.png"
+    },
+    {
+      "id": "ash-boar",
+      "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-9e39512b-8ef0-44cc-9ec6-e50175f19a65.png"
+    },
+    {
+      "id": "lost-sentinel",
+      "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-c0408276-9485-4eb1-adaf-7efa392521c3.png"
+    },
+    {
+      "id": "hollow-knight",
+      "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-124bcd2f-3cc0-4e16-bbf2-3ce6a4082ac4.png"
+    }
+  ],
+  "pending": "lost-sentinel tiny generated text lower right needs removal before release"
+}

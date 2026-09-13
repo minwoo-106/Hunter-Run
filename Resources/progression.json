@@ -316,6 +316,198 @@
       "defense": 0.04,
       "eventBonus": 0,
       "researchBonus": 3
+    },
+    {
+      "id": "glass-rapier",
+      "name": "거울결 세검",
+      "slot": "weapon",
+      "detail": "공격 +0.45 · 게임 판정 보정 +2%",
+      "crystals": 80,
+      "research": 20,
+      "cores": 1,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "hp": 0,
+      "attack": 0.45,
+      "defense": 0,
+      "eventBonus": 0.02,
+      "researchBonus": 0
+    },
+    {
+      "id": "ash-mallet",
+      "name": "재갑 파쇄추",
+      "slot": "weapon",
+      "detail": "HP +18 · 공격 +0.35 · 피해 경감 +8%",
+      "crystals": 115,
+      "research": 35,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "B",
+      "hp": 18,
+      "attack": 0.35,
+      "defense": 0.08,
+      "eventBonus": 0,
+      "researchBonus": 0
+    },
+    {
+      "id": "return-blade",
+      "name": "귀환의 검",
+      "slot": "weapon",
+      "detail": "공격 +0.50 · 조사 보너스 +1",
+      "crystals": 150,
+      "research": 50,
+      "cores": 3,
+      "supportLevel": 3,
+      "requiredRank": "A",
+      "hp": 0,
+      "attack": 0.5,
+      "defense": 0,
+      "eventBonus": 0,
+      "researchBonus": 1
+    },
+    {
+      "id": "mirror-coat",
+      "name": "굴절 방호 코트",
+      "slot": "armor",
+      "detail": "HP +18 · 피해 경감 +20% · 게임 판정 보정 +6%",
+      "crystals": 80,
+      "research": 20,
+      "cores": 1,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "hp": 18,
+      "attack": 0,
+      "defense": 0.2,
+      "eventBonus": 0.06,
+      "researchBonus": 0
+    },
+    {
+      "id": "ash-cuirass",
+      "name": "재갑 흉갑",
+      "slot": "armor",
+      "detail": "HP +45 · 피해 경감 +28%",
+      "crystals": 115,
+      "research": 35,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "B",
+      "hp": 45,
+      "attack": 0,
+      "defense": 0.28,
+      "eventBonus": 0,
+      "researchBonus": 0
+    },
+    {
+      "id": "return-jacket",
+      "name": "귀환 관측복",
+      "slot": "armor",
+      "detail": "HP +32 · 피해 경감 +22% · 조사 보너스 +1",
+      "crystals": 150,
+      "research": 50,
+      "cores": 3,
+      "supportLevel": 3,
+      "requiredRank": "A",
+      "hp": 32,
+      "attack": 0,
+      "defense": 0.22,
+      "eventBonus": 0,
+      "researchBonus": 1
+    },
+    {
+      "id": "echo-striders",
+      "name": "잔광 기동화",
+      "slot": "shoes",
+      "detail": "HP +10 · 공격 +0.10 · 게임 판정 보정 +15%",
+      "crystals": 80,
+      "research": 20,
+      "cores": 1,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "hp": 10,
+      "attack": 0.1,
+      "defense": 0,
+      "eventBonus": 0.15,
+      "researchBonus": 0
+    },
+    {
+      "id": "ash-treads",
+      "name": "재갑 전술화",
+      "slot": "shoes",
+      "detail": "HP +18 · 피해 경감 +10% · 게임 판정 보정 +10%",
+      "crystals": 115,
+      "research": 35,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "B",
+      "hp": 18,
+      "attack": 0,
+      "defense": 0.1,
+      "eventBonus": 0.1,
+      "researchBonus": 0
+    },
+    {
+      "id": "anchor-boots",
+      "name": "정착의 장화",
+      "slot": "shoes",
+      "detail": "HP +12 · 피해 경감 +5% · 게임 판정 보정 +20%",
+      "crystals": 150,
+      "research": 50,
+      "cores": 3,
+      "supportLevel": 3,
+      "requiredRank": "A",
+      "hp": 12,
+      "attack": 0,
+      "defense": 0.05,
+      "eventBonus": 0.2,
+      "researchBonus": 0
+    },
+    {
+      "id": "glass-compass",
+      "name": "거울 나침반",
+      "slot": "relic",
+      "detail": "HP +8 · 게임 판정 보정 +2% · 조사 보너스 +3",
+      "crystals": 80,
+      "research": 20,
+      "cores": 1,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "hp": 8,
+      "attack": 0,
+      "defense": 0,
+      "eventBonus": 0.02,
+      "researchBonus": 3
+    },
+    {
+      "id": "hollow-seal",
+      "name": "공백 인장",
+      "slot": "relic",
+      "detail": "공격 +0.20 · 피해 경감 +8%",
+      "crystals": 115,
+      "research": 35,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "B",
+      "hp": 0,
+      "attack": 0.2,
+      "defense": 0.08,
+      "eventBonus": 0,
+      "researchBonus": 0
+    },
+    {
+      "id": "return-badge",
+      "name": "귀환의 표식",
+      "slot": "relic",
+      "detail": "HP +20 · 피해 경감 +6% · 조사 보너스 +2",
+      "crystals": 150,
+      "research": 50,
+      "cores": 3,
+      "supportLevel": 3,
+      "requiredRank": "A",
+      "hp": 20,
+      "attack": 0,
+      "defense": 0.06,
+      "eventBonus": 0,
+      "researchBonus": 2
     }
   ],
   "upgrades": [
@@ -377,7 +569,8 @@
       "reveal": "다크엘프 월영대장 출현 정보를 얻었어요. D급부터 현장에서 만날 수 있어요.",
       "unlockActions": [
         "elite-signal"
-      ]
+      ],
+      "requiredRank": "C"
     },
     {
       "id": "research-3",
@@ -389,7 +582,8 @@
       "reveal": "상세 전술 분석이 열렸어요. 개체별 대응 방법과 연결 장비를 확인해요.",
       "unlockActions": [
         "tactical-analysis"
-      ]
+      ],
+      "requiredRank": "C"
     },
     {
       "id": "equipment-3",
@@ -401,7 +595,8 @@
       "reveal": "월영·몽환의 상급 장비를 확보할 수 있어요. 해당 개체의 실제 발견 기록도 필요해요.",
       "unlockActions": [
         "specialist-equipment"
-      ]
+      ],
+      "requiredRank": "C"
     },
     {
       "id": "contracts-3",
@@ -413,7 +608,8 @@
       "reveal": "서큐버스 몽환경비관 의뢰가 열렸어요. D급부터 현장에서 만날 수 있어요.",
       "unlockActions": [
         "elite-contract"
-      ]
+      ],
+      "requiredRank": "C"
     }
   ]
 }

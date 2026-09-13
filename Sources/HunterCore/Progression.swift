@@ -45,8 +45,10 @@ public struct EquipmentDefinition: Codable, Identifiable {
     public var cores: Int
     public var requiredEvent: String? = nil
     public var discoveryHint: String? = nil
+    public var requiredRank: String? = nil
     public func available(to profile: Profile) -> Bool {
         profile.growth.level(.equipment) >= supportLevel && (requiredEvent.map { FieldDiscovery.events(in: profile).contains($0) } ?? true)
+        && (requiredRank.map { (Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0) >= (Progression.ranks.firstIndex(of: $0) ?? Int.max) } ?? true)
     }
     public var supportLevel: Int
     public var hp: Double
@@ -64,6 +66,10 @@ public struct DepartmentUpgrade: Codable, Identifiable {
     public var playerHint: String
     public var reveal: String
     public var unlockActions: [String]
+    public var requiredRank: String? = nil
+    public func available(to profile: Profile) -> Bool {
+        requiredRank.map { (Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0) >= (Progression.ranks.firstIndex(of: $0) ?? Int.max) } ?? true
+    }
 }
 public struct ProgressionCatalog: Codable {
     public var schema: Int
@@ -93,6 +99,7 @@ public struct ProgressionCatalog: Codable {
         }
         result.attack = min(3, result.attack); result.defense = min(0.65, result.defense)
         result.eventBonus = min(0.2, result.eventBonus)
+        result.hp = min(600, result.hp); result.researchBonus = min(5, result.researchBonus)
         return result
     }
 }
@@ -117,11 +124,19 @@ public enum Progression {
         return ranks[index + 1]
     }
     public static func requirements(_ profile: Profile) -> (level: Int, runs: Int, gates: Int) {
-        switch nextRank(profile) { case "D": return (2, 2, 0); case "C": return (5, 5, 1); case "B": return (10, 15, 4); case "A": return (20, 30, 10); default: return (35, 60, 25) }
+        switch nextRank(profile) { case "D": return (2, 3, 0); case "C": return (8, 15, 1); case "B": return (18, 35, 4); case "A": return (30, 75, 10); default: return (45, 130, 25) }
+    }
+    public static func activityMinutes(_ profile: Profile) -> Int {
+        Int(min(100_000_000, profile.runs.reduce(0) { $0 + ($1.seconds.isFinite ? max(0, $1.seconds) : 0) }) / 60)
+    }
+    public static func activityCredits(_ profile: Profile) -> Int { activityMinutes(profile) / 20 }
+    public static func qualifiesForExam(_ profile: Profile) -> Bool {
+        let goal = requirements(profile)
+        return nextRank(profile) != nil && profile.level >= goal.level && activityCredits(profile) >= goal.runs && gateClears(profile) >= goal.gates
     }
     public static func canPromote(_ profile: Profile) -> Bool {
-        let goal = requirements(profile)
-        return nextRank(profile) != nil && profile.level >= goal.level && profile.runs.filter(\.completedGoal).count >= goal.runs && gateClears(profile) >= goal.gates
+        guard qualifiesForExam(profile), let next = nextRank(profile) else { return false }
+        return profile.journey?.completedQuests.contains("exam-" + next) == true
     }
     public static func allows(_ mode: RunMode, profile: Profile, catalog: ProgressionCatalog) -> Bool {
         mode != .gate || (profile.growth.rank != "E" && catalog.unlocked("gate", profile: profile))
@@ -145,6 +160,7 @@ public enum Progression {
     @discardableResult public static func upgrade(_ department: Department, save: inout SaveState, catalog: ProgressionCatalog) throws -> String {
         guard save.active == nil else { throw ProgressionError.activeRun }
         guard let upgrade = catalog.upgrades.first(where: { $0.department == department && $0.level == save.profile.growth.level(department) + 1 }) else { throw ProgressionError.unavailable }
+        guard upgrade.available(to: save.profile) else { throw ProgressionError.unavailable }
         guard save.profile.crystals >= upgrade.crystals, save.profile.research >= upgrade.research else { throw ProgressionError.insufficient }
         save.profile.crystals -= upgrade.crystals; save.profile.research -= upgrade.research
         var growth = save.profile.growth; growth.departments[department.rawValue] = upgrade.level; save.profile.growth = growth

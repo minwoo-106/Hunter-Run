@@ -7,14 +7,14 @@ final class FieldExpansionTests: XCTestCase {
         return try JSONDecoder().decode(type, from: Data(contentsOf: root.appendingPathComponent("Resources/" + file + ".json")))
     }
     func unlocked() -> Profile {
-        var p = Profile(); var g = p.growth; g.rank = "D"
-        for d in Department.allCases { g.departments[d.rawValue] = 3 }; p.growth = g; return p
+        var p = Profile(); var g = p.growth; g.rank = "B"
+        for d in Department.allCases { g.departments[d.rawValue] = 3 }; p.growth = g; var journey = JourneyState(); journey.unlocked = Set((1...16).map { String(format: "M%02d", $0) }); p.journey = journey; return p
     }
     func testEncounterUnlocksRequireBothRankAndDepartment() throws {
         let c = try load("encounters", EncounterCatalog.self), g = try load("progression", ProgressionCatalog.self)
         try c.validate(); var p = Profile()
-        XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.map(\.id), ["dark-elf-scout"])
-        p = unlocked(); XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 4)
+        XCTAssertTrue(c.encounters.filter { $0.available(to: p, catalog: g) }.isEmpty)
+        p = unlocked(); XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 10)
         var growth = p.growth; growth.rank = "E"; p.growth = growth
         XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 2)
     }
@@ -33,7 +33,7 @@ final class FieldExpansionTests: XCTestCase {
         var run = RunSession(targetSeconds: 1800, simulated: false, allowPursuit: true); run.directorVersion = 2; run.missionSnapshot = content
         let restored = try JSONDecoder().decode(RunSession.self, from: JSONEncoder().encode(run))
         var seen: Set<String> = []
-        for cycle in 0..<3 {
+        for cycle in 0..<12 {
             let events = RunDirector.events(content, session: run, cycle: cycle)
             XCTAssertEqual(events.map(\.id), RunDirector.events(restored.missionSnapshot!, session: restored, cycle: cycle).map(\.id))
             seen.formUnion(events.map { $0.id.components(separatedBy: "#")[0] })
@@ -80,6 +80,7 @@ final class FieldExpansionTests: XCTestCase {
     }
     func testAllDepartmentsUpgradeThroughThreeOnce() throws {
         let c = try load("progression", ProgressionCatalog.self); var save = SaveState()
+        save.profile = unlocked(); var entry = save.profile.growth; entry.departments = [:]; save.profile.growth = entry
         save.profile.crystals = 1000; save.profile.research = 1000
         for d in Department.allCases {
             try Progression.upgrade(d, save: &save, catalog: c); XCTAssertEqual(save.profile.growth.level(d), 2)

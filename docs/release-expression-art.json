@@ -1,0 +1,32 @@
+[
+  {
+    "id": "smile",
+    "asset": "Operator-smile",
+    "prompt": "Edit ONLY the facial expression in this exact original adult 22-year-old female operator character: a slightly warmer open friendly smile, happy eyes, subtle joyful cheeks. Preserve exact identity, large eye shape, head position/tilt, face size and placement, hairstyle with navy streaks, ear headset, hand anatomy, body, blouse, tie, black trousers and every pixel outside face as closely as possible. Same 1024x1536 image size and framing; do not zoom or shift character. Face must align with source for an expression overlay. Open eyes. Single frame, no sheet, no typography, no watermark. Preserve transparent alpha background if present; never introduce checker pattern. Charming expressive premium anime illustration.",
+    "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-4b79c0a2-6e39-4bd9-ae14-31d3d644dae9.png"
+  },
+  {
+    "id": "playful",
+    "asset": "Operator-playful",
+    "prompt": "Edit ONLY the facial expression in this exact original adult 22-year-old female operator character: a small teasing knowing smile and one eyebrow very subtly raised, gentle playfulness. Preserve exact identity, large eye shape, head position/tilt, face size and placement, hairstyle with navy streaks, ear headset, hand anatomy, body, blouse, tie, black trousers and every pixel outside face as closely as possible. Same 1024x1536 image size and framing; do not zoom or shift character. Face must align with source for an expression overlay. Open eyes. Single frame, no sheet, no typography, no watermark. Preserve transparent alpha background if present; never introduce checker pattern. Charming expressive premium anime illustration.",
+    "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-388d6cdc-0f55-4dcf-a3c3-676887525ded.png"
+  },
+  {
+    "id": "thoughtful",
+    "asset": "Operator-thoughtful",
+    "prompt": "Edit ONLY the facial expression in this exact original adult 22-year-old female operator character: a thoughtful focused expression, gently closed neutral lips, calm concentrated eyes. Preserve exact identity, large eye shape, head position/tilt, face size and placement, hairstyle with navy streaks, ear headset, hand anatomy, body, blouse, tie, black trousers and every pixel outside face as closely as possible. Same 1024x1536 image size and framing; do not zoom or shift character. Face must align with source for an expression overlay. Open eyes. Single frame, no sheet, no typography, no watermark. Preserve transparent alpha background if present; never introduce checker pattern. Charming expressive premium anime illustration.",
+    "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-a3dd9381-f83f-48f0-81cc-da328403dfc1.png"
+  },
+  {
+    "id": "worried",
+    "asset": "Operator-worried",
+    "prompt": "Edit ONLY the facial expression in this exact original adult 22-year-old female operator character: a mildly concerned caring expression, subtly drawn eyebrows, slightly parted lips, no tears. Preserve exact identity, large eye shape, head position/tilt, face size and placement, hairstyle with navy streaks, ear headset, hand anatomy, body, blouse, tie, black trousers and every pixel outside face as closely as possible. Same 1024x1536 image size and framing; do not zoom or shift character. Face must align with source for an expression overlay. Open eyes. Single frame, no sheet, no typography, no watermark. Preserve transparent alpha background if present; never introduce checker pattern. Charming expressive premium anime illustration.",
+    "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-43d5b70b-f725-44e4-a1e6-7a6b522ddf6e.png"
+  },
+  {
+    "id": "relieved",
+    "asset": "Operator-relieved",
+    "prompt": "Edit ONLY the facial expression in this exact original adult 22-year-old female operator character: a gentle relieved smile, relaxed eyebrows and tender eyes. Preserve exact identity, large eye shape, head position/tilt, face size and placement, hairstyle with navy streaks, ear headset, hand anatomy, body, blouse, tie, black trousers and every pixel outside face as closely as possible. Same 1024x1536 image size and framing; do not zoom or shift character. Face must align with source for an expression overlay. Open eyes. Single frame, no sheet, no typography, no watermark. Preserve transparent alpha background if present; never introduce checker pattern. Charming expressive premium anime illustration.",
+    "source": "C:\\Users\\ckdem\\.codex\\generated_images\\01a08b7c-2c5b-7cf0-9a33-aa3680c838f4\\exec-8e73f630-cd70-4ec1-ae18-5112fcf09f03.png"
+  }
+]

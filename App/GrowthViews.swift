@@ -18,8 +18,9 @@ struct AssociationView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill().frame(height: 160).clipped().clipShape(RoundedRectangle(cornerRadius: 20))
                 eyebrow("ASSOCIATION")
+                NavigationLink { QuestBoardView() } label: { Label("의뢰와 승급 심사", systemImage: "list.clipboard").card() }.accessibilityIdentifier("association.quests")
                 Text(AssociationStage.name(model.save.profile)).font(.headline).foregroundStyle(Theme.teal)
-                Text("시설 확장 \(AssociationStage.upgrades(model.save.profile)) / 4 · 2개 확장 시 정식 지부, 4개 확장 시 광역 지부").font(.caption).foregroundStyle(Theme.muted)
+                Text("지부 성장 \(AssociationStage.level(model.save.profile) + 1) / 5 · 시설을 Lv.2와 Lv.3으로 확장하면 공간도 함께 성장해요.").font(.caption).foregroundStyle(Theme.muted)
                 NavigationLink { BossBoardView() } label: { Label("주요 보스 토벌 게시판", systemImage: "shield.checkered").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.bosses")
                 NavigationLink { StoryArchiveView() } label: { Label("협회 통신 기록", systemImage: "envelope.badge").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.stories")
                 NavigationLink { EncounterBoardView() } label: { Label("신규 개체 · 월영과 몽환", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.field-intel")
@@ -37,10 +38,11 @@ struct AssociationView: View {
                         }
                         if let next {
                             Text(next.playerHint).foregroundStyle(Theme.muted)
+                            if let rank = next.requiredRank { Text("\(rank)급부터 확장 가능").font(.caption).foregroundStyle(Theme.teal) }
                             Text("마정석 \(next.crystals) · 조사 데이터 \(next.research)").font(.caption)
                             Button("시설 확장") { model.upgrade(department) }
                                 .buttonStyle(.borderedProminent)
-                                .disabled(model.growthLocked || model.save.profile.crystals < next.crystals || model.save.profile.research < next.research)
+                                .disabled(model.growthLocked || !next.available(to: model.save.profile) || model.save.profile.crystals < next.crystals || model.save.profile.research < next.research)
                         } else {
                             Text(model.progressionCatalog?.upgrades.first { $0.department == department && $0.level == level }?.reveal ?? "확장 완료")
                                 .font(.callout).foregroundStyle(Theme.teal)
@@ -94,7 +96,7 @@ struct EquipmentView: View {
                             Button("장비 확보") { model.buy(item.id) }.buttonStyle(.bordered)
                                 .disabled(model.growthLocked || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
                         } else {
-                            Label("장비지원부 Lv.\(item.supportLevel)" + (item.discoveryHint.map { " · " + $0 } ?? " 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
+                            Label("장비지원부 Lv.\(item.supportLevel)" + (item.requiredRank.map { " · " + $0 + "급" } ?? "") + (item.discoveryHint.map { " · " + $0 } ?? " 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
                         }
                     }.card()
                 }
@@ -116,11 +118,15 @@ struct RankView: View {
                     Text("다음 평가 · \(next)급").font(.title2.bold())
                     VStack(alignment: .leading, spacing: 14) {
                         requirement("헌터 레벨", model.save.profile.level, requirements.level)
-                        requirement("목표 완료 기록", model.save.profile.runs.filter(\.completedGoal).count, requirements.runs)
+                        requirement("누적 활동 시간(분)", Progression.activityMinutes(model.save.profile), requirements.runs * 20)
                         requirement("고위험 게이트 보스 토벌", Progression.gateClears(model.save.profile), requirements.gates)
                     }.card()
                     Button("승급 평가 받기") { model.promote() }.buttonStyle(.borderedProminent)
                         .disabled(model.growthLocked || !Progression.canPromote(model.save.profile))
+                    if model.save.profile.journey?.completedQuests.contains("exam-" + next) != true {
+                        NavigationLink { QuestBoardView() } label: { Label("전용 승급 심사 확인", systemImage: "shield.checkered") }
+                        Text("자격 조건을 갖춘 뒤 전용 감시체를 완전히 토벌하면 승급할 수 있어요.").font(.caption).foregroundStyle(Theme.muted)
+                    }
                 } else { Text("최고 등급에 도달했습니다.").foregroundStyle(Theme.teal) }
             }.padding(20)
         }.background(Theme.ink).navigationTitle("협회 평가").navigationBarTitleDisplayMode(.inline)

@@ -22,7 +22,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     private var stepsDistance: Double = 0
     private var stepsAt = Date.distantPast
     private var stepsSpeed: Double = 0
-    private var speeds: [(Date, Double)] = []
+    private var velocity = GPSVelocityWindow()
     private var active = false
     override init() {
         super.init()
@@ -34,7 +34,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     }
     func requestPermission() { location.requestWhenInUseAuthorization() }
     func start() {
-        active = true; latestFix = nil; speeds = []; pendingDistance = 0
+        active = true; latestFix = nil; velocity.reset(); pendingDistance = 0
         stepsDistance = 0; pendingStepsDistance = 0; stepsAt = .distantPast; motionAt = .distantPast
         motionValue = .unknown; speed = 0; signal = .unavailable
         location.allowsBackgroundLocationUpdates = true
@@ -93,10 +93,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
                 }
             }
             latestFix = fix
-            if fix.speed >= 0 && fix.speed <= 8 && fix.speedAccuracy >= 0 && fix.speedAccuracy <= 1.5 {
-                speeds.append((fix.timestamp, fix.speed))
-            }
-            speeds.removeAll { fix.timestamp.timeIntervalSince($0.0) > 7 }
+            velocity.observe(time: fix.timestamp.timeIntervalSince1970, speed: fix.speed, accuracy: fix.speedAccuracy)
         }
         onUpdate?()
     }
@@ -105,20 +102,21 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         let freshMotion = date.timeIntervalSince(motionAt) <= 15
         let freshSteps = date.timeIntervalSince(stepsAt) <= 8
         let quality = latestFix?.horizontalAccuracy ?? -1
-        signal = freshFix && precision && quality >= 0 && quality <= 35 && !speeds.isEmpty ? .good :
+        let gpsSpeed = velocity.speed(at: date.timeIntervalSince1970)
+        signal = freshFix && precision && quality >= 0 && quality <= 35 && gpsSpeed != nil ? .good :
                  freshFix && quality >= 0 && quality <= 60 ? .degraded : .unavailable
-        let freshSpeeds = speeds.filter { date.timeIntervalSince($0.0) <= 7 }.map { $0.1 }.sorted()
-        speed = freshFix && !freshSpeeds.isEmpty ? freshSpeeds[freshSpeeds.count / 2] : freshSteps ? stepsSpeed : 0
+        speed = freshFix ? (gpsSpeed ?? (freshSteps ? stepsSpeed : 0)) : freshSteps ? stepsSpeed : 0
         let rawSpeed = freshFix ? (latestFix?.speed ?? -1) : -1
         if freshMotion && motionValue == .vehicle || rawSpeed > 8 { movement = .vehicle }
         else if freshMotion && motionValue == .stationary && rawSpeed < 0.8 { movement = .stationary }
         else if rawSpeed >= 0 && rawSpeed < 0.35 { movement = .stationary }
         else if speed >= 0.5 && (freshFix || freshSteps) {
-            movement = freshMotion && motionValue == .running ? .running : speed >= 1.8 ? .running : .walking
+            if freshMotion && motionValue == .walking { movement = .walking }
+            else { movement = freshMotion && motionValue == .running ? .running : speed >= 1.8 && signal == .good ? .running : .walking }
         } else { movement = freshFix || freshMotion ? .stationary : .unknown }
+        if movement == .stationary || movement == .vehicle { velocity.reset() }
         let meters = signal == .unavailable ? (freshSteps ? pendingStepsDistance : 0) : pendingDistance
         pendingDistance = 0; pendingStepsDistance = 0
         return SensorFrame(timestamp: date.timeIntervalSince1970, speed: speed, distance: meters, movement: movement, signal: signal)
     }
 }
-

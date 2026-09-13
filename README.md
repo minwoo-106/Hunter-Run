@@ -1,3 +1,19 @@
+# Hunter Run 1.0.0
+
+Native iPhone walking/running RPG. This branch is the 1.0 release candidate; Apple build and physical field verification are tracked in docs/1.0-delivery-plan.md. The most recent verified installer remains below until a new build succeeds.
+
+- Offline main story and operator conversations, custom partner names, remembered choices and relationship progression.
+- Persistent quests, rank exams and time-based qualifications; existing saves retain their equipment and history.
+- Animated operator breathing/blinking and six dialogue expressions; five association growth backgrounds.
+- 17 creatures, 32 equipment items, 113 offline voice cues, original UI sound effects.
+- Exploration, contracts and gate combat with optional short accelerations, accumulated boss damage and neutral walking alternatives.
+- Production has no simulated activity entry. Dedicated Debug simulator tests retain an isolated harness.
+- Collections, backup/import/reset and on-device data guidance.
+
+Distribution remains the existing private Codemagic/AltStore route. Version 1.0 does not imply App Store publication.
+
+## Previous release record
+
 # Hunter Run — 0.11 field encounters and discovery gear
 
 iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.

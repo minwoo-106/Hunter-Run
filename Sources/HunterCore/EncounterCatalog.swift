@@ -18,11 +18,13 @@ public struct FieldEncounter: Codable, Identifiable {
     public var slots: [String: String]
     public var event: MissionTemplate
     public var survey: MissionTemplate?
+    public var requiredMain: String? = nil
 
     public func available(to profile: Profile, catalog: ProgressionCatalog) -> Bool {
         let rank = Progression.ranks.firstIndex(of: profile.growth.rank) ?? -1
         return rank >= (Progression.ranks.firstIndex(of: requiredRank) ?? Int.max)
             && (requiredAction.map { catalog.unlocked($0, profile: profile) } ?? true)
+            && (requiredMain.map { profile.journey?.unlocked.contains($0) == true || FieldDiscovery.events(in: profile).contains(event.id) } ?? true)
     }
 
     public var preview: GameContent {

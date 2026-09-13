@@ -10,7 +10,7 @@ final class ProgressionTests: XCTestCase {
     func testCatalogsAndUnlocksAreValid() throws {
         let catalog = try catalog(); try catalog.validate()
         let missions = try load("missions.json", as: MissionCatalog.self); try missions.validate()
-        XCTAssertEqual(catalog.equipment.count, 20)
+        XCTAssertEqual(catalog.equipment.count, 32)
         XCTAssertEqual(missions.content(for: .exploration, extended: false).events.filter { $0.kind != .discovery }.count, 0)
         XCTAssertEqual(missions.content(for: .contract, extended: true).events.count, 6)
     }
@@ -53,12 +53,15 @@ final class ProgressionTests: XCTestCase {
         XCTAssertFalse(catalog.unlocked("analysis", profile: save.profile))
         try Progression.upgrade(.research, save: &save, catalog: catalog)
         XCTAssertTrue(catalog.unlocked("analysis", profile: save.profile))
+        XCTAssertThrowsError(try Progression.upgrade(.research, save: &save, catalog: catalog))
+        var qualified = save.profile.growth; qualified.rank = "C"; save.profile.growth = qualified
         try Progression.upgrade(.research, save: &save, catalog: catalog)
         XCTAssertTrue(catalog.unlocked("tactical-analysis", profile: save.profile))
         let remaining = save.profile.research
         XCTAssertThrowsError(try Progression.upgrade(.research, save: &save, catalog: catalog))
         XCTAssertEqual(save.profile.research, remaining)
         try Progression.upgrade(.observation, save: &save, catalog: catalog)
+        var entryRank = save.profile.growth; entryRank.rank = "E"; save.profile.growth = entryRank
         XCTAssertFalse(Progression.allows(.gate, profile: save.profile, catalog: catalog))
         var growth = save.profile.growth; growth.rank = "D"; save.profile.growth = growth
         XCTAssertTrue(Progression.allows(.gate, profile: save.profile, catalog: catalog))
@@ -66,11 +69,14 @@ final class ProgressionTests: XCTestCase {
     func testExperienceAloneDoesNotPromote() throws {
         var save = SaveState(); save.profile.xp = 9000
         XCTAssertFalse(Progression.canPromote(save.profile))
-        for _ in 0..<2 {
-            var run = RunSession(targetSeconds: 300, simulated: false, allowPursuit: false)
-            run.activeSeconds = 300; run.phase = .finished
+        for _ in 0..<3 {
+            var run = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false)
+            run.activeSeconds = 1200; run.phase = .finished
             Settlement.apply(run, to: &save.profile)
         }
+        XCTAssertTrue(Progression.qualifiesForExam(save.profile))
+        XCTAssertThrowsError(try Progression.promote(save: &save))
+        var journey = save.profile.journey ?? JourneyState(); journey.completedQuests.insert("exam-D"); save.profile.journey = journey
         try Progression.promote(save: &save)
         XCTAssertEqual(save.profile.growth.rank, "D")
         XCTAssertFalse(Progression.canPromote(save.profile))

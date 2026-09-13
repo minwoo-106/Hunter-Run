@@ -35,9 +35,19 @@ public final class SaveRepository {
         }
         try data.write(to: current, options: .atomic)
     }
+    /// A confirmed reset replaces both recovery candidates, so deleted progress cannot return.
+    public func reset() throws -> SaveState {
+        let fresh = SaveState()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let data = try JSONEncoder().encode(fresh)
+        try data.write(to: directory.appendingPathComponent("backup.json"), options: .atomic)
+        try data.write(to: current, options: .atomic)
+        return fresh
+    }
     public func validate(_ save: SaveState) throws {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
+        guard save.profile.journey?.isValid ?? true else { throw Failure.invalid }
         guard (save.profile.discoveredEvents?.count ?? 0) <= 1000,
               (save.profile.discoveredEvents ?? []).allSatisfy({ !$0.isEmpty && $0.count <= 200 }) else { throw Failure.invalid }
         let growth = save.profile.growth

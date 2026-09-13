@@ -1,8 +1,9 @@
 import AVFoundation
 import Foundation
 
-final class LobbyMusicPlayer: NSObject {
+final class LobbyMusicPlayer: NSObject, AVAudioPlayerDelegate {
     private var player: AVAudioPlayer?
+    private var effect: AVAudioPlayer?
     private var ownsSession = false
     private var routeBlocked = false
     private let request = AudioRequest()
@@ -42,7 +43,32 @@ final class LobbyMusicPlayer: NSObject {
         }
     }
     func stop() { request.cancel(); AudioWorker.shared.enqueue { [self] in stopCurrent() } }
+    func playEffect(_ key: String, volume: Float) {
+        guard volume > 0, !AudioEnvironment.silentUITest else { return }
+        AudioWorker.shared.enqueue { [self] in
+            let session = AVAudioSession.sharedInstance()
+            guard !routeBlocked, !session.isOtherAudioPlaying,
+                  let url = Bundle.main.url(forResource: key, withExtension: "wav", subdirectory: "Effects") ?? Bundle.main.url(forResource: key, withExtension: "wav") else { return }
+            do {
+                if !ownsSession {
+                    try session.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+                    try session.setActive(true); ownsSession = true
+                }
+                effect?.stop()
+                let cue = try AVAudioPlayer(contentsOf: url); effect = cue
+                cue.volume = volume; cue.delegate = self
+                if !cue.play() { effect = nil; if player == nil { stopCurrent() } }
+            } catch { effect = nil; if player == nil { stopCurrent() } }
+        }
+    }
+    func audioPlayerDidFinishPlaying(_ finished: AVAudioPlayer, successfully flag: Bool) {
+        AudioWorker.shared.enqueue { [self] in
+            guard effect === finished else { return }; effect = nil
+            if player == nil { stopCurrent() }
+        }
+    }
     private func stopCurrent() {
+        effect?.stop(); effect = nil
         player?.stop(); player = nil
         guard ownsSession else { return }; ownsSession = false
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)

@@ -120,6 +120,7 @@ public struct RunSession: Codable, Identifiable {
     public var learnedReference: Double? = nil
     public var paceCooldownUntil: Double? = nil
     public var directorVersion: Int? = nil
+    public var questID: String? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -143,6 +144,7 @@ public struct RunSummary: Codable, Identifiable {
     public var cores: Int? = nil
     public var majorBoss: BossReport? = nil
     public var paceReport: PaceReport? = nil
+    public var questID: String? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"
@@ -158,6 +160,7 @@ public struct Profile: Codable {
     public var introductionSeen: Bool? = nil
     public var discoveredEvents: Set<String>? = nil
     public var paceMemory: PaceMemory? = nil
+    public var journey: JourneyState? = nil
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
         set { progression = newValue }
