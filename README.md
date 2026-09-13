@@ -1,4 +1,14 @@
-# Hunter Run 1.2.0
+# Hunter Run 1.2.1
+
+Stationary exercise balance update, built as 1.2.1/build22 by Codemagic build33 from `2a2d636` on 2026-09-13.
+
+[Download 1.2.1 from build33](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa6a7acc12cd81c2be1115d?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.2.1-release.md) · [Policy](docs/1.2.1-policy.md) · [Verification record](docs/release-121-verification.json)
+
+Only stationary exercise receives 50% activity XP, crystals and research, rounded down after totaling each currency, and automatically ends at 60 active minutes even with a free goal. Outdoor and treadmill rewards and unrestricted free goals are unchanged. Shorter goals, pauses, saved recovery, one-time quest rewards, core materials and progression are preserved. Mode selection remains user-declared, so this does not verify treadmill hardware or prevent choosing the wrong indoor mode.
+
+134 core tests, four focused iPhone 17 Pro UI tests and two compact-screen UI tests passed. The downloaded installer passed ZIP/IPA, arm64, launch-image and all 113 voice hash checks. Install `HunterRun-1.2.1-build22-unsigned.ipa` through AltStore over the existing app to retain progress. Physical sensor sensitivity still requires device feedback.
+
+## 1.2.0 release record
 
 Phone-only indoor activity and contextual operator conversations. Built as 1.2.0/build21 by Codemagic build32 from `8dcbfd3` on 2026-09-13.
 

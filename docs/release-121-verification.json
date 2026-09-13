@@ -1,0 +1,18 @@
+{
+  "version": "1.2.1",
+  "build": "22",
+  "sourceCommit": "2a2d636",
+  "codemagicBuild": 33,
+  "architecture": "arm64",
+  "stories": 28,
+  "clips": 113,
+  "monsters": 17,
+  "equipment": 32,
+  "coreTestsPassed": 134,
+  "primaryUITestsPassed": 4,
+  "compactUITestsPassed": 2,
+  "bytes": 138128044,
+  "file": "HunterRun-1.2.1-build22-install.zip",
+  "sha256": "78859fb696cb611083fe856e79a1a077df83408af3eae856ec6a92bab4723534",
+  "physicalIndoorMotionVerified": false
+}
