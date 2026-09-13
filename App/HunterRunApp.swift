@@ -160,10 +160,11 @@ struct SetupView: View {
                                 VStack(alignment: .leading, spacing: 5) { Text(mode.title).font(.headline); Text(mode.detail).font(.caption) }
                                 Spacer()
                             }.foregroundStyle(model.modeAllowed(mode) ? Theme.teal : Theme.muted).card()
-                        }.buttonStyle(.plain).disabled(!model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
+                        }.buttonStyle(.plain).disabled(model.activeQuest != nil || !model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
                     }
                     if !model.modeAllowed(.gate) { Text("고위험 게이트: 관측부 Lv.2와 D급 평가 통과 필요").font(.caption).foregroundStyle(Theme.muted) }
-                    if model.selectedMode == .gate { BossSelectionView() }
+                    if model.activeQuest != nil { Text("선택한 의뢰에 맞는 활동으로 준비했어요. 모드를 바꾸려면 위에서 일반 활동으로 변경해주세요.").font(.caption).foregroundStyle(Theme.muted) }
+                    if model.selectedMode == .gate && model.activeQuest == nil { BossSelectionView() }
                     Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
                     NavigationLink { PaceProfileView() } label: {
                         VStack(alignment: .leading, spacing: 6) {

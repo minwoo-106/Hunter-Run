@@ -118,6 +118,18 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
     }
+    @MainActor func testLargeTextKeepsStoryAndSettingsReachable() {
+        let app = application()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        let settings = app.buttons["home.settings"]
+        XCTAssertTrue(settings.waitForExistence(timeout: 15)); XCTAssertTrue(settings.isHittable)
+        let story = app.buttons["home.stories"]
+        for _ in 0..<6 { if story.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(story.isHittable); story.tap()
+        XCTAssertTrue(app.staticTexts["story.counts"].waitForExistence(timeout: 5))
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Large text story archive"; shot.lifetime = .keepAlways; add(shot)
+    }
     @MainActor func testGrowthNavigationAndModeLocks() {
         let app = application(); app.launch()
         let association = app.buttons["nav.3"]

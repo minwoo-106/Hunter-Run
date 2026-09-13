@@ -200,9 +200,10 @@ struct OperatorConversationView: View {
                     .font(.title3).lineSpacing(5).card().accessibilityIdentifier("operator.reply")
                 HStack {
                     Button("잠깐 쉬어요") {
+                        topic = nil
                         casual = state.memories["rest"] == "quiet" ? "좋아요. 오늘도 잠깐 조용히 있어요. 창문만 조금 열어둘게요." : tier < 3 ? "괜찮아요. 다음 의뢰는 준비되시면 확인해요." : "좋아요. 저도 잠깐 쉬려고 했어요. 오늘은 보고서 이야기 빼고요."
                     }.buttonStyle(.bordered)
-                    Button("오늘 기분은 어때요?") { casual = tier < 3 ? "오늘은 관측값이 잘 정리돼서 마음이 놓여요. 아직 확인할 건 조금 남았지만요." : "오늘은 일 얘기 말고 먼저 인사하고 싶었어요. 특별한 일이 없을 때도 이야기하고 싶어서요." }.buttonStyle(.bordered)
+                    Button("오늘 기분은 어때요?") { topic = nil; casual = tier < 3 ? "오늘은 관측값이 잘 정리돼서 마음이 놓여요. 아직 확인할 건 조금 남았지만요." : "오늘은 일 얘기 말고 먼저 인사하고 싶었어요. 특별한 일이 없을 때도 이야기하고 싶어서요." }.buttonStyle(.bordered)
                 }
                 NavigationLink { QuestBoardView() } label: { Label("오늘의 의뢰 이야기", systemImage: "list.clipboard").card() }
                 HStack {

@@ -43,7 +43,7 @@ struct BossBoardView: View {
                         Text(boss.description).font(.callout).foregroundStyle(Theme.muted)
                         let encounter = BossEncounter(definition: boss, state: state)
                         BossHPView(name: "\(state.round)회차 · 누적 토벌 \(state.clears)회", remaining: state.remainingHP, maximum: state.maximumHP, phase: encounter.phaseName)
-                        if !unlocked { Label("\(boss.requiredRank)급 + 관측부 Lv.2 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
+                        if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기 진행 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
                         if state.remainingHP > 0 {
                             Button("토벌 활동 준비") { model.prepareBoss(boss) }.buttonStyle(.borderedProminent).disabled(!unlocked || model.growthLocked)
                         } else {
@@ -73,7 +73,7 @@ struct BossSelectionView: View {
                 if model.selectedBoss == boss.id {
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     BossHPView(name: boss.name, remaining: state.remainingHP, maximum: state.maximumHP, phase: BossEncounter(definition: boss, state: state).phaseName)
-                    if !available { Text("토벌은 \(boss.requiredRank)급과 관측부 Lv.2가 필요합니다.").font(.caption).foregroundStyle(Theme.muted) }
+                    if !available { Text("\(boss.requiredRank)급과 관측부 Lv.2를 갖추고, 관련 지부 이야기를 이어가면 열려요.").font(.caption).foregroundStyle(Theme.muted) }
                 }
             }
         }.card().accessibilityIdentifier("boss.selection")

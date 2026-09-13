@@ -18,10 +18,19 @@ workflows:
       - build/Home-layout.png
       - build/layout-log.txt
       - build/Layout.xcresult
+      - build/Small-layout.png
+      - build/small-layout-log.txt
+      - build/Small-layout.xcresult
   ios-demo:
     name: Hunter Run 1.0 - personal installation
     instance_type: mac_mini_m2
     max_build_duration: 30
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'ios-build-*'
+          include: true
     environment:
       xcode: latest
     scripts:
@@ -54,3 +63,6 @@ workflows:
       - build/Home-layout.png
       - build/layout-log.txt
       - build/Layout.xcresult
+      - build/Small-layout.png
+      - build/small-layout-log.txt
+      - build/Small-layout.xcresult

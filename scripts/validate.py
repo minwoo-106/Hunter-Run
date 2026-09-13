@@ -134,3 +134,22 @@ for entry in encounters['encounters']:
 for item in progression['equipment']:
     if item.get('requiredEvent'): assert item['requiredEvent'] in {e['event']['id'] for e in encounters['encounters']}
 print('Validated ten encounter pools, cross-content unlocks and eight discovery-linked items.')
+
+narrative = json.loads((root/'Resources/narrative.json').read_text(encoding='utf-8'))
+scenes = narrative['scenes']
+assert len(scenes) == len({s['id'] for s in scenes}) == 28
+expressions = {'calm', 'smile', 'playful', 'thoughtful', 'worried', 'relieved'}
+for scene in scenes:
+    assert (catalog / (scene['artwork'] + '.imageset') / 'Contents.json').is_file()
+    nodes = {n['id']: n for n in scene['nodes']}
+    assert len(nodes) == len(scene['nodes']) and scene['start'] in nodes
+    for node in nodes.values():
+        assert node['expression'] in expressions and node['text'].strip()
+        if node.get('next'): assert node['next'] in nodes
+        for choice in node.get('choices', []): assert choice['next'] in nodes and choice['text'].strip()
+for expression in expressions - {'calm'}:
+    assert (catalog / ('Operator-' + expression + '.imageset') / 'Contents.json').is_file()
+for key in ['ui-select', 'ui-reward', 'ui-gate']:
+    with wave.open(str(root/'Resources/Effects'/(key + '.wav'))) as effect:
+        assert effect.getnframes() > 0 and effect.getsampwidth() == 2
+print('Validated 28 story scenes, expression/background references and three effect resources.')
