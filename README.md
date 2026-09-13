@@ -1,4 +1,18 @@
-# Hunter Run 1.1.0
+# Hunter Run 1.2.0
+
+Phone-only indoor activity and contextual operator conversations. Built as 1.2.0/build21 by Codemagic build32 from `8dcbfd3` on 2026-09-13.
+
+[Download 1.2.0 from build32](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa69ff5c12cd81c2be0fe8c?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.2-release.md) · [Verification record](docs/release-120-verification.json)
+
+- Activity environment offers outdoor, stationary exercise and treadmill. Indoor progress uses detected movement and active time without GPS distance or pace; Apple Watch is not required.
+- Existing quests, boss campaigns, rewards and rank progression continue indoors. Outdoor pace learning remains separate.
+- Real movement preflight, permission checks and explicit pause on background/lock prevent unattended timer-only activity. Phone must be carried; physical grip/gait sensitivity needs device feedback.
+- Operator dialogue uses a portrait scene, one current line and two or three contextual replies. Relationship records move to the book control. Title subtitle contrast is improved.
+- 128 core tests, 11 focused iPhone 17 Pro UI tests and six compact-screen tests passed. ZIP/IPA, arm64, launch-image and all 113 approved voice hashes were verified in the downloaded installer. UI motion activity is exercised through an isolated Debug harness; no simulated activity entry exists in Release.
+
+Install `HunterRun-1.2.0-build21-unsigned.ipa` through AltStore over the existing app to retain progress. This remains personal installation, not App Store publication.
+
+## 1.1 release record
 
 Labyrinth interface release, built as 1.1.0/build19 by Codemagic build30 from `2097d25` on 2026-09-13. Adds a tap-to-enter title screen, portrait dialogue stages, and a shared dungeon visual treatment for non-home screens while preserving the home composition and game data.
 
