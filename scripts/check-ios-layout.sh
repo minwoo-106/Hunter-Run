@@ -2,6 +2,8 @@
 set -euo pipefail
 mkdir -p build
 xcrun simctl list devices available --json > build/simulators.json
+xcrun simctl list devicetypes --json > build/device-types.json
+xcrun simctl list runtimes --json > build/runtimes.json
 DEVICE_ID=$(python3 - <<'PY'
 import json
 with open('build/simulators.json') as source:
@@ -36,12 +38,26 @@ xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo 
 sleep 1
 xcrun simctl io "$DEVICE_ID" screenshot build/portrait-checks/breath.png
 SMALL_DEVICE_ID=$(python3 - <<'PY'
-import json
+import json, subprocess
 with open('build/simulators.json') as source:
     devices = [d for ds in json.load(source)['devices'].values() for d in ds if d['isAvailable'] and 'iPhone' in d['name']]
-preferred = ['iPhone SE (3rd generation)', 'iPhone 16e', 'iPhone 16', 'iPhone 17']
+preferred = ['iPhone SE (3rd generation)', 'iPhone 16e', 'iPhone 16']
 device = next((d for name in preferred for d in devices if d['name'] == name), None)
-print(device['udid'] if device else '')
+if device:
+    print(device['udid'])
+else:
+    types = json.load(open('build/device-types.json'))['devicetypes']
+    runtimes = [r for r in json.load(open('build/runtimes.json'))['runtimes'] if r['isAvailable'] and r['name'].startswith('iOS')]
+    created = None
+    for name in preferred:
+        kind = next((t for t in types if t['name'] == name), None)
+        if kind and runtimes:
+            attempt = subprocess.run(['xcrun', 'simctl', 'create', 'HunterRun Compact QA', kind['identifier'], runtimes[-1]['identifier']], capture_output=True, text=True)
+            if attempt.returncode == 0:
+                created = attempt.stdout.strip()
+                print(created)
+                break
+    if not created: raise SystemExit('No compatible compact iPhone simulator could be created')
 PY
 )
 if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then

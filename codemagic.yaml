@@ -3,6 +3,12 @@ workflows:
     name: Hunter Run - iPhone layout check
     instance_type: mac_mini_m2
     max_build_duration: 20
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'ios-layout-*'
+          include: true
     environment:
       xcode: latest
     scripts:
@@ -14,7 +20,7 @@ workflows:
           xcodegen generate
           xcodebuild -downloadComponent MetalToolchain
       - name: Check home layout in iPhone simulator
-        script: bash scripts/check-ios-layout.sh
+        script: bash scripts/check-compact-layout.sh
     artifacts:
       - build/Home-layout.png
       - build/layout-log.txt
