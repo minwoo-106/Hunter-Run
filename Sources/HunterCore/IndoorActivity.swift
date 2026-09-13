@@ -1,12 +1,14 @@
 import Foundation
 
 public enum ActivityEnvironment: String, Codable, CaseIterable {
-    case outdoor, indoorStationary, indoorTreadmill
+    case outdoor, indoor, indoorStationary, indoorTreadmill
+    // Legacy raw values remain readable, but only the unified choice is offered.
+    public static var allCases: [Self] { [.outdoor, .indoor] }
     public var isIndoor: Bool { self != .outdoor }
-    public var rewardPercent: Int { self == .indoorStationary ? 50 : 100 }
-    public var maximumActiveSeconds: Double? { self == .indoorStationary ? 3600 : nil }
+    public var rewardPercent: Int { isIndoor ? 50 : 100 }
+    public var maximumActiveSeconds: Double? { isIndoor ? IndoorDailyLimit.seconds : nil }
     public var title: String {
-        switch self { case .outdoor: return "야외"; case .indoorStationary: return "제자리 운동"; case .indoorTreadmill: return "러닝머신" }
+        isIndoor ? "실내 러닝" : "야외"
     }
 }
 

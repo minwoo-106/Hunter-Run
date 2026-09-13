@@ -125,6 +125,8 @@ public struct RunSession: Codable, Identifiable {
     public var questID: String? = nil
     public var environment: ActivityEnvironment? = nil
     public var steps: Int? = nil
+    /// Remaining KST daily active-time budget at the start; nil supports older saves.
+    public var indoorAllowance: Double? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit

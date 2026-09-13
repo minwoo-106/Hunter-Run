@@ -10,7 +10,7 @@ final class StationaryPolicyTests: XCTestCase {
     @discardableResult private func tick(_ run: inout RunEngine, _ time: Double, moving: Bool = true) -> [GameCue] {
         run.consume(SensorFrame(timestamp: time, speed: 2, distance: 2, movement: moving ? .running : .stationary, signal: .good))
     }
-    func testOnlyStationaryRewardsAreHalvedAndCoreMaterialsArePreserved() throws {
+    func testAllIndoorRewardsAreHalvedAndCoreMaterialsArePreserved() throws {
         func settle(_ environment: ActivityEnvironment) throws -> RunSummary {
             var session = engine(environment).session
             session.phase = .finished; session.activeSeconds = 1210; session.mode = .gate
@@ -27,8 +27,10 @@ final class StationaryPolicyTests: XCTestCase {
         }
         let outdoor = try settle(.outdoor), treadmill = try settle(.indoorTreadmill), stationary = try settle(.indoorStationary)
         XCTAssertEqual(outdoor.xp, 161); XCTAssertEqual(outdoor.crystals, 16)
-        XCTAssertEqual(treadmill.xp, outdoor.xp); XCTAssertEqual(treadmill.crystals, outdoor.crystals)
-        XCTAssertEqual(treadmill.research, outdoor.research)
+        XCTAssertEqual(treadmill.xp, stationary.xp); XCTAssertEqual(treadmill.crystals, stationary.crystals)
+        XCTAssertEqual(treadmill.research, stationary.research)
+        let unified = try settle(.indoor)
+        XCTAssertEqual(unified.xp, stationary.xp); XCTAssertEqual(unified.rewardPercent, 50)
         XCTAssertEqual(stationary.xp, 80); XCTAssertEqual(stationary.crystals, 8)
         XCTAssertEqual(stationary.research, 1); XCTAssertEqual(stationary.cores, outdoor.cores)
         XCTAssertEqual(stationary.cores, 1); XCTAssertEqual(stationary.rewardPercent, 50)
@@ -53,12 +55,12 @@ final class StationaryPolicyTests: XCTestCase {
         XCTAssertEqual(save.profile.research - research, quest.research)
         XCTAssertThrowsError(try Quests.claim(quest.id, save: &save))
     }
-    func testFreeStationaryEndsExactlyAtOneHourOnceWhileOtherEnvironmentsContinue() throws {
+    func testFreeIndoorEndsExactlyAtOneHourOnceWhileOutdoorContinues() throws {
         for environment in ActivityEnvironment.allCases {
             var run = engine(environment, seconds: 3598.5)
             tick(&run, 0)
             let cues = tick(&run, 5)
-            if environment == .indoorStationary {
+            if environment.isIndoor {
                 XCTAssertEqual(run.session.activeSeconds, 3600)
                 XCTAssertEqual(run.session.phase, .finished); XCTAssertEqual(run.session.goalProgress, 1)
                 XCTAssertEqual(cues.filter { $0 == .goalReached }.count, 1)
@@ -73,10 +75,10 @@ final class StationaryPolicyTests: XCTestCase {
             }
         }
     }
-    func testTimeGoalsRespectShorterTargetAndOnlyStationaryHasHardCap() {
+    func testTimeGoalsRespectShorterTargetAndIndoorHasHardCap() {
         for minutes in [20.0, 60, 90] {
             for environment in ActivityEnvironment.allCases {
-                let expected = environment == .indoorStationary ? min(minutes * 60, 3600) : minutes * 60
+                let expected = environment.isIndoor ? min(minutes * 60, 3600) : minutes * 60
                 var run = engine(environment, goal: ActivityGoal(kind: .time, value: minutes * 60), seconds: expected - 1)
                 tick(&run, 0); tick(&run, 3)
                 XCTAssertEqual(run.session.activeSeconds, expected); XCTAssertEqual(run.session.phase, .finished)

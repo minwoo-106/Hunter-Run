@@ -34,6 +34,10 @@ public struct RunEngine {
     }
     @discardableResult public mutating func consume(_ frame: SensorFrame) -> [GameCue] {
         guard session.phase != .finished, frame.timestamp.isFinite else { return [] }
+        // Settle the prior day before accepting new-day frames, including a paused/recovered run.
+        if session.isIndoor && frame.timestamp >= IndoorDailyLimit.end(of: session.startedAt).timeIntervalSince1970 {
+            end(); return [.voice("run_end"), .checkpoint, .goalReached]
+        }
         let previous = session.lastTimestamp
         if let previous, frame.timestamp <= previous { return [] }
         session.lastTimestamp = frame.timestamp

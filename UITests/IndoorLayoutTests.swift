@@ -2,9 +2,10 @@ import XCTest
 
 final class IndoorLayoutTests: XCTestCase {
     override func setUp() { super.setUp(); continueAfterFailure = false }
-    @MainActor private func app() -> XCUIApplication {
+    @MainActor private func app(exhausted: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing-skip-title", "--ui-testing-skip-welcome", "--ui-testing-silent-audio", "--ui-testing-simulations", "--ui-testing-save", UUID().uuidString, "-operatorMotionEnabled", "NO"]
+        if exhausted { app.launchArguments.append("--ui-testing-indoor-exhausted") }
         app.launch(); return app
     }
     @MainActor private func reach(_ element: XCUIElement, in app: XCUIApplication) {
@@ -22,12 +23,14 @@ final class IndoorLayoutTests: XCTestCase {
     }
     @MainActor func testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration() {
         let app = app(); XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
-        app.segmentedControls["activity.environment"].buttons["제자리 운동"].tap()
-        XCTAssertTrue(app.staticTexts["stationary.policy"].label.contains("50%"))
-        XCTAssertTrue(app.staticTexts["stationary.policy"].label.contains("60분"))
+        app.segmentedControls["activity.environment"].buttons["실내 러닝"].tap()
+        XCTAssertEqual(app.segmentedControls["activity.environment"].buttons.count, 2)
+        XCTAssertTrue(app.staticTexts["indoor.budget"].label.contains("60분 0초"))
+        XCTAssertTrue(app.staticTexts["indoor.policy"].label.contains("50%"))
+        XCTAssertTrue(app.staticTexts["indoor.policy"].label.contains("60분"))
         reach(app.segmentedControls["goal.kind"], in: app)
         app.segmentedControls["goal.kind"].buttons["자유"].tap()
-        XCTAssertTrue(app.staticTexts["goal.free.help"].label.contains("60분에 자동 종료"))
+        XCTAssertTrue(app.staticTexts["goal.free.help"].label.contains("하루 합산 60분"))
         XCTAssertFalse(app.staticTexts["goal.free.help"].label.contains("제한 없이"))
         XCTAssertFalse(app.segmentedControls["goal.kind"].buttons["거리"].exists)
         XCTAssertFalse(app.switches["선택적 가속 허용"].exists)
@@ -42,22 +45,36 @@ final class IndoorLayoutTests: XCTestCase {
     }
     @MainActor func testIndoorActivityUsesTimeAndPausesOnBackground() {
         let app = app(); XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
-        app.segmentedControls["activity.environment"].buttons["러닝머신"].tap()
-        XCTAssertFalse(app.staticTexts["stationary.policy"].exists)
+        app.segmentedControls["activity.environment"].buttons["실내 러닝"].tap()
+        XCTAssertTrue(app.staticTexts["indoor.policy"].exists)
         reach(app.segmentedControls["goal.kind"], in: app)
         app.segmentedControls["goal.kind"].buttons["자유"].tap()
-        XCTAssertTrue(app.staticTexts["goal.free.help"].label.contains("제한 없이"))
+        XCTAssertTrue(app.staticTexts["goal.free.help"].label.contains("하루 합산 60분"))
         reach(app.buttons["activity.mock"], in: app); app.buttons["activity.mock"].tap()
-        XCTAssertTrue(app.staticTexts["실내 · 러닝머신"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["실내 러닝"].waitForExistence(timeout: 5))
         allowMotionPrompt(app)
         if app.buttons["계속"].exists { reach(app.buttons["계속"], in: app); app.buttons["계속"].tap() }
         XCTAssertFalse(app.staticTexts["KILOMETERS"].exists)
         XCTAssertFalse(app.staticTexts["최근 페이스"].exists)
-        XCTAssertFalse(app.staticTexts["activity.stationary-limit"].exists)
+        XCTAssertTrue(app.staticTexts["activity.indoor-limit"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Indoor-activity"; shot.lifetime = .keepAlways; add(shot)
         XCUIDevice.shared.press(.home); app.activate()
         reach(app.buttons["계속"], in: app)
         app.buttons["계속"].tap()
         XCTAssertTrue(app.buttons["일시정지"].waitForExistence(timeout: 5))
+    }
+    @MainActor func testDailyIndoorLimitBlocksNewSessionButNotOutdoor() {
+        let app = app(exhausted: true)
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        app.segmentedControls["activity.environment"].buttons["실내 러닝"].tap()
+        XCTAssertTrue(app.staticTexts["indoor.budget"].label.contains("모두 마쳤어요"))
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Indoor-daily-limit-used"; shot.lifetime = .keepAlways; add(shot)
+        reach(app.buttons["activity.start"], in: app); XCTAssertFalse(app.buttons["activity.start"].isEnabled)
+        for _ in 0..<24 {
+            if app.segmentedControls["activity.environment"].isHittable { break }
+            app.scrollViews.firstMatch.swipeDown()
+        }
+        app.segmentedControls["activity.environment"].buttons["야외"].tap()
+        reach(app.buttons["activity.start"], in: app); XCTAssertTrue(app.buttons["activity.start"].isEnabled)
     }
 }

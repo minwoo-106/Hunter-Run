@@ -59,6 +59,7 @@ public final class SaveRepository {
         guard save.profile.paceMemory?.isValid ?? true, save.profile.runs.allSatisfy({ $0.paceReport?.isValid ?? true }) else { throw Failure.invalid }
         guard save.profile.runs.allSatisfy({ ($0.steps ?? 0) >= 0 && ($0.steps ?? 0) <= 100_000_000 && (!$0.activityEnvironment.isIndoor || $0.distance == 0) }) else { throw Failure.invalid }
         if let run = save.active {
+            guard run.indoorAllowance.map({ $0.isFinite && (0...IndoorDailyLimit.seconds).contains($0) }) ?? true else { throw Failure.invalid }
             guard (run.steps ?? 0) >= 0, (run.steps ?? 0) <= 100_000_000,
                   !run.isIndoor || (run.distance == 0 && run.activityGoal.kind != .distance) else { throw Failure.invalid }
             guard run.directorVersion == nil || run.directorVersion == 1 || run.directorVersion == 2,

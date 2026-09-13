@@ -55,7 +55,13 @@ import UIKit
     let lobbyMusic = LobbyMusicPlayer()
     private var sceneActive = true
     private var testingAudio = false
+    var indoorRemaining: Double { IndoorDailyLimit.remaining(in: save.profile, on: Date()) }
+    var indoorBudgetText: String {
+        let remaining = Int(ceil(indoorRemaining))
+        return remaining > 0 ? "오늘 남은 실내 활동 · \(remaining / 60)분 \(remaining % 60)초" : "오늘의 실내 활동 60분을 모두 마쳤어요."
+    }
     var canStartReal: Bool {
+        guard !selectedEnvironment.isIndoor || indoorRemaining > 0 else { return false }
         if let quest = activeQuest { return isReady && !recoverable && quest.available(save.profile) }
         guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
         guard selectedMode == .gate, let id = selectedBoss else { return true }
@@ -180,6 +186,13 @@ import UIKit
             recoverable = save.active != nil
         }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
+        #if DEBUG && targetEnvironment(simulator)
+        if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-indoor-exhausted") {
+            var fixture = RunSession(targetSeconds: 3600, simulated: false, allowPursuit: false)
+            fixture.environment = .indoor; fixture.activeSeconds = 3600; fixture.phase = .finished
+            _ = Settlement.apply(fixture, to: &save.profile)
+        }
+        #endif
         if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
         isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
@@ -281,6 +294,9 @@ import UIKit
         guard simulated || encounterDemo == nil else { return }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)
         guard !environment.isIndoor || requested.kind != .distance else { notice = "실내 활동은 시간 또는 자유 목표로 진행해요."; return }
+        if environment.isIndoor && indoorRemaining <= 0 {
+            notice = "오늘의 실내 활동 60분을 모두 마쳤어요. 한국 시간 자정에 다시 열려요."; return
+        }
         if !simulated && environment.isIndoor {
             guard sensor.indoorAvailable, CMPedometer.authorizationStatus() != .denied, CMPedometer.authorizationStatus() != .restricted,
                   indoorCheckActive, sensor.frame(at: Date()).signal == .good else { notice = "먼저 실내 움직임 확인을 진행해주세요."; return }
@@ -293,6 +309,7 @@ import UIKit
         var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
         session.environment = environment; session.steps = environment.isIndoor ? 0 : nil
+        IndoorDailyLimit.prepare(&session, profile: save.profile)
         if environment.isIndoor { session.allowPursuit = false; session.paceObservation = nil }
         session.questID = quest?.id
         if let definition = quest?.boss {
@@ -414,7 +431,8 @@ import UIKit
     }
     func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
     func recover() {
-        guard let run = save.active, let content else { return }
+        guard var run = save.active, let content else { return }
+        IndoorDailyLimit.prepare(&run, profile: save.profile)
         displayedPace.reset(); currentSpeed = 0
         lobbyMusic.stop(); testingAudio = false
         engine = RunEngine(session: run, content: run.missionSnapshot ?? content, attack: save.profile.attack)

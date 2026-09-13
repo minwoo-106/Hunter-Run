@@ -30,15 +30,18 @@ public struct ActivityGoal: Codable, Equatable {
 
 public extension RunSession {
     var activityGoal: ActivityGoal { goal ?? ActivityGoal(kind: .time, value: targetSeconds) }
-    /// A free goal still respects the environment's session cap. Pauses do not spend it.
+    /// The shorter of the requested goal and the saved daily allowance. Pauses do not spend it.
     var activeTimeLimit: Double? {
         let target = activityGoal.kind == .time ? activityGoal.value : nil
-        guard let maximum = activityEnvironment.maximumActiveSeconds else { return target }
+        guard activityEnvironment.isIndoor else { return target }
+        let maximum = min(IndoorDailyLimit.seconds, max(0, indoorAllowance ?? IndoorDailyLimit.seconds))
         return min(target ?? maximum, maximum)
     }
     var goalLabel: String {
-        if activityEnvironment == .indoorStationary {
-            return activityGoal.kind == .free ? "자유 · 최대 60분" : "\(Int((activeTimeLimit ?? 3600) / 60))분"
+        if isIndoor {
+            let duration = Int(ceil(activeTimeLimit ?? IndoorDailyLimit.seconds))
+            let limit = "\(duration / 60)분 \(duration % 60)초"
+            return activityGoal.kind == .free ? "자유 · 남은 한도 " + limit : "목표 · " + limit
         }
         return activityGoal.label
     }
