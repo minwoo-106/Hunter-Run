@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "build": "14",
+  "architecture": "arm64",
+  "stories": 28,
+  "clips": 113,
+  "monsters": 17,
+  "equipment": 32,
+  "bytes": 136231902,
+  "file": "HunterRun-1.0.0-build14-install.zip",
+  "sha256": "95fa00916042e864a3d1bd9b31b1d17403b210faab92ea2427ed76882d9aa085",
+  "commit": "edf84fc",
+  "buildURL": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa66847c12cd81c2be084ae",
+  "coreTests": 119,
+  "iphone17ProUITests": 13,
+  "iphone17UITests": 3,
+  "compactCheck": {
+    "logicalPoints": [
+      375,
+      667
+    ],
+    "tests": 3,
+    "failures": 0,
+    "buildURL": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa66be7688764aa17bdeb42",
+    "commit": "c281e16",
+    "applicationChangesSinceRelease": false
+  },
+  "physicalField": "not yet verified on this build",
+  "renderInspection": [
+    "home",
+    "calm",
+    "smile",
+    "playful",
+    "thoughtful",
+    "worried",
+    "relieved",
+    "closed eyes",
+    "breathing frame"
+  ]
+}

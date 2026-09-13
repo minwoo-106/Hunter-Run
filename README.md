@@ -1,6 +1,10 @@
 # Hunter Run 1.0.0
 
-Native iPhone walking/running RPG. This branch is the 1.0 release candidate; Apple build and physical field verification are tracked in docs/1.0-delivery-plan.md. The most recent verified installer remains below until a new build succeeds.
+Native iPhone walking/running RPG. Version 1.0.0/build14 was compiled and packaged by Codemagic build25 from `edf84fc` on 2026-09-13. The downloaded installer passed archive, arm64 executable, story/content and all 113 voice hash checks.
+
+[Download 1.0.0 from build25](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa66847c12cd81c2be084ae?open-setting=build-artifacts) · [Spoiler-free release guide](docs/1.0-release.md) · [Verification record](docs/release-100-verification.json)
+
+119 core tests, 13 iPhone 17 Pro UI tests, three iPhone 17 checks and three additional 375×667 compact-screen checks passed. Portrait expression, closed-eye and breathing renders were inspected. Physical outdoor pace, interruptions and the new voice clips still need user-device feedback; this is not an App Store publication claim.
 
 - Offline main story and operator conversations, custom partner names, remembered choices and relationship progression.
 - Persistent quests, rank exams and time-based qualifications; existing saves retain their equipment and history.
