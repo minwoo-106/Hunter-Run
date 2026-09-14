@@ -76,7 +76,7 @@ struct ReturnBriefingView: View {
                         if index + 1 < report.lines.count { index += 1 } else { model.acknowledgeReturn() }
                     }.buttonStyle(GameButtonStyle(primary: true)).accessibilityIdentifier("return.next")
                 }.navigationTitle("귀환 보고").navigationBarTitleDisplayMode(.inline)
-                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button("나중에 보기") { model.showReturnBriefing = false }.buttonStyle(GameControlStyle()) } }
+                    .toolbar { ToolbarItem(placement: .cancellationAction) { Button { model.showReturnBriefing = false } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }.buttonStyle(.plain).accessibilityLabel("귀환 보고 닫기") } }
             }
         }.onAppear { index = 0 }
     }
