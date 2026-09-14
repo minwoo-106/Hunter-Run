@@ -1,0 +1,53 @@
+{
+  "version": "1.3.0",
+  "build": "27",
+  "architecture": "arm64",
+  "stories": 28,
+  "clips": 113,
+  "monsters": 17,
+  "equipment": 32,
+  "bytes": 138218536,
+  "file": "HunterRun-1.3.0-build27-install.zip",
+  "sha256": "f03f8d3927660aa508be59393da686125c6dabd55ce5ee8150d4d7588475bc67",
+  "sourceCommit": "878ed2b",
+  "codemagicBuild": 38,
+  "buildDurationSeconds": 913,
+  "coreTestsPassed": 149,
+  "primaryUITestsPassed": 3,
+  "compactUITestsPassed": 3,
+  "priorRegression": {
+    "codemagicBuild": 37,
+    "sourceCommit": "b1ada5d",
+    "primaryUITestsPassed": 9,
+    "compactUITestsPassed": 4
+  },
+  "launchImageVerified": true,
+  "physicalOutdoorPaceRetested": false,
+  "mutationPatterns": 4,
+  "screenshotPixels": {
+    "mutation.png": [
+      1206,
+      2622
+    ],
+    "weekly.png": [
+      1206,
+      2622
+    ],
+    "return.png": [
+      1206,
+      2622
+    ],
+    "compact-mutation.png": [
+      750,
+      1334
+    ],
+    "compact-weekly.png": [
+      750,
+      1334
+    ],
+    "compact-return.png": [
+      750,
+      1334
+    ]
+  }
+}

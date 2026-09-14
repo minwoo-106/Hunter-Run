@@ -1,4 +1,12 @@
-# Hunter Run 1.2.2
+# Hunter Run 1.3.0
+
+Ordinary assignments accompany the chosen activity mode. Focused navigation separates preparation, quests, weekly outdoor surveys and facilities. Adds contextual return briefings, three weekly beacons and four post-clear boss patterns.
+
+[Download 1.3.0 from build38](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa75852688764aa17c009f1?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.0-release.md) · [Design and game references](docs/1.3.0-expedition-design.md) · [Verification](docs/release-130-verification.json)
+
+Verified 1.3.0/build27 from `878ed2b`: 149 core tests and three focused UI checks on each screen size passed. The preceding broad regression build37 passed nine primary and four compact checks. Downloaded ZIP/IPA, arm64 executable, launch image and all 113 voice hashes verified. Update over the existing app to retain progress. Indoor 50% recurring rewards and daily 60-minute quota are preserved; outdoor pace estimation is unchanged.
+
+## 1.2.2 release record
 
 Unified indoor running with 50% activity rewards and a shared daily 60-minute active-time limit. The day resets at Korean midnight; outdoor free activity remains unrestricted.
 
