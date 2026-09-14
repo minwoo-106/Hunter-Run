@@ -27,6 +27,7 @@ struct BossReportView: View {
 }
 
 struct BossBoardView: View {
+    @State private var mutations = false
     @EnvironmentObject var model: AppModel
     @Environment(\.dismiss) private var dismiss
     var body: some View {
@@ -35,7 +36,10 @@ struct BossBoardView: View {
                 eyebrow("LONG-TERM ASSIGNMENTS")
                 Text("여러 번의 활동으로\n하나의 토벌을.").font(.largeTitle.bold())
                 Text("활동을 마칠 때 남은 HP를 저장합니다. 목표를 넘겨 달릴 필요는 없습니다.").foregroundStyle(Theme.muted)
-                ForEach(model.allBosses) { boss in
+                Picker("토벌 종류", selection: $mutations) { Text("주요 토벌").tag(false); Text("변이 의뢰").tag(true) }
+                    .pickerStyle(.segmented).accessibilityIdentifier("boss.category")
+                if mutations { Text("원형 보스를 완전히 토벌하면 새로운 대응 패턴이 열려요. 변이별 토벌 기록은 따로 이어져요.").font(.caption).foregroundStyle(Theme.muted) }
+                ForEach(model.allBosses.filter { ($0.requiredBossClear != nil) == mutations }) { boss in
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     let unlocked = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
                     VStack(alignment: .leading, spacing: 14) {

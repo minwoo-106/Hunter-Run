@@ -9,6 +9,7 @@ struct SetupView: View {
     @State private var indoorCheck = false
     @State private var indoorStartRequested = false
     @State private var quests = false
+    @State private var bosses = false
     private let refresh = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     private var indoor: Bool { model.selectedEnvironment.isIndoor }
     private func beginActivity() {
@@ -45,9 +46,9 @@ struct SetupView: View {
                             if indoor && model.allBosses.first(where: { $0.id == model.selectedBoss })?.requiredBossClear != nil {
                                 Text("변이 의뢰는 야외 전용이에요. 야외로 전환하거나 일반 게이트를 선택해주세요.").font(.caption).foregroundStyle(Theme.teal)
                             }
-                            NavigationLink { BossBoardView() } label: { Label("토벌 대상 선택 · 변이 의뢰", systemImage: "scope") }.accessibilityIdentifier("setup.bosses")
+                            Button { bosses = true } label: { Label("토벌 대상 선택", systemImage: "scope") }.buttonStyle(GameButtonStyle()).accessibilityIdentifier("setup.bosses")
                             if model.selectedBoss != nil { Button("일반 게이트로 변경") { model.selectedBoss = nil }.font(.caption) }
-                        }.card().accessibilityIdentifier("boss.selection")
+                        }.card()
                     }
                     permission
                     Button { if indoor { indoorCheck = true } else { beginActivity() } } label: {
@@ -70,6 +71,7 @@ struct SetupView: View {
         }
         .onReceive(refresh) { _ in model.objectWillChange.send() }
         .onChange(of: model.selectedEnvironment) { _, value in if value.isIndoor && goalKind == .distance { goalKind = .time } }
+        .sheet(isPresented: $bosses) { NavigationStack { BossBoardView().toolbar { ToolbarItem(placement: .cancellationAction) { Button("닫기") { bosses = false }.buttonStyle(GameControlStyle()) } } } }
         .sheet(isPresented: $quests) { NavigationStack { QuestBoardView().toolbar { ToolbarItem(placement: .cancellationAction) { Button("닫기") { quests = false } } } } }
         .fullScreenCover(isPresented: $indoorCheck, onDismiss: {
             if indoorStartRequested { indoorStartRequested = false; beginActivity() }

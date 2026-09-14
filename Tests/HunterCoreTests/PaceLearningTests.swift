@@ -107,4 +107,3 @@ final class PaceLearningTests: XCTestCase {
         XCTAssertEqual(RunMode.gate.startTitle(boss: true), "보스 토벌 시작")
     }
 }
-

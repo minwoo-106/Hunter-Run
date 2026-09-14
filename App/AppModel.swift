@@ -216,7 +216,7 @@ import UIKit
             var journey = JourneyState(); journey.unlocked = Set((1...16).map { String(format: "M%02d", $0) }); journey.selectedQuest = "wolf-first"
             save.profile.journey = journey
             var growth = save.profile.growth; growth.rank = "S"; growth.departments["observation"] = 2; save.profile.growth = growth
-            for offset in 1...3 {
+            for offset in stride(from: 3, through: 1, by: -1) {
                 var fixture = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false)
                 fixture.startedAt = expeditionDate.addingTimeInterval(Double(-offset) * 86400)
                 fixture.activeSeconds = 1200; fixture.distance = 1000; fixture.phase = .finished

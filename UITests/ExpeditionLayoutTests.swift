@@ -13,6 +13,10 @@ final class ExpeditionLayoutTests: XCTestCase {
             let scroll = app.scrollViews.firstMatch
             scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.8)).press(forDuration: 0.1, thenDragTo: scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.03, dy: 0.3)))
         }
+        if !element.isHittable {
+            print(app.debugDescription)
+            let image = XCTAttachment(screenshot: app.screenshot()); image.name = "Unreachable element"; image.lifetime = .keepAlways; add(image)
+        }
         XCTAssertTrue(element.isHittable)
     }
     @MainActor private func capture(_ name: String, app: XCUIApplication) {
@@ -57,8 +61,10 @@ final class ExpeditionLayoutTests: XCTestCase {
     }
     @MainActor func testPostClearMutationCanBePreparedWithoutLockingOrdinaryMode() {
         let app = application(); app.buttons["nav.2"].tap()
-        reach(app.buttons["mode.gate"], in: app); app.buttons["mode.gate"].tap()
+        reach(app.buttons["mode.gate"], in: app); XCTAssertTrue(app.buttons["mode.gate"].isEnabled); app.buttons["mode.gate"].tap()
         reach(app.buttons["setup.bosses"], in: app); app.buttons["setup.bosses"].tap()
+        let category = app.segmentedControls["boss.category"]
+        reach(category, in: app); category.buttons["변이 의뢰"].tap()
         let variant = app.buttons["boss.prepare.mutation-boundary-lord-echo"]
         reach(variant, in: app); XCTAssertTrue(variant.isEnabled)
         capture("Post-clear mutation assignment", app: app); variant.tap()
