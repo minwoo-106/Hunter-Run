@@ -7,7 +7,7 @@ struct HunterTabBar: View {
     var body: some View {
         HStack(alignment: .center, spacing: 2) {
             ForEach(0..<5) { index in
-                Button { model.interfaceFeedback(); if index == 3 { model.showAssociation = true } else { model.selectedTab = index } } label: {
+                Button { model.interfaceFeedback(); model.selectedTab = index } label: {
                     VStack(spacing: 4) {
                         Image(systemName: icons[index]).font(.system(size: index == 2 ? 27 : 21, weight: .semibold))
                         Text(labels[index]).font(.system(size: 11, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
@@ -20,7 +20,7 @@ struct HunterTabBar: View {
                     }
                     .offset(y: index == 2 ? -4 : 0)
                 }.buttonStyle(.plain).accessibilityLabel(labels[index]).accessibilityIdentifier("nav.\(index)")
-                    .accessibilityAddTraits((index == 3 ? model.showAssociation : !model.showAssociation && model.selectedTab == index) ? .isSelected : [])
+                    .accessibilityAddTraits((model.selectedTab == index) ? .isSelected : [])
             }
         }.padding(.horizontal, 12).padding(.top, 10).padding(.bottom, 4)
             .background(Theme.ink.opacity(0.98))
@@ -110,7 +110,7 @@ struct HistoryView: View {
                     NavigationLink { RunDetailView(run: run) } label: {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack { Text(run.date, style: .date); Spacer(); Image(systemName: "chevron.right") }
-                            Text(run.mode?.title ?? "헌터 의뢰").font(.caption).foregroundStyle(Theme.teal)
+                            Text(run.mode?.title ?? "현장 사냥").font(.caption).foregroundStyle(Theme.teal)
                             Text(run.activityMeasure + " · " + clock(run.seconds)).font(.title3.bold())
                             Text(run.completedGoal ? "목표 완료" : "성과 저장").font(.caption).foregroundStyle(Theme.muted)
                         }.card()
@@ -127,7 +127,7 @@ struct RunDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 eyebrow("MISSION REPORT")
-                Text(run.mode?.title ?? "헌터 의뢰").font(.largeTitle.bold())
+                Text(run.mode?.title ?? "현장 사냥").font(.largeTitle.bold())
                 Text(run.date, format: .dateTime.year().month().day().hour().minute()).foregroundStyle(Theme.muted)
                 Text(run.activityEnvironment.title).font(.caption).foregroundStyle(Theme.teal)
                 HStack { metric(run.activityEnvironment.isIndoor ? "실내 걸음 수" : "거리", run.activityEnvironment.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.seconds)) }.card()

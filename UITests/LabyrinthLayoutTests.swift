@@ -74,8 +74,8 @@ final class LabyrinthLayoutTests: XCTestCase {
         XCTAssertTrue(app.navigationBars["장비 보관함"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-equipment")
         app.buttons["nav.2"].tap(); capture(app, "Labyrinth-preparation")
         app.buttons["nav.3"].tap()
-        XCTAssertTrue(app.buttons["association.stories"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-association")
-        app.buttons["association.stories"].tap()
+        XCTAssertTrue(app.segmentedControls["association.section"].waitForExistence(timeout: 5)); capture(app, "Labyrinth-association")
+        app.buttons["nav.0"].tap(); app.buttons["home.stories"].tap()
         let story = app.buttons["story.M01"]
         for _ in 0..<5 { if story.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         capture(app, "Labyrinth-archive"); XCTAssertTrue(story.isHittable); story.tap()

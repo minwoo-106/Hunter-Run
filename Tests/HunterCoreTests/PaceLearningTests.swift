@@ -102,8 +102,9 @@ final class PaceLearningTests: XCTestCase {
     }
     func testModeSpecificStartTitles() {
         XCTAssertEqual(RunMode.exploration.startTitle(), "현장 탐험 시작")
-        XCTAssertEqual(RunMode.contract.startTitle(), "헌터 의뢰 시작")
+        XCTAssertEqual(RunMode.contract.startTitle(), "현장 사냥 시작")
         XCTAssertEqual(RunMode.gate.startTitle(), "게이트 조사 시작")
         XCTAssertEqual(RunMode.gate.startTitle(boss: true), "보스 토벌 시작")
     }
 }
+

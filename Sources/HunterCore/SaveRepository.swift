@@ -47,6 +47,7 @@ public final class SaveRepository {
     public func validate(_ save: SaveState) throws {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
+        guard save.profile.expeditions?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.journey?.isValid ?? true else { throw Failure.invalid }
         guard (save.profile.discoveredEvents?.count ?? 0) <= 1000,
               (save.profile.discoveredEvents ?? []).allSatisfy({ !$0.isEmpty && $0.count <= 200 }) else { throw Failure.invalid }

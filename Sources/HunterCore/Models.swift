@@ -164,6 +164,7 @@ public struct Profile: Codable {
     public var observationLevel = 1
     public var settled: Set<UUID> = []
     public var runs: [RunSummary] = []
+    public var expeditions: ExpeditionState? = nil
     public var progression: GrowthState? = nil
     public var bosses: [String: BossState]? = nil
     public var readStories: Set<String>? = nil

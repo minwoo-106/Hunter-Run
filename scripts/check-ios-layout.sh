@@ -39,6 +39,15 @@ if [ "${1:-}" = "stationary" ]; then
     -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
   )
 fi
+if [ "${1:-}" = "expedition" ]; then
+  UI_SCOPE=(
+    -only-testing:HunterRunUITests/ExpeditionLayoutTests
+    -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testGoalSelectionAndCentralNavigation
+    -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
+    -only-testing:HunterRunUITests/IndoorLayoutTests
+  )
+fi
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
@@ -102,6 +111,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
     -only-testing:HunterRunUITests/IndoorLayoutTests/testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration
   )
   if [ "${1:-}" = "stationary" ]; then SMALL_SCOPE=(-only-testing:HunterRunUITests/IndoorLayoutTests); fi
+  if [ "${1:-}" = "expedition" ]; then SMALL_SCOPE=(-only-testing:HunterRunUITests/ExpeditionLayoutTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen); fi
   xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
     -destination "platform=iOS Simulator,id=$SMALL_DEVICE_ID" -derivedDataPath build/layout \
     -resultBundlePath build/Small-layout.xcresult -parallel-testing-enabled NO \

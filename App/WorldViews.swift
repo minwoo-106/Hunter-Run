@@ -28,29 +28,31 @@ struct BossReportView: View {
 
 struct BossBoardView: View {
     @EnvironmentObject var model: AppModel
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 eyebrow("LONG-TERM ASSIGNMENTS")
                 Text("여러 번의 활동으로\n하나의 토벌을.").font(.largeTitle.bold())
                 Text("활동을 마칠 때 남은 HP를 저장합니다. 목표를 넘겨 달릴 필요는 없습니다.").foregroundStyle(Theme.muted)
-                ForEach(model.world?.bosses ?? []) { boss in
+                ForEach(model.allBosses) { boss in
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     let unlocked = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
                     VStack(alignment: .leading, spacing: 14) {
-                        Image("Monster-" + boss.id).resizable().scaledToFit().frame(maxWidth: .infinity).frame(height: 240).clipShape(RoundedRectangle(cornerRadius: 16)).accessibilityLabel(boss.name + " 이미지")
+                        Image(BossMutations.artwork(boss)).resizable().scaledToFit().frame(maxWidth: .infinity).frame(height: 240).clipShape(RoundedRectangle(cornerRadius: 16)).accessibilityLabel(boss.name + " 이미지")
                         Text(boss.name).font(.title2.bold())
                         Text(boss.description).font(.callout).foregroundStyle(Theme.muted)
+                        if boss.requiredBossClear != nil { Label("변이 의뢰 · 원형 토벌 후 해금", systemImage: "sparkles").font(.caption).foregroundStyle(Theme.teal) }
                         let encounter = BossEncounter(definition: boss, state: state)
                         BossHPView(name: "\(state.round)회차 · 누적 토벌 \(state.clears)회", remaining: state.remainingHP, maximum: state.maximumHP, phase: encounter.phaseName)
                         if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기 진행 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
                         if state.remainingHP > 0 {
-                            Button("토벌 활동 준비") { model.prepareBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
+                            Button("토벌 활동 준비") { model.prepareBoss(boss); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked).accessibilityIdentifier("boss.prepare." + boss.id)
                         } else {
                             Button("새 토벌 회차 열기") { model.restartBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
                         }
                         if AppModel.testHarness {
-                            Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true) }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
+                            Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true); dismiss() }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
                         }
                     }.card()
                 }
@@ -65,7 +67,7 @@ struct BossSelectionView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("게이트 임무 선택").font(.headline)
             Button { model.selectedBoss = nil } label: { Label("일반 게이트", systemImage: model.selectedBoss == nil ? "checkmark.circle.fill" : "circle") }.buttonStyle(GameButtonStyle())
-            ForEach(model.world?.bosses ?? []) { boss in
+            ForEach(model.allBosses) { boss in
                 let available = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
                 Button { model.selectedBoss = boss.id } label: {
                     HStack { Image(systemName: model.selectedBoss == boss.id ? "checkmark.circle.fill" : "circle"); Text(boss.name); Spacer(); if !available { Image(systemName: "lock.fill") } }
@@ -95,7 +97,10 @@ struct CodexView: View {
                     }.pickerStyle(.segmented)
                     if category == 0 {
                     Text("흔적을 조사하거나 개체와 조우하면 도감이 열려요. 연구부를 확장하면 전투 기록을 분석할 수 있어요.").foregroundStyle(Theme.muted)
-                    Button("현장 사건 기록 보기") { archive = true }.buttonStyle(GameButtonStyle())
+                    DisclosureGroup("현장 조사 자료") {
+                        NavigationLink("개체 출현과 발견 장비") { EncounterBoardView() }.accessibilityIdentifier("codex.field-intel")
+                        Button("사건 대응 기록") { archive = true }
+                    }.font(.callout)
                     ForEach(model.world?.monsters ?? []) { monster in
                         let records = monster.records(in: model.save.profile)
                         let known = monster.isKnown(in: model.save.profile)

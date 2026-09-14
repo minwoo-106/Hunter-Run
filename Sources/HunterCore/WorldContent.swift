@@ -26,6 +26,7 @@ public struct BossDefinition: Codable, Identifiable {
     public var maximumHP: Double
     public var phases: [GameContent]
     public var requiredMain: String? = nil
+    public var requiredBossClear: String? = nil
     public func validate() throws {
         guard !id.isEmpty, Progression.ranks.contains(requiredRank), maximumHP.isFinite,
               (100...100000).contains(maximumHP), phases.count == 3 else { throw ProgressionError.invalid }
@@ -36,7 +37,8 @@ public struct BossDefinition: Codable, Identifiable {
     }
     public func available(to profile: Profile, catalog: ProgressionCatalog) -> Bool {
         let rank = Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0
-        return rank >= (Progression.ranks.firstIndex(of: requiredRank) ?? Int.max) && catalog.unlocked("gate", profile: profile)
+        return (requiredBossClear.map { (profile.bosses?[$0]?.clears ?? 0) > 0 } ?? true)
+            && rank >= (Progression.ranks.firstIndex(of: requiredRank) ?? Int.max) && catalog.unlocked("gate", profile: profile)
             && (requiredMain.map { profile.journey?.unlocked.contains($0) == true || profile.bosses?[id] != nil } ?? true)
     }
 }

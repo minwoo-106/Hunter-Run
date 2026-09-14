@@ -84,7 +84,7 @@ public enum PaceLearning {
 
 public extension RunMode {
     func activityTitle(boss: Bool = false) -> String {
-        switch self { case .exploration: return "현장 탐험"; case .contract: return "헌터 의뢰"; case .gate: return boss ? "보스 토벌" : "게이트 조사" }
+        switch self { case .exploration: return "현장 탐험"; case .contract: return "현장 사냥"; case .gate: return boss ? "보스 토벌" : "게이트 조사" }
     }
     func startTitle(boss: Bool = false) -> String { activityTitle(boss: boss) + " 시작" }
 }

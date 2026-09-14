@@ -2,7 +2,7 @@ import Foundation
 
 public enum RunMode: String, Codable, CaseIterable {
     case exploration, contract, gate
-    public var title: String { switch self { case .exploration: return "탐험"; case .contract: return "헌터 의뢰"; case .gate: return "고위험 게이트" } }
+    public var title: String { switch self { case .exploration: return "탐험"; case .contract: return "현장 사냥"; case .gate: return "고위험 게이트" } }
     public var detail: String { switch self {
     case .exploration: return "발견과 조사 중심 · 조사 데이터 보상"
     case .contract: return "조사와 전투를 함께 · 균형 잡힌 보상"

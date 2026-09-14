@@ -21,14 +21,13 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(run.waitForExistence(timeout: 10)); XCTAssertTrue(run.isHittable); run.tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
         app.buttons["nav.3"].tap()
-        XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
-        app.buttons["닫기"].tap()
+        XCTAssertTrue(app.segmentedControls["association.section"].waitForExistence(timeout: 5))
     }
 
     @MainActor func testStoryCursorChoicesAndLockedChapters() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10)); app.buttons["nav.3"].tap()
-        let archive = app.buttons["association.stories"]
+        XCTAssertTrue(app.buttons["nav.0"].waitForExistence(timeout: 10)); app.buttons["nav.0"].tap()
+        let archive = app.buttons["home.stories"]
         XCTAssertTrue(archive.waitForExistence(timeout: 5)); archive.tap()
         let story = app.buttons["story.M01"]
         for _ in 0..<4 { if story.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
@@ -74,7 +73,7 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(app.staticTexts["pace.reference"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["pace.reference"].label, "표본 수집 중")
         app.buttons["nav.0"].tap(); app.buttons["nav.2"].tap()
-        XCTAssertTrue(app.navigationBars["헌터 활동 준비"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["헌터 활동"].waitForExistence(timeout: 5))
         app.buttons["mode.exploration"].tap()
         let start = app.buttons["activity.start"]
         for _ in 0..<8 { if start.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
@@ -134,8 +133,7 @@ final class HomeLayoutTests: XCTestCase {
         let app = application(); app.launch()
         let association = app.buttons["nav.3"]
         XCTAssertTrue(association.waitForExistence(timeout: 10)); association.tap()
-        XCTAssertTrue(app.buttons["association.bosses"].waitForExistence(timeout: 5))
-        app.buttons["닫기"].tap()
+        XCTAssertTrue(app.segmentedControls["association.section"].waitForExistence(timeout: 5))
         app.buttons["nav.1"].tap()
         app.buttons["장비 보관함"].tap()
         XCTAssertTrue(app.staticTexts["협회 지급검"].waitForExistence(timeout: 5))
@@ -143,7 +141,7 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
         app.buttons["mode.exploration"].tap()
-        XCTAssertTrue(app.staticTexts["도시 경계의 잔향"].exists)
+        XCTAssertTrue(app.buttons["mode.exploration"].isEnabled)
         XCTAssertFalse(app.buttons["mode.gate"].isEnabled)
     }
     @MainActor func testGoalSelectionAndCentralNavigation() {
@@ -168,28 +166,13 @@ final class HomeLayoutTests: XCTestCase {
     }
     @MainActor func testBossPreparationAndUndiscoveredArchive() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 10)); app.buttons["nav.3"].tap()
-        app.buttons["association.bosses"].tap()
-        let demo = app.buttons["boss.demo.boundary-lord"]
-        for _ in 0..<7 { if demo.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-        XCTAssertTrue(demo.isHittable)
-        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Major boss board"; shot.lifetime = .keepAlways; add(shot)
-        demo.tap()
-        XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
-        let mock = app.buttons["activity.mock.boss"]
-        for _ in 0..<10 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-        XCTAssertFalse(app.buttons["activity.start"].isEnabled)
-        XCTAssertTrue(mock.isHittable); mock.tap()
-        XCTAssertTrue(app.staticTexts["경계의 군주"].waitForExistence(timeout: 5))
-        let end = app.buttons["활동 종료"]
-        for _ in 0..<6 { if end.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
-        XCTAssertTrue(end.isHittable); end.tap()
-        app.buttons["저장하고 종료"].tap()
-        XCTAssertTrue(app.buttons["협회로 돌아가기"].waitForExistence(timeout: 5)); app.buttons["협회로 돌아가기"].tap()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        let gate = app.buttons["mode.gate"]
+        for _ in 0..<5 { if gate.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertFalse(gate.isEnabled)
         app.buttons["nav.4"].tap()
-        let monster = app.buttons["monster.echo-wolf"]
-        XCTAssertTrue(monster.waitForExistence(timeout: 5)); monster.tap()
-        XCTAssertTrue(app.staticTexts["아직 발견하지 못했습니다"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["association.bosses"].exists)
+        XCTAssertFalse(app.buttons["association.quests"].exists)
     }
     @MainActor func testNewEncounterGuideIsReachableFromPreparation() {
         let app = application(); app.launch()
@@ -231,8 +214,11 @@ final class HomeLayoutTests: XCTestCase {
     }
     @MainActor func testFieldBoardPreparesMockWithoutUnlockingRealContent() {
         let app = application(); app.launch()
-        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
-        let board = app.buttons["setup.field-intel"]
+        XCTAssertTrue(app.buttons["nav.4"].waitForExistence(timeout: 10)); app.buttons["nav.4"].tap()
+        let group = app.buttons["현장 조사 자료"]
+        for _ in 0..<8 { if group.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        group.tap()
+        let board = app.buttons["codex.field-intel"]
         XCTAssertTrue(board.waitForExistence(timeout: 5)); board.tap()
         let demo = app.buttons["encounter.demo.dark-elf-scout"]
         for _ in 0..<6 { if demo.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }

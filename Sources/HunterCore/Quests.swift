@@ -59,14 +59,14 @@ public enum Quests {
     public static let entries: [QuestDefinition] = [
         QuestDefinition(id: "wolf-first", title: "첫 잔향 토벌", detail: "잔향 늑대의 반응을 끝까지 확인해요.", main: 1, seconds: 0, samples: 0, xp: 40, crystals: 3, research: 2, lifetimeDefeats: 1),
         QuestDefinition(id: "wolf-ten", title: "잔향수 분석 의뢰", detail: "잔향 늑대 10마리를 토벌해요. 이전 토벌도 함께 반영돼요.", main: 3, seconds: 0, samples: 0, xp: 220, crystals: 15, research: 8, lifetimeDefeats: 10),
-        QuestDefinition(id: "compare-signals", title: "비교 관측", detail: "두 종류의 표본과 의뢰 활동 20분을 모아요.", main: 3, seconds: 1200, samples: 2, xp: 80, crystals: 5, research: 3),
-        QuestDefinition(id: "basic-survey", title: "기초 조사", detail: "심사에 제출할 표본 두 종류와 의뢰 활동 30분을 모아요.", main: 4, seconds: 1800, samples: 2, xp: 100, crystals: 7, research: 4),
-        QuestDefinition(id: "moon-mark", title: "월영 표식 조사", detail: "낯선 표식을 관측해요. 표본 두 종류와 의뢰 활동 30분이 필요해요.", main: 6, seconds: 1800, samples: 2, xp: 120, crystals: 8, research: 5),
-        QuestDefinition(id: "illusion-survey", title: "환영 관측", detail: "표본 세 종류와 의뢰 활동 40분으로 반응을 분리해요.", main: 7, seconds: 2400, samples: 3, xp: 140, crystals: 10, research: 5),
-        QuestDefinition(id: "compare-original", title: "원본 대조", detail: "의뢰 활동 20분과 표본 세 종류를 모아 비교해요.", main: 8, seconds: 1200, samples: 3, xp: 100, crystals: 6, research: 5),
-        QuestDefinition(id: "restore-link", title: "관측망 복구", detail: "표본 두 종류와 의뢰 활동 30분을 모아 연결을 점검해요.", main: 9, seconds: 1800, samples: 2, xp: 140, crystals: 10, research: 6),
-        QuestDefinition(id: "restore-records", title: "원본 복원", detail: "의뢰 활동 60분과 두 종류의 표본을 모아요. 여러 활동에 걸쳐 이어갈 수 있어요.", main: 11, seconds: 3600, samples: 2, xp: 200, crystals: 15, research: 8),
-        QuestDefinition(id: "inner-signal", title: "안쪽 신호 조사", detail: "의뢰 활동 60분과 표본 세 종류로 다음 관측을 준비해요.", main: 13, seconds: 3600, samples: 3, xp: 200, crystals: 15, research: 8)
+        QuestDefinition(id: "compare-signals", title: "비교 관측", detail: "두 종류의 표본과 활동 20분을 모아요.", main: 3, seconds: 1200, samples: 2, xp: 80, crystals: 5, research: 3),
+        QuestDefinition(id: "basic-survey", title: "기초 조사", detail: "심사에 제출할 표본 두 종류와 활동 30분을 모아요.", main: 4, seconds: 1800, samples: 2, xp: 100, crystals: 7, research: 4),
+        QuestDefinition(id: "moon-mark", title: "월영 표식 조사", detail: "낯선 표식을 관측해요. 표본 두 종류와 활동 30분이 필요해요.", main: 6, seconds: 1800, samples: 2, xp: 120, crystals: 8, research: 5),
+        QuestDefinition(id: "illusion-survey", title: "환영 관측", detail: "표본 세 종류와 활동 40분으로 반응을 분리해요.", main: 7, seconds: 2400, samples: 3, xp: 140, crystals: 10, research: 5),
+        QuestDefinition(id: "compare-original", title: "원본 대조", detail: "활동 20분과 표본 세 종류를 모아 비교해요.", main: 8, seconds: 1200, samples: 3, xp: 100, crystals: 6, research: 5),
+        QuestDefinition(id: "restore-link", title: "관측망 복구", detail: "표본 두 종류와 활동 30분을 모아 연결을 점검해요.", main: 9, seconds: 1800, samples: 2, xp: 140, crystals: 10, research: 6),
+        QuestDefinition(id: "restore-records", title: "원본 복원", detail: "활동 60분과 두 종류의 표본을 모아요. 여러 활동에 걸쳐 이어갈 수 있어요.", main: 11, seconds: 3600, samples: 2, xp: 200, crystals: 15, research: 8),
+        QuestDefinition(id: "inner-signal", title: "안쪽 신호 조사", detail: "활동 60분과 표본 세 종류로 다음 관측을 준비해요.", main: 13, seconds: 3600, samples: 3, xp: 200, crystals: 15, research: 8)
     ] + ["D", "C", "B", "A", "S"].enumerated().map { index, rank in
         QuestDefinition(id: "exam-" + rank, title: rank + "급 승급 심사", detail: "전용 감시체를 완전히 토벌해요. 피해량은 다음 활동으로 이어져요.", main: index == 0 ? 5 : index == 1 ? 12 : 16, seconds: 0, samples: 0, xp: 120 + index * 60, crystals: 10 + index * 5, research: 5 + index * 2, promotion: rank)
     }
@@ -78,11 +78,15 @@ public enum Quests {
     static func settle(_ session: RunSession, profile: inout Profile) {
         guard !session.simulated, session.phase == .finished else { return }
         var state = profile.journey ?? JourneyState()
-        if let quest = entry(session.questID) {
+        // Ordinary assignments accompany every eligible activity. Selection only pins a focus.
+        let eligible = entries.filter { quest in
+            quest.promotion == nil ? (quest.available(profile) || quest.id == session.questID) : quest.id == session.questID
+        }
+        for quest in eligible where !state.completedQuests.contains(quest.id) {
             var record = state.questRecords[quest.id] ?? QuestRecord()
             record.seconds = min(100_000_000, record.seconds + session.activeSeconds)
-            for event in session.records where event.outcome != .neutral && event.catalogID.hasPrefix("evidence-\(quest.id)-") {
-                record.evidence.insert(event.catalogID)
+            for event in session.records where event.kind == .discovery && [.perfect, .success, .partial].contains(event.outcome) {
+                if record.evidence.count < 100 { record.evidence.insert(event.catalogID) }
             }
             state.questRecords[quest.id] = record
             if quest.promotion != nil {

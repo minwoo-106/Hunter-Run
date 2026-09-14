@@ -213,7 +213,9 @@ public enum Settlement {
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)
+        let previousQuests = profile.journey?.completedQuests ?? []
         Quests.settle(session, profile: &profile)
+        Expeditions.returned(session, profile: &profile, previousQuests: previousQuests)
         return summary
     }
 }

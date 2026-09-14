@@ -36,8 +36,7 @@ struct ActivityArchiveView: View {
                     .font(.callout)
             }.card()
         }
-        NavigationLink("주요 보스 조사 현황") { BossBoardView() }.buttonStyle(GameButtonStyle())
-        NavigationLink("의뢰와 승급 심사") { QuestBoardView() }.buttonStyle(GameButtonStyle())
+        Text("활동 시작과 토벌 대상 선택은 하단 헌터 활동에서, 의뢰 보상은 협회 관리에서 확인해요.").font(.caption).foregroundStyle(Theme.muted)
     }
 }
 struct MaterialArchiveView: View {

@@ -11,19 +11,15 @@ struct ResourceStrip: View {
             .accessibilityLabel("마정석 \(model.save.profile.crystals), 조사 데이터 \(model.save.profile.research), 코어 \(model.save.profile.growth.cores)")
     }
 }
-struct AssociationView: View {
+struct AssociationFacilitiesView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill().frame(height: 160).clipped().clipShape(RoundedRectangle(cornerRadius: 20))
+                BeaconPanel()
                 eyebrow("ASSOCIATION")
-                NavigationLink { QuestBoardView() } label: { Label("의뢰와 승급 심사", systemImage: "list.clipboard").card() }.accessibilityIdentifier("association.quests")
                 Text(AssociationStage.name(model.save.profile)).font(.headline).foregroundStyle(Theme.teal)
                 Text("지부 성장 \(AssociationStage.level(model.save.profile) + 1) / 5 · 시설을 Lv.2와 Lv.3으로 확장하면 공간도 함께 성장해요.").font(.caption).foregroundStyle(Theme.muted)
-                NavigationLink { BossBoardView() } label: { Label("주요 보스 토벌 게시판", systemImage: "shield.checkered").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.bosses")
-                NavigationLink { StoryArchiveView() } label: { Label("협회 통신 기록", systemImage: "envelope.badge").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.stories")
-                NavigationLink { EncounterBoardView() } label: { Label("신규 개체 · 월영과 몽환", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("association.field-intel")
                 Text("우리의 지부를\n키워갑니다.").font(.largeTitle.bold())
                 Text("현장에서 얻은 자원으로 새로운 기능을 열어보세요.").foregroundStyle(Theme.muted)
                 ResourceStrip()

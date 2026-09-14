@@ -36,6 +36,7 @@ struct RootView: View {
             HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
             HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
             SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
+            NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
             CodexView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("도감", systemImage: "book") }
         }
         .toolbar(.hidden, for: .tabBar)
@@ -58,7 +59,7 @@ struct RootView: View {
         }) { SettingsView() }
         .fullScreenCover(isPresented: $model.showStories) { NavigationStack { StoryArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showStories = false }.buttonStyle(GameControlStyle()) } } } }
         .fullScreenCover(isPresented: $model.showOperator) { NavigationStack { OperatorConversationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showOperator = false }.buttonStyle(GameControlStyle()) } } } }
-        .fullScreenCover(isPresented: $model.showAssociation) { NavigationStack { AssociationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showAssociation = false }.buttonStyle(GameControlStyle()) } } } }
+        .fullScreenCover(isPresented: $model.showReturnBriefing) { ReturnBriefingView() }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             Button("확인") { model.notice = nil }
@@ -91,9 +92,13 @@ struct HomeView: View {
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {
-                        Button { model.showOperator = true } label: {
-                            Text((model.narratives?.tier(model.save.profile) ?? 1) > 2 ? "잘 오셨어요. 오늘은 어떤 이야기부터 할까요?" : "오셨네요! 오늘도 함께해요.").font(.headline)
-                        }.buttonStyle(.plain).accessibilityIdentifier("home.greeting")
+                        Text(model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요.")
+                            .font(.headline).accessibilityIdentifier("home.greeting")
+                        if model.save.profile.expeditions?.briefing != nil {
+                            Button { model.showReturnBriefing = true } label: {
+                                Label(model.save.profile.expeditions?.briefing?.acknowledged == false ? "새 귀환 보고" : "지난 귀환 보고", systemImage: "sparkle")
+                            }.buttonStyle(.plain).foregroundStyle(Theme.teal).accessibilityIdentifier("home.return")
+                        }
                         Button { model.showStories = true } label: {
                             let unread = (model.narratives?.main ?? []).filter { model.save.profile.journey?.unlocked.contains($0.id) == true && model.save.profile.journey?.completed.contains($0.id) != true }.count
                             Label(unread > 0 ? "스토리 · 새 이야기 \(unread)편" : "스토리 · 우리 지부의 기록", systemImage: "book.closed").font(.subheadline).foregroundStyle(Theme.teal)
@@ -109,7 +114,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · 1.2.2").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("HUNTER RUN · 1.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -131,140 +136,6 @@ struct HomeView: View {
                     .accessibilityHidden(true)
                 }
         }
-    }
-}
-struct SetupView: View {
-    @EnvironmentObject var model: AppModel
-    @AppStorage("activityMinutes") private var minutes = 20
-    @AppStorage("activityGoalKind") private var goalKind: GoalKind = .time
-    @AppStorage("activityKilometers") private var kilometers = 3
-    @AppStorage("activityAcceleration") private var pursuit = false
-    @State private var indoorCheck = false
-    @State private var indoorStartRequested = false
-    private var indoor: Bool { model.selectedEnvironment.isIndoor }
-    private let dayRefresh = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
-    private func beginActivity() {
-        let kind: GoalKind = indoor && goalKind == .distance ? .time : goalKind
-        let goal = ActivityGoal(kind: kind, value: kind == .time ? Double(minutes * 60) : kind == .distance ? Double(kilometers * 1000) : 0)
-        model.start(simulated: false, seconds: kind == .time ? goal.value : 1200, pursuit: pursuit, goal: goal, environment: model.selectedEnvironment)
-    }
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    eyebrow("TODAY'S ASSIGNMENT")
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("활동 장소").font(.headline)
-                        Picker("활동 장소", selection: $model.selectedEnvironment) {
-                            ForEach(ActivityEnvironment.allCases, id: \.rawValue) { Text($0.title).tag($0) }
-                        }.pickerStyle(.segmented).accessibilityIdentifier("activity.environment")
-                        if indoor { Text("실내 훈련 게이트 · 워치 없이 아이폰으로 움직임을 감지해요. 시간 유지로 전투하고 같은 성장 기록을 이어가요.").font(.caption).foregroundStyle(Theme.muted) }
-                        if indoor {
-                            Text("실내 러닝 · 활동 보상 50% · 하루 합산 60분").font(.caption.bold()).foregroundStyle(Theme.teal).accessibilityIdentifier("indoor.policy")
-                            Text(model.indoorBudgetText).font(.caption.bold()).foregroundStyle(Theme.teal).accessibilityIdentifier("indoor.budget")
-                            Text("제자리 달리기와 러닝머신을 함께 계산해요. 한국 시간 자정에 초기화되며, 자정을 넘기는 활동은 그때 저장하고 마쳐요.").font(.caption).foregroundStyle(Theme.muted)
-                            Text("경험치·마정석·조사 데이터에 적용해요. 일회성 의뢰 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted)
-                        }
-                    }.card()
-                    NavigationLink { QuestBoardView() } label: { Label("의뢰 게시판", systemImage: "list.clipboard").card() }.accessibilityIdentifier("setup.quests")
-                    if let quest = model.activeQuest {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("선택 의뢰 · " + quest.title).font(.headline).foregroundStyle(Theme.teal)
-                            Text(quest.detail).font(.caption)
-                            Button("일반 활동으로 변경") { model.selectQuest(nil) }.buttonStyle(GameButtonStyle())
-                        }.card()
-                    }
-                    Text(model.missions?.content(for: model.selectedMode, extended: false).missionTitle ?? "현장 의뢰").font(.largeTitle.bold())
-                    NavigationLink { EncounterBoardView() } label: { Label("현장 개체 조사", systemImage: "sparkles").frame(maxWidth: .infinity, alignment: .leading).card() }.accessibilityIdentifier("setup.field-intel")
-                    if AppModel.testHarness, let entry = model.fieldEncounters?.encounters.first(where: { $0.id == model.selectedFieldDemo }) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("모의 체험 대상 · " + entry.name).font(.headline)
-                            Text("20분 모의 활동에서 해당 개체를 만나요. 실제 출현·보상에는 영향을 주지 않아요.").font(.caption)
-                            Button("선택 개체 모의 활동 시작") { model.start(simulated: true, seconds: 1200, pursuit: true, encounterDemo: entry) }.buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked).accessibilityIdentifier("activity.mock.encounter")
-                            Button("모의 대상 선택 해제") { model.selectedFieldDemo = nil }.font(.caption)
-                        }.card()
-                    }
-                    ForEach(RunMode.allCases, id: \.rawValue) { mode in
-                        Button { model.selectedMode = mode } label: {
-                            HStack {
-                                Image(systemName: model.selectedMode == mode ? "checkmark.circle.fill" : model.modeAllowed(mode) ? "circle" : "lock.fill")
-                                VStack(alignment: .leading, spacing: 5) { Text(mode.title).font(.headline); Text(mode.detail).font(.caption) }
-                                Spacer()
-                            }.foregroundStyle(model.modeAllowed(mode) ? Theme.teal : Theme.muted).card()
-                        }.buttonStyle(.plain).disabled(model.activeQuest != nil || !model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
-                    }
-                    if !model.modeAllowed(.gate) { Text("고위험 게이트: 관측부 Lv.2와 D급 평가 통과 필요").font(.caption).foregroundStyle(Theme.muted) }
-                    if model.activeQuest != nil { Text("선택한 의뢰에 맞는 활동으로 준비했어요. 모드를 바꾸려면 위에서 일반 활동으로 변경해주세요.").font(.caption).foregroundStyle(Theme.muted) }
-                    if model.selectedMode == .gate && model.activeQuest == nil { BossSelectionView() }
-                    Text("흔적을 찾고, 신호의 원인을 확인하세요. 안전한 페이스로 이동해도 의뢰는 이어집니다.").foregroundStyle(Theme.muted)
-                    if !indoor { NavigationLink { PaceProfileView() } label: {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("나의 활동 기준").font(.headline)
-                            Text(learnedPaceText(model.save.profile.paceMemory?.reference)).foregroundStyle(Theme.teal)
-                        }.card()
-                    }.buttonStyle(.plain).accessibilityIdentifier("setup.pace") }
-                    HStack { Image(systemName: "waveform.path"); Text(model.selectedMode.title + " · 음성 안내") }.foregroundStyle(Theme.teal)
-                    NavigationLink { EncounterGuideView() } label: { Label("현장 사건 안내", systemImage: "waveform") }.accessibilityIdentifier("setup.encounters")
-                    VStack(alignment: .leading, spacing: 14) {
-                        Text("활동 목표").font(.headline)
-                        Picker("목표 종류", selection: $goalKind) {
-                            ForEach(GoalKind.allCases.filter { !indoor || $0 != .distance }, id: \.rawValue) { Text($0.title).tag($0) }
-                        }.pickerStyle(.segmented).accessibilityIdentifier("goal.kind")
-                        if goalKind == .time {
-                            Picker("목표 시간", selection: $minutes) {
-                                Text("5분").tag(5); Text("20분").tag(20); Text("30분").tag(30)
-                                if model.unlocked("extended-contract") { Text("45분").tag(45) }
-                            }.pickerStyle(.segmented)
-                        } else if goalKind == .distance {
-                            Picker("목표 거리", selection: $kilometers) {
-                                Text("1 km").tag(1); Text("3 km").tag(3); Text("5 km").tag(5); Text("10 km").tag(10)
-                            }.pickerStyle(.segmented).accessibilityIdentifier("goal.distance")
-                            Text("기록된 이동 거리가 목표에 도달하면 자동으로 마칩니다. GPS 상태에 따라 실제 거리와 차이가 날 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
-                        } else {
-                            Text(indoor ? "실내 자유 활동도 하루 합산 60분까지예요. 오늘 남은 시간에 맞춰 자동 종료해요. 멈추거나 일시정지한 시간은 쌓이지 않으며, 먼저 마쳐도 확보한 성과를 저장해요." : "시간과 거리 제한 없이 활동합니다. 안전한 곳에서 ‘활동 종료’를 누르면 성과가 저장됩니다. 자유 활동 시간도 승급 심사 자격에 포함돼요.").font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("goal.free.help")
-                        }
-                        if !indoor { Toggle("선택적 가속 허용", isOn: $pursuit)
-                        Text("추격·보스 가속은 10초씩 최대 2회, 사이에 최소 3분을 둡니다. 가속하지 않으면 추격은 조사로, 보스는 유지 공격으로 바뀝니다.").font(.caption).foregroundStyle(Theme.muted)
-                        } else { Text("실내에서는 가속과 거리 조건 대신 30초 움직임 유지로 대응해요. 걷기도 인정하며 멈추면 전투도 기다려요.").font(.caption).foregroundStyle(Theme.muted) }
-                    }.card()
-                    VStack(alignment: .leading, spacing: 12) {
-                        if !indoor { Label(model.permissionText, systemImage: "location")
-                        Text("GPS 품질은 활동 시작 후 확인됩니다. 신호가 약하면 속도 판정을 제한합니다.").font(.caption).foregroundStyle(Theme.muted)
-                        Button("위치 권한 확인") { model.authorize() }.buttonStyle(GameButtonStyle())
-                        } else { Label("실내는 GPS 없이 진행해요", systemImage: "figure.walk.motion").accessibilityIdentifier("indoor.no-gps") }
-                        Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
-                    }.card()
-                    Button {
-                        if indoor { indoorCheck = true } else { beginActivity() }
-                    } label: { Label(indoor ? "움직임 확인 후 입장" : model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run").frame(maxWidth: .infinity).padding(10) }
-                        .buttonStyle(GameButtonStyle(primary: true)).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
-                    Text(indoor ? "실내 활동 중에는 화면을 유지해요. 직접 잠그거나 다른 앱으로 이동하면 일시정지하며, 돌아와 재개할 수 있어요." : "활동 중에는 화면을 자동으로 끄지 않습니다. 전원 버튼으로 직접 잠글 수 있으며, 종료하면 원래 자동 잠금 설정으로 돌아갑니다.").font(.caption).foregroundStyle(Theme.muted)
-                    Text("걷기와 달리기는 활동시간에 포함됩니다. 위치·운동 정보는 기기에 저장되며 서버로 전송하지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
-                    if AppModel.testHarness {
-                    Divider()
-                    Text("실내에서 먼저 확인").font(.headline)
-                    Text("가짜 센서로 같은 게임 엔진을 실행합니다. 모의 기록과 보상은 실제 성장에 반영되지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
-                    Button("3분 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true, environment: model.selectedEnvironment) }.buttonStyle(GameButtonStyle()).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock")
-                    Button("20분 의뢰 모의 활동 · 장기전 포함") {
-                        model.selectedBoss = nil; model.selectedMode = .contract
-                        model.start(simulated: true, seconds: 1200, pursuit: true)
-                    }.buttonStyle(GameButtonStyle()).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.long")
-                    if model.selectedBoss != nil {
-                        Button("20분 보스 패턴 모의 활동 · 가속 포함") {
-                            model.start(simulated: true, seconds: 1200, pursuit: true)
-                        }.buttonStyle(GameButtonStyle()).disabled(!model.isReady || model.recoverable).accessibilityIdentifier("activity.mock.boss")
-                    }
-                    Text("긴 모의 활동에서는 진행 속도를 10배로 바꿔 장기전과 기습 대응을 빠르게 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
-                    }
-                }.padding(22)
-            }.labyrinthScreen().navigationTitle("헌터 활동 준비").navigationBarTitleDisplayMode(.inline)
-        }
-        .onReceive(dayRefresh) { _ in model.objectWillChange.send() }
-        .onChange(of: model.selectedEnvironment) { _, value in if value.isIndoor && goalKind == .distance { goalKind = .time } }
-        .fullScreenCover(isPresented: $indoorCheck, onDismiss: {
-            if indoorStartRequested { indoorStartRequested = false; beginActivity() }
-            model.stopIndoorCheck()
-        }) { IndoorCheckView { indoorStartRequested = true } }
     }
 }
 struct ActiveRunView: View {
@@ -416,7 +287,6 @@ struct HunterView: View {
                     NavigationLink { PaceProfileView() } label: { DossierLink(title: "나의 활동 기준", subtitle: "현장 기록으로 맞추는 페이스", icon: "waveform.path") }.accessibilityIdentifier("hunter.pace")
                     NavigationLink { EquipmentView() } label: { DossierLink(title: "장비 보관함", subtitle: "출발 전, 장비를 정비해요", icon: "shield.lefthalf.filled") }
                     NavigationLink { RankView() } label: { DossierLink(title: "협회 평가 · 승급", subtitle: "다음 등급으로 가는 심사", icon: "checkmark.seal") }
-                    NavigationLink { AssociationView() } label: { DossierLink(title: "협회 부서 관리", subtitle: "우리 지부의 시설과 지원", icon: "building.2") }
                     LoadoutStrip()
                     NavigationLink { HistoryView() } label: { Label("활동 기록 전체 보기", systemImage: "clock.arrow.circlepath").frame(maxWidth: .infinity, alignment: .leading).card() }
                     Text("최근 활동").font(.title2.bold())
@@ -424,7 +294,7 @@ struct HunterView: View {
                     ForEach(Array(model.save.profile.runs.prefix(3))) { run in
                         NavigationLink { RunDetailView(run: run) } label: { VStack(alignment: .leading, spacing: 8) {
                             Text(run.date, style: .date)
-                            Text(run.mode?.title ?? "헌터 의뢰").font(.caption).foregroundStyle(Theme.teal)
+                            Text(run.mode?.title ?? "현장 사냥").font(.caption).foregroundStyle(Theme.teal)
                             Text(run.activityMeasure + " · " + clock(run.seconds)).font(.title3)
                             Text("EXP +\(run.xp)").foregroundStyle(Theme.teal)
                         }.card() }.buttonStyle(.plain)
@@ -512,11 +382,10 @@ struct SettingsView: View {
                 }
                 GameSection("이용 안내") {
                     Button("첫 이용 안내 다시 보기") { model.replayWelcomeAfterSettings = true; model.showSettings = false }.accessibilityIdentifier("settings.welcome")
-                    NavigationLink("협회 통신 기록") { StoryArchiveView() }.accessibilityIdentifier("settings.stories")
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 GameSection("앱 정보") {
-                    Text("Hunter Run · 1.2.2")
+                    Text("Hunter Run · 1.3.0")
                     Text("당신의 발걸음으로 이어지는 지부의 이야기").font(.caption)
                     NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }

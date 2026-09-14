@@ -24,6 +24,30 @@ import UIKit
     @Published var showWelcome = false
     @Published var showStories = false
     @Published var showOperator = false
+    @Published var showReturnBriefing = false
+    var allBosses: [BossDefinition] { (world?.bosses ?? []) + (world.map(BossMutations.all) ?? []) }
+    var activeExam: QuestDefinition? { activeQuest?.promotion != nil ? activeQuest : nil }
+    var expeditionDate: Date {
+        #if DEBUG && targetEnvironment(simulator)
+        if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-expedition") {
+            return ISO8601DateFormatter().date(from: "2026-09-17T12:00:00+09:00")!
+        }
+        #endif
+        return Date()
+    }
+    var weeklySurvey: WeeklySurvey { Expeditions.survey(save.profile, at: expeditionDate) }
+    func claimWeeklySurvey() {
+        guard !growthLocked else { return }
+        var candidate = save
+        do { try Expeditions.claim(in: &candidate, at: expeditionDate); try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward") }
+        catch { notice = "이번 주 조사 조건과 보상 수령 상태를 확인해주세요." }
+    }
+    func acknowledgeReturn() {
+        guard let id = save.profile.expeditions?.briefing?.id else { showReturnBriefing = false; return }
+        var candidate = save; Expeditions.acknowledge(id, in: &candidate)
+        do { try repository.write(candidate); save = candidate; showReturnBriefing = false }
+        catch { notice = "귀환 보고를 저장하지 못했어요. 다시 확인해주세요." }
+    }
     var startStoryAfterWelcome = false
     @Published var selectedFieldDemo: String?
     @Published var selectedBoss: String?
@@ -62,10 +86,11 @@ import UIKit
     }
     var canStartReal: Bool {
         guard !selectedEnvironment.isIndoor || indoorRemaining > 0 else { return false }
-        if let quest = activeQuest { return isReady && !recoverable && quest.available(save.profile) }
+        if let quest = activeExam { return isReady && !recoverable && quest.available(save.profile) }
         guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
         guard selectedMode == .gate, let id = selectedBoss else { return true }
-        guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog else { return false }
+        guard let boss = allBosses.first(where: { $0.id == id }), let catalog = progressionCatalog else { return false }
+        guard boss.requiredBossClear == nil || !selectedEnvironment.isIndoor else { return false }
         return boss.available(to: save.profile, catalog: catalog) && BossCampaign.state(boss, profile: save.profile).remainingHP > 0
     }
     func refreshLobbyMusic() {
@@ -139,7 +164,7 @@ import UIKit
         var candidate = save
         do {
             try Quests.select(id, save: &candidate); try repository.write(candidate); save = candidate
-            selectedBoss = nil; selectedMode = activeQuest?.promotion == nil ? .contract : .gate
+            if activeExam != nil { selectedBoss = nil; selectedMode = .gate }
             if id != nil { selectedTab = 2; showAssociation = false }
         } catch { notice = "지금 선택할 수 없는 의뢰예요." }
     }
@@ -187,6 +212,22 @@ import UIKit
         }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
         #if DEBUG && targetEnvironment(simulator)
+        if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-expedition") {
+            var journey = JourneyState(); journey.unlocked = Set((1...16).map { String(format: "M%02d", $0) }); journey.selectedQuest = "wolf-first"
+            save.profile.journey = journey
+            var growth = save.profile.growth; growth.rank = "S"; growth.departments["observation"] = 2; save.profile.growth = growth
+            for offset in 1...3 {
+                var fixture = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false)
+                fixture.startedAt = expeditionDate.addingTimeInterval(Double(-offset) * 86400)
+                fixture.activeSeconds = 1200; fixture.distance = 1000; fixture.phase = .finished
+                fixture.records = ["discovery", "trail"].map { EventRecord(id: $0, title: "단서", outcome: .success, damage: 0, kind: .discovery) }
+                _ = Settlement.apply(fixture, to: &save.profile)
+            }
+            if let parent = world?.bosses.first {
+                var cleared = BossState(maximumHP: parent.maximumHP); cleared.remainingHP = 0; cleared.clears = 1
+                save.profile.bosses = [parent.id: cleared]
+            }
+        }
         if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-indoor-exhausted") {
             var fixture = RunSession(targetSeconds: 3600, simulated: false, allowPursuit: false)
             fixture.environment = .indoor; fixture.activeSeconds = 3600; fixture.phase = .finished
@@ -302,7 +343,7 @@ import UIKit
                   indoorCheckActive, sensor.frame(at: Date()).signal == .good else { notice = "먼저 실내 움직임 확인을 진행해주세요."; return }
         }
         guard requested.isValid else { notice = "활동 목표를 다시 선택해주세요."; return }
-        let quest = simulated ? nil : activeQuest
+        let quest = simulated ? nil : activeExam
         guard quest == nil || quest!.available(save.profile) else { notice = "의뢰 조건을 다시 확인해주세요."; return }
         let mode: RunMode = quest == nil ? selectedMode : quest?.promotion == nil ? .contract : .gate
         guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
@@ -318,8 +359,9 @@ import UIKit
             guard state.remainingHP > 0 else { notice = "심사 토벌을 완료했어요. 헌터 화면에서 결과를 확인해주세요."; return }
             session.boss = BossEncounter(definition: definition, state: state); mission = session.boss!.content
         } else if quest == nil && selectedMode == .gate, let id = selectedBoss {
-            guard let boss = world?.bosses.first(where: { $0.id == id }), let catalog = progressionCatalog,
+            guard let boss = allBosses.first(where: { $0.id == id }), let catalog = progressionCatalog,
                   (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "주요 보스 토벌 조건을 확인해주세요."; return }
+            guard boss.requiredBossClear == nil || !environment.isIndoor else { notice = "변이 토벌은 야외에서 진행해요. 일반 실내 활동은 계속 이용할 수 있어요."; return }
             let state = simulated ? BossState(maximumHP: boss.maximumHP) : BossCampaign.state(boss, profile: save.profile)
             guard state.remainingHP > 0 else { notice = "토벌을 완료했습니다. 토벌 게시판에서 새로운 회차를 열 수 있습니다."; return }
             let encounter = BossEncounter(definition: boss, state: state)
@@ -329,7 +371,6 @@ import UIKit
             mission = fieldEncounters.populate(mission, mode: selectedMode, profile: save.profile, catalog: catalog)
         }
         applyAudio()
-        if let quest, session.boss == nil { mission = quest.mission(from: mission) }
         if simulated, let encounterDemo { mission = encounterDemo.preview; mockRate = 10 }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
@@ -472,6 +513,10 @@ import UIKit
     }
     func prepareBoss(_ boss: BossDefinition, simulated: Bool = false) {
         guard let catalog = progressionCatalog, (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "필요한 등급과 관측부 레벨을 먼저 달성해주세요."; return }
+        guard !growthLocked else { return }
+        if activeExam != nil { selectQuest(nil) }
+        guard activeExam == nil else { return }
+        if boss.requiredBossClear != nil { selectedEnvironment = .outdoor }
         selectedFieldDemo = nil; selectedBoss = boss.id; selectedMode = .gate; showAssociation = false; selectedTab = 2
     }
     func restartBoss(_ boss: BossDefinition) {
