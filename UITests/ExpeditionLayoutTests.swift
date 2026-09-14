@@ -63,6 +63,10 @@ final class ExpeditionLayoutTests: XCTestCase {
         let app = application(); app.buttons["nav.2"].tap()
         reach(app.buttons["mode.gate"], in: app); XCTAssertTrue(app.buttons["mode.gate"].isEnabled); app.buttons["mode.gate"].tap()
         reach(app.buttons["setup.bosses"], in: app); app.buttons["setup.bosses"].tap()
+        let close = app.buttons["boss.close"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5)); XCTAssertTrue(close.isHittable)
+        close.tap(); XCTAssertTrue(app.buttons["setup.bosses"].waitForExistence(timeout: 5))
+        app.buttons["setup.bosses"].tap()
         let category = app.segmentedControls["boss.category"]
         reach(category, in: app); category.buttons["변이 의뢰"].tap()
         let variant = app.buttons["boss.prepare.mutation-boundary-lord-echo"]

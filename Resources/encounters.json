@@ -8,7 +8,7 @@
       "elite": false,
       "requiredRank": "E",
       "requiredAction": null,
-      "unlockHint": "헌터 의뢰에서 출현 · 탐험에서 흔적 조사 · 지부 조사 진행",
+      "unlockHint": "현장 사냥에서 출현 · 탐험에서 흔적 조사 · 지부 조사 진행",
       "tactic": "기습을 받으면 25초 동안 평소 페이스를 유지해 화살의 마력을 흩뜨려요.",
       "slots": {
         "contract": "beast",

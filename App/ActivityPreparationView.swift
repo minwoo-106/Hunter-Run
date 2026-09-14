@@ -71,7 +71,7 @@ struct SetupView: View {
         }
         .onReceive(refresh) { _ in model.objectWillChange.send() }
         .onChange(of: model.selectedEnvironment) { _, value in if value.isIndoor && goalKind == .distance { goalKind = .time } }
-        .sheet(isPresented: $bosses) { NavigationStack { BossBoardView().toolbar { ToolbarItem(placement: .cancellationAction) { Button("닫기") { bosses = false }.buttonStyle(GameControlStyle()) } } } }
+        .sheet(isPresented: $bosses) { NavigationStack { BossBoardView().toolbar { ToolbarItem(placement: .cancellationAction) { Button { bosses = false } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }.buttonStyle(.plain).accessibilityLabel("토벌 선택 닫기").accessibilityIdentifier("boss.close") } } } }
         .sheet(isPresented: $quests) { NavigationStack { QuestBoardView().toolbar { ToolbarItem(placement: .cancellationAction) { Button("닫기") { quests = false } } } } }
         .fullScreenCover(isPresented: $indoorCheck, onDismiss: {
             if indoorStartRequested { indoorStartRequested = false; beginActivity() }
