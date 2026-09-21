@@ -1,4 +1,12 @@
-# Hunter Run 1.3.2
+# Hunter Run 1.3.3
+
+Outdoor activities show a smoothed current pace and whole-activity average pace. The operator announces each confirmed kilometer: distinct exploration and hunting lines for 1–10 km, then a repeatable extra-kilometer line. Indoor running does not claim GPS distance or pace.
+
+[Download 1.3.3 from build41](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0f340688764aa17d9a534?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.3-release.md) · [Verification](docs/release-133-verification.json)
+
+Verified 1.3.3/build30 from `0d88e3c`: 154 core tests and four focused UI checks on each screen size passed. The installer ZIP/IPA, executable, and all 135 voice hashes passed package verification. Physical outdoor pace and voice timing still require an iPhone field test. Install over the existing app to retain progress.
+
+## 1.3.2 release record
 
 Ordinary assignments accompany the chosen activity mode. Focused navigation separates preparation, quests, weekly outdoor surveys and facilities. Adds contextual return briefings, three weekly beacons and four post-clear boss patterns.
 
