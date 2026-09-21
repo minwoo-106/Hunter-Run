@@ -1,10 +1,10 @@
-# Hunter Run 1.3.0
+# Hunter Run 1.3.1
 
 Ordinary assignments accompany the chosen activity mode. Focused navigation separates preparation, quests, weekly outdoor surveys and facilities. Adds contextual return briefings, three weekly beacons and four post-clear boss patterns.
 
-[Download 1.3.0 from build38](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa75852688764aa17c009f1?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.0-release.md) · [Design and game references](docs/1.3.0-expedition-design.md) · [Verification](docs/release-130-verification.json)
+[Download 1.3.1 from build39](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0d7fe688764aa17d9500c?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.1-release.md) · [Verification](docs/release-131-verification.json) · [1.3.0 design](docs/1.3.0-expedition-design.md)
 
-Verified 1.3.0/build27 from `878ed2b`: 149 core tests and three focused UI checks on each screen size passed. The preceding broad regression build37 passed nine primary and four compact checks. Downloaded ZIP/IPA, arm64 executable, launch image and all 113 voice hashes verified. Update over the existing app to retain progress. Indoor 50% recurring rewards and daily 60-minute quota are preserved; outdoor pace estimation is unchanged.
+Verified 1.3.1/build28 from `073f5f3`: 152 core tests and three focused UI checks on each screen size passed. The build validated the ZIP/IPA, executable, and all 113 voice hashes. Outdoor signal classification now uses position quality independently of velocity quality; physical iPhone field validation remains necessary. Update over the existing app to retain progress. Indoor 50% recurring rewards and daily 60-minute quota are preserved.
 
 ## 1.2.2 release record
 

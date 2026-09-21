@@ -1,0 +1,16 @@
+{
+  "version": "1.3.1",
+  "build": "28",
+  "sourceCommit": "073f5f3",
+  "codemagicBuild": 39,
+  "codemagicBuildId": "6ab0d7fe688764aa17d9500c",
+  "coreTestsPassed": 152,
+  "primaryUITestsPassed": 3,
+  "compactUITestsPassed": 3,
+  "clips": 113,
+  "packageVerified": true,
+  "file": "HunterRun-1.3.1-build28-install.zip",
+  "bytes": 138213992,
+  "sha256": "f8372dd34199c9df871e3912438eb3f73080983b6923f87413791610f4c12645",
+  "physicalOutdoorRetested": false
+}
