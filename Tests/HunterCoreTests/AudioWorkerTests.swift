@@ -22,10 +22,13 @@ final class AudioWorkerTests: XCTestCase {
     }
     func testTimeoutCannotCancelAReplacementOrAlreadyPlayingRequest() {
         let request = AudioRequest()
+        XCTAssertFalse(request.isActive)
         let old = request.begin(), replacement = request.begin()
+        XCTAssertTrue(request.isActive)
         XCTAssertFalse(request.expire(old)); XCTAssertTrue(request.valid(replacement))
         XCTAssertTrue(request.ready(replacement)); XCTAssertFalse(request.expire(replacement))
         let stalled = request.begin()
         XCTAssertTrue(request.expire(stalled)); XCTAssertFalse(request.ready(stalled))
+        XCTAssertFalse(request.isActive)
     }
 }

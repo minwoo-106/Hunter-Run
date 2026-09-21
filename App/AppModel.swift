@@ -125,6 +125,8 @@ import UIKit
     let sensor = SensorProbe()
     let audio = AudioDirector()
     @Published var operatorCaption: String?
+    private var pendingDistanceMilestones: [Int] = []
+    private var playingDistanceMilestone: Int?
     private var voiceVariants = VoiceVariants()
     private let voiceLines: [String: String] = AppModel.resource("audio-lines") ?? [:]
     private let variantCatalog: [String: [String]] = AppModel.resource("audio-variants") ?? [:]
@@ -255,6 +257,10 @@ import UIKit
         audio.onFailure = { [weak self] message in
             DispatchQueue.main.async {
                 guard let self else { return }
+                if let kilometer = self.playingDistanceMilestone {
+                    self.pendingDistanceMilestones.insert(kilometer, at: 0)
+                    self.playingDistanceMilestone = nil
+                }
                 self.notice = message; self.testingAudio = false
                 if self.engine != nil { self.engine?.pause(true); self.persist() }
             }
@@ -374,6 +380,7 @@ import UIKit
         if simulated, let encounterDemo { mission = encounterDemo.preview; mockRate = 10 }
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
+        pendingDistanceMilestones = []; playingDistanceMilestone = nil
         session.learnedReference = simulated || environment.isIndoor ? nil : save.profile.paceMemory?.reference
         session.goal = requested
         session.directorVersion = 2
@@ -413,6 +420,8 @@ import UIKit
             switch cue {
             case .checkpoint: persist()
             case .goalReached: finish()
+            case .distanceMilestone(let kilometer):
+                pendingDistanceMilestones.append(kilometer)
             case .voice(let key):
                 if key == "run_end" { continue } // Finish announces only after the result is saved.
                 let id = current.session.event?.template.id
@@ -431,6 +440,7 @@ import UIKit
                 }
             }
         }
+        playNextDistanceMilestone()
     }
     func pause() { engine?.pause(true); if engine?.session.isIndoor == true { sensor.stop() }; displayedPace.reset(); currentSpeed = 0; audio.stop(); operatorCaption = voiceLines["pause"]; persist() }
     func resume() {
@@ -473,7 +483,7 @@ import UIKit
             }
         }
     }
-    func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
+    func closeResult() { guard resultSaved else { return }; pendingDistanceMilestones = []; playingDistanceMilestone = nil; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }
     func recover() {
         guard var run = save.active, let content else { return }
         IndoorDailyLimit.prepare(&run, profile: save.profile)
@@ -530,9 +540,34 @@ import UIKit
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
     func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
     private func playOperator(_ key: String, completion: (() -> Void)? = nil) {
+        if let kilometer = playingDistanceMilestone {
+            pendingDistanceMilestones.insert(kilometer, at: 0)
+            playingDistanceMilestone = nil
+        }
         let clip = voiceVariants.select(key == "indoor_hold" ? "resume" : key, catalog: variantCatalog)
         operatorCaption = voiceLines[clip]
-        audio.play(clip, completion: completion)
+        audio.play(clip) { [weak self] in
+            completion?()
+            DispatchQueue.main.async { self?.playNextDistanceMilestone() }
+        }
+    }
+    private func playNextDistanceMilestone() {
+        guard showRun, engine != nil, engine?.session.manualPause == false,
+              engine?.session.interruption == false, playingDistanceMilestone == nil,
+              !audio.isBusy, !pendingDistanceMilestones.isEmpty else { return }
+        let kilometer = pendingDistanceMilestones.removeFirst()
+        let prefix = engine?.session.mode == .exploration ? "distance_walk_km_" : "distance_km_"
+        let key = prefix + (kilometer <= 10 ? String(kilometer) : "more")
+        playingDistanceMilestone = kilometer
+        operatorCaption = voiceLines[key]
+        audio.play(key) { [weak self] in
+            DispatchQueue.main.async {
+                guard let self, self.playingDistanceMilestone == kilometer else { return }
+                self.playingDistanceMilestone = nil
+                self.operatorCaption = nil
+                self.playNextDistanceMilestone()
+            }
+        }
     }
     func playDispatch(_ entry: StoryEntry) {
         guard !growthLocked, StoryProgress.available(entry, profile: save.profile) else { return }

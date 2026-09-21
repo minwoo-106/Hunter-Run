@@ -188,7 +188,7 @@ struct LaunchGateView: View {
                         }.buttonStyle(.plain).foregroundStyle(Labyrinth.parchment).accessibilityIdentifier("title.enter")
                         // Keep access to settings / backup recovery even when a save or catalog fails validation.
                         if !model.isReady { Text("기록을 확인해야 해요. 계속해서 안내를 확인해주세요.").font(.caption).multilineTextAlignment(.center) }
-                        Text("HUNTER RUN  ·  1.3.0").font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
+                        Text("HUNTER RUN  ·  \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")").font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
                     }.padding(.horizontal, 24).padding(.bottom, 24)
                 }.contentShape(Rectangle()).onTapGesture { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) { entered = true } }
             }.onAppear { model.refreshLobbyMusic() }

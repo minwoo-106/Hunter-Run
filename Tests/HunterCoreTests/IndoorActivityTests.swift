@@ -35,7 +35,13 @@ final class IndoorActivityTests: XCTestCase {
     }
     func testIndoorCombatNeedsMovementButNoSpeedOrGPSDistance() {
         var run = engine()
-        for t in 0...95 { move(&run, t) }
+        var kilometerCalls: [GameCue] = []
+        for t in 0...95 {
+            kilometerCalls += run.consume(SensorFrame(timestamp: Double(t), speed: 0, distance: 99,
+                movement: .walking, signal: .good, steps: 2)).filter {
+                if case .distanceMilestone = $0 { return true }; return false
+            }
+        }
         XCTAssertEqual(run.session.event?.template.kind, .boss)
         XCTAssertEqual(run.session.event?.instructionAudio, "indoor_hold")
         run.instructionFinished()
@@ -46,6 +52,7 @@ final class IndoorActivityTests: XCTestCase {
         for t in 107...150 { move(&run, t) }
         XCTAssertEqual(run.session.records.first?.defeated, true)
         XCTAssertEqual(run.session.distance, 0)
+        XCTAssertTrue(kilometerCalls.isEmpty, "indoor movement cannot announce GPS kilometers")
         XCTAssertGreaterThan(run.session.steps ?? 0, 0)
     }
     func testDistanceAndAccelerationEventsBecomeTimedCombat() {

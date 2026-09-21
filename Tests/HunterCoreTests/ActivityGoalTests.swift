@@ -15,16 +15,43 @@ final class ActivityGoalTests: XCTestCase {
     func testDistanceEndsExactlyAtGoalAndSettlesOnce() throws {
         var e = engine(ActivityGoal(kind: .distance, value: 1000))
         var endings = 0
-        for t in 0...450 { endings += step(&e, t, speed: 3).filter { $0 == .goalReached }.count; e.instructionFinished() }
+        var kilometers: [Int] = []
+        for t in 0...450 {
+            let cues = step(&e, t, speed: 3)
+            endings += cues.filter { $0 == .goalReached }.count
+            kilometers += cues.compactMap { if case .distanceMilestone(let value) = $0 { return value }; return nil }
+            e.instructionFinished()
+        }
         XCTAssertEqual(e.session.phase, .finished)
         XCTAssertEqual(e.session.distance, 1000, accuracy: 0.0001)
         XCTAssertEqual(e.session.activeSeconds, 1000 / 3, accuracy: 0.0001)
         XCTAssertEqual(endings, 1)
+        XCTAssertEqual(kilometers, [1], "the exact distance goal still receives its 1 km announcement")
         var profile = Profile()
         let summary = try XCTUnwrap(Settlement.apply(e.session, to: &profile))
         XCTAssertTrue(summary.completedGoal)
         XCTAssertEqual(summary.goal?.kind, .distance)
         XCTAssertNil(Settlement.apply(e.session, to: &profile))
+    }
+    func testOutdoorKilometersWaitForGoodSignalAndSurviveRecovery() throws {
+        var e = engine(ActivityGoal(kind: .free))
+        var heard: [Int] = []
+        for t in 0...350 {
+            let signal: Signal = (333...338).contains(t) ? .degraded : .good
+            let cues = e.consume(SensorFrame(timestamp: Double(t), speed: 3, distance: 3, movement: .running, signal: signal))
+            heard += cues.compactMap { if case .distanceMilestone(let value) = $0 { return value }; return nil }
+            e.instructionFinished()
+        }
+        XCTAssertEqual(heard, [1])
+        let restored = try JSONDecoder().decode(RunSession.self, from: JSONEncoder().encode(e.session))
+        var resumed = RunEngine(session: restored, content: e.content)
+        resumed.restorePaused(); resumed.pause(false)
+        for t in 351...700 {
+            let cues = step(&resumed, t, speed: 3)
+            heard += cues.compactMap { if case .distanceMilestone(let value) = $0 { return value }; return nil }
+            resumed.instructionFinished()
+        }
+        XCTAssertEqual(heard, [1, 2], "resume must not replay an already announced kilometer")
     }
     func testDistanceDoesNotEndAtOldTimeLimit() throws {
         var e = engine(ActivityGoal(kind: .distance, value: 5000))

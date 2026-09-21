@@ -1469,6 +1469,314 @@
       "sample_rate": 24000,
       "duration": 5.851,
       "sha256": "60c5c8c699b6cf97b474145bf5df2a75b218af34d1d95a750a2b849f5e2dc42a"
+    },
+    {
+      "key": "distance_km_1",
+      "file": "distance_km_1.wav",
+      "text": "좋아요! 1킬로미터 달렸어요!",
+      "seed": 1668924264,
+      "seeds": [
+        1668924264
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.589,
+      "sha256": "6690ce091f2eab71944fb6a2fe728dbce8e8e3cba6aa808668a8554a64c61038"
+    },
+    {
+      "key": "distance_km_2",
+      "file": "distance_km_2.wav",
+      "text": "2킬로미터 달렸어요! 잘하고 있어요!",
+      "seed": 1269709656,
+      "seeds": [
+        1269709656
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.576,
+      "sha256": "ddc60c5930f50f8d14f4b8ffed671a4e473616c74ccfff8a68939ab055af9f6f"
+    },
+    {
+      "key": "distance_km_3",
+      "file": "distance_km_3.wav",
+      "text": "3킬로미터 달렸어요! 지금 페이스 좋네요!",
+      "seed": 1653234651,
+      "seeds": [
+        1653234651
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.221,
+      "sha256": "d685e60d348cca6dbc61f799f13249b4088712eb82083bd5f641d5c6b9ac7661"
+    },
+    {
+      "key": "distance_km_4",
+      "file": "distance_km_4.wav",
+      "text": "4킬로미터 달렸어요! 계속 함께 가요!",
+      "seed": 2699064758,
+      "seeds": [
+        2699064758
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.867,
+      "sha256": "f74d698fb9a3f0a6622f0357f40162e303ce21d5e06bde2974fb2fd9e04460d5"
+    },
+    {
+      "key": "distance_km_5",
+      "file": "distance_km_5.wav",
+      "text": "5킬로미터 달렸어요! 대단해요!",
+      "seed": 2607046083,
+      "seeds": [
+        2607046083
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.438,
+      "sha256": "453f761085e43d6f230b49711deb66b266081da7051c4ee8979ba3d8a6d58393"
+    },
+    {
+      "key": "distance_km_6",
+      "file": "distance_km_6.wav",
+      "text": "6킬로미터 달렸어요! 무리하지 말고 이어가요!",
+      "seed": 990771783,
+      "seeds": [
+        990771783
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.447,
+      "sha256": "6478c483c6997d3a60800d875524c75435fef9b478b79ed2da67b5b5d214c90b"
+    },
+    {
+      "key": "distance_km_7",
+      "file": "distance_km_7.wav",
+      "text": "7킬로미터 달렸어요! 여기까지 잘 왔어요!",
+      "seed": 4009514307,
+      "seeds": [
+        4009514307
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.303,
+      "sha256": "31d3e4af48316ab79c1e0c586e28e486c9d6a26802f8254ab00f8447dd0beaa7"
+    },
+    {
+      "key": "distance_km_8",
+      "file": "distance_km_8.wav",
+      "text": "8킬로미터 달렸어요! 호흡을 편하게 가져가요!",
+      "seed": 212240889,
+      "seeds": [
+        212240889
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.265,
+      "sha256": "3c3dda74dd67d84f55d184deed1e983d7141236a98a5407c037ad4dee81ecc8b"
+    },
+    {
+      "key": "distance_km_9",
+      "file": "distance_km_9.wav",
+      "text": "9킬로미터 달렸어요! 조금만 더 함께 가요!",
+      "seed": 840217657,
+      "seeds": [
+        840217657
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.023,
+      "sha256": "17e6fd09d6ce1aa1ad1e5faa6dabd46a1a6ada07013d441fd9e38fba4f598017"
+    },
+    {
+      "key": "distance_km_10",
+      "file": "distance_km_10.wav",
+      "text": "10킬로미터 달렸어요! 정말 멋져요!",
+      "seed": 1254106779,
+      "seeds": [
+        1254106779
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.748,
+      "sha256": "d3243c387310c8a1207e1988a505ae084348cd9ec9b7fc69dc19e3e391fa261b"
+    },
+    {
+      "key": "distance_km_more",
+      "file": "distance_km_more.wav",
+      "text": "1킬로미터 더 달렸어요! 잘하고 있어요!",
+      "seed": 680694850,
+      "seeds": [
+        680694850
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.05,
+      "sha256": "284080baf5154da981947643ace54219dfe0c7f8a8eb8ff2d37d0e30b2124f36"
+    },
+    {
+      "key": "distance_walk_km_1",
+      "file": "distance_walk_km_1.wav",
+      "text": "1킬로미터 이동했어요! 차근차근 둘러봐요!",
+      "seed": 3946290847,
+      "seeds": [
+        3946290847
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.395,
+      "sha256": "d89aef0a43e517a5a5e18cceda80f93eb694716126ecb50d961ce5a2b614a046"
+    },
+    {
+      "key": "distance_walk_km_2",
+      "file": "distance_walk_km_2.wav",
+      "text": "2킬로미터 이동했어요! 새로운 흔적이 보일까요?",
+      "seed": 986159961,
+      "seeds": [
+        986159961
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.298,
+      "sha256": "dc04490287b844cdac8b600261cfaf5d6ab9f6f95518b5b9721305107a4161e4"
+    },
+    {
+      "key": "distance_walk_km_3",
+      "file": "distance_walk_km_3.wav",
+      "text": "3킬로미터 이동했어요! 편안한 걸음으로 이어가요!",
+      "seed": 615853574,
+      "seeds": [
+        615853574
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.503,
+      "sha256": "0d1d0b8e6df1903f5a919abfb260ab31bc4a69c9612f7949ef20566da8f081e7"
+    },
+    {
+      "key": "distance_walk_km_4",
+      "file": "distance_walk_km_4.wav",
+      "text": "4킬로미터 이동했어요! 주변을 계속 살펴볼게요!",
+      "seed": 930551144,
+      "seeds": [
+        930551144
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.487,
+      "sha256": "99bf12bf92a7fe7e59d831bc89ba2eebe6f2843491eeec783be13a904556612b"
+    },
+    {
+      "key": "distance_walk_km_5",
+      "file": "distance_walk_km_5.wav",
+      "text": "5킬로미터 이동했어요! 잘하고 있어요!",
+      "seed": 1904040862,
+      "seeds": [
+        1904040862
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.993,
+      "sha256": "93f77efb34429f923a327edd918653ce5f14be158417d5e57befa335045d1920"
+    },
+    {
+      "key": "distance_walk_km_6",
+      "file": "distance_walk_km_6.wav",
+      "text": "6킬로미터 이동했어요! 무리하지 않아도 돼요!",
+      "seed": 4156181504,
+      "seeds": [
+        4156181504
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.194,
+      "sha256": "d7caa4e736fb45cd8872271657d0395efcffb15538107f57be64edb50f92909d"
+    },
+    {
+      "key": "distance_walk_km_7",
+      "file": "distance_walk_km_7.wav",
+      "text": "7킬로미터 이동했어요! 조금 더 조사해봐요!",
+      "seed": 550978258,
+      "seeds": [
+        550978258
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.344,
+      "sha256": "20dc1c8cd0679426dfa6ceef9a0b2789b353154019fed0102c4bb13d572255d0"
+    },
+    {
+      "key": "distance_walk_km_8",
+      "file": "distance_walk_km_8.wav",
+      "text": "8킬로미터 이동했어요! 여기까지 잘 왔어요!",
+      "seed": 1614460432,
+      "seeds": [
+        1614460432
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.09,
+      "sha256": "b54ab7addc2bf622b09d2e47d92463856c7b097ca01f7de9c786632c7c178d42"
+    },
+    {
+      "key": "distance_walk_km_9",
+      "file": "distance_walk_km_9.wav",
+      "text": "9킬로미터 이동했어요! 편하게 이어가요!",
+      "seed": 1042939858,
+      "seeds": [
+        1042939858
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 2.961,
+      "sha256": "332e2c2d0dddb179d23613f423d89777c9b0b3b870bb0c054b21fe03fce628db"
+    },
+    {
+      "key": "distance_walk_km_10",
+      "file": "distance_walk_km_10.wav",
+      "text": "10킬로미터 이동했어요! 대단해요!",
+      "seed": 2877759099,
+      "seeds": [
+        2877759099
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.129,
+      "sha256": "ca72613dde52b22bfec381b07f420c9c87b83063296e7e8db06a8e1768eeb67d"
+    },
+    {
+      "key": "distance_walk_km_more",
+      "file": "distance_walk_km_more.wav",
+      "text": "1킬로미터 더 이동했어요! 잘하고 있어요!",
+      "seed": 995047442,
+      "seeds": [
+        995047442
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.143,
+      "sha256": "ce4ea49fe8d96c73fcf71aaf1657ba9d673de2f95c182c7e193662bfa6484ee7"
     }
   ],
   "references": [

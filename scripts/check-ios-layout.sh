@@ -53,6 +53,7 @@ if [ "${1:-}" = "expedition-final" ]; then
     -only-testing:HunterRunUITests/ExpeditionLayoutTests/testPostClearMutationCanBePreparedWithoutLockingOrdinaryMode
     -only-testing:HunterRunUITests/ExpeditionLayoutTests/testWeeklyRewardAndReturnConversation
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testOutdoorActivityShowsCurrentAndAveragePace
   )
 fi
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \

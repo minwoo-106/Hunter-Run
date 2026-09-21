@@ -97,6 +97,8 @@ public struct RunSession: Codable, Identifiable {
     public var activeSeconds: Double = 0
     public var runningSeconds: Double = 0
     public var distance: Double = 0
+    /// Last spoken outdoor kilometer; nil only for saves created before distance announcements.
+    public var announcedKilometers: Int? = nil
     public var phase: RunPhase = .calibrating
     public var manualPause = false
     public var interruption = false
@@ -130,6 +132,7 @@ public struct RunSession: Codable, Identifiable {
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
+        self.announcedKilometers = 0
         self.paceObservation = PaceObservation()
         self.mode = mode; self.loadout = loadout; self.hp = loadout?.hp ?? 100
     }
@@ -188,6 +191,7 @@ public struct SaveState: Codable {
 }
 public enum GameCue: Equatable {
     case voice(String)
+    case distanceMilestone(Int)
     case checkpoint
     case goalReached
 }

@@ -76,9 +76,20 @@ public struct RunEngine {
             let remaining = max(0, session.activityGoal.value - session.distance)
             if distance > remaining { dt *= remaining / distance; distance = remaining }
         }
+        let previousDistance = session.distance
         session.activeSeconds += dt
         if frame.movement == .running { session.runningSeconds += dt }
         session.distance += distance
+        var cues: [GameCue] = []
+        if !session.isIndoor && frame.signal == .good {
+            let reported = session.announcedKilometers ?? Int(previousDistance / 1000)
+            let first = reported + 1
+            let last = Int(session.distance / 1000)
+            if first <= last {
+                for kilometer in first...last { cues.append(.distanceMilestone(kilometer)) }
+            }
+            session.announcedKilometers = max(reported, last)
+        }
         let stable = !session.isIndoor && frame.movement == .running && frame.signal == .good && frame.speed >= 1 && frame.speed <= 6
         let outdoorSignal = !session.isIndoor && frame.signal == .good
         session.paceObservation?.observe(speed: frame.speed, seconds: dt, goodSignal: outdoorSignal,
@@ -93,9 +104,8 @@ public struct RunEngine {
             session.baseline = median
         }
         session.phase = session.activeSeconds < session.calibrationSeconds ? .calibrating : .moving
-        var cues: [GameCue] = []
         if session.reachedGoal {
-            end(); return [.voice("run_end"), .checkpoint, .goalReached]
+            end(); return cues + [.voice("run_end"), .checkpoint, .goalReached]
         }
         if session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
 

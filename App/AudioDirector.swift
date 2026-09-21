@@ -11,6 +11,7 @@ final class AudioDirector: NSObject, AVAudioPlayerDelegate {
     var onFailure: ((String) -> Void)?
     var ducking = true
     var volume: Float = 0.85
+    var isBusy: Bool { request.isActive }
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(interrupted(_:)), name: AVAudioSession.interruptionNotification, object: nil)

@@ -17,7 +17,7 @@ for key in keys:
 voice = json.loads((root / "Resources/operator-voice.json").read_text(encoding="utf-8"))
 lines = json.loads((root / "Resources/audio-lines.json").read_text(encoding="utf-8"))
 keys.update(lines)
-assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 113
+assert voice["voice"] == "adult-warm-operator" and len(voice["clips"]) == len(keys) == 135
 assert {c["key"] for c in voice["clips"]} == keys == set(lines)
 assert {p.stem for p in (root / "Resources/Audio").glob("*.wav")} == keys, "Unexpected or missing operator WAV"
 for clip in voice["clips"]:
@@ -30,7 +30,7 @@ for clip in voice["clips"]:
         assert .3 < duration < 15 and abs(duration - clip["duration"]) < .002
         samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
         assert 100 < max(abs(s) for s in samples) < 32700
-print("Validated 113 designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
+print(f"Validated {len(voice['clips'])} designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}

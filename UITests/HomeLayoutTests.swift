@@ -117,6 +117,20 @@ final class HomeLayoutTests: XCTestCase {
         app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
     }
+    @MainActor func testOutdoorActivityShowsCurrentAndAveragePace() {
+        let app = application(); app.launch()
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10))
+        app.buttons["nav.2"].tap()
+        let mock = app.buttons["activity.mock"]
+        for _ in 0..<12 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(mock.isHittable); mock.tap()
+        XCTAssertTrue(app.staticTexts["현재 페이스"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["활동 평균 페이스"].exists)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "Outdoor pace metrics"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
     @MainActor func testLargeTextKeepsStoryAndSettingsReachable() {
         let app = application()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]

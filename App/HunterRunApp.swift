@@ -114,7 +114,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · 1.3.0").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text("HUNTER RUN · \(appVersion)").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -161,11 +161,21 @@ struct ActiveRunView: View {
                                 metric(run.isIndoor ? "걸음 수" : "활동시간", run.isIndoor ? "\(run.steps ?? 0)" : clock(run.activeSeconds))
                                 Spacer()
                                 if run.isIndoor { metric("움직임", model.movement == .walking || model.movement == .running ? "감지 중" : "대기") }
-                                else { metric("최근 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) : "—") }
+                                else { metric("현재 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) + " /km" : "—") }
                                 Spacer()
                                 metric("목표", run.goalLabel)
                             }
-                            Text(run.isIndoor ? "움직임이 확인된 시간만 인정해요. 걸음 수는 늦게 갱신될 수 있어요." : "최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
+                            Text(run.isIndoor ? "움직임이 확인된 시간만 인정해요. 걸음 수는 늦게 갱신될 수 있어요." : "현재 페이스는 최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
+                            if !run.isIndoor {
+                                HStack {
+                                    Label("활동 평균 페이스", systemImage: "speedometer")
+                                    Spacer()
+                                    Text(averagePace(seconds: run.activeSeconds, distance: run.distance))
+                                        .monospacedDigit().foregroundStyle(Theme.teal)
+                                }.font(.callout)
+                                Text("평균에는 걷기 구간도 포함돼요. 1km마다 거리 안내가 나와요.")
+                                    .font(.caption2).foregroundStyle(Theme.muted)
+                            }
                             if !run.isIndoor {
                                 HStack(spacing: 14) {
                                     Label("움직임 · \(movementName(model.movement))", systemImage: "figure.run")
@@ -237,6 +247,7 @@ struct ActiveRunView: View {
                 eyebrow(run.simulated ? "SIMULATION COMPLETE" : "MISSION REPORT")
                 Text("활동 보고").font(.largeTitle.bold())
                 HStack { metric(run.isIndoor ? "실내 걸음 수" : "거리", run.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
+                if !run.isIndoor { HStack { metric("활동 평균 페이스", averagePace(seconds: run.activeSeconds, distance: run.distance)); Spacer() } }
                 Text(!run.simulated && !ActivityRecordPolicy.qualifies(run.activeSeconds)
                      ? "활동시간이 3분 미만이라 기록과 보상을 남기지 않았어요."
                      : run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.")
@@ -443,5 +454,10 @@ func metric(_ label: String, _ value: String) -> some View {
 }
 func clock(_ seconds: Double) -> String { let value = max(0, Int(seconds)); return String(format: "%02d:%02d", value / 60, value % 60) }
 private func pace(_ speed: Double) -> String { let value = Int(1000 / speed); return String(format: "%d′%02d″", value / 60, value % 60) }
+func averagePace(seconds: Double, distance: Double) -> String {
+    guard seconds.isFinite, distance.isFinite, seconds >= 30, distance >= 100 else { return "—" }
+    return pace(distance / seconds) + " /km"
+}
+private var appVersion: String { Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?" }
 private func signalName(_ signal: Signal) -> String { switch signal { case .good: return "GPS 양호"; case .degraded: return "GPS 약함"; case .unavailable: return "GPS 대기 / 보조 측정" } }
 func outcomeName(_ outcome: Outcome) -> String { switch outcome { case .perfect: return "완벽"; case .success: return "성공"; case .partial: return "부분 확보"; case .fail: return "철수"; case .neutral: return "중립 종료" } }

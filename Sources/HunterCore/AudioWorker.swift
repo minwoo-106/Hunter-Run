@@ -49,6 +49,7 @@ final class AudioRequest {
     func begin() -> UUID { lock.lock(); defer { lock.unlock() }; let next = UUID(); id = next; preparing = true; return next }
     func cancel() { lock.lock(); defer { lock.unlock() }; id = nil; preparing = false }
     func valid(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; return id == token }
+    var isActive: Bool { lock.lock(); defer { lock.unlock() }; return id != nil }
     func ready(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; guard id == token else { return false }; preparing = false; return true }
     func expire(_ token: UUID) -> Bool { lock.lock(); defer { lock.unlock() }; guard id == token, preparing else { return false }; id = nil; preparing = false; return true }
 }

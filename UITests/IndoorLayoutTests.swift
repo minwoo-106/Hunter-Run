@@ -55,7 +55,8 @@ final class IndoorLayoutTests: XCTestCase {
         allowMotionPrompt(app)
         if app.buttons["계속"].exists { reach(app.buttons["계속"], in: app); app.buttons["계속"].tap() }
         XCTAssertFalse(app.staticTexts["KILOMETERS"].exists)
-        XCTAssertFalse(app.staticTexts["최근 페이스"].exists)
+        XCTAssertFalse(app.staticTexts["현재 페이스"].exists)
+        XCTAssertFalse(app.staticTexts["활동 평균 페이스"].exists)
         XCTAssertTrue(app.staticTexts["activity.indoor-limit"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Indoor-activity"; shot.lifetime = .keepAlways; add(shot)
         XCUIDevice.shared.press(.home); app.activate()

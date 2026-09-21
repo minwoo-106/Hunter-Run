@@ -131,6 +131,9 @@ struct RunDetailView: View {
                 Text(run.date, format: .dateTime.year().month().day().hour().minute()).foregroundStyle(Theme.muted)
                 Text(run.activityEnvironment.title).font(.caption).foregroundStyle(Theme.teal)
                 HStack { metric(run.activityEnvironment.isIndoor ? "실내 걸음 수" : "거리", run.activityEnvironment.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.seconds)) }.card()
+                if !run.activityEnvironment.isIndoor {
+                    HStack { metric("활동 평균 페이스", averagePace(seconds: run.seconds, distance: run.distance)); Spacer() }.card()
+                }
                 HStack { metric("목표", run.goal?.label ?? "시간 목표"); Spacer(); metric("결과", run.completedGoal ? "완료" : "성과 저장") }
                 if !run.activityEnvironment.isIndoor, let seconds = run.runningSeconds { Text("달리기 \(clock(seconds)) · 걷기 \(clock(max(0, run.seconds - seconds)))").foregroundStyle(Theme.muted) }
                 Text("EXP +\(run.xp) · 마정석 +\(run.crystals)").font(.headline).foregroundStyle(Theme.teal)
