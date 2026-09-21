@@ -457,6 +457,7 @@ import UIKit
         guard engine != nil else { return }
         engine?.end(); sensor.stop(); timer?.invalidate(); timer = nil
         guard let run = engine?.session else { return }
+        lastSummary = nil
         if run.simulated { lastDemo = run }
         else if let summary = Settlement.apply(run, to: &save.profile) { lastSummary = summary }
         if !run.simulated { narratives?.refresh(&save.profile) }
@@ -466,8 +467,10 @@ import UIKit
         recoverable = false
         if announcedResult != run.id {
             announcedResult = run.id
-            let questDone = run.questID.map { save.profile.journey?.completedQuests.contains($0) == true } ?? false
-            playOperator(questDone ? (run.boss != nil ? "exam_pass" : "quest_complete") : "run_end")
+            if run.simulated || ActivityRecordPolicy.qualifies(run.activeSeconds) {
+                let questDone = run.questID.map { save.profile.journey?.completedQuests.contains($0) == true } ?? false
+                playOperator(questDone ? (run.boss != nil ? "exam_pass" : "quest_complete") : "run_end")
+            }
         }
     }
     func closeResult() { guard resultSaved else { return }; engine = nil; showRun = false; audio.stop(); refreshLobbyMusic() }

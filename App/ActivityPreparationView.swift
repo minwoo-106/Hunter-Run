@@ -60,6 +60,7 @@ struct SetupView: View {
                             .frame(maxWidth: .infinity).padding(10)
                     }.buttonStyle(GameButtonStyle(primary: true)).disabled(!model.canStartReal).accessibilityIdentifier("activity.start")
                     Text(indoor ? "움직이는 시간만 인정해요. 화면 잠금·다른 앱 이동 시 일시정지해요." : "활동 중 화면을 유지해요. 종료하면 운동 기록과 의뢰 성과를 함께 저장해요.").font(.caption).foregroundStyle(Theme.muted)
+                    Text("활동시간이 3분 미만이면 기록·보상·의뢰 진행도가 저장되지 않아요.").font(.caption).foregroundStyle(Theme.muted)
                     if AppModel.testHarness {
                         if model.selectedFieldDemo != nil {
                             Button("선택 개체 모의 활동") { model.start(simulated: true, seconds: 180, pursuit: true) }.accessibilityIdentifier("activity.mock.encounter")

@@ -99,6 +99,25 @@ final class RunEngineTests: XCTestCase {
         XCTAssertNil(Settlement.apply(e.session, to: &p))
         XCTAssertEqual(p.xp, 0)
     }
+    func testActivityUnderThreeMinutesIsDiscardedAtSettlement() {
+        var run = RunSession(targetSeconds: 1800, simulated: false, allowPursuit: false)
+        run.phase = .finished
+        run.activeSeconds = 179.9
+        run.distance = 500
+        run.records = [EventRecord(id: "beast", title: "잔향 늑대", outcome: .success, damage: 100, defeated: true, kind: .ambush)]
+        var profile = Profile()
+        XCTAssertNil(Settlement.apply(run, to: &profile))
+        XCTAssertTrue(profile.runs.isEmpty)
+        XCTAssertTrue(profile.settled.isEmpty)
+        XCTAssertEqual(profile.xp, 0)
+        XCTAssertEqual(profile.crystals, 0)
+        XCTAssertEqual(profile.research, 0)
+        XCTAssertEqual(Quests.defeats(profile), 0)
+        run.activeSeconds = 180
+        XCTAssertNotNil(Settlement.apply(run, to: &profile))
+        XCTAssertEqual(profile.runs.count, 1)
+        XCTAssertNil(Settlement.apply(run, to: &profile))
+    }
     func testRecoveryRebriefsAndDoesNotCountOfflineGap() throws {
         var e = make()
         for t in 0...95 { step(&e, Double(t)) }; e.instructionFinished(); step(&e, 96)
@@ -134,4 +153,3 @@ final class RunEngineTests: XCTestCase {
         XCTAssertThrowsError(try repo.load())
     }
 }
-

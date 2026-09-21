@@ -237,10 +237,15 @@ struct ActiveRunView: View {
                 eyebrow(run.simulated ? "SIMULATION COMPLETE" : "MISSION REPORT")
                 Text("활동 보고").font(.largeTitle.bold())
                 HStack { metric(run.isIndoor ? "실내 걸음 수" : "거리", run.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric("활동시간", clock(run.activeSeconds)) }
-                Text(run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.").foregroundStyle(Theme.muted)
+                Text(!run.simulated && !ActivityRecordPolicy.qualifies(run.activeSeconds)
+                     ? "활동시간이 3분 미만이라 기록과 보상을 남기지 않았어요."
+                     : run.reachedGoal ? "목표 활동을 마쳤습니다." : "확보한 성과를 정리했습니다.")
+                    .foregroundStyle(Theme.muted)
                 if let report = run.simulated ? PaceLearning.report(run, memory: nil) : model.lastSummary?.paceReport { PaceFeedbackView(report: report, simulated: run.simulated) }
-                ForEach(run.records) { record in
-                    HStack { Text(record.title); Spacer(); Text(outcomeName(record.outcome)).foregroundStyle(Theme.teal) }.card()
+                if run.simulated || ActivityRecordPolicy.qualifies(run.activeSeconds) {
+                    ForEach(run.records) { record in
+                        HStack { Text(record.title); Spacer(); Text(outcomeName(record.outcome)).foregroundStyle(Theme.teal) }.card()
+                    }
                 }
                 if run.simulated {
                     Text("모의 활동입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)

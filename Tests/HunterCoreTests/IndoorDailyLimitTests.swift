@@ -78,7 +78,7 @@ final class IndoorDailyLimitTests: XCTestCase {
         var run = session(); IndoorDailyLimit.prepare(&run, profile: profile)
         var engine = RunEngine(session: run, content: content)
         for second in 0...4000 { engine.consume(frame(day.addingTimeInterval(Double(second)), moving: false)) }
-        engine.end(); XCTAssertNotNil(Settlement.apply(engine.session, to: &profile))
+        engine.end(); XCTAssertNil(Settlement.apply(engine.session, to: &profile))
         XCTAssertEqual(IndoorDailyLimit.remaining(in: profile, on: day), 2400)
         var outdoor = session(7199, environment: .outdoor); IndoorDailyLimit.prepare(&outdoor, profile: profile)
         XCTAssertNil(outdoor.indoorAllowance); XCTAssertNil(outdoor.activeTimeLimit)

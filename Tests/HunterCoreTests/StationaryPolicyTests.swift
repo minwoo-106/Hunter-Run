@@ -93,7 +93,7 @@ final class StationaryPolicyTests: XCTestCase {
         for t in 3701...7400 { tick(&run, Double(t)) }
         XCTAssertEqual(run.session.activeSeconds, 0)
         run.end(); var profile = Profile()
-        XCTAssertEqual(Settlement.apply(run.session, to: &profile)?.xp, 0)
+        XCTAssertNil(Settlement.apply(run.session, to: &profile))
         XCTAssertEqual(profile.crystals, 0)
     }
     func testRecoveryKeepsUsedTimeAndFinishesAtSameCap() throws {

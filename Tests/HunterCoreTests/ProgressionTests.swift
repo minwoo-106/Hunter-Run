@@ -91,7 +91,8 @@ final class ProgressionTests: XCTestCase {
         XCTAssertNil(Settlement.apply(run, to: &profile))
         XCTAssertEqual(profile.research, 3)
         var gate = RunSession(targetSeconds: 300, simulated: false, allowPursuit: false, mode: .gate)
-        gate.phase = .finished; gate.records = [EventRecord(id: "gate-core", title: "보스", outcome: .perfect, damage: 85, defeated: true, kind: .boss)]
+        gate.phase = .finished; gate.activeSeconds = 180
+        gate.records = [EventRecord(id: "gate-core", title: "보스", outcome: .perfect, damage: 85, defeated: true, kind: .boss)]
         Settlement.apply(gate, to: &profile); Settlement.apply(gate, to: &profile)
         XCTAssertEqual(profile.growth.cores, 1)
         XCTAssertEqual(Progression.gateClears(profile), 1)

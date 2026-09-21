@@ -30,7 +30,7 @@ workflows:
       - build/Small-layout.xcresult
       - build/portrait-checks/*.png
   ios-demo:
-    name: Hunter Run 1.3.1 - outdoor signal and hunt diagnosis
+    name: Hunter Run 1.3.2 - three-minute activity minimum
     instance_type: mac_mini_m2
     max_build_duration: 30
     triggering:

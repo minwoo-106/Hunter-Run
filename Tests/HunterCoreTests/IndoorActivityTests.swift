@@ -61,7 +61,7 @@ final class IndoorActivityTests: XCTestCase {
     func testIndoorSettlementPreservesPaceMemoryAndAwardsOnce() throws {
         var run = engine()
         for t in 0...95 { move(&run, t) }; run.instructionFinished()
-        for t in 96...130 { move(&run, t) }; run.end()
+        for t in 96...180 { move(&run, t) }; run.end()
         var profile = Profile()
         var pace = PaceMemory(); pace.include(2.5); profile.paceMemory = pace
         let before = profile.paceMemory?.reference

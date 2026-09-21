@@ -50,10 +50,10 @@ final class PaceLearningTests: XCTestCase {
     }
     func testShortSamplesGiveFeedbackWithoutLearning() {
         var engine = RunEngine(session: session(), content: content)
-        for t in 0...100 { step(&engine, Double(t)) }; engine.end()
+        for t in 0...200 { step(&engine, Double(t)) }; engine.end()
         var profile = Profile()
         let report = Settlement.apply(engine.session, to: &profile)?.paceReport
-        XCTAssertEqual(report?.stableSeconds, 100); XCTAssertFalse(report?.learned ?? true); XCTAssertNil(profile.paceMemory)
+        XCTAssertEqual(report?.stableSeconds, 200); XCTAssertFalse(report?.learned ?? true); XCTAssertNil(profile.paceMemory)
     }
     func testRecentMedianLimitsEachChangeToFivePercent() {
         var memory = PaceMemory(); memory.include(2.5)

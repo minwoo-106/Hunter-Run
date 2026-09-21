@@ -88,7 +88,7 @@ final class ActivityGoalTests: XCTestCase {
     }
     func testRepeatedGateCoreCountsAsOneGateClearAndOneCore() {
         var session = engine(ActivityGoal(kind: .free)).session
-        session.mode = .gate; session.phase = .finished
+        session.mode = .gate; session.phase = .finished; session.activeSeconds = 180
         session.records = [EventRecord(id: "gate-core#1", title: "Core", outcome: .success, damage: 85, defeated: true, kind: .boss), EventRecord(id: "gate-core#2", title: "Core", outcome: .success, damage: 85, defeated: true, kind: .boss)]
         var profile = Profile()
         Settlement.apply(session, to: &profile)
