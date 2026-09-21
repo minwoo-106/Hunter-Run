@@ -1487,7 +1487,7 @@
     {
       "key": "distance_km_2",
       "file": "distance_km_2.wav",
-      "text": "2킬로미터 달렸어요! 잘하고 있어요!",
+      "text": "2킬로미터 달렸어요!",
       "seed": 1269709656,
       "seeds": [
         1269709656
@@ -1495,8 +1495,9 @@
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 3.576,
-      "sha256": "ddc60c5930f50f8d14f4b8ffed671a4e473616c74ccfff8a68939ab055af9f6f"
+      "duration": 1.55,
+      "sha256": "a217e95f913270dd9f9da54485f60e6dac237b7bc30fe7440012535b978f4126",
+      "edit": "original first sentence retained; changed-voice second sentence removed"
     },
     {
       "key": "distance_km_3",
@@ -1585,7 +1586,7 @@
     {
       "key": "distance_km_9",
       "file": "distance_km_9.wav",
-      "text": "9킬로미터 달렸어요! 조금만 더 함께 가요!",
+      "text": "9킬로미터 달렸어요!",
       "seed": 840217657,
       "seeds": [
         840217657
@@ -1593,8 +1594,9 @@
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.023,
-      "sha256": "17e6fd09d6ce1aa1ad1e5faa6dabd46a1a6ada07013d441fd9e38fba4f598017"
+      "duration": 1.55,
+      "sha256": "561d84e240f5589a613cb811294a7ccd3ef6eac298830adc86715cf2edce6533",
+      "edit": "original first sentence retained; changed-voice second sentence removed"
     },
     {
       "key": "distance_km_10",
@@ -1655,16 +1657,16 @@
     {
       "key": "distance_walk_km_3",
       "file": "distance_walk_km_3.wav",
-      "text": "3킬로미터 이동했어요! 편안한 걸음으로 이어가요!",
-      "seed": 615853574,
+      "text": "3킬로미터 이동했어요! 편안하게 이동해봐요!",
+      "seed": 324767683,
       "seeds": [
-        615853574
+        324767683
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 3.503,
-      "sha256": "0d1d0b8e6df1903f5a919abfb260ab31bc4a69c9612f7949ef20566da8f081e7"
+      "duration": 3.387,
+      "sha256": "143180f0acec78f9768798fa7522fe9318af4e14dfb34b961c870d0e11a7bfde"
     },
     {
       "key": "distance_walk_km_4",
