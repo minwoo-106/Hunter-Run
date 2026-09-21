@@ -1,4 +1,12 @@
-# Hunter Run 1.3.3
+# Hunter Run 1.3.4
+
+Kilometer voice repair: 2 km and 9 km hunt calls retain their original first sentence and remove the voice-shifting ending. The 3 km exploration call now asks players to move comfortably.
+
+[Download 1.3.4 from build42](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0fa9fdcbe25a2513d6bed?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.4-release.md) · [Verification](docs/release-134-verification.json)
+
+Verified 1.3.4/build31 from `48a1d1c`: 154 core tests and four focused UI checks on each screen size passed. The ZIP/IPA, executable and all 135 voice hashes passed package verification. Install over the existing app to retain progress.
+
+## 1.3.3 release record
 
 Outdoor activities show a smoothed current pace and whole-activity average pace. The operator announces each confirmed kilometer: distinct exploration and hunting lines for 1–10 km, then a repeatable extra-kilometer line. Indoor running does not claim GPS distance or pace.
 

@@ -1,0 +1,21 @@
+{
+  "version": "1.3.4",
+  "build": "31",
+  "sourceCommit": "48a1d1c",
+  "codemagicBuild": 42,
+  "codemagicBuildId": "6ab0fa9fdcbe25a2513d6bed",
+  "coreTestsPassed": 154,
+  "primaryUITestsPassed": 4,
+  "compactUITestsPassed": 4,
+  "clips": 135,
+  "packageVerified": true,
+  "file": "HunterRun-1.3.4-build31-install.zip",
+  "bytes": 140606703,
+  "sha256": "39938c3c4d04a0bf24ba1601cafe096ec8afac3eb58f03710af412932349457f",
+  "ipa": {
+    "file": "HunterRun-1.3.4-build31-unsigned.ipa",
+    "bytes": 140584814,
+    "sha256": "4c184eebe041f3104c39b9d7ca8abd4696cfb8548e904b112d99e14d67f09e38"
+  },
+  "physicalOutdoorRetested": false
+}
