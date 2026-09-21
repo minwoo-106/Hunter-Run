@@ -166,6 +166,22 @@ struct ActiveRunView: View {
                                 metric("목표", run.goalLabel)
                             }
                             Text(run.isIndoor ? "움직임이 확인된 시간만 인정해요. 걸음 수는 늦게 갱신될 수 있어요." : "최근 12초 기준 · 정지하거나 GPS가 불안정하면 — 로 표시합니다.").font(.caption2).foregroundStyle(Theme.muted)
+                            if !run.isIndoor {
+                                HStack(spacing: 14) {
+                                    Label("움직임 · \(movementName(model.movement))", systemImage: "figure.run")
+                                    Label(signalName(model.signal), systemImage: "location")
+                                }.font(.caption.bold()).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.movement")
+                                if model.signal != .good && !run.simulated {
+                                    Text(model.sensor.outdoorSignalHint).font(.caption2).foregroundStyle(Theme.muted)
+                                        .accessibilityIdentifier("activity.gps-hint")
+                                }
+                                if run.mode == .contract || run.mode == .gate {
+                                    Text(model.movement == .running && model.signal == .good
+                                         ? "새 토벌 사건을 진행할 수 있어요. 평소 달리기 페이스를 유지해요."
+                                         : "새 토벌 사건은 조사로 전환될 수 있어요. 달리기 판정과 GPS 양호를 확인해주세요.")
+                                        .font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("activity.combat-eligibility")
+                                }
+                            }
                             if run.activityGoal.kind != .free || run.activeTimeLimit != nil { ProgressView(value: run.goalProgress).tint(Theme.teal) }
                             else { Text("자유 활동 · 확보한 성과는 종료할 때 저장됩니다").font(.caption).foregroundStyle(Theme.muted) }
                             if run.isIndoor {
@@ -273,6 +289,9 @@ struct ActiveRunView: View {
     }
     private func stateName(_ run: RunSession) -> String {
         switch run.phase { case .calibrating: return "준비 중"; case .moving: return "활동 중"; case .paused: return "일시정지"; case .interrupted: return "중단"; case .finished: return "완료" }
+    }
+    private func movementName(_ movement: Movement) -> String {
+        switch movement { case .running: return "달리기"; case .walking: return "걷기"; case .stationary: return "정지"; case .vehicle: return "차량"; case .unknown: return "확인 중" }
     }
 }
 struct HunterView: View {

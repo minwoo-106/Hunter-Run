@@ -17,6 +17,9 @@ struct QuestBoardView: View {
                     let claimed = state.claimedQuests.contains(quest.id)
                     VStack(alignment: .leading, spacing: 12) {
                         Text(quest.title).font(.title3.bold())
+                        if !done && state.selectedQuest == quest.id {
+                            Label("현재 추적 중 · 활동 준비에 표시돼요", systemImage: "scope").font(.caption.bold()).foregroundStyle(Theme.teal)
+                        }
                         Text(quest.detail).font(.callout).foregroundStyle(Theme.muted)
                         if let target = quest.lifetimeDefeats {
                             ProgressView("토벌 \(min(target, Quests.defeats(model.save.profile))) / \(target)", value: Double(min(target, Quests.defeats(model.save.profile))), total: Double(target))
@@ -33,7 +36,7 @@ struct QuestBoardView: View {
                         else if done {
                             Button("보상 받기") { model.claimQuest(quest.id) }.buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked).accessibilityIdentifier("quest.claim." + quest.id)
                         } else {
-                            Button(quest.promotion != nil ? "승급 심사 출동 준비" : state.selectedQuest == quest.id ? "추적 중 · 활동 준비" : "목표 추적하기") { model.selectQuest(quest.id); dismiss() }
+                            Button(quest.promotion != nil ? "승급 심사 출동 준비" : state.selectedQuest == quest.id ? "활동 준비로 이동" : "목표 추적하기") { model.selectQuest(quest.id); dismiss() }
                                 .buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked).accessibilityIdentifier("quest.select." + quest.id)
                         }
                     }.card()

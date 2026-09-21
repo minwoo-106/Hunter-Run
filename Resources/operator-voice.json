@@ -1264,15 +1264,15 @@
       "key": "quest_complete",
       "file": "quest_complete.wav",
       "text": "잘했어요! 의뢰에 필요한 기록을 모두 모았어요. 돌아가서 보상을 확인해요.",
-      "seed": 3380747069,
+      "seed": 3166519236,
       "seeds": [
-        3380747069
+        3166519236
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.908,
-      "sha256": "e198431dae9775fecfe08d6db5c831dc470cd44631b5bf393dc3319012afb7c5"
+      "duration": 5.565,
+      "sha256": "f22d88e4ea13e6f2285e1080eca693386ef33a3be7b02e5617aaccd8e970ea4e"
     },
     {
       "key": "exam_start",

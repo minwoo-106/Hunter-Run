@@ -100,4 +100,26 @@ final class EncounterTests: XCTestCase {
         XCTAssertEqual(selector.select("success", catalog: catalog), "success")
         XCTAssertEqual(selector.select("endurance", catalog: catalog), "endurance")
     }
+
+    func testEarlyOutdoorHuntReachesWolfButWalkingInvestigates() throws {
+        let resource = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Resources")
+        let missions = try JSONDecoder().decode(MissionCatalog.self, from: Data(contentsOf: resource.appendingPathComponent("missions.json")))
+        let encounters = try JSONDecoder().decode(EncounterCatalog.self, from: Data(contentsOf: resource.appendingPathComponent("encounters.json")))
+        let progression = try JSONDecoder().decode(ProgressionCatalog.self, from: Data(contentsOf: resource.appendingPathComponent("progression.json")))
+        let content = encounters.populate(missions.content(for: .contract, extended: false), mode: .contract, profile: Profile(), catalog: progression)
+        for (movement, expectedKind) in [(Movement.running, EventKind.ambush), (.walking, .discovery)] {
+            var run = RunSession(targetSeconds: 1800, simulated: false, allowPursuit: true, mode: .contract)
+            run.goal = ActivityGoal(kind: .time, value: 1800)
+            run.directorVersion = 2
+            var engine = RunEngine(session: run, content: content)
+            var wolfIntroduction = false
+            for second in 0...650 {
+                _ = engine.consume(SensorFrame(timestamp: Double(second), speed: movement == .running ? 2.6 : 1.2, distance: movement == .running ? 2.6 : 1.2, movement: movement, signal: .good))
+                if engine.session.event?.template.audio == "wolf_intro" { wolfIntroduction = true }
+                if engine.session.event?.stage == .briefing { engine.instructionFinished() }
+            }
+            XCTAssertEqual(wolfIntroduction, movement == .running)
+            XCTAssertEqual(engine.session.records.first { $0.catalogID == "beast" }?.kind, expectedKind)
+        }
+    }
 }

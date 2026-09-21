@@ -35,8 +35,12 @@ struct SetupView: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Label("함께 진행하는 의뢰", systemImage: "list.clipboard").font(.headline)
                         if let focus = model.activeQuest {
+                            Label("현재 추적 중", systemImage: "scope").font(.caption.bold()).foregroundStyle(Theme.teal)
                             Text(focus.title).foregroundStyle(Theme.teal).accessibilityIdentifier("quest.focus")
                             Text(focus.detail).font(.caption).foregroundStyle(Theme.muted)
+                            if focus.id == "wolf-first" || focus.id == "wolf-ten" {
+                                Text("잔향 늑대 토벌은 야외 현장 사냥에서 달리기로 판정되고 위치 신호가 양호할 때 진행돼요. 탐험은 흔적 조사 중심이에요.").font(.caption).foregroundStyle(Theme.muted)
+                            }
                         } else { Text("열린 일반 의뢰는 자동으로 함께 진행돼요.").font(.caption).foregroundStyle(Theme.muted) }
                         Button("추적 목표 변경") { quests = true }.buttonStyle(GameControlStyle()).accessibilityIdentifier("setup.quests")
                     }.card()
@@ -107,6 +111,7 @@ struct SetupView: View {
                     .disabled(!model.modeAllowed(mode)).accessibilityIdentifier("mode." + mode.rawValue)
             }
             if !model.modeAllowed(.gate) { Text("고위험 게이트 · D급 평가와 관측부 Lv.2에서 해금").font(.caption2).foregroundStyle(Theme.muted) }
+            Text("탐험은 조사 중심이에요. 야외 현장 사냥의 토벌은 달리기 판정과 양호한 위치 신호가 필요하고, 걷기나 신호 부족 구간은 조사로 바뀌어요.").font(.caption).foregroundStyle(Theme.muted)
         }.card()
     }
     private var goal: some View {
@@ -133,6 +138,7 @@ struct SetupView: View {
         VStack(alignment: .leading, spacing: 10) {
             if indoor { Label("실내는 GPS 없이 진행해요", systemImage: "figure.walk.motion").accessibilityIdentifier("indoor.no-gps") }
             else { HStack { Label(model.permissionText, systemImage: "location"); Spacer(); Button("위치 권한 확인") { model.authorize() }.buttonStyle(GameControlStyle()) } }
+            if !indoor { Text("권한을 매번 묻는다면 iPhone 설정에서 Hunter Run의 위치를 ‘앱을 사용하는 동안’으로 바꾸고 ‘정확한 위치’를 켜주세요. ‘한 번 허용’은 다음 실행 때 만료돼요.").font(.caption2).foregroundStyle(Theme.muted) }
             DisclosureGroup("음성 확인과 활동 안내") {
                 Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
                 NavigationLink("사건 대응 방법") { EncounterGuideView() }

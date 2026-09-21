@@ -30,6 +30,7 @@ final class ExpeditionLayoutTests: XCTestCase {
         capture("Activity modes with ordinary assignment", app: app)
         reach(app.staticTexts["quest.focus"], in: app)
         XCTAssertEqual(app.staticTexts["quest.focus"].label, "첫 잔향 토벌")
+        XCTAssertTrue(app.staticTexts["현재 추적 중"].exists)
         app.buttons["nav.1"].tap()
         for _ in 0..<5 { app.scrollViews.firstMatch.swipeUp() }
         XCTAssertFalse(app.buttons["협회 부서 관리"].exists)

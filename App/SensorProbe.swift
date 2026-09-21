@@ -32,6 +32,16 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     private var stepsSpeed: Double = 0
     private var velocity = GPSVelocityWindow()
     private var active = false
+    var outdoorSignalHint: String {
+        if permission != .authorizedAlways && permission != .authorizedWhenInUse { return "위치 권한을 확인해주세요." }
+        if !precision { return "iPhone 설정에서 정확한 위치를 켜주세요." }
+        guard let fix = latestFix else { return "GPS 위치를 찾는 중이에요. 하늘이 보이는 곳에서 잠시 기다려주세요." }
+        if Date().timeIntervalSince(fix.timestamp) > 5 { return "최근 GPS 신호가 없어요. 잠시 위치를 다시 확인할게요." }
+        if fix.horizontalAccuracy.isFinite && fix.horizontalAccuracy > 35 && fix.horizontalAccuracy < 10_000 {
+            return "현재 위치 오차가 약 \(Int(fix.horizontalAccuracy))m예요. 신호가 좋아지면 토벌을 진행해요."
+        }
+        return "GPS 위치를 확인하고 있어요."
+    }
     override init() {
         super.init()
         location.delegate = self
@@ -64,7 +74,9 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         if CMMotionActivityManager.isActivityAvailable() {
             motion.startActivityUpdates(to: .main) { [weak self] activity in
                 guard let self, self.active, self.generation == token, let activity else { return }
-                self.motionAt = activity.startDate
+                // startDate is when this activity began, not when Core Motion
+                // delivered the classification. Long runs otherwise look stale.
+                self.motionAt = Date()
                 if activity.confidence == .high && (activity.automotive || activity.cycling) { self.motionValue = .vehicle }
                 else if activity.confidence != .low && activity.running { self.motionValue = .running }
                 else if activity.confidence != .low && activity.walking { self.motionValue = .walking }
@@ -137,21 +149,25 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
             let steps = pendingSteps; pendingSteps = 0
             return SensorFrame(timestamp: date.timeIntervalSince1970, speed: 0, distance: 0, movement: movement, signal: signal, steps: steps)
         }
-        let freshFix = latestFix.map { date.timeIntervalSince($0.timestamp) <= 5 } ?? false
+        let fixAge = latestFix.map { date.timeIntervalSince($0.timestamp) }
+        let freshFix = fixAge.map { (0...5).contains($0) } ?? false
         let freshMotion = date.timeIntervalSince(motionAt) <= 15
         let freshSteps = date.timeIntervalSince(stepsAt) <= 8
         let quality = latestFix?.horizontalAccuracy ?? -1
         let gpsSpeed = velocity.speed(at: date.timeIntervalSince1970)
-        signal = freshFix && precision && quality >= 0 && quality <= 35 && gpsSpeed != nil ? .good :
-                 freshFix && quality >= 0 && quality <= 60 ? .degraded : .unavailable
-        speed = freshFix ? (gpsSpeed ?? (freshSteps ? stepsSpeed : 0)) : freshSteps ? stepsSpeed : 0
+        signal = OutdoorSignalQuality.classify(fixAge: fixAge, horizontalAccuracy: quality, precise: precision)
         let rawSpeed = freshFix ? (latestFix?.speed ?? -1) : -1
+        let runSpeed = freshFix && signal == .good && OutdoorSignalQuality.credibleRunningSpeed(rawSpeed, accuracy: latestFix?.speedAccuracy ?? -1)
+        // A moderately accurate running velocity is useful for event scoring
+        // even when it is too uncertain for the strict pace-only window.
+        speed = freshFix ? (gpsSpeed ?? (runSpeed ? rawSpeed : freshSteps ? stepsSpeed : 0)) : freshSteps ? stepsSpeed : 0
         if freshMotion && motionValue == .vehicle || rawSpeed > 8 { movement = .vehicle }
         else if freshMotion && motionValue == .stationary && rawSpeed < 0.8 { movement = .stationary }
         else if rawSpeed >= 0 && rawSpeed < 0.35 { movement = .stationary }
         else if speed >= 0.5 && (freshFix || freshSteps) {
-            if freshMotion && motionValue == .walking { movement = .walking }
-            else { movement = freshMotion && motionValue == .running ? .running : speed >= 1.8 && signal == .good ? .running : .walking }
+            if freshMotion && motionValue == .running { movement = .running }
+            else if runSpeed { movement = .running }
+            else { movement = .walking }
         } else { movement = freshFix || freshMotion ? .stationary : .unknown }
         if movement == .stationary || movement == .vehicle { velocity.reset() }
         let meters = signal == .unavailable ? (freshSteps ? pendingStepsDistance : 0) : pendingDistance
