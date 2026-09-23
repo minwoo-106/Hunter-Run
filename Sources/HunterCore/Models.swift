@@ -10,12 +10,16 @@ public struct SensorFrame {
     public var timestamp: TimeInterval
     public var speed: Double
     public var distance: Double
+    /// Time represented by the accumulated distance. GPS callbacks may arrive
+    /// between the one-second engine ticks and can contain several seconds of
+    /// already validated travel.
+    public var distanceDuration: TimeInterval?
     public var movement: Movement
     public var signal: Signal
     public var steps: Int
-    public init(timestamp: TimeInterval, speed: Double, distance: Double, movement: Movement, signal: Signal, steps: Int = 0) {
+    public init(timestamp: TimeInterval, speed: Double, distance: Double, movement: Movement, signal: Signal, steps: Int = 0, distanceDuration: TimeInterval? = nil) {
         self.timestamp = timestamp; self.speed = speed; self.distance = distance; self.movement = movement; self.signal = signal
-        self.steps = steps
+        self.steps = steps; self.distanceDuration = distanceDuration
     }
 }
 public struct MissionTemplate: Codable, Identifiable {

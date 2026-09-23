@@ -1,4 +1,10 @@
-# Hunter Run 1.3.4
+# Hunter Run 1.3.5
+
+Outdoor distance repair: normal Core Location batches up to 30 seconds retain their validated travel, and distance is bounded by the GPS interval it represents instead of the callback's arrival offset. Implausible jumps, vehicle speeds and long delivery gaps remain excluded. Whole-activity pace uses the repaired accumulated distance.
+
+The iPhone build is being verified. [한국어 변경·설치 안내](docs/1.3.5-release.md)
+
+## 1.3.4 release record
 
 Kilometer voice repair: 2 km and 9 km hunt calls retain their original first sentence and remove the voice-shifting ending. The 3 km exploration call now asks players to move comfortably.
 

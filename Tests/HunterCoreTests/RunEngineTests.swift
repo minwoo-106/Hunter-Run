@@ -40,6 +40,16 @@ final class RunEngineTests: XCTestCase {
         XCTAssertEqual(e.session.activeSeconds, 1)
         XCTAssertEqual(e.session.distance, distance)
     }
+    func testBatchedGPSDistanceIsNotClippedByCallbackTiming() {
+        var e = make()
+        step(&e, 0, movement: .walking, speed: 1.35)
+        step(&e, 1, movement: .walking, speed: 1.35)
+        let before = e.session.distance
+        e.consume(SensorFrame(timestamp: 1.1, speed: 1.35, distance: 8.1,
+                              movement: .walking, signal: .good, distanceDuration: 6))
+        XCTAssertEqual(e.session.distance - before, 8.1, accuracy: 0.001,
+                       "a GPS segment must be bounded by the time it represents, not its callback arrival offset")
+    }
     func testVehicleAddsNoProgress() {
         var e = make(); step(&e, 0)
         for t in 1...30 { step(&e, Double(t), movement: .vehicle, speed: 15) }

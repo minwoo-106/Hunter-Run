@@ -26,12 +26,16 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     private var motionAt = Date.distantPast
     private var motionValue: Movement = .unknown
     private var pendingDistance: Double = 0
+    private var pendingDistanceDuration: TimeInterval = 0
     private var pendingStepsDistance: Double = 0
+    private var pendingStepsDuration: TimeInterval = 0
     private var stepsDistance: Double = 0
     private var stepsAt = Date.distantPast
     private var stepsSpeed: Double = 0
     private var velocity = GPSVelocityWindow()
+    private var outdoorDistance = OutdoorDistanceAccumulator()
     private var active = false
+    private var sessionStartedAt = Date.distantPast
     var outdoorSignalHint: String {
         if permission != .authorizedAlways && permission != .authorizedWhenInUse { return "위치 권한을 확인해주세요." }
         if !precision { return "iPhone 설정에서 정확한 위치를 켜주세요." }
@@ -56,8 +60,8 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         self.environment = environment
         let token = UUID(); generation = token
         indoor.reset(); totalSteps = 0; pendingSteps = 0; stepCallbackAt = Date()
-        active = true; latestFix = nil; velocity.reset(); pendingDistance = 0
-        stepsDistance = 0; pendingStepsDistance = 0; stepsAt = .distantPast; motionAt = .distantPast
+        active = true; sessionStartedAt = Date(); latestFix = nil; velocity.reset(); outdoorDistance.reset(); pendingDistance = 0
+        pendingDistanceDuration = 0; stepsDistance = 0; pendingStepsDistance = 0; pendingStepsDuration = 0; stepsAt = .distantPast; motionAt = .distantPast
         motionValue = .unknown; speed = 0; signal = .unavailable
         if !environment.isIndoor {
             location.allowsBackgroundLocationUpdates = true
@@ -95,12 +99,15 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
                     let added = max(0, count - self.totalSteps)
                     self.pendingSteps += added; self.totalSteps = count
                     let now = Date()
+                    let callbackElapsed = max(0, now.timeIntervalSince(self.stepCallbackAt))
                     if now.timeIntervalSince(data.endDate) <= 3 {
-                        self.indoor.observeSteps(count: added, elapsed: now.timeIntervalSince(self.stepCallbackAt), at: now.timeIntervalSince1970)
+                        self.indoor.observeSteps(count: added, elapsed: callbackElapsed, at: now.timeIntervalSince1970)
                     }
                     self.stepCallbackAt = now
                     let total = data.distance?.doubleValue ?? self.stepsDistance
-                    self.pendingStepsDistance += max(0, total - self.stepsDistance)
+                    let addedDistance = max(0, total - self.stepsDistance)
+                    self.pendingStepsDistance += addedDistance
+                    if addedDistance > 0 { self.pendingStepsDuration += callbackElapsed }
                     self.stepsDistance = total; self.stepsAt = data.endDate
                     if let pace = data.currentPace?.doubleValue, pace > 0 { self.stepsSpeed = 1 / pace }
                 }
@@ -124,16 +131,16 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         guard active else { return }
         let now = Date()
         for fix in locations.sorted(by: { $0.timestamp < $1.timestamp }) {
-            guard fix.horizontalAccuracy >= 0, now.timeIntervalSince(fix.timestamp) < 10,
+            guard fix.timestamp >= sessionStartedAt, fix.horizontalAccuracy >= 0, now.timeIntervalSince(fix.timestamp) < 60,
                   now.timeIntervalSince(fix.timestamp) >= -1 else { continue }
             if let old = latestFix, fix.timestamp <= old.timestamp { continue }
-            if let old = latestFix {
-                let dt = fix.timestamp.timeIntervalSince(old.timestamp)
-                let meters = fix.distance(from: old)
-                if dt > 0 && dt <= 5 && fix.horizontalAccuracy <= 60 && old.horizontalAccuracy <= 60 && meters <= 8 * dt {
-                    pendingDistance += meters
-                }
-            }
+            let meters = latestFix.map { fix.distance(from: $0) }
+            pendingDistance += outdoorDistance.observe(
+                timestamp: fix.timestamp.timeIntervalSince1970,
+                horizontalAccuracy: fix.horizontalAccuracy,
+                distanceFromPrevious: meters
+            )
+            pendingDistanceDuration += outdoorDistance.lastAcceptedDuration
             latestFix = fix
             velocity.observe(time: fix.timestamp.timeIntervalSince1970, speed: fix.speed, accuracy: fix.speedAccuracy)
         }
@@ -170,8 +177,11 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
             else { movement = .walking }
         } else { movement = freshFix || freshMotion ? .stationary : .unknown }
         if movement == .stationary || movement == .vehicle { velocity.reset() }
-        let meters = signal == .unavailable ? (freshSteps ? pendingStepsDistance : 0) : pendingDistance
-        pendingDistance = 0; pendingStepsDistance = 0
-        return SensorFrame(timestamp: date.timeIntervalSince1970, speed: speed, distance: meters, movement: movement, signal: signal)
+        let useSteps = signal == .unavailable && freshSteps
+        let meters = useSteps ? pendingStepsDistance : signal == .unavailable ? 0 : pendingDistance
+        let distanceDuration = useSteps ? pendingStepsDuration : signal == .unavailable ? 0 : pendingDistanceDuration
+        pendingDistance = 0; pendingDistanceDuration = 0; pendingStepsDistance = 0; pendingStepsDuration = 0
+        return SensorFrame(timestamp: date.timeIntervalSince1970, speed: speed, distance: meters, movement: movement,
+                           signal: signal, distanceDuration: distanceDuration > 0 ? distanceDuration : nil)
     }
 }

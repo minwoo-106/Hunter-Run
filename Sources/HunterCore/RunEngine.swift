@@ -70,7 +70,10 @@ public struct RunEngine {
             return [.voice("resume"), .checkpoint]
         }
         var dt = min(rawDT, max(0, (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds))
-        var distance = session.isIndoor ? 0 : max(0, min(frame.distance, 8 * dt))
+        let representedDistanceTime = frame.distanceDuration.flatMap {
+            $0.isFinite && $0 > 0 ? $0 : nil
+        } ?? dt
+        var distance = session.isIndoor ? 0 : max(0, min(frame.distance, 8 * max(dt, representedDistanceTime)))
         if session.isIndoor { session.steps = (session.steps ?? 0) + min(30, max(0, frame.steps)) }
         if session.activityGoal.kind == .distance {
             let remaining = max(0, session.activityGoal.value - session.distance)
