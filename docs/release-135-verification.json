@@ -1,0 +1,25 @@
+{
+  "version": "1.3.5",
+  "build": "32",
+  "sourceCommit": "ea5597f",
+  "codemagicBuild": 43,
+  "codemagicBuildId": "6ab344fe50d35310b24e5777",
+  "coreTestsPassed": 158,
+  "primaryUITestsPassed": 4,
+  "compactUITestsPassed": 4,
+  "clips": 135,
+  "stories": 28,
+  "monsters": 17,
+  "equipment": 32,
+  "architecture": "arm64",
+  "packageVerified": true,
+  "file": "HunterRun-1.3.5-build32-install.zip",
+  "bytes": 140608930,
+  "sha256": "8b309d1ee4a9192a7f30ceaf7e29a526b4d079850995fab7059631b395f93df8",
+  "ipa": {
+    "file": "HunterRun-1.3.5-build32-unsigned.ipa",
+    "bytes": 140586116,
+    "sha256": "757f0a0d29f4256de106de7b2fee3451dab5cefaa567751cd8f747c39a309e4a"
+  },
+  "physicalOutdoorRetested": false
+}

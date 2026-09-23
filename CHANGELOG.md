@@ -6,7 +6,9 @@
 
 정상적인 Core Location 묶음 좌표를 최대 30초까지 보존하고, 거리 상한을 콜백 도착 간격이 아니라 실제 GPS 구간 시간으로 계산합니다. 비정상적인 순간이동·차량 속도·긴 전달 공백은 계속 제외하며, 활동 평균 페이스는 복구된 누적 거리로 계산합니다.
 
-iPhone 빌드를 검증하고 있습니다. [한국어 변경·설치 안내](docs/1.3.5-release.md)
+[Codemagic build 43에서 1.3.5 받기](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab344fe50d35310b24e5777?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.5-release.md) · [검증 기록](docs/release-135-verification.json)
+
+`ea5597f` 소스에서 만든 1.3.5/build32를 검증했습니다. 코어 테스트 158개와 두 화면 크기에서 각각 4개의 UI 테스트가 통과했고, 설치 ZIP·IPA·arm64 실행 파일 및 음성 135개의 해시도 확인했습니다. 기존 앱 위에 설치하면 진행 데이터는 유지됩니다.
 
 ## 1.3.4 release record
 
