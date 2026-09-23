@@ -1,236 +1,80 @@
-# Hunter Run 1.3.5
+<div align="center">
+  <img src="Resources/Assets.xcassets/AppIcon.appiconset/app-icon.png" width="128" alt="Hunter Run 앱 아이콘">
+  <h1>HUNTER RUN</h1>
+  <p><strong>현실의 걸음과 달리기가 미궁 조사와 헌터의 성장으로 이어지는 iPhone 러닝 RPG</strong></p>
+  <p>iOS 17+ · SwiftUI · 오프라인 플레이 · 현재 버전 1.3.5</p>
+</div>
 
-Outdoor distance repair: normal Core Location batches up to 30 seconds retain their validated travel, and distance is bounded by the GPS interval it represents instead of the callback's arrival offset. Implausible jumps, vehicle speeds and long delivery gaps remain excluded. Whole-activity pace uses the repaired accumulated distance.
+<p align="center">
+  <img src="Resources/Assets.xcassets/LabyrinthEntrance.imageset/art.png" width="360" alt="Hunter Run 미궁 입구">
+</p>
 
-The iPhone build is being verified. [한국어 변경·설치 안내](docs/1.3.5-release.md)
+## 게임 소개
 
-## 1.3.4 release record
+대한민국 곳곳에 정체불명의 게이트가 나타난 뒤, 플레이어는 헌터 협회의 신규 조사 인원으로 배정됩니다. 현실에서 걷고 달리는 동안 오퍼레이터의 음성 안내를 받아 마력 흔적을 조사하고, 몬스터와 조우하며, 장기 토벌과 지부 성장에 참여합니다.
 
-Kilometer voice repair: 2 km and 9 km hunt calls retain their original first sentence and remove the voice-shifting ending. The 3 km exploration call now asks players to move comfortably.
+단순히 이동 거리를 숫자로 기록하는 대신 매 활동이 하나의 의뢰가 됩니다. 같은 경로를 달려도 선택한 모드, 진행 중인 퀘스트, 해금된 개체와 보스 상태에 따라 다른 사건과 대사가 등장합니다.
 
-[Download 1.3.4 from build42](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0fa9fdcbe25a2513d6bed?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.4-release.md) · [Verification](docs/release-134-verification.json)
+## 주요 기능
 
-Verified 1.3.4/build31 from `48a1d1c`: 154 core tests and four focused UI checks on each screen size passed. The ZIP/IPA, executable and all 135 voice hashes passed package verification. Install over the existing app to retain progress.
+- **야외 헌터 활동**: 탐험, 현장 사냥, 게이트 조사와 보스 토벌을 시간·거리·자유 목표로 진행합니다.
+- **상황형 음성 플레이**: 오퍼레이터가 출발, 조사, 조우, 가속, 전투 결과와 1km 단위 이동을 한국어 음성으로 안내합니다.
+- **짧은 가속 이벤트**: 평소 페이스를 유지하다 안전한 구간에서 선택적으로 10초 가속 공격에 도전할 수 있습니다.
+- **실내 러닝**: 러닝머신과 제자리 달리기를 하나의 실내 모드로 지원합니다. 반복 보상은 50%, 하루 인정 시간은 60분입니다.
+- **스토리와 오퍼레이터**: 이름을 정한 파트너와 대화하고 관계를 쌓으며, 활동과 성장 조건에 따라 메인 스토리와 개인 이야기를 해금합니다.
+- **헌터 성장**: 경험치, 장비, 협회 부서, 퀘스트, 승급 심사와 누적 보스 토벌이 하나의 진행 구조로 연결됩니다.
+- **수집 콘텐츠**: 17종의 개체 일러스트, 32종의 장비, 다단계 협회 시설과 활동 기록을 제공합니다.
+- **오프라인 중심**: 게임 진행, 음성, 이미지와 저장 데이터가 기기 안에서 작동합니다.
 
-## 1.3.3 release record
+## 플레이 흐름
 
-Outdoor activities show a smoothed current pace and whole-activity average pace. The operator announces each confirmed kilometer: distinct exploration and hunting lines for 1–10 km, then a repeatable extra-kilometer line. Indoor running does not claim GPS distance or pace.
+1. 탐험·현장 사냥·게이트 중 활동 목적을 선택합니다.
+2. 시간·거리·자유 목표와 야외·실내 환경을 정합니다.
+3. 현실에서 걷거나 달리며 오퍼레이터의 안내에 따라 사건을 진행합니다.
+4. 종료 후 거리, 시간, 평균 페이스, 사건 결과와 보상을 확인합니다.
+5. 획득한 자원으로 장비와 협회 지부를 성장시키고 다음 이야기와 토벌을 엽니다.
 
-[Download 1.3.3 from build41](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0f340688764aa17d9a534?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.3-release.md) · [Verification](docs/release-133-verification.json)
+## 현재 콘텐츠
 
-Verified 1.3.3/build30 from `0d88e3c`: 154 core tests and four focused UI checks on each screen size passed. The installer ZIP/IPA, executable, and all 135 voice hashes passed package verification. Physical outdoor pace and voice timing still require an iPhone field test. Install over the existing app to retain progress.
+| 구분 | 내용 |
+| --- | --- |
+| 활동 | 탐험, 현장 사냥, 게이트 조사, 주요 보스 및 변이 토벌, 실내 러닝 |
+| 이야기 | 메인 스토리 28개 장면, 선택형 오퍼레이터 대화와 관계 진행 |
+| 전투·수집 | 개체 17종, 장비 32종, 주요 보스 2종과 반복 회차 |
+| 오디오 | 오프라인 한국어 오퍼레이터 음성 135개, UI 효과음, 로비 BGM |
+| 기록 | 거리·시간·평균 페이스·걷기/달리기 구간·사건·보상 이력 |
 
-## 1.3.2 release record
+## 설치와 기기 요구사항
 
-Ordinary assignments accompany the chosen activity mode. Focused navigation separates preparation, quests, weekly outdoor surveys and facilities. Adds contextual return briefings, three weekly beacons and four post-clear boss patterns.
+현재 Hunter Run은 App Store에 공개하지 않은 개인 개발 빌드입니다. Codemagic에서 만든 unsigned IPA를 Windows의 AltStore Classic으로 개인 서명해 설치합니다.
 
-[Download 1.3.2 from build40](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ab0dd26688764aa17d95f80?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.3.2-release.md) · [Verification](docs/release-132-verification.json) · [1.3.0 design](docs/1.3.0-expedition-design.md)
+- iPhone, iOS 17 이상
+- 야외 활동 시 위치 접근과 **정확한 위치** 허용
+- 걷기·달리기 및 실내 활동을 위한 동작 및 피트니스 권한
+- Apple Watch는 필수가 아니며, 비교 측정과 별도 운동 기록에 사용할 수 있습니다.
+- 음성 안내를 위해 AirPods 또는 안전한 오픈형 이어폰 사용을 권장합니다.
 
-Verified 1.3.2/build29 from `b435ff6`: 153 core tests and three focused UI checks on each screen size passed. The build validated the ZIP/IPA, executable, and all 113 voice hashes. Activities shorter than three active minutes no longer persist records, rewards or progression. Outdoor signal classification uses position quality independently of velocity quality; physical iPhone field validation remains necessary. Update over the existing app to retain progress. Indoor 50% recurring rewards and daily 60-minute quota are preserved.
+[최신 1.3.5 변경·설치 안내](docs/1.3.5-release.md) · [전체 변경 기록](CHANGELOG.md) · [실기기 테스트 안내](docs/TESTING.md)
 
-## 1.2.2 release record
+## 개인정보와 저장
 
-Unified indoor running with 50% activity rewards and a shared daily 60-minute active-time limit. The day resets at Korean midnight; outdoor free activity remains unrestricted.
+정확한 이동 좌표는 저장하지 않습니다. 활동 결과와 게임 진행은 iPhone 내부에 저장되며, 서버 계정·광고·분석 SDK·결제 기능은 현재 포함하지 않습니다. 설정에서 진행 데이터를 내보내거나 가져올 수 있습니다.
 
-[Download 1.2.2 from build34](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa6b0b5688764aa17be873e?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.2.2-release.md) · [Policy](docs/1.2.2-policy.md) · [Verification](docs/release-122-verification.json) · [후속 확장 제안](docs/outdoor-next-direction.md)
+## 개발 정보
 
-Verified 1.2.2/build23 from source `83b5369`: Codemagic build34 succeeded in 13 minutes. 140 core tests, five iPhone 17 Pro UI checks and three compact-screen checks passed. The downloaded installer passed ZIP/IPA, arm64, launch-image and 113 audio hash verification. Install over the existing app to retain progress. Physical movement sensitivity uses the existing indoor sensor implementation.
+Hunter Run은 SwiftUI, Core Location, Core Motion과 AVFoundation으로 만든 네이티브 iOS 앱입니다. 게임 규칙은 `HunterCore` 모듈로 분리되어 Linux/macOS에서 테스트할 수 있고, 실제 iPhone 앱은 Codemagic의 macOS 환경에서 컴파일합니다.
 
-## 1.2.0 release record
-
-Phone-only indoor activity and contextual operator conversations. Built as 1.2.0/build21 by Codemagic build32 from `8dcbfd3` on 2026-09-13.
-
-[Download 1.2.0 from build32](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa69ff5c12cd81c2be0fe8c?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.2-release.md) · [Verification record](docs/release-120-verification.json)
-
-- Activity environment offers outdoor and unified indoor running (stationary exercise or treadmill). Indoor progress uses detected movement and active time without GPS distance or pace; Apple Watch is not required.
-- Existing quests, boss campaigns, rewards and rank progression continue indoors. Outdoor pace learning remains separate.
-- Real movement preflight, permission checks and explicit pause on background/lock prevent unattended timer-only activity. Phone must be carried; physical grip/gait sensitivity needs device feedback.
-- Operator dialogue uses a portrait scene, one current line and two or three contextual replies. Relationship records move to the book control. Title subtitle contrast is improved.
-- 128 core tests, 11 focused iPhone 17 Pro UI tests and six compact-screen tests passed. ZIP/IPA, arm64, launch-image and all 113 approved voice hashes were verified in the downloaded installer. UI motion activity is exercised through an isolated Debug harness; no simulated activity entry exists in Release.
-
-Install `HunterRun-1.2.0-build21-unsigned.ipa` through AltStore over the existing app to retain progress. This remains personal installation, not App Store publication.
-
-## 1.1 release record
-
-Labyrinth interface release, built as 1.1.0/build19 by Codemagic build30 from `2097d25` on 2026-09-13. Adds a tap-to-enter title screen, portrait dialogue stages, and a shared dungeon visual treatment for non-home screens while preserving the home composition and game data.
-
-[Download 1.1.0 from build30](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa68faa688764aa17be37ce?open-setting=build-artifacts) · [한국어 변경·설치 안내](docs/1.1-release.md) · [Verification record](docs/release-110-verification.json)
-
-119 core tests, content validation, seven focused iPhone 17 Pro UI tests and five 375×667 compact UI tests passed. The downloaded installer passed ZIP/IPA, arm64, launch-image and all 113 voice hash checks. Install `HunterRun-1.1.0-build19-unsigned.ipa` through AltStore; updating the existing app preserves progress. UI testing here is simulator-based.
-
-## 1.0 release record
-
-Native iPhone walking/running RPG. Version 1.0.0/build14 was compiled and packaged by Codemagic build25 from `edf84fc` on 2026-09-13. The downloaded installer passed archive, arm64 executable, story/content and all 113 voice hash checks.
-
-[Download 1.0.0 from build25](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa66847c12cd81c2be084ae?open-setting=build-artifacts) · [Spoiler-free release guide](docs/1.0-release.md) · [Verification record](docs/release-100-verification.json)
-
-119 core tests, 13 iPhone 17 Pro UI tests, three iPhone 17 checks and three additional 375×667 compact-screen checks passed. Portrait expression, closed-eye and breathing renders were inspected. Physical outdoor pace, interruptions and the new voice clips still need user-device feedback; this is not an App Store publication claim.
-
-- Offline main story and operator conversations, custom partner names, remembered choices and relationship progression.
-- Persistent quests, rank exams and time-based qualifications; existing saves retain their equipment and history.
-- Animated operator breathing/blinking and six dialogue expressions; five association growth backgrounds.
-- 17 creatures, 32 equipment items, 113 offline voice cues, original UI sound effects.
-- Exploration, contracts and gate combat with optional short accelerations, accumulated boss damage and neutral walking alternatives.
-- Production has no simulated activity entry. Dedicated Debug simulator tests retain an isolated harness.
-- Collections, backup/import/reset and on-device data guidance.
-
-Distribution remains the existing private Codemagic/AltStore route. Version 1.0 does not imply App Store publication.
-
-## Previous release record
-
-# Hunter Run — 0.11 field encounters and discovery gear
-
-iPhone audio running RPG. SwiftUI + Core Location + Core Motion + AVFoundation.
-Primary field device: user-reported iPhone 17 Pro / iOS 26.6.2.
-Minimum deployment target: iOS 17.0 (compatibility target, not a claim of device verification).
-
-## 0.11 expansion
-- Four illustrated creatures: dark-elf scout/captain and succubus weaver/warden.
-- Eight discovery-linked equipment items, with individual artwork; all four departments can reach Lv.3.
-- Saved encounter alternatives rotate across patrols while retaining gate objectives and investigation-only exploration.
-- A public field board and targeted mock activities let players preview locked creatures without unlocking real rewards.
-- Sixteen new operator recordings; the 64 previously approved WAVs remain byte-for-byte unchanged.
-- 101 portable core tests and content/80-audio hash validation passed locally. Apple build23 also passed all101 core and10 UI checks.
-[0.11 field guide](docs/0.11-월영과-몽환.md).
-
-## Verified build (0.11.0)
-Codemagic demo build23 completed on2026-09-12 KST from commit `b5e4529` on Mac mini M2 in7m48s.
-All101 core tests and10 iPhone simulator UI tests passed, including field mock completion and subsequent story playback controls. Physical-iPhone Release compilation succeeded.
-`HunterRun-0.11.0-build13-install.zip` (79.11MB) contains `HunterRun-0.11.0-build13-unsigned.ipa`.
-Packaging verified ZIP/IPA integrity, version/build, executable and all80 voice hashes.
-[Build and artifacts](https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6aa51cfe6d07de75e140b03f). [한국어 설치 안내](docs/시작안내.md).
-
-## Added in 0.10.1
-- User-approved replacements for clips 28, 57, 61 and 64; the other 60 files are unchanged.
-- Clip 28 has its last 0.5 seconds removed at a quiet boundary, eliminating the reported trailing sound.
-- Verified installer: build21,93 core and9 UI checks passed.
-
-## Added in 0.10
-- User-selected A narration method for the 14 flagged recordings and revised/new lines; no “우와” in current dialogue.
-- Optional ten-second pursuits and boss barrier attacks, with four-second intent confirmation included in those ten seconds.
-- Thirty-second steady boss alternatives, two bursts per activity, 180-second intervals and 60-second easy investigation periods.
-- Mixed burst/steady attacks in every phase of both bosses, remaining-effort/recovery UI and a 20-minute boss mock activity.
-- Pause and save recovery preserve the remaining effort and intensity budget. All 93 core and 9 Apple UI tests passed in build20. The four follow-up recordings were approved and applied in0.10.1.
-[0.10 field guide](docs/0.10-가속과-음성.md), [v1 progress estimate](docs/v1-progress-estimate.md).
-
-## Added in 0.9
-- 56 offline voice clips in consistent friendly Korean speech, using the user-approved adult voice reference.
-- Named encounter results distinguish real defeats, damage, investigation, withdrawal and recovery.
-- Phase-specific guidance for both major bosses and six unlock-gated dispatch summaries.
-- Activity captions use the exact selected voice variant; short endurance substitutions use a short hold instruction.
-- Local and Apple game engine: 84 passing tests; 9 simulator UI tests, Release compilation and all bundled voice hashes verified.
-[0.9 dialogue and test guide](docs/0.9-오퍼레이터-대사.md).
-
-## Added in 0.8
-- Approved original operator voice: 19 local WAVs, including three pairs of alternating equivalent lines.
-- Large-eyed young adult operator with navy hair streaks and true transparent cutout.
-- 400m endurance battles and 25-second ambush responses; short goals use a brief hold.
-- Deterministic patrol timing variation with recovery stability and canonical codex identities.
-- Recovery-period combat suppression, encounter guide and 20-minute mock contract.
-- Versioned installer filenames and verification of all bundled voice hashes.
-- Local validation: 77 core tests and content/audio checks passed.
-[0.8 test guide](docs/0.8-현장-테스트.md).
-
-## Added in 0.7
-- Bottom navigation: home / hunter / large central hunter activity / association / codex.
-- Removed the large activity card on home; settings are a 44pt gear below the profile/rank.
-- Disable automatic screen lock only during foreground unfinished activities, including pause; normal locking resumes on results/home/background. Physical-device lock behavior still needs testing.
-- Existing temporary voice remains in the app. Rejected stock presets A–E were excluded. Original VoiceDesign auditions were generated locally; the user prefers the brighter gentle revision and is discussing character presentation.
-[0.7 테스트](docs/0.7-음성과-메뉴.md), [오퍼레이터 방향](docs/operator-voice-direction.md).
-
-## Added in 0.6
-- Lobby BGM continues through activity preparation and stops on actual/mock activity start.
-- Hunter activity entry with exploration, contract, gate investigation and boss-hunt start labels.
-- Personal pace reference from eligible real sessions: at least five minutes of good-GPS stable running, excluding events and post-combat recovery. Last-five median with a 5% per-session change limit; today's slower baseline takes priority.
-- Reference/reset screen and per-activity observation reports; legacy saves retained, simulations excluded from learning.
-- Recent pace display uses a time-weighted 12-second window with bounded changes, clears on stops/pause/unreliable GPS and restarts from fresh data. Raw gameplay, distance and time values are unchanged.
-Validation: 68 core tests, 8 iPhone UI tests, Release compilation, resource validation and installer integrity passed in verified build 16. Physical-device pace/audio follow-up remains necessary.
-[한국어 0.6 테스트](docs/0.6-활동-테스트.md), [pace display regression](docs/pace-display-regression.md).
-
-## Added in 0.5
-- Continuous lobby BGM across home, hunter/equipment, archive, menu and association. RUN setup and active/result screens stay silent for BGM.
-- Four skippable welcome pages with optional permission/audio actions; existing saves are not forced through onboarding.
-- Six readable operator dispatches unlocked in order by real activities, facilities and the boundary boss.
-- Saved read markers, unread count on home, and the next story requirement in the archive.
-- No reading rewards; simulations cannot unlock real story progress. Original operator/room artwork reused.
-Validation: all 51 core tests and seven UI tests passed in the verified Apple build.
-[한국어 0.5 테스트](docs/0.5-통신-테스트.md), [BGM regression](docs/bgm-navigation-regression.md).
-
-## Added in 0.4
-- Large home RUN CTA and a slightly larger central association-management control.
-- Two persistent bosses with three HP phases, per-run settlement and manually opened new rounds.
-- Seven monster illustrations, discovery-gated archive and research-based combat analysis.
-- Three association backgrounds based on 0/2/4 upgraded departments.
-- Original 32-second synthesized lobby BGM sketch; foreground home/association only, with saved controls.
-- Boss mock preparation before unlock; real HP and rewards remain unchanged in simulation.
-Validation: 43 core tests and 6 simulator UI tests passed in the verified Apple build.
-[한국어 0.4 테스트](docs/0.4-토벌-테스트.md).
-
-## Added in 0.3
-- Association management home CTA and an emphasized central RUN control.
-- Twelve individually generated equipment illustrations, details, owned filter and loadout view.
-- Time, distance (1/3/5/10 km), and manually ended free activities.
-- Recurring 20-active-minute patrols for distance/free goals, stable archive identities and per-run core caps.
-- Activity journal with filters, total distance/count and per-run goal/event/reward details.
-- In-app field guide and old-save goal fallback.
-[한국어 0.3 테스트](docs/0.3-현장-테스트.md), [goal rules](docs/activity-goals.md), [art direction](docs/equipment-art-direction.md).
-
-## Included now
-- Native association home based on the approved earpiece operator concept.
-- Exploration, contract and progression-gated high-risk gate mission profiles.
-- 5/20/30-minute real runs, unlockable 45-minute goals, and a 3-minute simulated run.
-- GPS + motion + pedometer inputs; uncertainty suspends precision scoring.
-- Foreground-started background location session; intermittent local voice playback.
-- Sixty-four pre-generated designed Korean WAV clips; no runtime TTS or server.
-- Pause/resume, goal completion, local progress, recovery, import/export, basic field archive.
-- Mock speed/movement/GPS controls and a non-destructive recovery drill.
-- Pure Swift engine tests including stop protection, replay, gap, and settlement invariants.
-
-## Progression in 0.2
-- Twelve equipment items across weapon, armor, shoes and relic slots; purchases and loadouts.
-- Four departments with one functional upgrade each: gate access, analysis, advanced equipment, extended contracts.
-- Rank evaluation using level, completed goals and boss records; no XP-only automatic promotion.
-- Mode-specific research/crystal rewards and boss cores; simulation cannot award progression.
-- Legacy save decoding and saved run loadout/mission snapshots.
-[한국어 성장 테스트](docs/0.2-성장-테스트.md), [design and persistence](docs/progression-design.md).
-
-## Not yet implemented
-Expanded voiced story/content, further operator performance polish,
-polished audio production and production balancing.
-This is a playable progression milestone, not content-complete v1. See [remaining work](docs/v1-remaining.md).
-
-## Build (macOS / Codemagic)
-1. Place this folder's contents at the ROOT of the linked repository.
-2. Run the `ios-demo` workflow in `codemagic.yaml`.
-3. It validates resources, runs Swift tests, generates the Xcode project, compiles
-   the actual iPhone target, and packages a versioned `HunterRun-0.8.0-build9-unsigned.ipa`.
-4. The IPA is UNSIGNED and cannot be installed by tapping a download link.
-   Use personal signing via AltStore Classic / AltServer on Windows.
-5. No Apple developer credentials are needed by this build workflow.
-   Do not enable paid billing to run this demo; use available personal M2 minutes.
-
-The cloud workflow has a 30-minute cap and no automatic triggers.
-No TestFlight upload, App Store publication, analytics, or payment integration is configured.
-An uploaded build still needs a real-device install and field test.
-
-## Local logic tests (Linux/macOS with Swift 5.9+)
 ```sh
 swift test
 python3 scripts/validate.py
 ```
-Linux tests do not validate Apple framework compilation or real sensor behavior.
 
-## First iPhone test
-See [docs/TESTING.md](docs/TESTING.md). Start with 5 minutes and pursuit OFF.
-Audio files are locally generated Korean operator speech from the user-approved synthetic reference. No runtime TTS or paid API is used.
+현재 158개의 코어 테스트와 콘텐츠·음성·이미지 검증을 통과했습니다. GPS 거리와 페이스, 센서 민감도, 오디오 타이밍은 iPhone 17 Pro 실기기 테스트를 계속 반영하고 있습니다.
 
-## Design
-Approved operator: original earpiece pose, white shirt, dark tie, calm office atmosphere.
-Home uses separate transparent operator and office layers. Additional expressions are a later pass.
-SwiftUI renders text/buttons; the UI is not a stretched screenshot.
+## 문서
 
-## Data
-Saves are local, with atomic writes and a previous valid snapshot.
-Mock sessions cannot grant real rewards. Exact raw coordinates are not saved.
-Save import replaces progress and requires confirmation in the UI.
-Do not place personal saves, signing credentials, or tokens in this repository.
+- [전체 버전 변경 기록](CHANGELOG.md)
+- [게임 데이터와 실기기 테스트](docs/TESTING.md)
+- [스토리 및 홈 화면 방향](docs/story-and-home-direction.md)
+- [1.3 야외 확장 설계](docs/1.3.0-expedition-design.md)
+- [게임 시스템의 남은 작업](docs/v1-remaining.md)
