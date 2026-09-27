@@ -42,14 +42,22 @@ struct BossBoardView: View {
                 ForEach(model.allBosses.filter { ($0.requiredBossClear != nil) == mutations }) { boss in
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     let unlocked = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
+                    let defeatCount = boss.requiredDefeats?.filter { FieldDiscovery.defeated($0, in: model.save.profile) }.count ?? 0
+                    let concealed = (boss.requiredDefeats.map { defeatCount < $0.count } ?? false)
+                        || (boss.requiredBossClear == "corrupted-hunter" && (model.save.profile.bosses?["corrupted-hunter"]?.clears ?? 0) == 0)
                     VStack(alignment: .leading, spacing: 14) {
-                        Image(BossMutations.artwork(boss)).resizable().scaledToFit().frame(maxWidth: .infinity).frame(height: 240).clipShape(RoundedRectangle(cornerRadius: 16)).accessibilityLabel(boss.name + " 이미지")
-                        Text(boss.name).font(.title2.bold())
-                        Text(boss.description).font(.callout).foregroundStyle(Theme.muted)
+                        if concealed {
+                            Image(systemName: "lock.shield.fill").font(.system(size: 68)).foregroundStyle(Theme.muted)
+                                .frame(maxWidth: .infinity).frame(height: 240).accessibilityLabel("아직 확인되지 않은 토벌 대상")
+                        } else {
+                            Image(BossMutations.artwork(boss)).resizable().scaledToFit().frame(maxWidth: .infinity).frame(height: 240).clipShape(RoundedRectangle(cornerRadius: 16)).accessibilityLabel(boss.name + " 이미지")
+                        }
+                        Text(concealed ? "미확인 최종 대상" : boss.name).font(.title2.bold())
+                        Text(concealed ? (boss.requiredBossClear == "corrupted-hunter" ? "원형 대상 토벌 후 확인할 수 있어요." : "선발대 정화 기록 \(defeatCount) / \(boss.requiredDefeats?.count ?? 0)") : boss.description).font(.callout).foregroundStyle(Theme.muted)
                         if boss.requiredBossClear != nil { Label("변이 의뢰 · 원형 토벌 후 해금", systemImage: "sparkles").font(.caption).foregroundStyle(Theme.teal) }
                         let encounter = BossEncounter(definition: boss, state: state)
                         BossHPView(name: "\(state.round)회차 · 누적 토벌 \(state.clears)회", remaining: state.remainingHP, maximum: state.maximumHP, phase: encounter.phaseName)
-                        if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기 진행 필요", systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
+                        if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기" + (concealed ? " · 선발대 정화 필요" : " 진행 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
                         if state.remainingHP > 0 {
                             Button("토벌 활동 준비") { model.prepareBoss(boss); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked).accessibilityIdentifier("boss.prepare." + boss.id)
                         } else {
@@ -73,8 +81,10 @@ struct BossSelectionView: View {
             Button { model.selectedBoss = nil } label: { Label("일반 게이트", systemImage: model.selectedBoss == nil ? "checkmark.circle.fill" : "circle") }.buttonStyle(GameButtonStyle())
             ForEach(model.allBosses) { boss in
                 let available = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
+                let concealed = (boss.requiredDefeats?.contains { !FieldDiscovery.defeated($0, in: model.save.profile) } ?? false)
+                    || (boss.requiredBossClear == "corrupted-hunter" && (model.save.profile.bosses?["corrupted-hunter"]?.clears ?? 0) == 0)
                 Button { model.selectedBoss = boss.id } label: {
-                    HStack { Image(systemName: model.selectedBoss == boss.id ? "checkmark.circle.fill" : "circle"); Text(boss.name); Spacer(); if !available { Image(systemName: "lock.fill") } }
+                    HStack { Image(systemName: model.selectedBoss == boss.id ? "checkmark.circle.fill" : "circle"); Text(concealed ? "미확인 최종 대상" : boss.name); Spacer(); if !available { Image(systemName: "lock.fill") } }
                 }.buttonStyle(GameButtonStyle()).disabled(!available)
                 if model.selectedBoss == boss.id {
                     let state = BossCampaign.state(boss, profile: model.save.profile)

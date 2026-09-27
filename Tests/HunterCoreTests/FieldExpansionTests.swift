@@ -14,7 +14,7 @@ final class FieldExpansionTests: XCTestCase {
         let c = try load("encounters", EncounterCatalog.self), g = try load("progression", ProgressionCatalog.self)
         try c.validate(); var p = Profile()
         XCTAssertTrue(c.encounters.filter { $0.available(to: p, catalog: g) }.isEmpty)
-        p = unlocked(); XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 10)
+        p = unlocked(); XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 18)
         var growth = p.growth; growth.rank = "E"; p.growth = growth
         XCTAssertEqual(c.encounters.filter { $0.available(to: p, catalog: g) }.count, 2)
     }

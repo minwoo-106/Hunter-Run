@@ -158,6 +158,88 @@
       "bossID": null,
       "defeated": "veil-witch_defeated",
       "hit": "veil-witch_hit"
+    },
+    {
+      "id": "mirror-shard-automata",
+      "eventIDs": [
+        "mirror-shard-automata"
+      ],
+      "bossID": null,
+      "defeated": "mirror-shard-automata_defeated",
+      "hit": "mirror-shard-automata_hit"
+    },
+    {
+      "id": "ironhide-charger",
+      "eventIDs": [
+        "ironhide-charger"
+      ],
+      "bossID": null,
+      "defeated": "ironhide-charger_defeated",
+      "hit": "ironhide-charger_hit"
+    },
+    {
+      "id": "corrupted-vanguard-warrior",
+      "eventIDs": [
+        "corrupted-vanguard-warrior"
+      ],
+      "bossID": null,
+      "defeated": "corrupted-vanguard-warrior_defeated",
+      "hit": "corrupted-vanguard-warrior_hit"
+    },
+    {
+      "id": "corrupted-vanguard-mage",
+      "eventIDs": [
+        "corrupted-vanguard-mage"
+      ],
+      "bossID": null,
+      "defeated": "corrupted-vanguard-mage_defeated",
+      "hit": "corrupted-vanguard-mage_hit"
+    },
+    {
+      "id": "corrupted-vanguard-archer",
+      "eventIDs": [
+        "corrupted-vanguard-archer"
+      ],
+      "bossID": null,
+      "defeated": "corrupted-vanguard-archer_defeated",
+      "hit": "corrupted-vanguard-archer_hit"
+    },
+    {
+      "id": "corrupted-vanguard-cleric",
+      "eventIDs": [
+        "corrupted-vanguard-cleric"
+      ],
+      "bossID": null,
+      "defeated": "corrupted-vanguard-cleric_defeated",
+      "hit": "corrupted-vanguard-cleric_hit"
+    },
+    {
+      "id": "mirror-witch",
+      "eventIDs": [
+        "mirror-witch"
+      ],
+      "bossID": null,
+      "defeated": "mirror-witch_defeated",
+      "hit": "mirror-witch_hit"
+    },
+    {
+      "id": "ironclad-rhino",
+      "eventIDs": [
+        "ironclad-rhino"
+      ],
+      "bossID": null,
+      "defeated": "ironclad-rhino_defeated",
+      "hit": "ironclad-rhino_hit"
+    },
+    {
+      "id": "corrupted-hunter",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "corrupted-hunter",
+      "defeated": "corrupted-hunter_defeated",
+      "hit": "corrupted-hunter_hit"
     }
   ]
 }

@@ -31,6 +31,9 @@ struct OperatorPortrait: View {
                 .drawingGroup()
                 .distortionEffect(ShaderLibrary.operatorBreath(.float(Float(time)), .float2(Float(width), Float(height))),
                                   maxSampleOffset: CGSize(width: 4, height: 4), isEnabled: animate)
+                .rotationEffect(.degrees(animate ? sin(time / 4.2) * (expression == "thoughtful" ? 0.72 : 0.38) : 0))
+                .offset(x: animate ? sin(time / 6.1) * 1.2 : 0)
+                .animation(.easeInOut(duration: 0.42), value: expression)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             }
         }.accessibilityHidden(true).allowsHitTesting(false)

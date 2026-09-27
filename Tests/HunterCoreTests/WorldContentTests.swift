@@ -19,7 +19,7 @@ final class WorldContentTests: XCTestCase {
     }
     func testWorldCatalogAndStageThresholds() throws {
         let world = try world(); XCTAssertNoThrow(try world.validate())
-        XCTAssertEqual(world.monsters.count, 17); XCTAssertEqual(world.bosses.count, 2)
+        XCTAssertEqual(world.monsters.count, 26); XCTAssertEqual(world.bosses.count, 3)
         var profile = Profile(); XCTAssertEqual(AssociationStage.level(profile), 0)
         var growth = profile.growth; growth.departments["observation"] = 2; profile.growth = growth
         XCTAssertEqual(AssociationStage.level(profile), 0)

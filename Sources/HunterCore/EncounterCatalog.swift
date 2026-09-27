@@ -19,12 +19,14 @@ public struct FieldEncounter: Codable, Identifiable {
     public var event: MissionTemplate
     public var survey: MissionTemplate?
     public var requiredMain: String? = nil
+    public var requiredDefeats: [String]? = nil
 
     public func available(to profile: Profile, catalog: ProgressionCatalog) -> Bool {
         let rank = Progression.ranks.firstIndex(of: profile.growth.rank) ?? -1
         return rank >= (Progression.ranks.firstIndex(of: requiredRank) ?? Int.max)
             && (requiredAction.map { catalog.unlocked($0, profile: profile) } ?? true)
             && (requiredMain.map { profile.journey?.unlocked.contains($0) == true || FieldDiscovery.events(in: profile).contains(event.id) } ?? true)
+            && (requiredDefeats?.allSatisfy { FieldDiscovery.defeated($0, in: profile) } ?? true)
     }
 
     public var preview: GameContent {
@@ -61,6 +63,12 @@ public struct EncounterCatalog: Codable {
 }
 
 public enum FieldDiscovery {
+    public static func defeated(_ eventID: String, in profile: Profile) -> Bool {
+        profile.runs.contains { run in
+            (run.majorBoss?.bossID == eventID && run.majorBoss?.cleared == true)
+                || run.records.contains { $0.catalogID == eventID && $0.defeated == true && $0.outcome != .neutral && $0.kind != .discovery }
+        }
+    }
     public static func events(in profile: Profile) -> Set<String> {
         (profile.discoveredEvents ?? []).union(profile.runs.flatMap { $0.records.filter { $0.outcome != .neutral }.map(\.catalogID) })
     }

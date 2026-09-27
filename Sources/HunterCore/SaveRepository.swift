@@ -73,7 +73,7 @@ public final class SaveRepository {
                   (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }
             if let stats = run.loadout {
-                guard stats.hp.isFinite, (100...600).contains(stats.hp), stats.attack.isFinite, (0.5...3).contains(stats.attack), stats.defense.isFinite, (0...0.65).contains(stats.defense), stats.eventBonus.isFinite, (0...0.2).contains(stats.eventBonus), (0...5).contains(stats.researchBonus) else { throw Failure.invalid }
+                guard stats.hp.isFinite, (100...1000).contains(stats.hp), stats.attack.isFinite, (0.5...12).contains(stats.attack), stats.defense.isFinite, (0...0.8).contains(stats.defense), stats.eventBonus.isFinite, (0...0.45).contains(stats.eventBonus), (0...15).contains(stats.researchBonus) else { throw Failure.invalid }
             }
             if let boss = run.boss {
                 guard boss.isValid, run.mode == .gate else { throw Failure.invalid }

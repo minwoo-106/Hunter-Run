@@ -10,7 +10,7 @@ final class ProgressionTests: XCTestCase {
     func testCatalogsAndUnlocksAreValid() throws {
         let catalog = try catalog(); try catalog.validate()
         let missions = try load("missions.json", as: MissionCatalog.self); try missions.validate()
-        XCTAssertEqual(catalog.equipment.count, 32)
+        XCTAssertEqual(catalog.equipment.count, 36)
         XCTAssertEqual(missions.content(for: .exploration, extended: false).events.filter { $0.kind != .discovery }.count, 0)
         XCTAssertEqual(missions.content(for: .contract, extended: true).events.count, 6)
     }

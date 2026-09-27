@@ -175,6 +175,97 @@
         "veil-witch"
       ],
       "bossID": null
+    },
+    {
+      "id": "mirror-shard-automata",
+      "name": "거울 파편 인형",
+      "family": "거울 구조체",
+      "description": "거울 파편의 반사 주기를 읽어요. 35초간 일정한 달리기로 환영을 흐트러뜨려요.",
+      "eventIDs": [
+        "mirror-shard-automata"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "ironhide-charger",
+      "name": "철피 돌진수",
+      "family": "철갑 야수",
+      "description": "돌진을 피하기 위해 속도를 올릴 필요는 없어요. 일정한 달리기로 충격의 틈을 관측해요.",
+      "eventIDs": [
+        "ironhide-charger"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "corrupted-vanguard-warrior",
+      "name": "오염된 선발대 전사",
+      "family": "오염된 선발대",
+      "description": "선봉의 검격을 400m 동안 차분히 흘려보내요. 짧은 목표에서는 30초 유지 대응해요.",
+      "eventIDs": [
+        "corrupted-vanguard-warrior"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "corrupted-vanguard-mage",
+      "name": "오염된 선발대 마법사",
+      "family": "오염된 선발대",
+      "description": "마법진이 펼쳐지면 안전한 구간에서만 선택적으로 10초 가속해요. 30초 유지 공략도 가능해요.",
+      "eventIDs": [
+        "corrupted-vanguard-mage"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "corrupted-vanguard-archer",
+      "name": "오염된 선발대 궁수",
+      "family": "오염된 선발대",
+      "description": "그림자 화살을 피하려고 갑자기 방향을 바꾸지 마세요. 평소 페이스를 유지해요.",
+      "eventIDs": [
+        "corrupted-vanguard-archer"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "corrupted-vanguard-cleric",
+      "name": "오염된 선발대 성직자",
+      "family": "오염된 선발대",
+      "description": "뒤틀린 보호막에 40초 동안 일정한 페이스로 대응해요. 정화 신호를 확인할게요.",
+      "eventIDs": [
+        "corrupted-vanguard-cleric"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "mirror-witch",
+      "name": "거울마녀",
+      "family": "엘리트 · 거울술사",
+      "description": "반사 결계가 약해지는 순간을 노려요. 안전하면 10초 가속, 아니면 30초 유지 공격으로 대응해요.",
+      "eventIDs": [
+        "mirror-witch"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "ironclad-rhino",
+      "name": "철갑 코뿔소",
+      "family": "엘리트 · 철갑 야수",
+      "description": "두꺼운 외피를 400m 동안 지속 압박해요. 짧은 목표라면 30초 유지 공격으로 전환해요.",
+      "eventIDs": [
+        "ironclad-rhino"
+      ],
+      "bossID": null
+    },
+    {
+      "id": "corrupted-hunter",
+      "name": "타락 헌터",
+      "family": "주요 보스 · 귀환의 선봉",
+      "description": "오염된 선발대 네 사람의 기록을 정화해야만 길을 찾을 수 있어요.",
+      "eventIDs": [
+        "major-strike-a",
+        "major-strike-b"
+      ],
+      "bossID": "corrupted-hunter"
     }
   ],
   "bosses": [
@@ -515,6 +606,154 @@
         }
       ],
       "requiredMain": "M14"
+    },
+    {
+      "id": "corrupted-hunter",
+      "name": "타락 헌터",
+      "description": "선발대 네 사람의 오염을 정화한 뒤 여러 활동에 걸쳐 결계를 해체해요.",
+      "requiredRank": "A",
+      "maximumHP": 3200,
+      "phases": [
+        {
+          "schema": 1,
+          "missionTitle": "타락 헌터 정화 작전",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "선발대 기록 대조",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "타락 헌터 · 가속 정화",
+              "kind": "boss",
+              "startFraction": 0.35,
+              "duration": 10,
+              "hp": 3200,
+              "audio": "corrupted-hunter_phase1",
+              "burstSeconds": 10,
+              "steadyAudio": "corrupted-hunter_steady"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "타락 헌터 · 유지 정화",
+              "kind": "boss",
+              "startFraction": 0.7,
+              "duration": 30,
+              "hp": 3200,
+              "audio": "corrupted-hunter_steady"
+            },
+            {
+              "id": "major-recovery",
+              "title": "선발대 기록 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "타락 헌터 정화 작전",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "선발대 기록 대조",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "타락 헌터 · 유지 압박",
+              "kind": "boss",
+              "startFraction": 0.35,
+              "duration": 30,
+              "hp": 3200,
+              "audio": "corrupted-hunter_phase2"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "타락 헌터 · 유지 정화",
+              "kind": "boss",
+              "startFraction": 0.7,
+              "duration": 10,
+              "hp": 3200,
+              "audio": "corrupted-hunter_phase2",
+              "burstSeconds": 10,
+              "steadyAudio": "corrupted-hunter_steady"
+            },
+            {
+              "id": "major-recovery",
+              "title": "선발대 기록 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        },
+        {
+          "schema": 1,
+          "missionTitle": "타락 헌터 정화 작전",
+          "events": [
+            {
+              "id": "major-probe",
+              "title": "선발대 기록 대조",
+              "kind": "discovery",
+              "startFraction": 0.13,
+              "duration": 30,
+              "hp": 0,
+              "audio": "investigate"
+            },
+            {
+              "id": "major-strike-a",
+              "title": "타락 헌터 · 가속 정화",
+              "kind": "boss",
+              "startFraction": 0.35,
+              "duration": 10,
+              "hp": 3200,
+              "audio": "corrupted-hunter_phase3",
+              "burstSeconds": 10,
+              "steadyAudio": "corrupted-hunter_steady"
+            },
+            {
+              "id": "major-strike-b",
+              "title": "타락 헌터 · 유지 정화",
+              "kind": "boss",
+              "startFraction": 0.7,
+              "duration": 30,
+              "hp": 3200,
+              "audio": "corrupted-hunter_steady"
+            },
+            {
+              "id": "major-recovery",
+              "title": "선발대 기록 회수",
+              "kind": "discovery",
+              "startFraction": 0.82,
+              "duration": 20,
+              "hp": 0,
+              "audio": "investigate"
+            }
+          ]
+        }
+      ],
+      "requiredMain": "M16",
+      "requiredDefeats": [
+        "corrupted-vanguard-warrior",
+        "corrupted-vanguard-mage",
+        "corrupted-vanguard-archer",
+        "corrupted-vanguard-cleric"
+      ]
     }
   ]
 }

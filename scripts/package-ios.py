@@ -7,7 +7,7 @@ assert all(c.isdigit() or c=='.' for c in version) and str(build).isdigit()
 assert info['CFBundleIdentifier']=='com.hunterrun.demo'
 manifest_paths=list(app.rglob('operator-voice.json')); assert len(manifest_paths)==1
 voice=json.loads(manifest_paths[0].read_text())
-assert len(voice['clips'])==135
+assert len(voice['clips'])==177
 for clip in voice['clips']:
     files=list(app.rglob(clip['file'])); assert len(files)==1,clip['file']
     assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']

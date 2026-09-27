@@ -14,7 +14,8 @@
       "attack": 0.12,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 1
     },
     {
       "id": "resonance-blade",
@@ -29,7 +30,8 @@
       "attack": 0.25,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 2
     },
     {
       "id": "core-spear",
@@ -44,7 +46,8 @@
       "attack": 0.4,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "field-vest",
@@ -59,7 +62,8 @@
       "attack": 0,
       "defense": 0.08,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 1
     },
     {
       "id": "barrier-coat",
@@ -74,7 +78,8 @@
       "attack": 0,
       "defense": 0.15,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 2
     },
     {
       "id": "core-armor",
@@ -89,7 +94,8 @@
       "attack": 0,
       "defense": 0.22,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "field-shoes",
@@ -104,7 +110,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0.04,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 1
     },
     {
       "id": "trace-shoes",
@@ -119,7 +126,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0.08,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 2
     },
     {
       "id": "core-shoes",
@@ -134,7 +142,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0.12,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "field-compass",
@@ -149,7 +158,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 1
+      "researchBonus": 1,
+      "tier": 1
     },
     {
       "id": "archive-lens",
@@ -164,7 +174,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 2
+      "researchBonus": 2,
+      "tier": 2
     },
     {
       "id": "core-orbit",
@@ -179,24 +190,26 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 3
+      "researchBonus": 3,
+      "tier": 3
     },
     {
       "id": "moon-blade",
       "name": "월영 반월검",
       "slot": "weapon",
-      "detail": "공격 보정 +0.47",
+      "detail": "공격 보정 +0.62",
       "crystals": 65,
       "research": 16,
       "cores": 2,
       "supportLevel": 3,
-      "requiredEvent": "dark-elf-captain",
-      "discoveryHint": "다크엘프 월영대장 실제 발견 기록 필요",
+      "discoveryHint": "다크엘프 월영대장 실제 토벌 필요",
       "hp": 0,
-      "attack": 0.47,
+      "attack": 0.62,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 4,
+      "requiredDefeat": "dark-elf-captain"
     },
     {
       "id": "moon-mail",
@@ -213,7 +226,8 @@
       "attack": 0,
       "defense": 0.16,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "moon-boots",
@@ -230,7 +244,8 @@
       "attack": 0,
       "defense": 0.03,
       "eventBonus": 0.1,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "moon-compass",
@@ -247,24 +262,26 @@
       "attack": 0.08,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 3
+      "researchBonus": 3,
+      "tier": 4
     },
     {
       "id": "dream-staff",
       "name": "몽환의 장봉",
       "slot": "weapon",
-      "detail": "HP +10 · 공격 보정 +0.44",
+      "detail": "공격 보정 +0.82",
       "crystals": 65,
       "research": 16,
       "cores": 2,
       "supportLevel": 3,
-      "requiredEvent": "succubus-warden",
-      "discoveryHint": "서큐버스 몽환경비관 실제 발견 기록 필요",
+      "discoveryHint": "서큐버스 몽환경비관 실제 토벌 필요",
       "hp": 10,
-      "attack": 0.44,
+      "attack": 0.82,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 5,
+      "requiredDefeat": "succubus-warden"
     },
     {
       "id": "dream-mantle",
@@ -281,7 +298,8 @@
       "attack": 0,
       "defense": 0.2,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "dream-steps",
@@ -298,7 +316,8 @@
       "attack": 0,
       "defense": 0,
       "eventBonus": 0.1,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 3
     },
     {
       "id": "dream-mirror",
@@ -315,199 +334,312 @@
       "attack": 0,
       "defense": 0.04,
       "eventBonus": 0,
-      "researchBonus": 3
+      "researchBonus": 3,
+      "tier": 5
     },
     {
       "id": "glass-rapier",
       "name": "거울결 세검",
       "slot": "weapon",
-      "detail": "공격 +0.45 · 게임 판정 보정 +2%",
+      "detail": "공격 보정 +1.05",
       "crystals": 80,
       "research": 20,
       "cores": 1,
       "supportLevel": 3,
       "requiredRank": "C",
       "hp": 0,
-      "attack": 0.45,
+      "attack": 1.05,
       "defense": 0,
       "eventBonus": 0.02,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 6,
+      "requiredDefeat": "mirror-witch",
+      "discoveryHint": "거울마녀 실제 토벌 필요"
     },
     {
       "id": "ash-mallet",
-      "name": "재갑 파쇄추",
+      "name": "철갑 파쇄추",
       "slot": "weapon",
-      "detail": "HP +18 · 공격 +0.35 · 피해 경감 +8%",
+      "detail": "공격 보정 +1.28 · 게임 피해 경감 +10%",
       "crystals": 115,
       "research": 35,
       "cores": 2,
       "supportLevel": 3,
       "requiredRank": "B",
       "hp": 18,
-      "attack": 0.35,
-      "defense": 0.08,
+      "attack": 1.28,
+      "defense": 0.1,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 7,
+      "requiredDefeat": "ironclad-rhino",
+      "discoveryHint": "철갑 코뿔소 실제 토벌 필요"
     },
     {
       "id": "return-blade",
       "name": "귀환의 검",
       "slot": "weapon",
-      "detail": "공격 +0.50 · 조사 보너스 +1",
+      "detail": "공격 보정 +1.50",
       "crystals": 150,
       "research": 50,
       "cores": 3,
       "supportLevel": 3,
       "requiredRank": "A",
       "hp": 0,
-      "attack": 0.5,
+      "attack": 1.5,
       "defense": 0,
       "eventBonus": 0,
-      "researchBonus": 1
+      "researchBonus": 1,
+      "tier": 8,
+      "requiredDefeat": "corrupted-hunter",
+      "discoveryHint": "타락 헌터 완전 정화 필요"
     },
     {
       "id": "mirror-coat",
       "name": "굴절 방호 코트",
       "slot": "armor",
-      "detail": "HP +18 · 피해 경감 +20% · 게임 판정 보정 +6%",
+      "detail": "HP +62 · 게임 피해 경감 31% · 유지 공격 +16%",
       "crystals": 80,
       "research": 20,
       "cores": 1,
       "supportLevel": 3,
       "requiredRank": "C",
-      "hp": 18,
+      "hp": 62,
       "attack": 0,
-      "defense": 0.2,
-      "eventBonus": 0.06,
-      "researchBonus": 0
+      "defense": 0.31,
+      "eventBonus": 0.16,
+      "researchBonus": 0,
+      "tier": 6,
+      "requiredDefeat": "mirror-witch",
+      "discoveryHint": "거울마녀 실제 토벌 필요"
     },
     {
       "id": "ash-cuirass",
       "name": "재갑 흉갑",
       "slot": "armor",
-      "detail": "HP +45 · 피해 경감 +28%",
+      "detail": "HP +88 · 게임 피해 경감 38%",
       "crystals": 115,
       "research": 35,
       "cores": 2,
       "supportLevel": 3,
       "requiredRank": "B",
-      "hp": 45,
+      "hp": 88,
       "attack": 0,
-      "defense": 0.28,
+      "defense": 0.38,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 0,
+      "tier": 7,
+      "requiredDefeat": "ironclad-rhino",
+      "discoveryHint": "철갑 코뿔소 실제 토벌 필요"
     },
     {
       "id": "return-jacket",
       "name": "귀환 관측복",
       "slot": "armor",
-      "detail": "HP +32 · 피해 경감 +22% · 조사 보너스 +1",
+      "detail": "HP +120 · 게임 피해 경감 45% · 조사 데이터 +4",
       "crystals": 150,
       "research": 50,
       "cores": 3,
       "supportLevel": 3,
       "requiredRank": "A",
-      "hp": 32,
+      "hp": 120,
       "attack": 0,
-      "defense": 0.22,
+      "defense": 0.45,
       "eventBonus": 0,
-      "researchBonus": 1
+      "researchBonus": 4,
+      "tier": 8,
+      "requiredDefeat": "corrupted-hunter",
+      "discoveryHint": "타락 헌터 완전 정화 필요"
     },
     {
       "id": "echo-striders",
       "name": "잔광 기동화",
       "slot": "shoes",
-      "detail": "HP +10 · 공격 +0.10 · 게임 판정 보정 +15%",
+      "detail": "HP +24 · 공격 +0.24 · 유지 공격 +22%",
       "crystals": 80,
       "research": 20,
       "cores": 1,
       "supportLevel": 3,
       "requiredRank": "C",
-      "hp": 10,
-      "attack": 0.1,
+      "hp": 24,
+      "attack": 0.24,
       "defense": 0,
-      "eventBonus": 0.15,
-      "researchBonus": 0
+      "eventBonus": 0.22,
+      "researchBonus": 0,
+      "tier": 6,
+      "requiredDefeat": "mirror-witch",
+      "discoveryHint": "거울마녀 실제 토벌 필요"
     },
     {
       "id": "ash-treads",
       "name": "재갑 전술화",
       "slot": "shoes",
-      "detail": "HP +18 · 피해 경감 +10% · 게임 판정 보정 +10%",
+      "detail": "HP +40 · 공격 +0.31 · 게임 피해 경감 14% · 유지 공격 +28%",
       "crystals": 115,
       "research": 35,
       "cores": 2,
       "supportLevel": 3,
       "requiredRank": "B",
-      "hp": 18,
-      "attack": 0,
-      "defense": 0.1,
-      "eventBonus": 0.1,
-      "researchBonus": 0
+      "hp": 40,
+      "attack": 0.31,
+      "defense": 0.14,
+      "eventBonus": 0.28,
+      "researchBonus": 0,
+      "tier": 7,
+      "requiredDefeat": "ironclad-rhino",
+      "discoveryHint": "철갑 코뿔소 실제 토벌 필요"
     },
     {
       "id": "anchor-boots",
       "name": "정착의 장화",
       "slot": "shoes",
-      "detail": "HP +12 · 피해 경감 +5% · 게임 판정 보정 +20%",
+      "detail": "HP +58 · 공격 +0.42 · 게임 피해 경감 18% · 유지 공격 +36%",
       "crystals": 150,
       "research": 50,
       "cores": 3,
       "supportLevel": 3,
       "requiredRank": "A",
-      "hp": 12,
-      "attack": 0,
-      "defense": 0.05,
-      "eventBonus": 0.2,
-      "researchBonus": 0
+      "hp": 58,
+      "attack": 0.42,
+      "defense": 0.18,
+      "eventBonus": 0.36,
+      "researchBonus": 0,
+      "tier": 8,
+      "requiredDefeat": "corrupted-hunter",
+      "discoveryHint": "타락 헌터 완전 정화 필요"
     },
     {
       "id": "glass-compass",
       "name": "거울 나침반",
       "slot": "relic",
-      "detail": "HP +8 · 게임 판정 보정 +2% · 조사 보너스 +3",
+      "detail": "HP +22 · 공격 +0.18 · 유지 공격 +10% · 조사 데이터 +6",
       "crystals": 80,
       "research": 20,
       "cores": 1,
       "supportLevel": 3,
       "requiredRank": "C",
-      "hp": 8,
-      "attack": 0,
+      "hp": 22,
+      "attack": 0.18,
       "defense": 0,
-      "eventBonus": 0.02,
-      "researchBonus": 3
+      "eventBonus": 0.1,
+      "researchBonus": 6,
+      "tier": 6,
+      "requiredDefeat": "mirror-witch",
+      "discoveryHint": "거울마녀 실제 토벌 필요"
     },
     {
       "id": "hollow-seal",
       "name": "공백 인장",
       "slot": "relic",
-      "detail": "공격 +0.20 · 피해 경감 +8%",
+      "detail": "HP +34 · 공격 +0.35 · 게임 피해 경감 16% · 조사 데이터 +8",
       "crystals": 115,
       "research": 35,
       "cores": 2,
       "supportLevel": 3,
       "requiredRank": "B",
-      "hp": 0,
-      "attack": 0.2,
-      "defense": 0.08,
+      "hp": 34,
+      "attack": 0.35,
+      "defense": 0.16,
       "eventBonus": 0,
-      "researchBonus": 0
+      "researchBonus": 8,
+      "tier": 7,
+      "requiredDefeat": "ironclad-rhino",
+      "discoveryHint": "철갑 코뿔소 실제 토벌 필요"
     },
     {
       "id": "return-badge",
       "name": "귀환의 표식",
       "slot": "relic",
-      "detail": "HP +20 · 피해 경감 +6% · 조사 보너스 +2",
+      "detail": "HP +48 · 공격 +0.50 · 게임 피해 경감 22% · 조사 데이터 +10",
       "crystals": 150,
       "research": 50,
       "cores": 3,
       "supportLevel": 3,
       "requiredRank": "A",
-      "hp": 20,
-      "attack": 0,
-      "defense": 0.06,
+      "hp": 48,
+      "attack": 0.5,
+      "defense": 0.22,
       "eventBonus": 0,
-      "researchBonus": 2
+      "researchBonus": 10,
+      "tier": 8,
+      "requiredDefeat": "corrupted-hunter",
+      "discoveryHint": "타락 헌터 완전 정화 필요"
+    },
+    {
+      "id": "moon-wardplate",
+      "name": "월영 수호갑",
+      "slot": "armor",
+      "detail": "HP +48 · 게임 피해 경감 26%",
+      "crystals": 70,
+      "research": 18,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "requiredDefeat": "dark-elf-captain",
+      "discoveryHint": "다크엘프 월영대장 실제 토벌 필요",
+      "hp": 48,
+      "attack": 0,
+      "defense": 0.26,
+      "eventBonus": 0,
+      "researchBonus": 0,
+      "tier": 4
+    },
+    {
+      "id": "moon-wardboots",
+      "name": "월영 방진화",
+      "slot": "shoes",
+      "detail": "HP +12 · 게임 피해 경감 5% · 유지 공격 +15%",
+      "crystals": 62,
+      "research": 16,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "requiredDefeat": "dark-elf-captain",
+      "discoveryHint": "다크엘프 월영대장 실제 토벌 필요",
+      "hp": 12,
+      "attack": 0,
+      "defense": 0.05,
+      "eventBonus": 0.15,
+      "researchBonus": 0,
+      "tier": 4
+    },
+    {
+      "id": "dream-wardcloak",
+      "name": "몽환 결계망토",
+      "slot": "armor",
+      "detail": "HP +58 · 게임 피해 경감 29%",
+      "crystals": 82,
+      "research": 23,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "requiredDefeat": "succubus-warden",
+      "discoveryHint": "서큐버스 몽환경비관 실제 토벌 필요",
+      "hp": 58,
+      "attack": 0,
+      "defense": 0.29,
+      "eventBonus": 0,
+      "researchBonus": 0,
+      "tier": 5
+    },
+    {
+      "id": "dream-wardsteps",
+      "name": "몽환 결계화",
+      "slot": "shoes",
+      "detail": "HP +18 · 게임 피해 경감 8% · 유지 공격 +18%",
+      "crystals": 76,
+      "research": 20,
+      "cores": 2,
+      "supportLevel": 3,
+      "requiredRank": "C",
+      "requiredDefeat": "succubus-warden",
+      "discoveryHint": "서큐버스 몽환경비관 실제 토벌 필요",
+      "hp": 18,
+      "attack": 0,
+      "defense": 0.08,
+      "eventBonus": 0.18,
+      "researchBonus": 0,
+      "tier": 5
     }
   ],
   "upgrades": [

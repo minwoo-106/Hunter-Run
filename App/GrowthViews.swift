@@ -78,7 +78,7 @@ struct EquipmentView: View {
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(item.name).font(.headline)
                                 Text(item.detail).font(.caption).foregroundStyle(Theme.muted)
-                                Text(item.cores > 0 ? "코어 장비" : item.supportLevel > 1 ? "고급 장비" : "기본 장비").font(.caption2).foregroundStyle(Theme.teal)
+                                Text("단계 \(item.tier ?? 1) · \(item.stageName)").font(.caption2).foregroundStyle(Theme.teal)
                             }
                             Spacer(minLength: 0)
                             Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.muted)

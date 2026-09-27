@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "version": "1.3.6",
+  "clips": [
+    {
+      "key": "mirror-shard-automata_intro",
+      "file": "mirror-shard-automata_intro.wav",
+      "text": "거울 파편 인형이 움직여요! 삼십오 초 동안 평소 페이스를 유지하며 반사 마력을 흩뜨려봐요.",
+      "seed": 1297519553,
+      "seeds": [
+        1297519553
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.857,
+      "sha256": "c444791221bf95cf6ada843bdc1581df2fce50163ecf6ec0b4e134bf6a333633"
+    },
+    {
+      "key": "mirror-shard-automata_hit",
+      "file": "mirror-shard-automata_hit.wav",
+      "text": "거울 파편 인형의 균열을 찾았어요! 남은 움직임을 확인해요.",
+      "seed": 342894361,
+      "seeds": [
+        342894361
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.986,
+      "sha256": "7dd0901bb0641bd5c0c6f0cceb5b8945430e2ab1a07d0f14929be1417c1cbfe1"
+    },
+    {
+      "key": "mirror-shard-automata_defeated",
+      "file": "mirror-shard-automata_defeated.wav",
+      "text": "잘했어요! 거울 파편 인형의 동력이 멈췄어요. 마력 조각을 기록할게요.",
+      "seed": 319862347,
+      "seeds": [
+        319862347
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.254,
+      "sha256": "da1c87c08cc15952c0a7b1ffe525f9246f9c9dfd3a48ae95b96573da9ea6b152"
+    },
+    {
+      "key": "mirror-shard-automata_survey",
+      "file": "mirror-shard-automata_survey.wav",
+      "text": "거울 파편 인형의 흔적을 찾았어요! 편하게 이동하면 제가 조사할게요.",
+      "seed": 3506827929,
+      "seeds": [
+        3506827929
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.769,
+      "sha256": "4dc6f3ba214aef878d24fc5f2690220e0a743379f2eca2d17e461c616ed8da9d"
+    },
+    {
+      "key": "ironhide-charger_intro",
+      "file": "ironhide-charger_intro.wav",
+      "text": "철피 돌진수가 다가와요! 무리해서 가속하지 말고 삼십 초 동안 달리기를 이어가요.",
+      "seed": 3998046271,
+      "seeds": [
+        3998046271
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.381,
+      "sha256": "3489accf3ee3558538857d80559cd198a2f4454d32be5fecce9c9a8b9047db1b"
+    },
+    {
+      "key": "ironhide-charger_hit",
+      "file": "ironhide-charger_hit.wav",
+      "text": "철피 돌진수의 외피에 틈이 생겼어요! 반응을 계속 살펴볼게요.",
+      "seed": 3576174525,
+      "seeds": [
+        3576174525
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.707,
+      "sha256": "5c3ee07aab638c68bf9ddd758e2cbc92c3dae5c53acfd72d292294d4cc6b5677"
+    },
+    {
+      "key": "ironhide-charger_defeated",
+      "file": "ironhide-charger_defeated.wav",
+      "text": "대단해요! 철피 돌진수를 제압했어요. 다음 관측 경로가 열렸어요.",
+      "seed": 276850478,
+      "seeds": [
+        276850478
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.729,
+      "sha256": "6cb1634ca3bfa0e97313016fe7c47a9cc6feb76a575837ff3492b2880e4adc11"
+    },
+    {
+      "key": "ironhide-charger_survey",
+      "file": "ironhide-charger_survey.wav",
+      "text": "철피 돌진수가 지나간 흔적이에요! 안전하게 이동하며 조사해요.",
+      "seed": 120272522,
+      "seeds": [
+        120272522
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.4,
+      "sha256": "e171df4c14ff73e909602eb21b35fab322beccd001b3fc66db90828d27cf3f8d"
+    },
+    {
+      "key": "corrupted-vanguard-warrior_intro",
+      "file": "corrupted-vanguard-warrior_intro.wav",
+      "text": "오염된 선발대 전사가 길을 막았어요! 평소 페이스로 사백 미터를 이동하며 대응해요.",
+      "seed": 2265657976,
+      "seeds": [
+        2265657976
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.264,
+      "sha256": "5c2777f25a04fb671bda45d6e6f1ca913f3375164d09bf3aef32ed864ef64754"
+    },
+    {
+      "key": "corrupted-vanguard-warrior_hit",
+      "file": "corrupted-vanguard-warrior_hit.wav",
+      "text": "전사의 오염된 갑주가 약해졌어요. 조금만 더 지켜볼게요.",
+      "seed": 855542308,
+      "seeds": [
+        855542308
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.294,
+      "sha256": "ff8134cfd76c534a6ea50a768fc4486bae1ad40935f7f4f951f4f8b4cd2d4c1c"
+    },
+    {
+      "key": "corrupted-vanguard-warrior_defeated",
+      "file": "corrupted-vanguard-warrior_defeated.wav",
+      "text": "잘했어요! 선발대 전사의 오염을 정화했어요. 그의 기록을 확보했어요.",
+      "seed": 118206143,
+      "seeds": [
+        118206143
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.095,
+      "sha256": "f229e3bc3536b4162707750601e45934d2204a69ffda9268288e3b06c45b3c90"
+    },
+    {
+      "key": "corrupted-vanguard-warrior_survey",
+      "file": "corrupted-vanguard-warrior_survey.wav",
+      "text": "전사가 지나간 흔적이에요. 안전하게 이동하며 조사해요.",
+      "seed": 188004484,
+      "seeds": [
+        188004484
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.652,
+      "sha256": "2175dcf5237a37b5de27a8c94b9b0746d37a2994e8bd3eceeabe9a1c72405a22"
+    },
+    {
+      "key": "corrupted-vanguard-warrior_short",
+      "file": "corrupted-vanguard-warrior_short.wav",
+      "text": "오염된 선발대 전사의 반응이에요! 이번에는 삼십 초 동안 편안한 달리기로 대응해요.",
+      "seed": 3665401943,
+      "seeds": [
+        3665401943
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.759,
+      "sha256": "49146c1e67ed689bb8a4a58cc9f39a0c98fd699d77700efbf7f0c9482bb8cbc4"
+    },
+    {
+      "key": "corrupted-vanguard-mage_intro",
+      "file": "corrupted-vanguard-mage_intro.wav",
+      "text": "선발대 마법사가 마법진을 펼쳤어요! 안전하면 십 초 가속으로 틈을 공략해요. 유지 대응도 괜찮아요.",
+      "seed": 2414818116,
+      "seeds": [
+        2414818116
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.782,
+      "sha256": "98110c6c0f1999d7f49feb204870c8ced327ac43de99118a0c5a62adf8ec6e6d"
+    },
+    {
+      "key": "corrupted-vanguard-mage_hit",
+      "file": "corrupted-vanguard-mage_hit.wav",
+      "text": "마법진이 흔들려요! 차분히 대응해봐요.",
+      "seed": 3558143653,
+      "seeds": [
+        3558143653
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.117,
+      "sha256": "96e92d0c9713ebe7f395d1f750d05c44749d042a94c3a981eb7ab809f94896b0"
+    },
+    {
+      "key": "corrupted-vanguard-mage_defeated",
+      "file": "corrupted-vanguard-mage_defeated.wav",
+      "text": "잘했어요! 선발대 마법사의 오염을 정화했어요. 남긴 기록을 살펴볼게요.",
+      "seed": 4095089041,
+      "seeds": [
+        4095089041
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.472,
+      "sha256": "46d967deec9ef4d3a838728dc080139a4021249c26bf630c0d7232b8eb20a949"
+    },
+    {
+      "key": "corrupted-vanguard-mage_survey",
+      "file": "corrupted-vanguard-mage_survey.wav",
+      "text": "마법진의 흔적이에요. 편하게 이동하며 조사해요.",
+      "seed": 2238065460,
+      "seeds": [
+        2238065460
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.357,
+      "sha256": "15ecf602810db584ab5a749e710b40ab37f640543c78bdbe2784ccfdf67aded4"
+    },
+    {
+      "key": "corrupted-vanguard-mage_steady",
+      "file": "corrupted-vanguard-mage_steady.wav",
+      "text": "오염된 선발대 마법사의 결계를 유지 공격으로 약화시켜요. 삼십 초 동안 평소 페이스를 이어가요.",
+      "seed": 666219956,
+      "seeds": [
+        666219956
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.182,
+      "sha256": "795f75915020aceccbeb017ef23fed15ab226d393f20f4de3a6bf78edbeb5ed4"
+    },
+    {
+      "key": "corrupted-vanguard-archer_intro",
+      "file": "corrupted-vanguard-archer_intro.wav",
+      "text": "선발대 궁수가 화살을 겨눴어요! 방향을 급히 바꾸지 말고 평소 페이스를 이어가요.",
+      "seed": 3312700634,
+      "seeds": [
+        3312700634
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.529,
+      "sha256": "134e670d5c987fb99da85021ea388f77e5527c61418bcb6c42a95633bc306130"
+    },
+    {
+      "key": "corrupted-vanguard-archer_hit",
+      "file": "corrupted-vanguard-archer_hit.wav",
+      "text": "궁수의 그림자 활에 균열이 생겼어요. 반응을 살펴볼게요.",
+      "seed": 2846003671,
+      "seeds": [
+        2846003671
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.925,
+      "sha256": "90c75c6dfbe3676fdbcd1ca8a54b2a0d55ddd18d4eb5116a3281591e6b24f8e3"
+    },
+    {
+      "key": "corrupted-vanguard-archer_defeated",
+      "file": "corrupted-vanguard-archer_defeated.wav",
+      "text": "잘했어요! 선발대 궁수의 오염을 정화했어요. 화살의 출처도 확인했어요.",
+      "seed": 1460872555,
+      "seeds": [
+        1460872555
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.438,
+      "sha256": "a2a7d4e4a03985e97ff923842beab4e48afd264428c1d944bd827bb8a0e195c3"
+    },
+    {
+      "key": "corrupted-vanguard-archer_survey",
+      "file": "corrupted-vanguard-archer_survey.wav",
+      "text": "그림자 화살의 흔적이에요. 안전하게 이동하며 조사해요.",
+      "seed": 1289545467,
+      "seeds": [
+        1289545467
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.668,
+      "sha256": "36a7d290cc1aa0c19a453ec262d502b357c43201ea803213bdc842c78aca7509"
+    },
+    {
+      "key": "corrupted-vanguard-cleric_intro",
+      "file": "corrupted-vanguard-cleric_intro.wav",
+      "text": "선발대 성직자의 보호막이 뒤틀렸어요! 사십 초 동안 일정한 페이스로 정화 신호를 찾아봐요.",
+      "seed": 212058925,
+      "seeds": [
+        212058925
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.837,
+      "sha256": "08d9e09a7a4fcc07b98a4820b79d1d0129f5e1a65b33bade823a9e2f7dea2a82"
+    },
+    {
+      "key": "corrupted-vanguard-cleric_hit",
+      "file": "corrupted-vanguard-cleric_hit.wav",
+      "text": "보호막이 조금씩 옅어져요! 제가 신호를 추적할게요.",
+      "seed": 3600477531,
+      "seeds": [
+        3600477531
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.89,
+      "sha256": "bed2d4d6d3379cd088919b734f9127afc9592f4655a9f15193f88bb220cd5663"
+    },
+    {
+      "key": "corrupted-vanguard-cleric_defeated",
+      "file": "corrupted-vanguard-cleric_defeated.wav",
+      "text": "잘했어요! 선발대 성직자의 오염을 정화했어요. 네 사람의 기록을 이어볼게요.",
+      "seed": 2164906605,
+      "seeds": [
+        2164906605
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.92,
+      "sha256": "223c09fa088928d0b552f522a84574bf18e6825a23ae28172516ee870c5af8a5"
+    },
+    {
+      "key": "corrupted-vanguard-cleric_survey",
+      "file": "corrupted-vanguard-cleric_survey.wav",
+      "text": "뒤틀린 보호막의 흔적이에요. 편하게 조사해요.",
+      "seed": 1251994059,
+      "seeds": [
+        1251994059
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.421,
+      "sha256": "1644936422a549e4dc02c143124cf36e7856f2656cb72f78e0a390a612dcec48"
+    },
+    {
+      "key": "mirror-witch_intro",
+      "file": "mirror-witch_intro.wav",
+      "text": "거울마녀가 반사 결계를 펼쳤어요! 안전하면 십 초 가속으로 틈을 공략해요. 유지 공격도 괜찮아요.",
+      "seed": 3407850706,
+      "seeds": [
+        3407850706
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.094,
+      "sha256": "a0646df85a15c076093709b06de8585a40ef17136fade1eb1b641c9dd92c2e40"
+    },
+    {
+      "key": "mirror-witch_hit",
+      "file": "mirror-witch_hit.wav",
+      "text": "거울마녀의 결계가 약해졌어요! 차분히 대응해요.",
+      "seed": 343224425,
+      "seeds": [
+        343224425
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.745,
+      "sha256": "40896a5548394243eb06a3a76525cfe848102ac235134e22745bd5194147b778"
+    },
+    {
+      "key": "mirror-witch_defeated",
+      "file": "mirror-witch_defeated.wav",
+      "text": "대단해요! 거울마녀를 토벌했어요. 거울결 장비의 핵심을 확보했어요.",
+      "seed": 1648187895,
+      "seeds": [
+        1648187895
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.163,
+      "sha256": "fc1cc2ba65f2015f55772c47db2767e230523e77e14f9ed7604519138b3c5ec5"
+    },
+    {
+      "key": "mirror-witch_survey",
+      "file": "mirror-witch_survey.wav",
+      "text": "거울마녀의 마력 흔적이에요. 편하게 이동하며 기록할게요.",
+      "seed": 3411134477,
+      "seeds": [
+        3411134477
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.849,
+      "sha256": "f480882a53a9bca17b59c285b5c2ae1581cfaac93bc0a1598bda931a6ef6e1a9"
+    },
+    {
+      "key": "mirror-witch_steady",
+      "file": "mirror-witch_steady.wav",
+      "text": "거울마녀의 결계를 유지 공격으로 약화시켜요. 삼십 초 동안 평소 페이스를 이어가요.",
+      "seed": 2132584034,
+      "seeds": [
+        2132584034
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.502,
+      "sha256": "ea2dfd06bd93b24b1f1a1a173f364c5ecb00063dc8c239a949c5a3481ea730a8"
+    },
+    {
+      "key": "ironclad-rhino_intro",
+      "file": "ironclad-rhino_intro.wav",
+      "text": "철갑 코뿔소가 돌진해요! 평소 페이스로 사백 미터를 이동하며 외피를 압박해요.",
+      "seed": 800071781,
+      "seeds": [
+        800071781
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.421,
+      "sha256": "6f9a6b5386b54c35430a6cf83bf1b675ed8069861fff313da2d531d665fb0afb"
+    },
+    {
+      "key": "ironclad-rhino_hit",
+      "file": "ironclad-rhino_hit.wav",
+      "text": "철갑 코뿔소의 갑주가 갈라졌어요! 남은 반응을 확인해요.",
+      "seed": 731601238,
+      "seeds": [
+        731601238
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.121,
+      "sha256": "db7a3725f4f7954ef74a461e932beae23c02c48fa617a477c9c00a741d23f0ab"
+    },
+    {
+      "key": "ironclad-rhino_defeated",
+      "file": "ironclad-rhino_defeated.wav",
+      "text": "대단해요! 철갑 코뿔소를 토벌했어요. 철갑 장비의 핵심을 확보했어요.",
+      "seed": 3375215856,
+      "seeds": [
+        3375215856
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.044,
+      "sha256": "af40018561e25ba4f61e75c835c4635a5fe120b41e2ea0b9cc0f8c3e843ac21f"
+    },
+    {
+      "key": "ironclad-rhino_survey",
+      "file": "ironclad-rhino_survey.wav",
+      "text": "철갑 코뿔소의 발자국이에요. 안전하게 이동하며 조사해요.",
+      "seed": 1628555226,
+      "seeds": [
+        1628555226
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.895,
+      "sha256": "6fe918a220f154c7b7844bfaa07133ecca84d16103ca7ed061efbf48689c691d"
+    },
+    {
+      "key": "ironclad-rhino_short",
+      "file": "ironclad-rhino_short.wav",
+      "text": "철갑 코뿔소의 반응이에요! 이번에는 삼십 초 동안 편안한 달리기로 대응해요.",
+      "seed": 4051981505,
+      "seeds": [
+        4051981505
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.476,
+      "sha256": "8c5760315dfbaebddede4d9ce50a9263107a47999c26a2cb7b3fbab67bcdd336"
+    },
+    {
+      "key": "corrupted-hunter_phase1",
+      "file": "corrupted-hunter_phase1.wav",
+      "text": "타락 헌터가 검을 들었어요! 안전한 구간이면 십 초 가속으로 검붉은 결계를 공략해요. 유지 공격도 괜찮아요.",
+      "seed": 115900472,
+      "seeds": [
+        115900472
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 8.474,
+      "sha256": "5bf6a688ee76b9bd5fadfffc0c518105f27658a05436c4b1aad66e2fcc0d8b1e"
+    },
+    {
+      "key": "corrupted-hunter_phase2",
+      "file": "corrupted-hunter_phase2.wav",
+      "text": "검붉은 갑주에 틈이 생겼어요! 평소 페이스로 압박을 이어가요.",
+      "seed": 2792423346,
+      "seeds": [
+        2792423346
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.14,
+      "sha256": "e6a53ef1ebf5b1af658480e1ed1113c2d419f809944778923cd175a2a9bf76d0"
+    },
+    {
+      "key": "corrupted-hunter_phase3",
+      "file": "corrupted-hunter_phase3.wav",
+      "text": "타락 헌터의 마지막 오염이 드러났어요! 무리하지 말고 안전할 때만 십 초 가속으로 정화해요.",
+      "seed": 3770122624,
+      "seeds": [
+        3770122624
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.499,
+      "sha256": "85165d1a951819a67a74f6715557afe0b3f624c777927fb7cb53fd8e7c571305"
+    },
+    {
+      "key": "corrupted-hunter_steady",
+      "file": "corrupted-hunter_steady.wav",
+      "text": "검붉은 결계가 약해지고 있어요. 삼십 초 동안 편안한 달리기를 이어가요.",
+      "seed": 2512692331,
+      "seeds": [
+        2512692331
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.721,
+      "sha256": "94e9cc44d309ea2af071660af0a0b0dd1f8342974614cf2ff7a0247d9943fd3a"
+    },
+    {
+      "key": "corrupted-hunter_hit",
+      "file": "corrupted-hunter_hit.wav",
+      "text": "좋아요! 타락 헌터의 오염을 조금 걷어냈어요. 다음 활동에서도 이어갈 수 있어요.",
+      "seed": 2087516990,
+      "seeds": [
+        2087516990
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.502,
+      "sha256": "fcab8aac20ea907bdfd652171973f0a53ca39331feca8eda05a2102c63b2ff1b"
+    },
+    {
+      "key": "corrupted-hunter_defeated",
+      "file": "corrupted-hunter_defeated.wav",
+      "text": "대단해요! 타락 헌터의 오염을 완전히 정화했어요. 선발대의 귀환을 함께 기록해요!",
+      "seed": 3751974752,
+      "seeds": [
+        3751974752
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.559,
+      "sha256": "04a6f63bcfbe2b875803a436dac0945feb49b8c025109706d86021631680dc7b"
+    }
+  ]
+}

@@ -64,18 +64,33 @@ struct LoadoutStrip: View {
 struct EquipmentDetailView: View {
     @EnvironmentObject var model: AppModel
     let item: EquipmentDefinition
+    private var equipped: EquipmentDefinition? {
+        let id = model.save.profile.growth.equipped[item.slot.rawValue]
+        return model.progressionCatalog?.equipment.first { $0.id == id }
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 GearArtwork(item: item, size: 240).frame(maxWidth: .infinity)
-                eyebrow(item.cores > 0 ? "CORE EQUIPMENT" : item.supportLevel > 1 ? "ADVANCED EQUIPMENT" : "FIELD EQUIPMENT")
+                eyebrow("EQUIPMENT STAGE \(item.tier ?? 1)")
                 Text(item.name).font(.largeTitle.bold())
-                Text(item.slot.title).foregroundStyle(Theme.teal)
+                Text(item.slot.title + " · " + item.stageName).foregroundStyle(Theme.teal)
                 Text(item.detail).font(.headline)
+                if let current = equipped, current.id != item.id {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("현재 \(current.name) 대비").font(.subheadline.bold())
+                        Text(String(format: "HP %+.0f · 공격 %+.2f · 피해 경감 %+.0f%%", item.hp - current.hp, item.attack - current.attack, (item.defense - current.defense) * 100))
+                        Text(String(format: "유지 공격 %+.0f%% · 조사 데이터 %+d", (item.eventBonus - current.eventBonus) * 100, item.researchBonus - current.researchBonus))
+                    }.font(.caption).foregroundStyle(Theme.teal).card()
+                }
                 Text("장착한 장비의 효과는 다음 활동에 적용됩니다. 활동 중에는 장비를 바꿀 수 없습니다.").foregroundStyle(Theme.muted)
                 Text("필요 자원 · 마정석 \(item.crystals) / 조사 \(item.research) / 코어 \(item.cores)").font(.callout)
                 Text("장비지원부 Lv.\(item.supportLevel)").font(.caption).foregroundStyle(Theme.muted)
-                if let hint = item.discoveryHint { Label(hint, systemImage: item.requiredEvent.map { FieldDiscovery.events(in: model.save.profile).contains($0) } == true ? "checkmark.circle" : "lock.fill").font(.caption).foregroundStyle(Theme.teal) }
+                if let hint = item.discoveryHint {
+                    let achieved = (item.requiredDefeat.map { FieldDiscovery.defeated($0, in: model.save.profile) } ?? true)
+                        && (item.requiredEvent.map { FieldDiscovery.events(in: model.save.profile).contains($0) } ?? true)
+                    Label(hint, systemImage: achieved ? "checkmark.circle" : "lock.fill").font(.caption).foregroundStyle(Theme.teal)
+                }
                 ResourceStrip()
                 if model.save.profile.growth.owned.contains(item.id) {
                     Button(model.save.profile.growth.equipped[item.slot.rawValue] == item.id ? "장착 해제" : "장착") { model.equip(item.id) }

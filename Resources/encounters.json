@@ -330,6 +330,280 @@
         "audio": "veil-witch_survey"
       },
       "requiredMain": "M10"
+    },
+    {
+      "id": "mirror-shard-automata",
+      "monsterID": "mirror-shard-automata",
+      "name": "거울 파편 인형",
+      "elite": false,
+      "requiredRank": "C",
+      "requiredAction": null,
+      "requiredMain": "M13",
+      "unlockHint": "C급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "거울 파편의 반사 주기를 읽어요. 35초간 일정한 달리기로 환영을 흐트러뜨려요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "mirror-shard-automata",
+        "title": "거울 파편 인형 대응",
+        "kind": "maintain",
+        "startFraction": 0.3,
+        "duration": 35,
+        "hp": 155,
+        "audio": "mirror-shard-automata_intro"
+      },
+      "survey": {
+        "id": "mirror-shard-automata",
+        "title": "거울 파편 인형 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "mirror-shard-automata_survey"
+      }
+    },
+    {
+      "id": "ironhide-charger",
+      "monsterID": "ironhide-charger",
+      "name": "철피 돌진수",
+      "elite": false,
+      "requiredRank": "B",
+      "requiredAction": null,
+      "requiredMain": "M15",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "돌진을 피하기 위해 속도를 올릴 필요는 없어요. 일정한 달리기로 충격의 틈을 관측해요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush",
+        "exploration": "exp-echo"
+      },
+      "event": {
+        "id": "ironhide-charger",
+        "title": "철피 돌진수 대응",
+        "kind": "ambush",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 225,
+        "audio": "ironhide-charger_intro"
+      },
+      "survey": {
+        "id": "ironhide-charger",
+        "title": "철피 돌진수 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "ironhide-charger_survey"
+      }
+    },
+    {
+      "id": "corrupted-vanguard-warrior",
+      "monsterID": "corrupted-vanguard-warrior",
+      "name": "오염된 선발대 전사",
+      "elite": false,
+      "requiredRank": "B",
+      "requiredAction": null,
+      "requiredMain": "M16",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "선봉의 검격을 400m 동안 차분히 흘려보내요. 짧은 목표에서는 30초 유지 대응해요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush"
+      },
+      "event": {
+        "id": "corrupted-vanguard-warrior",
+        "title": "오염된 선발대 전사 대응",
+        "kind": "endurance",
+        "startFraction": 0.3,
+        "duration": 180,
+        "hp": 340,
+        "audio": "corrupted-vanguard-warrior_intro",
+        "targetDistance": 400,
+        "shortAudio": "corrupted-vanguard-warrior_short"
+      },
+      "survey": {
+        "id": "corrupted-vanguard-warrior",
+        "title": "오염된 선발대 전사 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "corrupted-vanguard-warrior_survey"
+      }
+    },
+    {
+      "id": "corrupted-vanguard-mage",
+      "monsterID": "corrupted-vanguard-mage",
+      "name": "오염된 선발대 마법사",
+      "elite": false,
+      "requiredRank": "B",
+      "requiredAction": null,
+      "requiredMain": "M16",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "마법진이 펼쳐지면 안전한 구간에서만 선택적으로 10초 가속해요. 30초 유지 공략도 가능해요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard"
+      },
+      "event": {
+        "id": "corrupted-vanguard-mage",
+        "title": "오염된 선발대 마법사 대응",
+        "kind": "boss",
+        "startFraction": 0.3,
+        "duration": 10,
+        "hp": 340,
+        "audio": "corrupted-vanguard-mage_intro",
+        "burstSeconds": 10,
+        "steadyAudio": "corrupted-vanguard-mage_steady"
+      },
+      "survey": {
+        "id": "corrupted-vanguard-mage",
+        "title": "오염된 선발대 마법사 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "corrupted-vanguard-mage_survey"
+      }
+    },
+    {
+      "id": "corrupted-vanguard-archer",
+      "monsterID": "corrupted-vanguard-archer",
+      "name": "오염된 선발대 궁수",
+      "elite": false,
+      "requiredRank": "B",
+      "requiredAction": null,
+      "requiredMain": "M16",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "그림자 화살을 피하려고 갑자기 방향을 바꾸지 마세요. 평소 페이스를 유지해요.",
+      "slots": {
+        "contract": "beast",
+        "gate": "gate-ambush"
+      },
+      "event": {
+        "id": "corrupted-vanguard-archer",
+        "title": "오염된 선발대 궁수 대응",
+        "kind": "ambush",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 340,
+        "audio": "corrupted-vanguard-archer_intro"
+      },
+      "survey": {
+        "id": "corrupted-vanguard-archer",
+        "title": "오염된 선발대 궁수 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "corrupted-vanguard-archer_survey"
+      }
+    },
+    {
+      "id": "corrupted-vanguard-cleric",
+      "monsterID": "corrupted-vanguard-cleric",
+      "name": "오염된 선발대 성직자",
+      "elite": false,
+      "requiredRank": "B",
+      "requiredAction": null,
+      "requiredMain": "M16",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "뒤틀린 보호막에 40초 동안 일정한 페이스로 대응해요. 정화 신호를 확인할게요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard"
+      },
+      "event": {
+        "id": "corrupted-vanguard-cleric",
+        "title": "오염된 선발대 성직자 대응",
+        "kind": "maintain",
+        "startFraction": 0.3,
+        "duration": 40,
+        "hp": 340,
+        "audio": "corrupted-vanguard-cleric_intro"
+      },
+      "survey": {
+        "id": "corrupted-vanguard-cleric",
+        "title": "오염된 선발대 성직자 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "corrupted-vanguard-cleric_survey"
+      }
+    },
+    {
+      "id": "mirror-witch",
+      "monsterID": "mirror-witch",
+      "name": "거울마녀",
+      "elite": true,
+      "requiredRank": "C",
+      "requiredAction": "elite-signal",
+      "requiredMain": "M13",
+      "unlockHint": "C급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "반사 결계가 약해지는 순간을 노려요. 안전하면 10초 가속, 아니면 30초 유지 공격으로 대응해요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard"
+      },
+      "event": {
+        "id": "mirror-witch",
+        "title": "거울마녀 대응",
+        "kind": "boss",
+        "startFraction": 0.3,
+        "duration": 10,
+        "hp": 230,
+        "audio": "mirror-witch_intro",
+        "burstSeconds": 10,
+        "steadyAudio": "mirror-witch_steady"
+      },
+      "survey": {
+        "id": "mirror-witch",
+        "title": "거울마녀 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "mirror-witch_survey"
+      }
+    },
+    {
+      "id": "ironclad-rhino",
+      "monsterID": "ironclad-rhino",
+      "name": "철갑 코뿔소",
+      "elite": true,
+      "requiredRank": "B",
+      "requiredAction": "elite-signal",
+      "requiredMain": "M15",
+      "unlockHint": "B급 · 관련 지부 이야기 · 야외 현장 사냥/게이트",
+      "tactic": "두꺼운 외피를 400m 동안 지속 압박해요. 짧은 목표라면 30초 유지 공격으로 전환해요.",
+      "slots": {
+        "contract": "contract-endurance",
+        "gate": "gate-guard"
+      },
+      "event": {
+        "id": "ironclad-rhino",
+        "title": "철갑 코뿔소 대응",
+        "kind": "endurance",
+        "startFraction": 0.3,
+        "duration": 180,
+        "hp": 270,
+        "audio": "ironclad-rhino_intro",
+        "targetDistance": 400,
+        "shortAudio": "ironclad-rhino_short"
+      },
+      "survey": {
+        "id": "ironclad-rhino",
+        "title": "철갑 코뿔소 흔적",
+        "kind": "discovery",
+        "startFraction": 0.3,
+        "duration": 30,
+        "hp": 0,
+        "audio": "ironclad-rhino_survey"
+      }
     }
   ]
 }

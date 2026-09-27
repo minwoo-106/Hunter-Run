@@ -5,7 +5,7 @@ public struct RunEngine {
     public let content: GameContent
     public var attack: Double
     public init(session: RunSession, content: GameContent, attack: Double = 1) {
-        self.session = session; self.content = content; self.attack = min(3, max(0.5, session.loadout?.attack ?? attack))
+        self.session = session; self.content = content; self.attack = min(12, max(0.5, session.loadout?.attack ?? attack))
     }
     public mutating func restorePaused() {
         session.lastTimestamp = nil; session.manualPause = true; session.interruption = false

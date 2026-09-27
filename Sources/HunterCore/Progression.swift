@@ -44,13 +44,28 @@ public struct EquipmentDefinition: Codable, Identifiable {
     public var research: Int
     public var cores: Int
     public var requiredEvent: String? = nil
+    public var requiredDefeat: String? = nil
     public var discoveryHint: String? = nil
     public var requiredRank: String? = nil
     public func available(to profile: Profile) -> Bool {
         profile.growth.level(.equipment) >= supportLevel && (requiredEvent.map { FieldDiscovery.events(in: profile).contains($0) } ?? true)
+        && (requiredDefeat.map { FieldDiscovery.defeated($0, in: profile) } ?? true)
         && (requiredRank.map { (Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0) >= (Progression.ranks.firstIndex(of: $0) ?? Int.max) } ?? true)
     }
     public var supportLevel: Int
+    public var tier: Int? = nil
+    public var stageName: String {
+        switch tier ?? 1 {
+        case 1: return "기본 장비"
+        case 2: return "고급 장비"
+        case 3: return requiredEvent == nil ? "첫 코어 장비" : "현장 준비 장비"
+        case 4: return "월영 장비"
+        case 5: return "몽환 장비"
+        case 6: return "거울결 장비"
+        case 7: return "철갑 장비"
+        default: return "귀환 장비"
+        }
+    }
     public var hp: Double
     public var attack: Double
     public var defense: Double
@@ -78,7 +93,7 @@ public struct ProgressionCatalog: Codable {
     public func validate() throws {
         guard schema == 1, !equipment.isEmpty, Set(equipment.map(\.id)).count == equipment.count,
               Set(upgrades.map(\.id)).count == upgrades.count,
-              equipment.allSatisfy({ !$0.id.isEmpty && $0.crystals >= 0 && $0.research >= 0 && $0.cores >= 0 && (1...3).contains($0.supportLevel) && $0.hp.isFinite && (0...50).contains($0.hp) && $0.attack.isFinite && (0...0.5).contains($0.attack) && $0.defense.isFinite && (0...0.3).contains($0.defense) && $0.eventBonus.isFinite && (0...0.2).contains($0.eventBonus) && (0...5).contains($0.researchBonus) }),
+              equipment.allSatisfy({ !$0.id.isEmpty && $0.crystals >= 0 && $0.research >= 0 && $0.cores >= 0 && (1...3).contains($0.supportLevel) && (1...8).contains($0.tier ?? 1) && $0.hp.isFinite && (0...120).contains($0.hp) && $0.attack.isFinite && (0...1.5).contains($0.attack) && $0.defense.isFinite && (0...0.45).contains($0.defense) && $0.eventBonus.isFinite && (0...0.45).contains($0.eventBonus) && (0...15).contains($0.researchBonus) }),
               upgrades.count == Department.allCases.count * 2,
               Set(upgrades.map(\.department)).count == Department.allCases.count,
               upgrades.allSatisfy({ (2...3).contains($0.level) && $0.crystals >= 0 && $0.research >= 0 }) else { throw ProgressionError.invalid }
@@ -97,9 +112,9 @@ public struct ProgressionCatalog: Codable {
             result.hp += item.hp; result.attack += item.attack; result.defense += item.defense
             result.eventBonus += item.eventBonus; result.researchBonus += item.researchBonus
         }
-        result.attack = min(3, result.attack); result.defense = min(0.65, result.defense)
-        result.eventBonus = min(0.2, result.eventBonus)
-        result.hp = min(600, result.hp); result.researchBonus = min(5, result.researchBonus)
+        result.attack = min(12, result.attack); result.defense = min(0.8, result.defense)
+        result.eventBonus = min(0.45, result.eventBonus)
+        result.hp = min(1000, result.hp); result.researchBonus = min(15, result.researchBonus)
         return result
     }
 }
