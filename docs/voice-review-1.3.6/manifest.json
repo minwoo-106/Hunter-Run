@@ -115,6 +115,230 @@
       "sha256": "e171df4c14ff73e909602eb21b35fab322beccd001b3fc66db90828d27cf3f8d"
     },
     {
+      "key": "mirror-witch_intro",
+      "file": "mirror-witch_intro.wav",
+      "text": "거울마녀가 반사 결계를 펼쳤어요! 안전하면 십 초 가속으로 틈을 공략해요. 유지 공격도 괜찮아요.",
+      "seed": 3407850706,
+      "seeds": [
+        3407850706
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.094,
+      "sha256": "a0646df85a15c076093709b06de8585a40ef17136fade1eb1b641c9dd92c2e40"
+    },
+    {
+      "key": "mirror-witch_hit",
+      "file": "mirror-witch_hit.wav",
+      "text": "거울마녀의 결계가 약해졌어요! 차분히 대응해요.",
+      "seed": 343224425,
+      "seeds": [
+        343224425
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.745,
+      "sha256": "40896a5548394243eb06a3a76525cfe848102ac235134e22745bd5194147b778"
+    },
+    {
+      "key": "mirror-witch_defeated",
+      "file": "mirror-witch_defeated.wav",
+      "text": "대단해요! 거울마녀를 토벌했어요. 거울결 장비의 핵심을 확보했어요.",
+      "seed": 1648187895,
+      "seeds": [
+        1648187895
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.163,
+      "sha256": "fc1cc2ba65f2015f55772c47db2767e230523e77e14f9ed7604519138b3c5ec5"
+    },
+    {
+      "key": "mirror-witch_survey",
+      "file": "mirror-witch_survey.wav",
+      "text": "거울마녀의 마력 흔적이에요. 편하게 이동하며 기록할게요.",
+      "seed": 3411134477,
+      "seeds": [
+        3411134477
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 3.849,
+      "sha256": "f480882a53a9bca17b59c285b5c2ae1581cfaac93bc0a1598bda931a6ef6e1a9"
+    },
+    {
+      "key": "mirror-witch_steady",
+      "file": "mirror-witch_steady.wav",
+      "text": "거울마녀의 결계를 유지 공격으로 약화시켜요. 삼십 초 동안 평소 페이스를 이어가요.",
+      "seed": 2132584034,
+      "seeds": [
+        2132584034
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.502,
+      "sha256": "ea2dfd06bd93b24b1f1a1a173f364c5ecb00063dc8c239a949c5a3481ea730a8"
+    },
+    {
+      "key": "ironclad-rhino_intro",
+      "file": "ironclad-rhino_intro.wav",
+      "text": "철갑 코뿔소가 돌진해요! 평소 페이스로 사백 미터를 이동하며 외피를 압박해요.",
+      "seed": 800071781,
+      "seeds": [
+        800071781
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.421,
+      "sha256": "6f9a6b5386b54c35430a6cf83bf1b675ed8069861fff313da2d531d665fb0afb"
+    },
+    {
+      "key": "ironclad-rhino_hit",
+      "file": "ironclad-rhino_hit.wav",
+      "text": "철갑 코뿔소의 갑주가 갈라졌어요! 남은 반응을 확인해요.",
+      "seed": 731601238,
+      "seeds": [
+        731601238
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.121,
+      "sha256": "db7a3725f4f7954ef74a461e932beae23c02c48fa617a477c9c00a741d23f0ab"
+    },
+    {
+      "key": "ironclad-rhino_defeated",
+      "file": "ironclad-rhino_defeated.wav",
+      "text": "대단해요! 철갑 코뿔소를 토벌했어요. 철갑 장비의 핵심을 확보했어요.",
+      "seed": 3375215856,
+      "seeds": [
+        3375215856
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.044,
+      "sha256": "af40018561e25ba4f61e75c835c4635a5fe120b41e2ea0b9cc0f8c3e843ac21f"
+    },
+    {
+      "key": "ironclad-rhino_survey",
+      "file": "ironclad-rhino_survey.wav",
+      "text": "철갑 코뿔소의 발자국이에요. 안전하게 이동하며 조사해요.",
+      "seed": 1628555226,
+      "seeds": [
+        1628555226
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.895,
+      "sha256": "6fe918a220f154c7b7844bfaa07133ecca84d16103ca7ed061efbf48689c691d"
+    },
+    {
+      "key": "ironclad-rhino_short",
+      "file": "ironclad-rhino_short.wav",
+      "text": "철갑 코뿔소의 반응이에요! 이번에는 삼십 초 동안 편안한 달리기로 대응해요.",
+      "seed": 4051981505,
+      "seeds": [
+        4051981505
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.476,
+      "sha256": "8c5760315dfbaebddede4d9ce50a9263107a47999c26a2cb7b3fbab67bcdd336"
+    },
+    {
+      "key": "corrupted-hunter_phase1",
+      "file": "corrupted-hunter_phase1.wav",
+      "text": "타락 헌터가 검을 들었어요! 안전한 구간이면 십 초 가속으로 검붉은 결계를 공략해요. 유지 공격도 괜찮아요.",
+      "seed": 115900472,
+      "seeds": [
+        115900472
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 8.474,
+      "sha256": "5bf6a688ee76b9bd5fadfffc0c518105f27658a05436c4b1aad66e2fcc0d8b1e"
+    },
+    {
+      "key": "corrupted-hunter_phase2",
+      "file": "corrupted-hunter_phase2.wav",
+      "text": "검붉은 갑주에 틈이 생겼어요! 평소 페이스로 압박을 이어가요.",
+      "seed": 2792423346,
+      "seeds": [
+        2792423346
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.14,
+      "sha256": "e6a53ef1ebf5b1af658480e1ed1113c2d419f809944778923cd175a2a9bf76d0"
+    },
+    {
+      "key": "corrupted-hunter_phase3",
+      "file": "corrupted-hunter_phase3.wav",
+      "text": "타락 헌터의 마지막 오염이 드러났어요! 무리하지 말고 안전할 때만 십 초 가속으로 정화해요.",
+      "seed": 3770122624,
+      "seeds": [
+        3770122624
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 5.499,
+      "sha256": "85165d1a951819a67a74f6715557afe0b3f624c777927fb7cb53fd8e7c571305"
+    },
+    {
+      "key": "corrupted-hunter_steady",
+      "file": "corrupted-hunter_steady.wav",
+      "text": "검붉은 결계가 약해지고 있어요. 삼십 초 동안 편안한 달리기를 이어가요.",
+      "seed": 2512692331,
+      "seeds": [
+        2512692331
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 4.721,
+      "sha256": "94e9cc44d309ea2af071660af0a0b0dd1f8342974614cf2ff7a0247d9943fd3a"
+    },
+    {
+      "key": "corrupted-hunter_hit",
+      "file": "corrupted-hunter_hit.wav",
+      "text": "좋아요! 타락 헌터의 오염을 조금 걷어냈어요. 다음 활동에서도 이어갈 수 있어요.",
+      "seed": 2087516990,
+      "seeds": [
+        2087516990
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 7.502,
+      "sha256": "fcab8aac20ea907bdfd652171973f0a53ca39331feca8eda05a2102c63b2ff1b"
+    },
+    {
+      "key": "corrupted-hunter_defeated",
+      "file": "corrupted-hunter_defeated.wav",
+      "text": "대단해요! 타락 헌터의 오염을 완전히 정화했어요. 선발대의 귀환을 함께 기록해요!",
+      "seed": 3751974752,
+      "seeds": [
+        3751974752
+      ],
+      "segmented": false,
+      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+      "sample_rate": 24000,
+      "duration": 6.559,
+      "sha256": "04a6f63bcfbe2b875803a436dac0945feb49b8c025109706d86021631680dc7b"
+    },
+    {
       "key": "corrupted-vanguard-warrior_intro",
       "file": "corrupted-vanguard-warrior_intro.wav",
       "text": "오염된 선발대 전사가 길을 막았어요! 평소 페이스로 사백 미터를 이동하며 대응해요.",
@@ -365,230 +589,6 @@
       "sample_rate": 24000,
       "duration": 3.421,
       "sha256": "1644936422a549e4dc02c143124cf36e7856f2656cb72f78e0a390a612dcec48"
-    },
-    {
-      "key": "mirror-witch_intro",
-      "file": "mirror-witch_intro.wav",
-      "text": "거울마녀가 반사 결계를 펼쳤어요! 안전하면 십 초 가속으로 틈을 공략해요. 유지 공격도 괜찮아요.",
-      "seed": 3407850706,
-      "seeds": [
-        3407850706
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 7.094,
-      "sha256": "a0646df85a15c076093709b06de8585a40ef17136fade1eb1b641c9dd92c2e40"
-    },
-    {
-      "key": "mirror-witch_hit",
-      "file": "mirror-witch_hit.wav",
-      "text": "거울마녀의 결계가 약해졌어요! 차분히 대응해요.",
-      "seed": 343224425,
-      "seeds": [
-        343224425
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 3.745,
-      "sha256": "40896a5548394243eb06a3a76525cfe848102ac235134e22745bd5194147b778"
-    },
-    {
-      "key": "mirror-witch_defeated",
-      "file": "mirror-witch_defeated.wav",
-      "text": "대단해요! 거울마녀를 토벌했어요. 거울결 장비의 핵심을 확보했어요.",
-      "seed": 1648187895,
-      "seeds": [
-        1648187895
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 5.163,
-      "sha256": "fc1cc2ba65f2015f55772c47db2767e230523e77e14f9ed7604519138b3c5ec5"
-    },
-    {
-      "key": "mirror-witch_survey",
-      "file": "mirror-witch_survey.wav",
-      "text": "거울마녀의 마력 흔적이에요. 편하게 이동하며 기록할게요.",
-      "seed": 3411134477,
-      "seeds": [
-        3411134477
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 3.849,
-      "sha256": "f480882a53a9bca17b59c285b5c2ae1581cfaac93bc0a1598bda931a6ef6e1a9"
-    },
-    {
-      "key": "mirror-witch_steady",
-      "file": "mirror-witch_steady.wav",
-      "text": "거울마녀의 결계를 유지 공격으로 약화시켜요. 삼십 초 동안 평소 페이스를 이어가요.",
-      "seed": 2132584034,
-      "seeds": [
-        2132584034
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 5.502,
-      "sha256": "ea2dfd06bd93b24b1f1a1a173f364c5ecb00063dc8c239a949c5a3481ea730a8"
-    },
-    {
-      "key": "ironclad-rhino_intro",
-      "file": "ironclad-rhino_intro.wav",
-      "text": "철갑 코뿔소가 돌진해요! 평소 페이스로 사백 미터를 이동하며 외피를 압박해요.",
-      "seed": 800071781,
-      "seeds": [
-        800071781
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 5.421,
-      "sha256": "6f9a6b5386b54c35430a6cf83bf1b675ed8069861fff313da2d531d665fb0afb"
-    },
-    {
-      "key": "ironclad-rhino_hit",
-      "file": "ironclad-rhino_hit.wav",
-      "text": "철갑 코뿔소의 갑주가 갈라졌어요! 남은 반응을 확인해요.",
-      "seed": 731601238,
-      "seeds": [
-        731601238
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 4.121,
-      "sha256": "db7a3725f4f7954ef74a461e932beae23c02c48fa617a477c9c00a741d23f0ab"
-    },
-    {
-      "key": "ironclad-rhino_defeated",
-      "file": "ironclad-rhino_defeated.wav",
-      "text": "대단해요! 철갑 코뿔소를 토벌했어요. 철갑 장비의 핵심을 확보했어요.",
-      "seed": 3375215856,
-      "seeds": [
-        3375215856
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 6.044,
-      "sha256": "af40018561e25ba4f61e75c835c4635a5fe120b41e2ea0b9cc0f8c3e843ac21f"
-    },
-    {
-      "key": "ironclad-rhino_survey",
-      "file": "ironclad-rhino_survey.wav",
-      "text": "철갑 코뿔소의 발자국이에요. 안전하게 이동하며 조사해요.",
-      "seed": 1628555226,
-      "seeds": [
-        1628555226
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 4.895,
-      "sha256": "6fe918a220f154c7b7844bfaa07133ecca84d16103ca7ed061efbf48689c691d"
-    },
-    {
-      "key": "ironclad-rhino_short",
-      "file": "ironclad-rhino_short.wav",
-      "text": "철갑 코뿔소의 반응이에요! 이번에는 삼십 초 동안 편안한 달리기로 대응해요.",
-      "seed": 4051981505,
-      "seeds": [
-        4051981505
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 5.476,
-      "sha256": "8c5760315dfbaebddede4d9ce50a9263107a47999c26a2cb7b3fbab67bcdd336"
-    },
-    {
-      "key": "corrupted-hunter_phase1",
-      "file": "corrupted-hunter_phase1.wav",
-      "text": "타락 헌터가 검을 들었어요! 안전한 구간이면 십 초 가속으로 검붉은 결계를 공략해요. 유지 공격도 괜찮아요.",
-      "seed": 115900472,
-      "seeds": [
-        115900472
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 8.474,
-      "sha256": "5bf6a688ee76b9bd5fadfffc0c518105f27658a05436c4b1aad66e2fcc0d8b1e"
-    },
-    {
-      "key": "corrupted-hunter_phase2",
-      "file": "corrupted-hunter_phase2.wav",
-      "text": "검붉은 갑주에 틈이 생겼어요! 평소 페이스로 압박을 이어가요.",
-      "seed": 2792423346,
-      "seeds": [
-        2792423346
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 4.14,
-      "sha256": "e6a53ef1ebf5b1af658480e1ed1113c2d419f809944778923cd175a2a9bf76d0"
-    },
-    {
-      "key": "corrupted-hunter_phase3",
-      "file": "corrupted-hunter_phase3.wav",
-      "text": "타락 헌터의 마지막 오염이 드러났어요! 무리하지 말고 안전할 때만 십 초 가속으로 정화해요.",
-      "seed": 3770122624,
-      "seeds": [
-        3770122624
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 5.499,
-      "sha256": "85165d1a951819a67a74f6715557afe0b3f624c777927fb7cb53fd8e7c571305"
-    },
-    {
-      "key": "corrupted-hunter_steady",
-      "file": "corrupted-hunter_steady.wav",
-      "text": "검붉은 결계가 약해지고 있어요. 삼십 초 동안 편안한 달리기를 이어가요.",
-      "seed": 2512692331,
-      "seeds": [
-        2512692331
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 4.721,
-      "sha256": "94e9cc44d309ea2af071660af0a0b0dd1f8342974614cf2ff7a0247d9943fd3a"
-    },
-    {
-      "key": "corrupted-hunter_hit",
-      "file": "corrupted-hunter_hit.wav",
-      "text": "좋아요! 타락 헌터의 오염을 조금 걷어냈어요. 다음 활동에서도 이어갈 수 있어요.",
-      "seed": 2087516990,
-      "seeds": [
-        2087516990
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 7.502,
-      "sha256": "fcab8aac20ea907bdfd652171973f0a53ca39331feca8eda05a2102c63b2ff1b"
-    },
-    {
-      "key": "corrupted-hunter_defeated",
-      "file": "corrupted-hunter_defeated.wav",
-      "text": "대단해요! 타락 헌터의 오염을 완전히 정화했어요. 선발대의 귀환을 함께 기록해요!",
-      "seed": 3751974752,
-      "seeds": [
-        3751974752
-      ],
-      "segmented": false,
-      "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
-      "sample_rate": 24000,
-      "duration": 6.559,
-      "sha256": "04a6f63bcfbe2b875803a436dac0945feb49b8c025109706d86021631680dc7b"
     }
   ]
 }
