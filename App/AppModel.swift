@@ -300,10 +300,10 @@ import UIKit
     }
     func beginDialogue(_ id: String) { updateJourney { try $0.begin(id, profile: &$1) } }
     func advanceDialogue(_ choice: String? = nil) { updateJourney { _ = try $0.advance(choice: choice, profile: &$1) } }
-    func restoreCheongwol() {
-        guard !growthLocked, CheongwolSanctum.available(save.profile), let narratives else { return }
+    func restoreHaesol() {
+        guard !growthLocked, HaesolSanctum.available(save.profile), let narratives else { return }
         var candidate = save
-        guard CheongwolSanctum.restore(&candidate.profile) else { return }
+        guard HaesolSanctum.restore(&candidate.profile) else { return }
         narratives.refresh(&candidate.profile)
         do { try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward") }
         catch { notice = "시설 기록을 저장하지 못했어요. 다시 시도해주세요." }

@@ -91,10 +91,13 @@ final class NarrativeTests: XCTestCase {
     }
     func testFinalReturnRouteRequiresRealVanguardDefeatsAndOneTimeFacility() throws {
         let catalog = try catalog()
+        XCTAssertEqual(catalog.scene("M21")?.title, "다시 밝아진 거리")
+        XCTAssertEqual(catalog.scene("M21")?.artwork, "HaesolBefore")
+        XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("강해솔") } == true)
         var profile = Profile()
         var journey = JourneyState(); journey.unlocked = Set(catalog.main.prefix(16).map(\.id)); journey.completed.insert("M16")
         profile.journey = journey
-        XCTAssertFalse(CheongwolSanctum.available(profile))
+        XCTAssertFalse(HaesolSanctum.available(profile))
         catalog.refresh(&profile)
         XCTAssertTrue(profile.journey!.unlocked.contains("M17"))
         try finish("M17", profile: &profile, catalog: catalog)
@@ -123,11 +126,11 @@ final class NarrativeTests: XCTestCase {
         bosses["corrupted-hunter"] = boss; profile.bosses = bosses
         catalog.refresh(&profile)
         XCTAssertTrue(profile.journey!.unlocked.contains("M20"))
-        XCTAssertFalse(CheongwolSanctum.available(profile))
+        XCTAssertFalse(HaesolSanctum.available(profile))
         try finish("M20", profile: &profile, catalog: catalog)
-        XCTAssertTrue(CheongwolSanctum.available(profile))
-        XCTAssertTrue(CheongwolSanctum.restore(&profile))
-        XCTAssertFalse(CheongwolSanctum.restore(&profile))
+        XCTAssertTrue(HaesolSanctum.available(profile))
+        XCTAssertTrue(HaesolSanctum.restore(&profile))
+        XCTAssertFalse(HaesolSanctum.restore(&profile))
         catalog.refresh(&profile)
         XCTAssertTrue(profile.journey!.unlocked.contains("M21"))
         try finish("M21", profile: &profile, catalog: catalog)

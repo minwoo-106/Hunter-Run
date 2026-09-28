@@ -58,7 +58,7 @@ def compile_scene(identifier, title, body, kind, index):
     for raw in body.splitlines():
         line = raw.strip()
         match = re.match(r'(?:오퍼레이터|O): (.+)', line)
-        report = re.match(r'(평가관의 서면|문해진의 기록|환영의 문자|사서의 문자|청월의 기록): (.+)', line)
+        report = re.match(r'(평가관의 서면|문해진의 기록|환영의 문자|사서의 문자|강해솔의 기록): (.+)', line)
         choice = re.match(r'- ([RM]\d{2}-[A-Z]) 「([^」]+)」 → (?:O|오퍼레이터): (.+)', line)
         if choice:
             if chooser is None:
@@ -89,7 +89,7 @@ def compile_scene(identifier, title, body, kind, index):
     tier = 1 if index <= 2 else 2 if index <= 5 else 3 if index <= 8 else 4 if index <= 10 else 5
     main_gate = [1,1,3,3,4,6,6,8,10,12,14,16][index-1] if kind == 'bond' else 0
     dependencies = {'R02':['R01'], 'R07':['R02'], 'R09':['R07'], 'R10':['R06'], 'R12':['R11']}
-    artwork = 'CheongwolBefore' if identifier == 'M21' else 'Monster-corrupted-hunter' if identifier == 'M20' else 'AssociationOffice' if index <= 6 else 'AssociationOperational' if index <= 12 else 'AssociationAdvanced'
+    artwork = 'HaesolBefore' if identifier == 'M21' else 'Monster-corrupted-hunter' if identifier == 'M20' else 'AssociationOffice' if index <= 6 else 'AssociationOperational' if index <= 12 else 'AssociationAdvanced'
     return dict(id=identifier, title=title, kind=kind, order=index,
                 artwork=artwork,
                 requiredMain=main_gate, requiredTier=tier if kind == 'bond' else 1,

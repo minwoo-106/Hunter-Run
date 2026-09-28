@@ -47,15 +47,20 @@ struct AssociationFacilitiesView: View {
                 }
                 VStack(alignment: .leading, spacing: 12) {
                     if model.save.profile.journey?.completed.contains("M20") == true {
-                        Image("CheongwolBefore").resizable().scaledToFit().frame(maxWidth: .infinity).frame(maxHeight: 260).clipped().accessibilityHidden(true)
+                        Image(model.save.profile.journey?.memories[HaesolSanctum.restorationKey] == "yes" ? "HaesolBefore" : "Monster-corrupted-hunter")
+                            .resizable().scaledToFit().frame(maxWidth: .infinity).frame(maxHeight: 260).clipped().accessibilityHidden(true)
                         Label("귀환 정화실", systemImage: "moon.stars.fill").font(.title3.bold()).foregroundStyle(Theme.teal)
-                        if model.save.profile.journey?.memories["cheongwolRestored"] == "yes" {
+                        if model.save.profile.journey?.memories[HaesolSanctum.restorationKey] == "yes" {
                             Text("정화 절차 완료 · 마지막 이야기를 스토리에서 확인해요.").foregroundStyle(Theme.muted)
+                            if model.save.profile.journey?.completed.contains("M21") == true {
+                                NavigationLink("강해솔의 일상 보기") { HaesolMomentsView() }
+                                    .buttonStyle(GameButtonStyle()).accessibilityIdentifier("association.haesol.moments")
+                            }
                         } else {
                             Text("봉인된 시설의 기록을 복원하고 귀환 절차를 마무리해요.").foregroundStyle(Theme.muted)
-                            Button("정화실 가동") { model.restoreCheongwol() }
+                            Button("정화실 가동") { model.restoreHaesol() }
                                 .buttonStyle(GameButtonStyle(primary: true))
-                                .disabled(model.growthLocked || !CheongwolSanctum.available(model.save.profile))
+                                .disabled(model.growthLocked || !HaesolSanctum.available(model.save.profile))
                                 .accessibilityIdentifier("association.sanctum.restore")
                         }
                     } else {
@@ -66,6 +71,36 @@ struct AssociationFacilitiesView: View {
                 Text("이번 버전에서는 각 부서를 Lv.3까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
         }.labyrinthScreen().navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct HaesolMomentsView: View {
+    private let moments: [(asset: String, title: String, detail: String)] = [
+        ("HaesolBefore", "평범한 귀갓길", "강해솔은 도시의 오후를 천천히 걸었어요."),
+        ("HaesolHairTie", "출발 전", "긴 머리를 묶고 다시 길을 나설 준비를 해요."),
+        ("HaesolCurious", "궁금한 얼굴", "무슨 이야기를 들었는지 한 걸음 가까이 다가왔어요."),
+        ("HaesolBeetle", "작은 예외", "수많은 게이트 앞에서도 침착했지만, 작은 벌레 앞에서는 잠깐 움찔했어요.")
+    ]
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                eyebrow("HUNTER / OFF DUTY")
+                Text("강해솔의 일상").font(.largeTitle.bold())
+                Text("도시에서 보낸 평범한 오후예요. 좌우로 넘겨보세요.").foregroundStyle(Theme.muted)
+                TabView {
+                    ForEach(0..<moments.count, id: \.self) { index in
+                        VStack(alignment: .leading, spacing: 12) {
+                            Image(moments[index].asset).resizable().scaledToFit()
+                                .frame(maxWidth: .infinity, maxHeight: 505)
+                                .accessibilityLabel(moments[index].title + ". " + moments[index].detail)
+                            Text(moments[index].title).font(.title3.bold()).foregroundStyle(Theme.teal)
+                            Text(moments[index].detail).font(.callout).foregroundStyle(Theme.muted)
+                            Spacer(minLength: 0)
+                        }.padding(.horizontal, 2)
+                    }
+                }.tabViewStyle(.page(indexDisplayMode: .always)).frame(height: 615)
+            }.padding(20)
+        }.labyrinthScreen().navigationTitle("일상 기록").navigationBarTitleDisplayMode(.inline)
     }
 }
 struct EquipmentView: View {
