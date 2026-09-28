@@ -24,6 +24,16 @@ final class NarrativeTests: XCTestCase {
         XCTAssertEqual(catalog.main.count, 21); XCTAssertEqual(catalog.bonds.count, 12)
         XCTAssertEqual(catalog.scenes.flatMap(\.nodes).flatMap { $0.choices ?? [] }.count, 50)
     }
+    func testHaesolIsKnownBeforeHerDisappearanceAndRecognizedBeforeFinalOperation() throws {
+        let catalog = try catalog()
+        for id in ["M01", "M06", "M07", "M10", "M13", "M16"] {
+            XCTAssertTrue(catalog.scene(id)?.nodes.contains { $0.text.contains("해솔") } == true, id)
+        }
+        XCTAssertTrue(catalog.scene("M17")?.nodes.contains { $0.text.contains("H-01") } == true)
+        XCTAssertFalse(catalog.scene("M18")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
+        XCTAssertTrue(catalog.scene("M19")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
+        XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("해솔 님의 검이 멈췄어요") } == true)
+    }
     func testRegistrationMigratesNamesWithoutErasingExistingProgress() throws {
         let catalog = try catalog(); var profile = Profile()
         profile.xp = 1234; profile.crystals = 456; profile.readStories = ["arrival"]
