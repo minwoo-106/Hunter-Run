@@ -134,6 +134,8 @@ public struct RunSession: Codable, Identifiable {
     public var questID: String? = nil
     public var environment: ActivityEnvironment? = nil
     public var steps: Int? = nil
+    /// Recent pedometer evidence for the final rescue's GPS-safe observation route.
+    public var lastVerifiedStepAt: Double? = nil
     /// Remaining KST daily active-time budget at the start; nil supports older saves.
     public var indoorAllowance: Double? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }

@@ -22,18 +22,19 @@ final class NarrativeTests: XCTestCase {
         let catalog = try catalog()
         try catalog.validate()
         XCTAssertEqual(catalog.main.count, 21); XCTAssertEqual(catalog.bonds.count, 12)
-        XCTAssertEqual(catalog.scenes.flatMap(\.nodes).flatMap { $0.choices ?? [] }.count, 50)
+        XCTAssertEqual(catalog.scenes.flatMap(\.nodes).flatMap { $0.choices ?? [] }.count, 56)
     }
     func testHaesolIsKnownBeforeHerDisappearanceAndRecognizedBeforeFinalOperation() throws {
         let catalog = try catalog()
-        for id in ["M01", "M06", "M07", "M10", "M13", "M16"] {
+        for id in ["M01", "M06", "M13", "M17", "M19", "M20"] {
             XCTAssertTrue(catalog.scene(id)?.nodes.contains { $0.text.contains("해솔") } == true, id)
         }
-        XCTAssertTrue(catalog.scene("M17")?.nodes.contains { $0.text.contains("H-01") } == true)
+        XCTAssertTrue(catalog.scene("M01")?.nodes.contains { $0.text.contains("1위로 알려진") } == true)
+        XCTAssertTrue(catalog.scene("M17")?.nodes.contains { $0.text.contains("종이 기록") || $0.text.contains("통로") } == true)
         XCTAssertFalse(catalog.scene("M18")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
-        XCTAssertTrue(catalog.scene("M19")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
-        XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("해솔 님의 검이 멈췄어요") } == true)
-        XCTAssertTrue(catalog.scene("M06")?.nodes.contains { $0.speakerLabel == "강해솔의 기록" } == true)
+        XCTAssertTrue(catalog.scene("M19")?.nodes.contains { $0.text.contains("강해솔 헌터님") } == true)
+        XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("정화된 건 아니에요") } == true)
+        XCTAssertTrue(catalog.scene("M06")?.nodes.contains { $0.text.contains("첫 승급 때 남은 축하 기록") } == true)
     }
     func testEarlyChoicesReturnAsOptionalCallbacksWithoutBreakingOlderSaves() throws {
         let catalog = try catalog()
@@ -124,8 +125,7 @@ final class NarrativeTests: XCTestCase {
     }
     func testFinalReturnRouteRequiresRealVanguardDefeatsAndOneTimeFacility() throws {
         let catalog = try catalog()
-        XCTAssertEqual(catalog.scene("M21")?.title, "다시 밝아진 거리")
-        XCTAssertEqual(catalog.scene("M21")?.artwork, "HaesolBefore")
+        XCTAssertEqual(catalog.scene("M21")?.artwork, "PurificationRoom")
         XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("강해솔") } == true)
         var profile = Profile()
         var journey = JourneyState(); journey.unlocked = Set(catalog.main.prefix(16).map(\.id)); journey.completed.insert("M16")
@@ -148,6 +148,9 @@ final class NarrativeTests: XCTestCase {
         record(["warrior"], simulated: false, profile: &profile)
         catalog.refresh(&profile)
         XCTAssertTrue(profile.journey!.unlocked.contains("M18"))
+        XCTAssertEqual(profile.journey?.memories["firstVanguardRole"], "warrior")
+        let fragment = try XCTUnwrap(catalog.scene("M18")?.nodes.first { $0.variants?.contains { $0.key == "firstVanguardRole" } == true })
+        XCTAssertTrue(fragment.rendered(profile: profile).contains("전사가"))
         try finish("M18", profile: &profile, catalog: catalog)
         record(["mage", "archer", "cleric"], simulated: false, profile: &profile)
         catalog.refresh(&profile)

@@ -3,7 +3,7 @@
   "scenes": [
     {
       "id": "M01",
-      "title": "다시 켜진 관제실",
+      "title": "신규 헌터 등록",
       "kind": "main",
       "order": 1,
       "artwork": "AssociationOffice",
@@ -11,46 +11,60 @@
       "requiredTier": 1,
       "prerequisite": [],
       "requirements": [],
-      "start": "M01.n001",
+      "start": "M01.v14.001",
       "nodes": [
         {
-          "id": "M01.n001",
-          "text": "들리세요? …좋아요. 이번에는 연결됐어요.",
+          "id": "M01.v14.001",
           "speaker": "operator",
+          "text": "안녕하세요.\n오늘부터 담당하게 된 {operatorName}이에요.\n신규 헌터 등록부터 도와드릴게요.",
           "expression": "calm",
-          "next": "M01.n002"
+          "next": "M01.v14.002"
         },
         {
-          "id": "M01.n002",
-          "text": "안녕하세요. 저는 {operatorName}예요. 오늘부터 {hunterName}님의 현장 관제를 맡아요.",
+          "id": "M01.v14.002",
           "speaker": "operator",
+          "text": "헌터명은…\n{hunterName}님.\n확인됐어요.",
           "expression": "calm",
-          "next": "M01.n003"
+          "next": "M01.v14.003"
         },
         {
-          "id": "M01.n003",
-          "text": "생각보다 조용하죠? 어제까지는 이 방에 저랑 안 켜지는 프린터밖에 없었어요.",
+          "id": "M01.v14.003",
           "speaker": "operator",
+          "text": "다행이다.\n아침에는 저게 아예 안 켜졌거든요.\n등록 업무 시작하기 전에 프린터부터 고치고 있었어요.",
           "expression": "calm",
-          "next": "M01.n004"
+          "next": "M01.v14.004"
         },
         {
-          "id": "M01.n004",
-          "text": "아, 프린터는 고쳤어요. 제가요. 헌터님 오시기 전에 하나쯤은 해결하고 싶어서요.",
+          "id": "M01.v14.004",
           "speaker": "operator",
+          "text": "협회 1위로 알려진 강해솔 헌터님이에요.\n저 사진도 꽤 유명해요. 구조 현장에서 찍힌 거래요.",
           "expression": "calm",
-          "next": "M01.n005"
+          "next": "M01.v14.005"
         },
         {
-          "id": "M01.n005",
-          "text": "어떻게 말할까요?",
+          "id": "M01.v14.005",
+          "speaker": "operator",
+          "text": "그리고 저쪽은 예전 의료실이에요.\n지금은 사용하지 않아서 잠겨 있어요.\n저도 안에 들어가 본 적은 없어요.",
+          "expression": "calm",
+          "next": "M01.v14.006"
+        },
+        {
+          "id": "M01.v14.006",
+          "speaker": "operator",
+          "text": "이건 아직 확인된 정보가 없네요.\n그냥 비워둘게요.\n모르는 걸 적당히 채워놓으면 나중에 더 귀찮아지거든요.\n이건 예전에 배운 습관이에요.",
+          "expression": "calm",
+          "next": "M01.v14.007"
+        },
+        {
+          "id": "M01.v14.007",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M01-A",
               "text": "그럼 두 번째는 같이 해결해요.",
-              "next": "M01.n006",
+              "next": "M01.v14.008",
               "memory": {
                 "firstOffice": "teamwork"
               }
@@ -58,7 +72,7 @@
             {
               "id": "M01-B",
               "text": "첫 의뢰가 프린터 수리일 뻔했네요.",
-              "next": "M01.n007",
+              "next": "M01.v14.009",
               "memory": {
                 "firstOffice": "humor"
               }
@@ -66,65 +80,30 @@
           ]
         },
         {
-          "id": "M01.n006",
+          "id": "M01.v14.008",
           "speaker": "operator",
-          "text": "좋아요. 두 번째부터는 공동 작업으로 적어둘게요.",
+          "text": "두 번째 문제가 안 생기면 제일 좋긴 한데요.\n그래도 생기면… 그때 부탁할게요.",
           "expression": "smile",
-          "next": "M01.n008"
+          "next": "M01.v14.010"
         },
         {
-          "id": "M01.n007",
+          "id": "M01.v14.009",
           "speaker": "operator",
-          "text": "그건 제가 먼저 토벌했어요. 종이를 꽤 많이 희생했지만요.",
+          "text": "그랬으면 헌터 협회 이미지가 시작부터 좀 위험했겠네요.\n첫 의뢰는 제대로 된 걸로 준비할게요.",
           "expression": "smile",
-          "next": "M01.n008"
+          "next": "M01.v14.010"
         },
         {
-          "id": "M01.n008",
-          "text": "게이트가 처음 열린 뒤로, 같은 장소가 어제와 다른 반응을 보일 때가 있어요. 저희는 그 차이를 기록해요.",
+          "id": "M01.v14.010",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M01.n009"
-        },
-        {
-          "id": "M01.n009",
-          "text": "첫 임무는 평소 길에서 관측 기록을 가져오는 거예요. 특별한 곳을 찾아갈 필요는 없어요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M01.n010"
-        },
-        {
-          "id": "M01.n010",
-          "text": "돌아오시면 이 자리에서 같이 확인해요. …잘 부탁해요, {hunterName}님.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M01.n011"
-        },
-        {
-          "id": "M01.n011",
-          "text": "아, 저 사진은 강해솔 님이에요. 협회 1위 헌터요. 첫 대규모 게이트 때 귀환로를 끝까지 지켜서 저희 지부에도 걸어뒀어요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M01.n012"
-        },
-        {
-          "id": "M01.n012",
-          "text": "대단한 분이죠. 그래도 오늘 현장 기록은 {hunterName}님만 남길 수 있어요. 저는 여기서 기다릴게요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M01.n013"
-        },
-        {
-          "id": "M01.n013",
-          "text": "사진 아래 잠긴 방은 예전 귀환 의료실이에요. 장비가 꺼진 뒤로는 아무도 쓰지 못했대요.",
-          "speaker": "operator",
+          "text": "확인한 내용을 기록해둘게요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M02",
-      "title": "발걸음 사이의 신호",
+      "title": "이상한 빈 구간",
       "kind": "main",
       "order": 2,
       "artwork": "AssociationOffice",
@@ -139,54 +118,47 @@
           "key": null
         }
       ],
-      "start": "M02.n001",
+      "start": "M02.v14.001",
       "nodes": [
         {
-          "id": "M02.n001",
-          "text": "첫 보고가 들어왔어요. 접수 번호도 생겼고요. 이제 정말 시작했네요.",
+          "id": "M02.v14.001",
           "speaker": "operator",
+          "text": "잠깐만요.",
           "expression": "calm",
-          "next": "M02.n002"
+          "next": "M02.v14.002"
         },
         {
-          "id": "M02.n002",
-          "text": "여기 보세요. 신호가 약해졌다가 돌아오는 간격이 이상하게 같아요.",
+          "id": "M02.v14.002",
           "speaker": "operator",
+          "text": "여기 좀 이상한데…\n신호가 약해졌다가 돌아오는 간격이 이상하게 같아요.",
           "expression": "calm",
-          "next": "M02.n003"
+          "next": "M02.v14.003"
         },
         {
-          "id": "M02.n003",
-          "text": "장비가 멈췄나 확인했는데, 헌터님 이동 기록은 계속 남아 있어요.",
+          "id": "M02.v14.003",
           "speaker": "operator",
+          "text": "마흔일곱 초.\n다른 구간도…\n비슷하네요.",
           "expression": "calm",
-          "next": "M02.n004"
+          "next": "M02.v14.004"
         },
         {
-          "id": "M02.n004",
-          "text": "그러니까… 우리가 놓친 시간이 아니라, 저쪽에서 비워둔 시간 같아요.",
+          "id": "M02.v14.004",
           "speaker": "operator",
+          "text": "게이트 근처에서 통신이 흔들리는 건 흔한 일이에요.\n그런데 이렇게 비슷하게 잘리는 건 조금 이상하긴 해요.",
           "expression": "calm",
-          "next": "M02.n005"
+          "next": "M02.v14.005"
         },
         {
-          "id": "M02.n005",
-          "text": "우선 다른 기록과 비교해볼게요. 아직은 우연일 수도 있으니까요.",
+          "id": "M02.v14.005",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M02.n006"
-        },
-        {
-          "id": "M02.n006",
-          "text": "첫날부터 수수께끼를 가져오셨네요. 보고서가 심심할 일은 없겠어요.",
-          "speaker": "operator",
+          "text": "일단 오류 기록으로 남겨둘게요.\n지금 단계에서 의미를 붙이기엔 정보가 너무 적어요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M03",
-      "title": "늑대가 기다린 소리",
+      "title": "첫 잔향 늑대 토벌",
       "kind": "main",
       "order": 3,
       "artwork": "AssociationOffice",
@@ -201,54 +173,40 @@
           "key": "beast"
         }
       ],
-      "start": "M03.n001",
+      "start": "M03.v14.001",
       "nodes": [
         {
-          "id": "M03.n001",
-          "text": "잘했어요! 잔향 늑대의 반응이 사라졌어요. 첫 토벌 기록이에요.",
+          "id": "M03.v14.001",
           "speaker": "operator",
+          "text": "첫 토벌이에요.\n잘했어요, {hunterName}님.",
           "expression": "calm",
-          "next": "M03.n002"
+          "next": "M03.v14.002"
         },
         {
-          "id": "M03.n002",
-          "text": "그런데 이 소리… 늑대가 내던 게 아니었네요.",
+          "id": "M03.v14.002",
           "speaker": "operator",
+          "text": "이런 식으로 주변 소리나 움직임을 조금 늦게 따라 해요.\n그래서 잔향 늑대라고 부르는 거고요.",
           "expression": "calm",
-          "next": "M03.n003"
+          "next": "M03.v14.003"
         },
         {
-          "id": "M03.n003",
-          "text": "늑대가 신호를 따라왔던 거예요. 우리가 먼저 듣지 못했을 뿐이고요.",
+          "id": "M03.v14.003",
           "speaker": "operator",
+          "text": "…이건.\n예전 장비 노이즈랑 비슷하네요.\n확실하지 않으니까 일단 남겨둘게요.",
           "expression": "calm",
-          "next": "M03.n004"
+          "next": "M03.v14.004"
         },
         {
-          "id": "M03.n004",
-          "text": "구분하기 편하라고 그렸어요. 늑대예요. 강아지는 아니고요.",
+          "id": "M03.v14.004",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M03.n005"
-        },
-        {
-          "id": "M03.n005",
-          "text": "다음에는 이 파형을 먼저 찾아볼게요. 준비하고 만날 수 있겠어요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M03.n006"
-        },
-        {
-          "id": "M03.n006",
-          "text": "추가 토벌 자료도 받는대요. 열 마리를 모으면 분석 지원 보상이 나와요. 지금 한 마리도 포함돼요.",
-          "speaker": "operator",
+          "text": "아, 추가 의뢰도 하나 열렸어요.\n잔향 늑대를 누적 열 마리 토벌하면 받을 수 있는 보너스 의뢰예요.\n메인 의뢰랑은 별개니까 꼭 먼저 할 필요는 없어요.\n하다가 자연스럽게 채워도 돼요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M04",
-      "title": "보고서의 여백",
+      "title": "비교 관측",
       "kind": "main",
       "order": 4,
       "artwork": "AssociationOffice",
@@ -263,61 +221,54 @@
           "key": "compare-signals"
         }
       ],
-      "start": "M04.n001",
+      "start": "M04.v14.001",
       "nodes": [
         {
-          "id": "M04.n001",
-          "text": "서로 다른 개체인데 빈칸이 같아요. 오늘 기록으로 장비 오차는 제외할 수 있겠어요.",
+          "id": "M04.v14.001",
           "speaker": "operator",
+          "text": "비교 관측 자료 들어왔어요.\n같은 현상을 본 기록인데 조금씩 달라요.",
           "expression": "calm",
-          "next": "M04.n002"
+          "next": "M04.v14.002"
         },
         {
-          "id": "M04.n002",
-          "text": "이쪽은… 제가 훈련 때 보던 자료예요. 비슷한 부분이 있어서 가져왔어요.",
+          "id": "M04.v14.002",
           "speaker": "operator",
+          "text": "이럴 때 한쪽만 보고 맞다고 정하면 안 된다고 배웠어요.",
           "expression": "calm",
-          "next": "M04.n003"
+          "next": "M04.v14.003"
         },
         {
-          "id": "M04.n003",
-          "text": "제 선생님은 틀린 숫자도 지우지 않고 줄만 그었어요. 왜 바꿨는지 남겨야 한다고요.",
+          "id": "M04.v14.003",
           "speaker": "operator",
+          "text": "…이 표시.\n제 선생님이 쓰던 방식이에요.\n중요한 건 꼭 서로 다른 원본 두 개에서 확인하셨거든요.",
           "expression": "calm",
-          "next": "M04.n004"
+          "next": "M04.v14.004"
         },
         {
-          "id": "M04.n004",
-          "text": "저는 그게 지저분해 보여서 새 종이에 옮겨 적곤 했는데요.",
+          "id": "M04.v14.004",
           "speaker": "operator",
+          "text": "잠깐.\n이쪽에서는 이미 귀환한 걸로 되어 있는데…\n다른 원본에서는 아직 현장에 있어요.",
           "expression": "calm",
-          "next": "M04.n005"
+          "next": "M04.v14.005"
         },
         {
-          "id": "M04.n005",
-          "text": "이상하네요. 지금은 지워진 부분이 더 궁금해요.",
+          "id": "M04.v14.005",
           "speaker": "operator",
+          "text": "비교 자료가 없었으면 그냥 지나갔겠네요.",
           "expression": "calm",
-          "next": "M04.n006"
+          "next": "M04.v14.006"
         },
         {
-          "id": "M04.n006",
-          "text": "…확인되면 말씀드릴게요. 아직 설명할 만큼은 아니에요.",
+          "id": "M04.v14.006",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M04.n007"
-        },
-        {
-          "id": "M04.n007",
-          "text": "사본 끝에 같은 필체로 작은 표시가 있어요. '원본 두 곳에서 확인.' 선생님은 왜 한 장으로 끝내지 않았을까요?",
-          "speaker": "operator",
+          "text": "원본 두 곳에서 확인.\n아직은 이쪽이 맞는 것 같아요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M05",
-      "title": "불합격 항목",
+      "title": "D급 심사 준비",
       "kind": "main",
       "order": 5,
       "artwork": "AssociationOffice",
@@ -338,55 +289,40 @@
           "key": "basic-survey"
         }
       ],
-      "start": "M05.n001",
+      "start": "M05.v14.001",
       "nodes": [
         {
-          "id": "M05.n001",
-          "text": "가장 빠른 기록이 아니라, 다음 관제자가 이어받을 수 있는 기록을 제출하세요.",
-          "speaker": "report",
+          "id": "M05.v14.001",
+          "speaker": "operator",
+          "text": "D급 심사 안내가 왔어요.\n첫 승급 심사네요.",
           "expression": "calm",
-          "speakerLabel": "평가관의 서면",
-          "next": "M05.n002"
+          "next": "M05.v14.002"
         },
         {
-          "id": "M05.n002",
-          "text": "반려된 예시가 붙어 있어요. '표적 소실을 토벌로 기재함.' …눈앞에서 사라졌다고 끝난 건 아니네요.",
+          "id": "M05.v14.002",
           "speaker": "operator",
+          "text": "기록이 빠르다고 무조건 좋은 점수를 받는 방식은 아니에요.\n무리해서 속도를 올릴 필요도 없고요.\n상황이 안 좋으면 멈추거나 걷는 판단도 심사에 포함돼요.",
           "expression": "calm",
-          "next": "M05.n003"
+          "next": "M05.v14.003"
         },
         {
-          "id": "M05.n003",
-          "text": "저희는 남은 반응까지 확인했어요. 그 자료로 응시할 수 있어요.",
+          "id": "M05.v14.003",
           "speaker": "operator",
+          "text": "…이것도 좀 이상하네요.\n원본에는 판단 유보 표시가 있는데 최종본에는 전부 정상으로 들어가 있어요.",
           "expression": "calm",
-          "next": "M05.n004"
+          "next": "M05.v14.004"
         },
         {
-          "id": "M05.n004",
-          "text": "심사 구역은 일반 게이트와 별개예요. 지금 등급으로 들어갈 수 있게 승인됐어요.",
+          "id": "M05.v14.004",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M05.n005"
-        },
-        {
-          "id": "M05.n005",
-          "text": "전용 감시자의 핵을 끝까지 확인하면 돼요. 한 번에 끝내지 못한 피해도 이어서 기록돼요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M05.n006"
-        },
-        {
-          "id": "M05.n006",
-          "text": "제 관제 기록도 같이 평가받아요. 첫 심사부터 혼자 보내지는 않을게요.",
-          "speaker": "operator",
+          "text": "이건 제가 따로 확인해둘게요.\n지금은 심사부터 준비하죠.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M06",
-      "title": "귀환 확인",
+      "title": "첫 D급 승급",
       "kind": "main",
       "order": 6,
       "artwork": "AssociationOffice",
@@ -401,94 +337,79 @@
           "key": null
         }
       ],
-      "start": "M06.n001",
+      "start": "M06.v14.001",
       "nodes": [
         {
-          "id": "M06.n001",
-          "text": "핵 반응까지 멈췄어요. 심사 통과예요, {hunterName}님!",
+          "id": "M06.v14.001",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M06.n002"
+          "text": "통과했어요.\nD급 승급 축하해요, {hunterName}님.",
+          "expression": "smile",
+          "next": "M06.v14.002"
         },
         {
-          "id": "M06.n002",
-          "text": "새 등급표가 왔어요. 사진으로만 봤는데… 실제로 받으니까 꽤 멋있네요.",
+          "id": "M06.v14.002",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M06.n003"
+          "text": "여기 두면 되겠다.\n강해솔 헌터님 첫 승급 사진 옆이에요.",
+          "expression": "smile",
+          "next": "M06.v14.003"
         },
         {
-          "id": "M06.n003",
-          "text": "어떻게 말할까요?",
+          "id": "M06.v14.003",
+          "speaker": "operator",
+          "text": "강해솔 헌터님 첫 승급 때 남은 축하 기록도 같이 있네요.\n지금은 {hunterName}님 사진이 그 옆이고요.",
+          "expression": "smile",
+          "next": "M06.v14.004"
+        },
+        {
+          "id": "M06.v14.004",
+          "speaker": "operator",
+          "text": "아, 저때도 붙이고 다녔네요.\n강해솔 헌터님 장비에 주황 테이프 붙이는 습관 있었거든요.\n자기 물건 찾기 쉽게 한다고요.",
+          "expression": "smile",
+          "next": "M06.v14.005"
+        },
+        {
+          "id": "M06.v14.005",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M06-A",
               "text": "이제 통신 꺼도 괜찮아요.",
-              "next": "M06.n004"
+              "next": "M06.v14.006"
             },
             {
               "id": "M06-B",
               "text": "우리 둘 다 통과한 거죠?",
-              "next": "M06.n005"
+              "next": "M06.v14.007"
             }
           ]
         },
         {
-          "id": "M06.n004",
+          "id": "M06.v14.006",
           "speaker": "operator",
-          "text": "네. 돌아오신 것까지 확인했으니까요. 이제 괜찮아요.",
+          "text": "네.\n돌아오신 것까지 제대로 확인했으니까…\n이제 통신 꺼도 괜찮아요.\n오늘은 승급한 것만 생각해도 되겠네요.",
           "expression": "smile",
-          "next": "M06.n006"
+          "next": "M06.v14.008"
         },
         {
-          "id": "M06.n005",
+          "id": "M06.v14.007",
           "speaker": "operator",
-          "text": "맞아요. 그러네요. 저도 오늘 처음으로 통과했어요.",
+          "text": "저도 포함이에요?\n그럼…\n네. 우리 둘 다 통과한 걸로 해요.",
           "expression": "smile",
-          "next": "M06.n006"
+          "next": "M06.v14.008"
         },
         {
-          "id": "M06.n006",
-          "text": "축하 인사는 연습했는데 막상 하려니 생각이 안 나요.",
+          "id": "M06.v14.008",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M06.n007"
-        },
-        {
-          "id": "M06.n007",
-          "text": "그래서 그냥 말할게요. 오늘 정말 잘했어요. 같이해서 좋았어요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M06.n008"
-        },
-        {
-          "id": "M06.n008",
-          "text": "강해솔 님의 첫 승급 사진도 여기 있어요. 그분도 처음부터 1위였던 건 아니네요. 지금은 {hunterName}님의 첫 사진을 옆에 걸어둘게요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M06.n009"
-        },
-        {
-          "id": "M06.n009",
-          "text": "첫 승급을 축하해요. 기록표는 잠깐 접어두고, 같이 돌아온 사람한테 물부터 한 잔 건네요. 멋진 말은 그다음에 해도 돼요.",
-          "speaker": "report",
-          "expression": "calm",
-          "speakerLabel": "강해솔의 기록",
-          "next": "M06.n010"
-        },
-        {
-          "id": "M06.n010",
-          "text": "저도 컵 두 개 챙겨올게요. 오늘은 보고서보다 축하가 먼저네요.",
-          "speaker": "operator",
+          "text": "확인한 내용을 기록해둘게요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M07",
-      "title": "다른 발자국",
+      "title": "전자 표식을 피하는 다크엘프",
       "kind": "main",
       "order": 7,
       "artwork": "AssociationOperational",
@@ -503,54 +424,33 @@
           "key": "moon-mark"
         }
       ],
-      "start": "M07.n001",
+      "start": "M07.v14.001",
       "nodes": [
         {
-          "id": "M07.n001",
-          "text": "정찰병이 가져가려던 건 마석이 아니에요. 협회의 예전 표식이에요.",
+          "id": "M07.v14.001",
           "speaker": "operator",
+          "text": "이걸 부순 게 아니네요.\n일부러 떼어낸 것 같아요.",
           "expression": "calm",
-          "next": "M07.n002"
+          "next": "M07.v14.002"
         },
         {
-          "id": "M07.n002",
-          "text": "사람을 찾으라고 만든 표식을, 왜 저쪽에서 모으고 있었을까요?",
+          "id": "M07.v14.002",
           "speaker": "operator",
+          "text": "전자 장비가 싫어서 피한 걸까요.\n아니면…\n여길 이미 알고 있었던 걸까요.",
           "expression": "calm",
-          "next": "M07.n003"
+          "next": "M07.v14.003"
         },
         {
-          "id": "M07.n003",
-          "text": "이 기종은 이미 퇴역했어요. 지금 관제실을 알 수가 없는데요.",
+          "id": "M07.v14.003",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M07.n004"
-        },
-        {
-          "id": "M07.n004",
-          "text": "수신 경로를 끊어둘게요. 분석용 사본만 남겨요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M07.n005"
-        },
-        {
-          "id": "M07.n005",
-          "text": "이번에는 답을 기다리는 신호가 아니라… 이쪽의 답을 따라 하는 것 같아요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M07.n006"
-        },
-        {
-          "id": "M07.n006",
-          "text": "장치의 제작 연도가 강해솔 님의 상위 게이트 원정 시기와 겹쳐요. 같은 장비였는지는 아직 모르겠어요. 번호를 남겨둘게요.",
-          "speaker": "operator",
+          "text": "이 기록…\n공식 원정 기록에는 없는 이동이에요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M08",
-      "title": "익숙한 관제실",
+      "title": "가짜로 잘 만들어진 지부",
       "kind": "main",
       "order": 8,
       "artwork": "AssociationOperational",
@@ -565,55 +465,28 @@
           "key": "illusion-survey"
         }
       ],
-      "start": "M08.n001",
+      "start": "M08.v14.001",
       "nodes": [
         {
-          "id": "M08.n001",
-          "text": "모든 귀환을 확인했어요. 이제 더 확인하지 않아도 돼요.",
+          "id": "M08.v14.001",
           "speaker": "report",
+          "text": "오셨네요.\n기록은 제가 다 확인했어요.\n문제없어요.",
           "expression": "calm",
-          "speakerLabel": "환영의 문자",
-          "next": "M08.n002"
+          "speakerLabel": "가짜 {operatorName}",
+          "next": "M08.v14.002"
         },
         {
-          "id": "M08.n002",
-          "text": "제 말투를 배웠어요. 책상 배치까지요.",
-          "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M08.n003"
-        },
-        {
-          "id": "M08.n003",
-          "text": "그런데 저 그림… 귀가 같아요. 저는 한쪽을 너무 크게 그렸는데요.",
-          "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M08.n004"
-        },
-        {
-          "id": "M08.n004",
-          "text": "고친 거예요. 틀렸다고 생각한 부분을요.",
-          "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M08.n005"
-        },
-        {
-          "id": "M08.n005",
-          "text": "익숙하게 만들어서 믿게 하는 거네요. 서큐버스의 환영에도 같은 수정 흔적이 있어요.",
-          "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M08.n006"
-        },
-        {
-          "id": "M08.n006",
-          "text": "앞으로 목소리만으로 판단하지 않을게요. 실제 기록과 맞는지 확인해요.",
-          "speaker": "operator",
-          "expression": "thoughtful"
+          "id": "M08.v14.002",
+          "speaker": "report",
+          "text": "다음 일정도 준비해뒀어요.",
+          "expression": "calm",
+          "speakerLabel": "가짜 {operatorName}"
         }
       ]
     },
     {
       "id": "M09",
-      "title": "꺼두지 못한 채널",
+      "title": "오퍼레이터의 고백",
       "kind": "main",
       "order": 9,
       "artwork": "AssociationOperational",
@@ -628,86 +501,121 @@
           "key": "compare-original"
         }
       ],
-      "start": "M09.n001",
+      "start": "M09.v14.001",
       "nodes": [
         {
-          "id": "M09.n001",
-          "text": "제가 먼저 말씀드려야 해요. 오래된 자료를 가져온 이유요.",
+          "id": "M09.v14.001",
           "speaker": "operator",
-          "expression": "worried",
-          "next": "M09.n002"
+          "text": "{hunterName}님.\n잠깐 얘기해도 될까요?",
+          "expression": "calm",
+          "next": "M09.v14.002"
         },
         {
-          "id": "M09.n002",
-          "text": "마지막 귀환 교대 때, 제가 잡음이라고 표시한 구간이 있었어요. 마흔일곱 초예요.",
+          "id": "M09.v14.002",
           "speaker": "operator",
-          "expression": "worried",
-          "next": "M09.n003"
+          "text": "M08에서 본 그 파형.\n제가 돌린 복구 장치에서 나온 거예요.",
+          "expression": "calm",
+          "next": "M09.v14.003"
         },
         {
-          "id": "M09.n003",
-          "text": "나중에 그 안에서 구조 요청이 나왔어요. 제 선생님 목소리도 있었고요.",
+          "id": "M09.v14.003",
           "speaker": "operator",
-          "expression": "worried",
-          "next": "M09.n004"
+          "text": "훈련받을 때 제가 잡음이라고 표시한 구간이 있었어요.\n마흔일곱 초예요.",
+          "expression": "calm",
+          "next": "M09.v14.004"
         },
         {
-          "id": "M09.n004",
-          "text": "이번 신호가 닮아서… 허가 없이 복구 장치를 연결했어요. 한 번만 제대로 들으면 알 수 있을 것 같았어요.",
+          "id": "M09.v14.004",
           "speaker": "operator",
-          "expression": "worried",
-          "next": "M09.n005"
+          "text": "나중에 그 안에서 구조 요청이 나왔어요.\n제 선생님 목소리도 있었고요.",
+          "expression": "calm",
+          "next": "M09.v14.005"
         },
         {
-          "id": "M09.n005",
-          "text": "그런데 그 통로로 관제실 기록이 나갔어요. 저 환영이 저희를 아는 건 제 책임이에요.",
+          "id": "M09.v14.005",
           "speaker": "operator",
-          "expression": "worried",
-          "next": "M09.n006"
+          "text": "그때 제가 놓친 게 더 있었던 건 아닐까 싶었어요.\n그래서 오래된 파일을 다시 복구했어요.\n허가받지 않고요.",
+          "expression": "calm",
+          "next": "M09.v14.006"
         },
         {
-          "id": "M09.n006",
-          "text": "어떻게 말할까요?",
+          "id": "M09.v14.006",
+          "speaker": "operator",
+          "text": "처음엔 파일만 보는 거라고 생각했어요.\n그런데 장치가 예전 통신 구조까지 건드린 흔적이 있어요.",
+          "expression": "calm",
+          "next": "M09.v14.007"
+        },
+        {
+          "id": "M09.v14.007",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M09-A",
               "text": "지금부터 확인한 것부터 정리해요.",
-              "next": "M09.n007"
+              "next": "M09.v14.008"
             },
             {
               "id": "M09-B",
               "text": "혼자 해결하려고 했던 거군요.",
-              "next": "M09.n008"
+              "next": "M09.v14.009"
             }
           ]
         },
         {
-          "id": "M09.n007",
+          "id": "M09.v14.008",
           "speaker": "operator",
           "text": "네. 숨기지 않고 처음 연결한 시점부터 적을게요.",
           "expression": "smile",
-          "next": "M09.n009"
+          "next": "M09.v14.010"
         },
         {
-          "id": "M09.n008",
+          "id": "M09.v14.009",
           "speaker": "operator",
           "text": "도움을 청하면 멈추라고 할까 봐요. 그래서 더 늦어졌어요.",
           "expression": "smile",
-          "next": "M09.n009"
+          "next": "M09.v14.010"
         },
         {
-          "id": "M09.n009",
-          "text": "용서해달라는 말부터 하고 싶지는 않아요. 제가 연 통로를 닫는 일부터 할게요.",
+          "id": "M09.v14.010",
           "speaker": "operator",
-          "expression": "worried"
+          "text": "…네.\n추측부터 더 붙이지 않을게요.\n지금 확인된 것부터 정리할게요.",
+          "expression": "calm",
+          "next": "M09.v14.011"
+        },
+        {
+          "id": "M09.v14.011",
+          "speaker": "operator",
+          "text": "…맞아요.\n알려지면 못 하게 할 것 같아서.\n그게 이미 문제였네요.",
+          "expression": "calm",
+          "next": "M09.v14.012"
+        },
+        {
+          "id": "M09.v14.012",
+          "speaker": "operator",
+          "text": "이건 제가 직접 보고할게요.\n숨기면 더 이상해질 것 같아요.",
+          "expression": "calm",
+          "next": "M09.v14.013"
+        },
+        {
+          "id": "M09.v14.013",
+          "speaker": "operator",
+          "text": "일반 활동 안내는 계속할 수 있어요.\n러닝 중 필요한 안내까지 막힌 건 아니에요.\n대신 예전 회선을 제 마음대로 열거나 송신하는 건 이제 못 해요.",
+          "expression": "calm",
+          "next": "M09.v14.014"
+        },
+        {
+          "id": "M09.v14.014",
+          "speaker": "operator",
+          "text": "…제가 보낸 게 아닌데.",
+          "expression": "calm"
         }
       ]
     },
     {
       "id": "M10",
-      "title": "두 개의 서명",
+      "title": "재생된 적 없는 관제 로그",
       "kind": "main",
       "order": 10,
       "artwork": "AssociationOperational",
@@ -728,69 +636,114 @@
           "key": "restore-link"
         }
       ],
-      "start": "M10.n001",
+      "start": "M10.v14.001",
       "nodes": [
         {
-          "id": "M10.n001",
-          "text": "원본을 보존하고 모든 조작을 남기세요. 현장과 관제, 두 명의 검증이 필요해요.",
-          "speaker": "report",
+          "id": "M10.v14.001",
+          "speaker": "operator",
+          "text": "오늘 기록은 여기까지…\n…잠깐만요.",
           "expression": "calm",
-          "speakerLabel": "평가관의 서면",
-          "next": "M10.n002"
+          "next": "M10.v14.002"
         },
         {
-          "id": "M10.n002",
-          "text": "저 혼자 복구할 수 없게 권한을 나눴어요. 관측 부서와 분석 부서가 서로 비교해요.",
+          "id": "M10.v14.002",
           "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n003"
+          "text": "이상하네요.\n활동 중에 재생된 적이 없는 파일이에요.\n끝난 뒤에 보고서에 들어왔어요.",
+          "expression": "calm",
+          "next": "M10.v14.003"
         },
         {
-          "id": "M10.n003",
-          "text": "번거롭죠? 그래도 이제 제가 틀리면 바로 발견할 수 있어요.",
+          "id": "M10.v14.003",
           "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n004"
+          "text": "이건 원본 상태 그대로 따로 보관할게요.",
+          "expression": "calm",
+          "next": "M10.v14.004"
         },
         {
-          "id": "M10.n004",
-          "text": "반응을 가리던 외벽을 분리했어요. 경계의 군주예요.",
+          "id": "M10.v14.004",
           "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n005"
+          "text": "원래 채널은 보기만 할게요.\n여기서는 밖으로 아무것도 보내지 않아요.",
+          "expression": "calm",
+          "next": "M10.v14.005"
         },
         {
-          "id": "M10.n005",
-          "text": "여기부터는 없던 일로 덮을 수 없어요. 그러니까 제대로 남겨볼게요.",
-          "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n006"
+          "id": "M10.v14.005",
+          "speaker": "hunter",
+          "text": "어떻게 답할까요?",
+          "expression": "calm",
+          "choices": [
+            {
+              "id": "M10-A",
+              "text": "공식 관제 기록부터 비교해봐요.",
+              "next": "M10.v14.006",
+              "memory": {
+                "m10EvidencePath": "official"
+              }
+            },
+            {
+              "id": "M10-B",
+              "text": "음성 파일 자체를 확인해봐요.",
+              "next": "M10.v14.007",
+              "memory": {
+                "m10EvidencePath": "audio"
+              }
+            },
+            {
+              "id": "M10-C",
+              "text": "먼저 그대로 보존해요.",
+              "next": "M10.v14.008",
+              "memory": {
+                "m10EvidencePath": "preserve"
+              }
+            }
+          ]
         },
         {
-          "id": "M10.n006",
-          "text": "제 실수도, 우리가 고친 방법도요.",
+          "id": "M10.v14.006",
           "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n007"
+          "text": "정상 안내라면 승인 기록이 있어야 해요.\n없네요.",
+          "expression": "smile",
+          "next": "M10.v14.009"
         },
         {
-          "id": "M10.n007",
-          "text": "그러고 보니 요즘 해솔 님 소식을 못 들었어요. 상위 게이트 원정이 길어진 걸까요? 공개 보고가 멈춘 날짜도 기록해둘게요.",
+          "id": "M10.v14.007",
           "speaker": "operator",
-          "expression": "thoughtful",
-          "next": "M10.n008"
+          "text": "저 말…\n제가 한 적 없어요.",
+          "expression": "smile",
+          "next": "M10.v14.009"
         },
         {
-          "id": "M10.n008",
-          "text": "두 지부의 전원을 연결했더니 잠긴 의료실에도 표시등 하나가 켜졌어요. 아직 문은 안 열리지만요.",
+          "id": "M10.v14.008",
           "speaker": "operator",
-          "expression": "thoughtful"
+          "text": "네.\n원본부터 남겨두죠.",
+          "expression": "smile",
+          "next": "M10.v14.009"
+        },
+        {
+          "id": "M10.v14.009",
+          "speaker": "operator",
+          "text": "새 신호가 들어와요.\n우린 아무것도 보내고 있지 않아요.",
+          "expression": "calm",
+          "next": "M10.v14.010"
+        },
+        {
+          "id": "M10.v14.010",
+          "speaker": "operator",
+          "text": "우리 쪽 송신은 계속 꺼져 있었어요.\n저걸 끊은 건 지부가 아니에요.",
+          "expression": "calm",
+          "next": "M10.v14.011"
+        },
+        {
+          "id": "M10.v14.011",
+          "speaker": "operator",
+          "text": "파일을 보낸 쪽이 있고…\n그걸 밖에서 잘라낸 쪽도 있어요.\n같은 존재는 아닌 것 같아요.",
+          "expression": "calm"
         }
       ]
     },
     {
       "id": "M11",
-      "title": "경계 너머의 답신",
+      "title": "끝난 내일",
       "kind": "main",
       "order": 11,
       "artwork": "AssociationOperational",
@@ -805,55 +758,68 @@
           "key": "boundary-lord"
         }
       ],
-      "start": "M11.n001",
+      "start": "M11.v14.001",
       "nodes": [
         {
-          "id": "M11.n001",
-          "text": "경계의 군주 토벌을 확인했어요! 가려져 있던 신호가 보여요.",
+          "id": "M11.v14.001",
           "speaker": "operator",
+          "text": "일단 조용해졌어요.\n저 검은 반응이 끊어낸 뒤로 같은 신호는 다시 안 들어오고 있어요.",
           "expression": "calm",
-          "next": "M11.n002"
+          "next": "M11.v14.002"
         },
         {
-          "id": "M11.n002",
-          "text": "잠깐… 이건 저희 지부예요. 내일 날짜인데요.",
+          "id": "M11.v14.002",
           "speaker": "operator",
+          "text": "문제는 정상 기록까지 같이 잘렸다는 거예요.\n정말 경계만 끊어낸 거네요.\n안에 뭐가 있는지는 상관없이.",
           "expression": "calm",
-          "next": "M11.n003"
+          "next": "M11.v14.003"
         },
         {
-          "id": "M11.n003",
-          "text": "아무도 없는데 모두 귀환했다고 적혀 있어요.",
+          "id": "M11.v14.003",
           "speaker": "operator",
+          "text": "…이건 뭐죠?",
           "expression": "calm",
-          "next": "M11.n004"
+          "next": "M11.v14.004"
         },
         {
-          "id": "M11.n004",
-          "text": "손실이 없는 기록을 준비했어요. 다음 기록은 필요하지 않아요.",
-          "speaker": "report",
+          "id": "M11.v14.004",
+          "speaker": "operator",
+          "text": "아직 내일이 오지도 않았는데.\n사람 이름도 없어요.",
           "expression": "calm",
-          "speakerLabel": "사서의 문자",
-          "next": "M11.n005"
+          "next": "M11.v14.005"
         },
         {
-          "id": "M11.n005",
-          "text": "사람을 돌려보내는 게 아니었어요. 더 잃지 않도록 같은 순간에 가두는 거예요.",
+          "id": "M11.v14.005",
           "speaker": "operator",
+          "text": "사람이 한 명도 없는데…\n하루가 다 끝난 기록만 있어요.",
           "expression": "calm",
-          "next": "M11.n006"
+          "next": "M11.v14.006"
         },
         {
-          "id": "M11.n006",
-          "text": "협회 기록에 이름이 있어요. 공허의 사서. 문을 지키던 군주 뒤에서 기록을 고치고 있었어요.",
+          "id": "M11.v14.006",
           "speaker": "operator",
+          "text": "전에 귀환 기록이 먼저 생겼던 것도 그렇고.\n이쪽은 자꾸 결과부터 만들어놓네요.",
+          "expression": "calm",
+          "next": "M11.v14.007"
+        },
+        {
+          "id": "M11.v14.007",
+          "speaker": "operator",
+          "text": "그리고 이건…\n방금 그 이상한 기록보다 훨씬 오래된 파일이에요.",
+          "expression": "calm",
+          "next": "M11.v14.008"
+        },
+        {
+          "id": "M11.v14.008",
+          "speaker": "operator",
+          "text": "군주가 사라졌다고 잘린 회선까지 다시 이어지는 건 아니네요.\n끊어진 경계는 그대로 닫혀 있어요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M12",
-      "title": "수정되지 않은 기록",
+      "title": "틀린 시간과 남겨둔 간식",
       "kind": "main",
       "order": 12,
       "artwork": "AssociationOperational",
@@ -868,55 +834,68 @@
           "key": "restore-records"
         }
       ],
-      "start": "M12.n001",
+      "start": "M12.v14.001",
       "nodes": [
         {
-          "id": "M12.n001",
-          "text": "또 시계를 잘못 봤네. 지우지 말고 옆에 적어둬. 이 시계가 얼마나 늦는지도 자료야.",
-          "speaker": "report",
+          "id": "M12.v14.001",
+          "speaker": "operator",
+          "text": "…선생님 글씨예요.",
           "expression": "calm",
-          "speakerLabel": "문해진의 기록",
-          "next": "M12.n002"
+          "next": "M12.v14.002"
         },
         {
-          "id": "M12.n002",
-          "text": "선생님은 마지막까지 멋있는 말만 하셨을 줄 알았어요.",
+          "id": "M12.v14.002",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M12.n003"
+          "text": "시간 진짜 자주 틀리셨거든요.\n저한테는 기록 정확히 하라고 그렇게 말하면서.",
+          "expression": "calm",
+          "next": "M12.v14.003"
         },
         {
-          "id": "M12.n003",
-          "text": "그런데 시계를 틀리게 보고… 간식 사오겠다는 약속도 적어두셨네요.",
+          "id": "M12.v14.003",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M12.n004"
+          "text": "…이런 것도 남아 있었네요.",
+          "expression": "calm",
+          "next": "M12.v14.004"
         },
         {
-          "id": "M12.n004",
-          "text": "환영에는 이런 게 없어요. 틀리지도 않고, 약속을 못 지키지도 않아요.",
+          "id": "M12.v14.004",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M12.n005"
+          "text": "이상하죠.\n저는 자꾸 마지막 통신만 생각했는데.\n원래는 이런 사람이었어요.",
+          "expression": "calm",
+          "next": "M12.v14.005"
         },
         {
-          "id": "M12.n005",
-          "text": "이쪽이 진짜예요. 완벽하지 않은 사람이 남긴 기록이요.",
+          "id": "M12.v14.005",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M12.n006"
+          "text": "이건 여전하네요.\n시간은 틀려도 중요한 건 꼭 두 군데서 확인했고요.",
+          "expression": "calm",
+          "next": "M12.v14.006"
         },
         {
-          "id": "M12.n006",
-          "text": "저도 원본을 지우지 않을게요. 이번에는 제대로 배웠어요.",
+          "id": "M12.v14.006",
           "speaker": "operator",
-          "expression": "relieved"
+          "text": "강해솔 헌터님 원정 자료예요.\n이 파일도 이 시기에 같이 묶여 있었네요.",
+          "expression": "calm",
+          "next": "M12.v14.007"
+        },
+        {
+          "id": "M12.v14.007",
+          "speaker": "operator",
+          "text": "그런데 이동 기록이 안 맞아요.\n공식 자료에는 없는 구간이 있어요.",
+          "expression": "calm",
+          "next": "M12.v14.008"
+        },
+        {
+          "id": "M12.v14.008",
+          "speaker": "operator",
+          "text": "…앞뒤가 없네요.\n지금은 이것만으로 뜻을 정하지 않을게요.",
+          "expression": "calm"
         }
       ]
     },
     {
       "id": "M13",
-      "title": "판단을 맡기는 일",
+      "title": "모른다고 적는 사람",
       "kind": "main",
       "order": 13,
       "artwork": "AssociationAdvanced",
@@ -931,69 +910,114 @@
           "key": null
         }
       ],
-      "start": "M13.n001",
+      "start": "M13.v14.001",
       "nodes": [
         {
-          "id": "M13.n001",
-          "text": "둘 다 정상으로 보여요. 지금 자료만으로 어느 쪽인지 모르겠어요.",
+          "id": "M13.v14.001",
           "speaker": "operator",
+          "text": "축하해요.\n이제 제가 못 보는 현장 자료도 {hunterName}님 쪽에서 먼저 보일 수 있겠네요.",
           "expression": "calm",
-          "next": "M13.n002"
+          "next": "M13.v14.002"
         },
         {
-          "id": "M13.n002",
-          "text": "한 가지 더 확인하면 구분할 수 있어요. 기존 판단은 보류할게요.",
+          "id": "M13.v14.002",
           "speaker": "operator",
+          "text": "장비 문제라고 쓰면 보고서는 깔끔해지긴 하는데…\n근거가 부족해요.",
           "expression": "calm",
-          "next": "M13.n003"
+          "next": "M13.v14.003"
         },
         {
-          "id": "M13.n003",
-          "text": "불확실성을 보고했고, 추가 자료로 결론을 바꿨어요. 상위 임무 대응 자격을 승인해요.",
-          "speaker": "report",
+          "id": "M13.v14.003",
+          "speaker": "operator",
+          "text": "…모르겠어요.",
           "expression": "calm",
-          "speakerLabel": "평가관의 서면",
-          "next": "M13.n004"
+          "next": "M13.v14.004"
         },
         {
-          "id": "M13.n004",
-          "text": "모른다고 말해서 떨어질 줄 알았는데요.",
+          "id": "M13.v14.004",
           "speaker": "operator",
+          "text": "이렇게 적어도 되겠네요.\n아직 모른다고.",
           "expression": "calm",
-          "next": "M13.n005"
+          "next": "M13.v14.005"
         },
         {
-          "id": "M13.n005",
-          "text": "이제는… 같이 확인할 사람이 있다는 걸 알아요.",
+          "id": "M13.v14.005",
           "speaker": "operator",
+          "text": "대신 한 번 더 관측해봐요.\n지금 없는 답을 만들어내는 것보다 그게 낫겠어요.",
           "expression": "calm",
-          "next": "M13.n006"
+          "next": "M13.v14.006"
         },
         {
-          "id": "M13.n006",
-          "text": "C급 헌터님, 다음 지시가 있어요. 오늘 보고서에 축하 표시 하나만 더 붙여도 될까요?",
+          "id": "M13.v14.006",
           "speaker": "operator",
+          "text": "강해솔 헌터님 기록도…\n최근 소식이 없네요.",
           "expression": "calm",
-          "next": "M13.n007"
+          "next": "M13.v14.007"
         },
         {
-          "id": "M13.n007",
-          "text": "이제 상위 게이트 자료도 일부 볼 수 있겠네요. 해솔 님 원정 기록을 찾았는데, 귀환 확인 칸만 비어 있어요. 아직 미제출인 걸까요?",
-          "speaker": "operator",
+          "id": "M13.v14.007",
+          "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
-          "next": "M13.n008"
+          "choices": [
+            {
+              "id": "M13-A",
+              "text": "확실한 내용만 적어요.",
+              "next": "M13.v14.008",
+              "memory": {
+                "m13ReportMethod": "confirmed"
+              }
+            },
+            {
+              "id": "M13-B",
+              "text": "불확실하다고 표시해요.",
+              "next": "M13.v14.009",
+              "memory": {
+                "m13ReportMethod": "uncertain"
+              }
+            },
+            {
+              "id": "M13-C",
+              "text": "현장 판단과 관제 판단을 따로 적어요.",
+              "next": "M13.v14.010",
+              "memory": {
+                "m13ReportMethod": "separate"
+              }
+            }
+          ]
         },
         {
-          "id": "M13.n008",
-          "text": "예전 인터뷰에선 제일 무서운 게 게이트가 아니라 작전 뒤 반성회라고 웃으셨어요. 그렇게 가까운 분처럼 느껴지는데, 정작 최근 영상은 없네요.",
+          "id": "M13.v14.008",
           "speaker": "operator",
+          "text": "네.\n나머지는 비워둘게요.",
+          "expression": "smile",
+          "next": "M13.v14.011"
+        },
+        {
+          "id": "M13.v14.009",
+          "speaker": "operator",
+          "text": "그게 제일 정확하겠네요.\n모른다는 것도 정보니까요.",
+          "expression": "smile",
+          "next": "M13.v14.011"
+        },
+        {
+          "id": "M13.v14.010",
+          "speaker": "operator",
+          "text": "좋아요.\n같은 걸 봐도 다르게 판단할 수 있으니까요.",
+          "expression": "smile",
+          "next": "M13.v14.011"
+        },
+        {
+          "id": "M13.v14.011",
+          "speaker": "operator",
+          "text": "확인한 내용을 기록해둘게요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M14",
-      "title": "돌아갈 자리를 남겨요",
+      "title": "닫힌 채로 확인한다",
       "kind": "main",
       "order": 14,
       "artwork": "AssociationAdvanced",
@@ -1014,55 +1038,61 @@
           "key": "inner-signal"
         }
       ],
-      "start": "M14.n001",
+      "start": "M14.v14.001",
       "nodes": [
         {
-          "id": "M14.n001",
-          "text": "준비됐어요. 한쪽 기록이 바뀌면 다른 쪽이 차이를 찾을 거예요.",
+          "id": "M14.v14.001",
           "speaker": "operator",
+          "text": "승인 다 들어왔어요.\n이번에도 과거 회선은 안 열어요.\n지금 가진 자료만 비교할게요.",
           "expression": "calm",
-          "next": "M14.n002"
+          "next": "M14.v14.002"
         },
         {
-          "id": "M14.n002",
-          "text": "마흔일곱 초를 복원할 수 있어요. 그때 응답하면 아무도 잃지 않아요.",
-          "speaker": "report",
+          "id": "M14.v14.002",
+          "speaker": "operator",
+          "text": "저는 관제 기록 쪽을 볼게요.\n{hunterName}님은 현장에서 직접 확인한 자료가 맞는지만 확인해 주세요.",
           "expression": "calm",
-          "speakerLabel": "사서의 문자",
-          "next": "M14.n003"
+          "next": "M14.v14.003"
         },
         {
-          "id": "M14.n003",
-          "text": "정말 듣고 싶었어요. 지금도요.",
+          "id": "M14.v14.003",
           "speaker": "operator",
+          "text": "여기.",
           "expression": "calm",
-          "next": "M14.n004"
+          "next": "M14.v14.004"
         },
         {
-          "id": "M14.n004",
-          "text": "그런데 그 순간으로 돌아가면, 오늘 여기 온 사람은 누가 안내해요?",
+          "id": "M14.v14.004",
           "speaker": "operator",
+          "text": "비슷해요.\n그 마흔일곱 초가 단순 손실 구간이 아닐 수도 있어요.",
           "expression": "calm",
-          "next": "M14.n005"
+          "next": "M14.v14.005"
         },
         {
-          "id": "M14.n005",
-          "text": "그 채널은 원본으로 보관해요. 지금은 현재 연결을 유지할게요.",
+          "id": "M14.v14.005",
           "speaker": "operator",
+          "text": "…아니.\n이것도 아직 가능성까지만.",
           "expression": "calm",
-          "next": "M14.n006"
+          "next": "M14.v14.006"
         },
         {
-          "id": "M14.n006",
-          "text": "{hunterName}님. 돌아갈 자리는 제가 남겨둘게요. 준비되면 시작해요.",
+          "id": "M14.v14.006",
           "speaker": "operator",
+          "text": "{hunterName}님.\n저 화면 믿지 마세요.\n우리가 방금 확인한 자료부터 기억해요.",
+          "expression": "calm",
+          "next": "M14.v14.007"
+        },
+        {
+          "id": "M14.v14.007",
+          "speaker": "operator",
+          "text": "잠깐… 새 신호가 아니에요.\n이 반응, 자료 안에 이미 들어 있었어요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M15",
-      "title": "마지막 페이지의 빈칸",
+      "title": "마흔일곱 초의 안쪽",
       "kind": "main",
       "order": 15,
       "artwork": "AssociationAdvanced",
@@ -1077,55 +1107,61 @@
           "key": "void-librarian"
         }
       ],
-      "start": "M15.n001",
+      "start": "M15.v14.001",
       "nodes": [
         {
-          "id": "M15.n001",
-          "text": "불완전한 기록이에요. 다시 잃을 수 있어요.",
-          "speaker": "report",
+          "id": "M15.v14.001",
+          "speaker": "operator",
+          "text": "…이거예요.\nM09에서 보여드린 파일.",
           "expression": "calm",
-          "speakerLabel": "사서의 문자",
-          "next": "M15.n002"
+          "next": "M15.v14.002"
         },
         {
-          "id": "M15.n002",
-          "text": "알아요. 그래도 아직 일어나지 않은 일을 끝났다고 적을 수는 없어요.",
+          "id": "M15.v14.002",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M15.n003"
+          "text": "이건 맞아요.\n제가 나중에 찾아낸 구조 요청.\n진짜였어요.",
+          "expression": "calm",
+          "next": "M15.v14.003"
         },
         {
-          "id": "M15.n003",
-          "text": "이건 실수가 없는 보고서가 아니라, 사람이 돌아온 기록이에요.",
+          "id": "M15.v14.003",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M15.n004"
+          "text": "그런데 뒤쪽은…",
+          "expression": "calm",
+          "next": "M15.v14.004"
         },
         {
-          "id": "M15.n004",
-          "text": "연결된 지부마다 현재 기록이 달라요. 사서가 하나의 답으로 덮지 못하고 있어요.",
+          "id": "M15.v14.004",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M15.n005"
+          "text": "계속 구조 요청을 보내던 게 아니었어요.\n중간부터는…\n선생님이 회선을 닫고 있었어요.",
+          "expression": "calm",
+          "next": "M15.v14.005"
         },
         {
-          "id": "M15.n005",
-          "text": "핵 반응 정지… 한 번 더 확인할게요.",
+          "id": "M15.v14.005",
           "speaker": "operator",
-          "expression": "relieved",
-          "next": "M15.n006"
+          "text": "저는 이 마흔일곱 초 안에…\n아직 못 들은 말이 계속 남아 있다고 생각했어요.",
+          "expression": "calm",
+          "next": "M15.v14.006"
         },
         {
-          "id": "M15.n006",
-          "text": "확인했어요. 길이 열렸어요, {hunterName}님. 이제 돌아와요.",
+          "id": "M15.v14.006",
           "speaker": "operator",
-          "expression": "relieved"
+          "text": "놓친 건 있었어요.\n그건 없어지는 일이 아니고요.",
+          "expression": "calm",
+          "next": "M15.v14.007"
+        },
+        {
+          "id": "M15.v14.007",
+          "speaker": "operator",
+          "text": "하지만 닫힌 뒤까지 계속 열어보려고 한 건…\n제가 지금 한 일이에요.",
+          "expression": "calm"
         }
       ]
     },
     {
       "id": "M16",
-      "title": "내일도 열리는 문",
+      "title": "돌아온 지부",
       "kind": "main",
       "order": 16,
       "artwork": "AssociationAdvanced",
@@ -1140,79 +1176,86 @@
           "key": "void-librarian"
         }
       ],
-      "start": "M16.n001",
+      "start": "M16.v14.001",
       "nodes": [
         {
-          "id": "M16.n001",
-          "text": "지부 전원 귀환. 이번에는 기록과 실제 확인이 모두 같아요.",
+          "id": "M16.v14.001",
           "speaker": "operator",
+          "text": "…잘 되네요.\n이번엔 제가 안 고쳤는데.",
           "expression": "smile",
-          "next": "M16.n002"
+          "next": "M16.v14.002"
         },
         {
-          "id": "M16.n002",
-          "text": "지역 게이트 반복 현상도 멈췄어요. 남아 있는 개체는 따로 조사하면 돼요.",
+          "id": "M16.v14.002",
           "speaker": "operator",
+          "text": "귀환 기록도 정상.\n통신도 정상.\n내일 기록도 아직 없고요.",
           "expression": "smile",
-          "next": "M16.n003"
+          "next": "M16.v14.003"
         },
         {
-          "id": "M16.n003",
-          "text": "끝내 듣지 못한 말은 남았어요. 그래도 지금 할 말까지 놓치지는 않으려고요.",
+          "id": "M16.v14.003",
           "speaker": "operator",
+          "text": "당연한 건데…\n이제 이런 게 좀 반갑네요.",
           "expression": "smile",
-          "next": "M16.n004"
+          "next": "M16.v14.004"
         },
         {
-          "id": "M16.n004",
-          "text": "어떻게 말할까요?",
+          "id": "M16.v14.004",
+          "speaker": "operator",
+          "text": "모르는 건 그대로 남겼어요.\n이번엔 이걸로 제출할게요.",
+          "expression": "smile",
+          "next": "M16.v14.005"
+        },
+        {
+          "id": "M16.v14.005",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M16-A",
               "text": "다녀왔어요.",
-              "next": "M16.n005"
+              "next": "M16.v14.006"
             },
             {
               "id": "M16-B",
               "text": "우리 지부, 꽤 괜찮아졌네요.",
-              "next": "M16.n006"
+              "next": "M16.v14.007"
             }
           ]
         },
         {
-          "id": "M16.n005",
+          "id": "M16.v14.006",
           "speaker": "operator",
-          "text": "잘 다녀오셨어요. 이 말, 오늘은 제가 먼저 하려고 했는데요.",
+          "text": "어서 오세요.\n이번엔 돌아오신 것까지 제대로 확인했어요.",
           "expression": "smile",
-          "next": "M16.n007"
+          "next": "M16.v14.008"
         },
         {
-          "id": "M16.n006",
+          "id": "M16.v14.007",
           "speaker": "operator",
-          "text": "그렇죠? 프린터 하나 고치던 때보다는요. 두 번째부터 함께한 덕분이에요.",
+          "text": "그러게요.\n처음엔 프린터도 안 켜졌는데.\n이 정도면 꽤 많이 나아졌죠.",
           "expression": "smile",
-          "next": "M16.n007"
+          "next": "M16.v14.008"
         },
         {
-          "id": "M16.n007",
-          "text": "다음 보고서는 나중에 열어요. 지금은 오늘 일을 좀 더 기억하고 싶어요.",
+          "id": "M16.v14.008",
           "speaker": "operator",
-          "expression": "smile",
-          "next": "M16.n008"
+          "text": "오늘은 여기까지 해도 될 것 같아요.\n지역 이상 신호도 더는 안 잡혀요.\n수고했어요, {hunterName}님.",
+          "expression": "calm",
+          "next": "M16.v14.009"
         },
         {
-          "id": "M16.n008",
-          "text": "한 가지는 아직 남았어요. 강해솔 님 원정팀의 귀환 확인이 끝내 들어오지 않았어요. 지역 게이트가 안정됐으니, 내일은 그 기록을 함께 살펴봐요.",
+          "id": "M16.v14.009",
           "speaker": "operator",
+          "text": "이건 이번 사건 기록이 아니네요. 훨씬 예전 센서예요.\n별도 사건으로 넘겨둘게요. 오늘은 여기까지예요.",
           "expression": "smile"
         }
       ]
     },
     {
       "id": "M17",
-      "title": "돌아오지 않은 이름",
+      "title": "남아 있던 경로",
       "kind": "main",
       "order": 17,
       "artwork": "AssociationAdvanced",
@@ -1227,46 +1270,46 @@
           "key": "M16"
         }
       ],
-      "start": "M17.n001",
+      "start": "M17.v14.001",
       "nodes": [
         {
-          "id": "M17.n001",
-          "text": "사서의 기록을 정리하다가 별도 봉인 목록을 찾았어요. 끝난 사건과는 다른, 오래전 원정 기록이에요.",
+          "id": "M17.v14.001",
           "speaker": "operator",
+          "text": "이 장비 자체는 이번 사건하고 관계없어요.\n기록된 시점도 훨씬 전이고요.",
           "expression": "calm",
-          "next": "M17.n002"
+          "next": "M17.v14.002"
         },
         {
-          "id": "M17.n002",
-          "text": "협회가 먼저 보낸 네 명의 선발대와 한 명의 지휘관. 모두 미귀환으로 표시돼 있어요.",
+          "id": "M17.v14.002",
           "speaker": "operator",
+          "text": "대신 날짜가 이 기록하고 맞아요.",
           "expression": "calm",
-          "next": "M17.n003"
+          "next": "M17.v14.003"
         },
         {
-          "id": "M17.n003",
-          "text": "이상해요. 명단의 마지막 줄만 이름이 지워졌는데, 관제용 호출 부호는 남아 있어요. H-01. 공개 원정 기록에는 없는 번호예요.",
+          "id": "M17.v14.003",
           "speaker": "operator",
+          "text": "주황색 표시만 보고 강해솔 헌터님 팀이라고 할 수는 없어요.\n그런데…\n날짜도 같고, 통로 방향도 같아요.",
           "expression": "calm",
-          "next": "M17.n004"
+          "next": "M17.v14.004"
         },
         {
-          "id": "M17.n004",
-          "text": "당장 위험한 곳을 찾아갈 필요는 없어요. 평소 활동 중 같은 신호가 나타나면 그때 대조할게요.",
+          "id": "M17.v14.004",
           "speaker": "operator",
+          "text": "공식 기록에 없는 이동이 있었던 건 맞는 것 같아요.\n누가 움직였는지는 아직 모르고요.",
           "expression": "calm",
-          "next": "M17.n005"
+          "next": "M17.v14.005"
         },
         {
-          "id": "M17.n005",
-          "text": "어떻게 말할까요?",
+          "id": "M17.v14.005",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M17-A",
               "text": "사라진 사람들을 먼저 찾아봐요.",
-              "next": "M17.n006",
+              "next": "M17.v14.006",
               "memory": {
                 "searchPriority": "people"
               }
@@ -1274,7 +1317,7 @@
             {
               "id": "M17-B",
               "text": "봉인된 이유를 먼저 알아봐요.",
-              "next": "M17.n007",
+              "next": "M17.v14.007",
               "memory": {
                 "searchPriority": "records"
               }
@@ -1282,37 +1325,37 @@
           ]
         },
         {
-          "id": "M17.n006",
+          "id": "M17.v14.006",
           "speaker": "operator",
-          "text": "네. 전투 기록보다 귀환 기록부터 확인할게요. 아직 단정하지 않을 거예요.",
+          "text": "좋아요.\n현재 신호가 남아 있는지부터 확인할게요.\n봉인 기록은 그다음에 봐도 돼요.",
           "expression": "smile",
-          "next": "M17.n008"
+          "next": "M17.v14.008"
         },
         {
-          "id": "M17.n007",
+          "id": "M17.v14.007",
           "speaker": "operator",
-          "text": "좋아요. 봉인 명령을 내린 사람이 누구인지부터 추적할게요. 서두르지 않아도 돼요.",
+          "text": "그것도 필요해요.\n왜 이 통로가 정상 기록에서 빠졌는지 알면 안쪽 상황도 예측할 수 있을 거예요.\n다만 사람 신호가 확인되면 그쪽을 먼저 볼게요.",
           "expression": "smile",
-          "next": "M17.n008"
+          "next": "M17.v14.008"
         },
         {
-          "id": "M17.n008",
-          "text": "보고서 아래쪽에 같은 문장이 여러 번 적혀 있어요. '마지막 한 사람까지 돌아오게 한다.' 누가 적었는지는 아직 몰라요.",
+          "id": "M17.v14.008",
           "speaker": "operator",
+          "text": "…잠깐.\n몬스터 반응이랑 조금 달라요.\n협회 장비 신호도 아주 약하게 섞여 있고요.",
           "expression": "calm",
-          "next": "M17.n009"
+          "next": "M17.v14.009"
         },
         {
-          "id": "M17.n009",
-          "text": "잠깐, 문서 끝의 짧은 신호가 선생님이 남긴 마흔일곱 초와 겹쳐요. 그때 선생님도 이 원정의 통신을 듣고 계셨던 걸까요?",
+          "id": "M17.v14.009",
           "speaker": "operator",
+          "text": "사람이라고 단정하진 않을게요.\n직접 확인해봐요.",
           "expression": "calm"
         }
       ]
     },
     {
       "id": "M18",
-      "title": "네 사람의 신호",
+      "title": "첫 번째 생존 신호",
       "kind": "main",
       "order": 18,
       "artwork": "AssociationAdvanced",
@@ -1333,46 +1376,39 @@
           "key": null
         }
       ],
-      "start": "M18.n001",
+      "start": "M18.v14.001",
       "nodes": [
         {
-          "id": "M18.n001",
-          "text": "방금 확보한 장비 번호가 그 선발대 명단과 같아요. 네 명 중 한 분이 맞아요.",
+          "id": "M18.v14.001",
           "speaker": "operator",
+          "text": "…사람이에요.\n살아 있어요.",
           "expression": "calm",
-          "next": "M18.n002"
+          "next": "M18.v14.002"
         },
         {
-          "id": "M18.n002",
-          "text": "공격 직전에 동료를 향한 경고 신호가 먼저 나왔어요. 오염된 상태인데도 대열을 지키려 한 것 같아요.",
+          "id": "M18.v14.002",
           "speaker": "operator",
+          "text": "상위 게이트 선발대 사람이에요.",
           "expression": "calm",
-          "next": "M18.n003"
+          "next": "M18.v14.003"
         },
         {
-          "id": "M18.n003",
-          "text": "음성 기록은 많이 훼손됐어요. 그래도 누군가 '뒤로 물러서'라고 외친 흔적은 남아 있어요.",
+          "id": "M18.v14.003",
           "speaker": "operator",
+          "text": "아직 정화된 건 아니에요.\n전투가 끝난 건 맞지만, 지금은 오염 반응을 억제해서 안정시킨 상태예요.",
           "expression": "calm",
-          "next": "M18.n004"
+          "next": "M18.v14.004"
         },
         {
-          "id": "M18.n004",
-          "text": "제가 처음엔 적이라고 분류했어요. 지금은 구조 가능한 사람인지부터 확인하고 싶어요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M18.n005"
-        },
-        {
-          "id": "M18.n005",
-          "text": "어떻게 말할까요?",
+          "id": "M18.v14.004",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M18-A",
               "text": "기록을 지우지 말고 그대로 남겨요.",
-              "next": "M18.n006",
+              "next": "M18.v14.005",
               "memory": {
                 "vanguardMethod": "original"
               }
@@ -1380,7 +1416,7 @@
             {
               "id": "M18-B",
               "text": "다른 대원들의 흔적도 찾아봐요.",
-              "next": "M18.n007",
+              "next": "M18.v14.006",
               "memory": {
                 "vanguardMethod": "trace"
               }
@@ -1388,30 +1424,60 @@
           ]
         },
         {
-          "id": "M18.n006",
+          "id": "M18.v14.005",
           "speaker": "operator",
-          "text": "알겠어요. 잘못 판단했던 부분도 함께 남길게요. 다음 판단에 꼭 필요해요.",
+          "text": "네.\n해석은 나중에 하고 원본부터 보존할게요.",
           "expression": "smile",
-          "next": "M18.n008"
+          "next": "M18.v14.008"
         },
         {
-          "id": "M18.n007",
+          "id": "M18.v14.006",
           "speaker": "operator",
-          "text": "네. 각자의 신호를 따로 추적할게요. 모두 같은 길에서 사라진 건 아닐지도 몰라요.",
+          "text": "저도 그래야 한다고 생각해요.\n한 분이 여기까지 왔다면…\n다른 분들도 확인해야 해요.",
           "expression": "smile",
-          "next": "M18.n008"
+          "next": "M18.v14.007"
         },
         {
-          "id": "M18.n008",
-          "text": "전투가 끝난 자리에서 빛바랜 태양 문양이 발견됐어요. 지휘관의 호출 부호와 이어지는 흔적인지 더 확인할게요.",
+          "id": "M18.v14.007",
           "speaker": "operator",
-          "expression": "calm"
+          "text": "기록은 그대로 보존하고, 다른 신호도 찾아볼게요.",
+          "expression": "smile",
+          "next": "M18.v14.008"
+        },
+        {
+          "id": "M18.v14.008",
+          "speaker": "report",
+          "text": "깨진 화면 너머에서 누군가 말해요. ‘이번엔 우리 말 좀 들어요.’",
+          "expression": "calm",
+          "speakerLabel": "선발대의 기억 조각",
+          "variants": [
+            {
+              "key": "firstVanguardRole",
+              "value": "warrior",
+              "text": "검게 끊기는 화면. 강해솔이 ‘안 돼요’라고 말하자 전사가 답해요. ‘이번엔 우리 말 좀 들어요.’"
+            },
+            {
+              "key": "firstVanguardRole",
+              "value": "mage",
+              "text": "공간에 다섯 신호가 떠요. 마법사의 목소리. ‘네 개는 움직여요. 하나는 그대로고.’"
+            },
+            {
+              "key": "firstVanguardRole",
+              "value": "archer",
+              "text": "궁수가 뒤쪽으로 활을 겨누지만 쏘지 않아요. ‘뒤는 잡혀 있어. 앞만 보면 돼.’"
+            },
+            {
+              "key": "firstVanguardRole",
+              "value": "cleric",
+              "text": "깨진 관측 화면을 가리키며 성직자가 말해요. ‘제가 계산했어요. 한 명이면 된다고.’"
+            }
+          ]
         }
       ]
     },
     {
       "id": "M19",
-      "title": "비워 둔 다섯 번째 자리",
+      "title": "다섯 번째 사람",
       "kind": "main",
       "order": 19,
       "artwork": "AssociationAdvanced",
@@ -1432,95 +1498,119 @@
           "key": null
         }
       ],
-      "start": "M19.n001",
+      "start": "M19.v14.001",
       "nodes": [
         {
-          "id": "M19.n001",
-          "text": "네 사람의 기록이 모였어요. 마지막 송신 시간은 서로 달랐지만, 같은 다섯 번째 채널로 향하고 있어요.",
+          "id": "M19.v14.001",
           "speaker": "operator",
+          "text": "네 분 모두 안정됐어요.\n기억 조각도 시간순으로 맞춰봤고요.",
           "expression": "calm",
-          "next": "M19.n002"
+          "next": "M19.v14.002"
         },
         {
-          "id": "M19.n002",
-          "text": "마지막 좌표 대신 귀환 순서가 남아 있어요. 지휘관이 다른 사람들을 먼저 내보내려 했던 것 같아요.",
+          "id": "M19.v14.002",
           "speaker": "operator",
+          "text": "연결을 유지할 한 사람이 필요했고…\n그 방법을 먼저 계산한 건 성직자였어요.",
           "expression": "calm",
-          "next": "M19.n003"
+          "next": "M19.v14.003"
         },
         {
-          "id": "M19.n003",
-          "text": "그 뒤의 기록은 전부 검붉게 덮였어요. 무슨 일이 있었는지는 아직 알 수 없지만, 누군가 구조를 기다리고 있을 수도 있어요.",
+          "id": "M19.v14.003",
           "speaker": "operator",
+          "text": "그래도 마지막 결정은 본인이 내렸어요.\n네 분을 먼저 보내고 남기로요.",
           "expression": "calm",
-          "next": "M19.n004"
+          "next": "M19.v14.004"
         },
         {
-          "id": "M19.n004",
-          "text": "어떻게 말할까요?",
+          "id": "M19.v14.004",
+          "speaker": "operator",
+          "text": "그리고 네 분은 생각했던 것보다 훨씬 바깥까지 나왔어요.\n문제는…\n최종 귀환 확인 전에 통신이 끊겼다는 거예요.",
+          "expression": "calm",
+          "next": "M19.v14.005"
+        },
+        {
+          "id": "M19.v14.005",
+          "speaker": "report",
+          "text": "안 돼.",
+          "expression": "calm",
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h01",
+          "next": "M19.v14.006"
+        },
+        {
+          "id": "M19.v14.006",
+          "speaker": "report",
+          "text": "다른 방법을 찾아.",
+          "expression": "calm",
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h02",
+          "next": "M19.v14.007"
+        },
+        {
+          "id": "M19.v14.007",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M19-A",
               "text": "다섯 번째 사람도 데려와요.",
-              "next": "M19.n005"
+              "next": "M19.v14.008"
             },
             {
               "id": "M19-B",
               "text": "우선 모두 안전하게 돌아오는 걸 목표로 해요.",
-              "next": "M19.n006"
+              "next": "M19.v14.009"
             }
           ]
         },
         {
-          "id": "M19.n005",
+          "id": "M19.v14.008",
           "speaker": "operator",
-          "text": "네. 이번 작전의 목표는 처치가 아니라 귀환으로 적을게요.",
+          "text": "네.\n누구든 여기까지 연결돼 있다면 확인하고 데려와요.",
           "expression": "smile",
-          "next": "M19.n007"
+          "next": "M19.v14.011"
         },
         {
-          "id": "M19.n006",
+          "id": "M19.v14.009",
           "speaker": "operator",
-          "text": "좋아요. 현장 안전을 먼저 지키면서 귀환 경로를 확보할게요.",
+          "text": "좋아요.\n누구를 만나든 우선 생존과 귀환부터 볼게요.",
           "expression": "smile",
-          "next": "M19.n007"
+          "next": "M19.v14.010"
         },
         {
-          "id": "M19.n007",
-          "text": "협회 게시판에 새 작전이 열렸어요. 한 번에 끝내지 않아도 돼요. 오늘 할 수 있는 만큼만 함께해요.",
+          "id": "M19.v14.010",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M19.n008"
+          "text": "다섯 번째 신호도 확인하고, 모두 살아서 돌아오는 걸 목표로 할게요.",
+          "expression": "smile",
+          "next": "M19.v14.011"
         },
         {
-          "id": "M19.n008",
-          "text": "다섯 번째 채널의 원본이 열렸어요. …강해솔 님이에요. 저 사진 속에서 웃고 계시던 분이요.",
+          "id": "M19.v14.011",
           "speaker": "operator",
+          "text": "…강해솔 헌터님이에요.",
           "expression": "calm",
-          "next": "M19.n009"
+          "next": "M19.v14.012"
         },
         {
-          "id": "M19.n009",
-          "text": "관측실이 잠깐 조용해졌어요. 저도 믿기 어려워요. 하지만 생체 신호는 남아 있어요. 아직 돌아올 수 있다는 뜻이에요.",
+          "id": "M19.v14.012",
           "speaker": "operator",
+          "text": "아직도 네 분하고 연결돼 있어요.\n강해솔 헌터님은 이 사람들이 여기까지 나왔다는 걸 모르는 것 같아요.",
           "expression": "calm",
-          "next": "M19.n010"
+          "next": "M19.v14.013"
         },
         {
-          "id": "M19.n010",
-          "text": "이번 작전은 오염을 멈추고 귀환로를 여는 거예요. 무리해서 한 번에 끝낼 필요는 없어요. 저희도 모두 연결해둘게요.",
+          "id": "M19.v14.013",
           "speaker": "operator",
+          "text": "설명만으로는 안 믿을 수도 있어요.\n그래서 우리가 직접 확인한 것들을 가져가요.",
           "expression": "calm",
-          "next": "M19.n011"
+          "next": "M19.v14.014"
         },
         {
-          "id": "M19.n011",
-          "text": "당시 이름과 호출 좌표를 함께 봉인한 건 신호를 복제하는 개체가 구조 대상을 흉내 내지 못하게 하려는 긴급 조치였어요. 위험이 지난 뒤에도 봉인을 풀지 않은 건 협회의 잘못입니다. 그 책임을 기록에 남기겠습니다.",
-          "speaker": "report",
+          "id": "M19.v14.014",
+          "speaker": "operator",
+          "text": "목표는 토벌이 아니에요.\n강해솔 헌터님을 제압해서 데려오는 거예요.",
           "expression": "calm",
-          "speakerLabel": "평가관의 서면",
           "next": "M19.search"
         },
         {
@@ -1528,7 +1618,6 @@
           "speaker": "operator",
           "text": "우리가 고른 방법으로 찾은 자료를 다시 맞춰볼게요.",
           "expression": "smile",
-          "next": "M19.n012",
           "variants": [
             {
               "key": "searchPriority",
@@ -1541,18 +1630,12 @@
               "text": "봉인 이유부터 확인하자고 하셨죠. 당시의 긴급 조치와 지금의 미해제 기록을 구분할 수 있게 됐어요."
             }
           ]
-        },
-        {
-          "id": "M19.n012",
-          "text": "그럼 지금부터는 봉인된 이름이 아니라 돌아올 사람으로 기록해요. 제가 끝까지 연결할게요.",
-          "speaker": "operator",
-          "expression": "calm"
         }
       ]
     },
     {
       "id": "M20",
-      "title": "검이 내려간 뒤",
+      "title": "다섯 번째 귀환",
       "kind": "main",
       "order": 20,
       "artwork": "Monster-corrupted-hunter",
@@ -1573,86 +1656,111 @@
           "key": "corrupted-hunter"
         }
       ],
-      "start": "M20.n001",
+      "start": "M20.v14.001",
       "nodes": [
         {
-          "id": "M20.n001",
-          "text": "해솔 님의 검이 멈췄어요. 생체 신호는 남아 있어요. 귀환 경로를 열게요.",
+          "id": "M20.v14.001",
           "speaker": "operator",
+          "text": "강해솔 헌터님 생체 신호 확인됐어요.\n여기서 더 할 수 있는 건 없어요.\n이제 지부로 옮겨야 해요.",
           "expression": "calm",
-          "next": "M20.n002"
+          "next": "M20.v14.002"
         },
         {
-          "id": "M20.n002",
-          "text": "이제 원본 기록이 읽혀요. 선발대는 문 안에 갇힌 사람들을 내보내려고, 돌아오는 통로를 끝까지 붙잡고 있었어요.",
+          "id": "M20.v14.002",
           "speaker": "operator",
+          "text": "정화된 건 아니에요. 이제 지부로 데려가야 해요.",
           "expression": "calm",
-          "next": "M20.n003"
+          "voiceKey": "operator_o20",
+          "next": "M20.v14.003"
         },
         {
-          "id": "M20.n003",
-          "text": "강해솔 님은 마지막 대원이 나갈 때까지 빛으로 귀환 통로를 지켰어요. 그 뒤로 오래 이어진 오염을 혼자 견딘 거예요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M20.n004"
-        },
-        {
-          "id": "M20.n004",
-          "text": "협회는 그분을 미귀환으로만 기록했어요. 봉인 목록은 누가 책임질지 결정하지 못한 채 닫혔고요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M20.n005"
-        },
-        {
-          "id": "M20.n005",
-          "text": "제가 그분의 이름을 지우지 않을게요. 그렇다고 혼자서 치료할 수 있다고 말하지도 않을 거예요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M20.n006"
-        },
-        {
-          "id": "M20.n006",
-          "text": "어떻게 말할까요?",
+          "id": "M20.v14.003",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M20-A",
               "text": "지부로 데려와 함께 방법을 찾아요.",
-              "next": "M20.n007"
+              "next": "M20.v14.004"
             },
             {
               "id": "M20-B",
               "text": "네 사람의 기록도 같이 가져가요.",
-              "next": "M20.n008"
+              "next": "M20.v14.005"
             }
           ]
         },
         {
-          "id": "M20.n007",
+          "id": "M20.v14.004",
           "speaker": "operator",
-          "text": "네. 의무 기록과 현장 자료를 합쳐 볼게요. 이번엔 문을 닫지 않을 거예요.",
+          "text": "네.\n여기서 끝내지 말고 지부에서 방법을 찾아요.\n이송 준비할게요.",
           "expression": "smile",
-          "next": "M20.n009"
+          "next": "M20.v14.006"
         },
         {
-          "id": "M20.n008",
+          "id": "M20.v14.005",
           "speaker": "operator",
-          "text": "물론이에요. 그분이 지키려던 사람들의 목소리까지 함께 돌아가요.",
+          "text": "네.\n강해솔 헌터님 이송하면서 네 분의 안정화 기록도 전부 같이 묶을게요.\n같은 사건의 기록이면 따로 보면 안 될 것 같아요.",
           "expression": "smile",
-          "next": "M20.n009"
+          "next": "M20.v14.006"
         },
         {
-          "id": "M20.n009",
-          "text": "오래 봉인된 시설 도면이 열렸어요. 준비가 되면 지부에서 마지막 단계를 진행할 수 있어요.",
+          "id": "M20.v14.006",
           "speaker": "operator",
+          "text": "다섯 분 전부 들어왔어요.",
           "expression": "calm",
-          "next": "M20.n010"
+          "voiceKey": "operator_o21",
+          "next": "M20.v14.007"
         },
         {
-          "id": "M20.n010",
-          "text": "선생님의 마흔일곱 초 끝에 이 의료실의 수동 가동 신호가 있었어요. 그때는 잡음처럼 들렸지만, 지금은 두 지부의 원본 기록으로 확인할 수 있어요.",
+          "id": "M20.v14.007",
+          "speaker": "report",
+          "text": "네 명은? 다 여기 있어?",
+          "expression": "calm",
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h11",
+          "next": "M20.v14.008"
+        },
+        {
+          "id": "M20.v14.008",
           "speaker": "operator",
+          "text": "여기 있어요.\n전부요.",
+          "expression": "calm",
+          "next": "M20.v14.009"
+        },
+        {
+          "id": "M20.v14.009",
+          "speaker": "operator",
+          "text": "이제 왜 이 시설이 남아 있었는지 알겠어요.",
+          "expression": "calm",
+          "next": "M20.v14.010"
+        },
+        {
+          "id": "M20.v14.010",
+          "speaker": "operator",
+          "text": "같은 게이트에서 오염된 사람들 신호를 서로 비교해서…\n모두에게 공통으로 들어온 오염만 분리하는 장비예요.",
+          "expression": "calm",
+          "next": "M20.v14.011"
+        },
+        {
+          "id": "M20.v14.011",
+          "speaker": "operator",
+          "text": "네 분만 있을 때는 중심 오염 패턴이 빠져 있었어요.\n강해솔 헌터님 신호까지 있으니까…",
+          "expression": "calm",
+          "next": "M20.v14.012"
+        },
+        {
+          "id": "M20.v14.012",
+          "speaker": "operator",
+          "text": "이제 구분할 수 있어요.\n원래 이 사람들한테 있던 것하고…\n밖에서 들어온 것하고요.",
+          "expression": "calm",
+          "next": "M20.v14.013"
+        },
+        {
+          "id": "M20.v14.013",
+          "speaker": "operator",
+          "text": "아직 정화된 건 아니에요.\n지금부터가 치료예요.",
           "expression": "calm",
           "next": "M20.vanguard"
         },
@@ -1661,7 +1769,6 @@
           "speaker": "operator",
           "text": "네 사람의 자료가 마지막 귀환로를 가리키고 있어요.",
           "expression": "smile",
-          "next": "M20.n011",
           "variants": [
             {
               "key": "vanguardMethod",
@@ -1674,21 +1781,15 @@
               "text": "네 사람의 신호를 각각 추적한 덕분에, 겹쳐 있던 귀환로의 입구가 보여요."
             }
           ]
-        },
-        {
-          "id": "M20.n011",
-          "text": "가동 조건은 확인됐어요. 해솔 님이 지부에 도착하면, 우리가 함께 문을 열어요.",
-          "speaker": "operator",
-          "expression": "calm"
         }
       ]
     },
     {
       "id": "M21",
-      "title": "다시 밝아진 거리",
+      "title": "돌아온 사람들",
       "kind": "main",
       "order": 21,
-      "artwork": "HaesolBefore",
+      "artwork": "PurificationRoom",
       "requiredMain": 0,
       "requiredTier": 1,
       "prerequisite": [],
@@ -1706,97 +1807,134 @@
           "key": "cheongwolRestored"
         }
       ],
-      "start": "M21.n001",
+      "start": "M21.v14.001",
       "nodes": [
         {
-          "id": "M21.n001",
-          "text": "신호가 안정됐어요. 서둘러 말 걸지 않을게요. 돌아온 사람에게는 조용한 시간도 필요하니까요.",
+          "id": "M21.v14.001",
           "speaker": "operator",
-          "expression": "calm",
-          "next": "M21.n002"
+          "text": "됐어요. 다섯 분 모두 안정됐어요. 이번엔 정말로요.",
+          "expression": "smile",
+          "voiceKey": "operator_o22",
+          "next": "M21.v14.002"
         },
         {
-          "id": "M21.n002",
-          "text": "…네 명은요? 모두 밖으로 나갔나요?",
+          "id": "M21.v14.002",
+          "speaker": "operator",
+          "text": "정화됐어요.",
+          "expression": "smile",
+          "next": "M21.v14.003"
+        },
+        {
+          "id": "M21.v14.003",
+          "speaker": "operator",
+          "text": "다만 바로 예전처럼 움직일 수 있는 건 아니에요.\n오랫동안 몸이 고착돼 있었고, 마력계도 많이 지쳐 있어요.\n이제부터 필요한 건 정화가 아니라 회복이에요.",
+          "expression": "smile",
+          "next": "M21.v14.004"
+        },
+        {
+          "id": "M21.v14.004",
           "speaker": "report",
+          "text": "그때 계산한 건… 저였어요. 미안해요.",
+          "expression": "calm",
+          "speakerLabel": "성직자",
+          "next": "M21.v14.005"
+        },
+        {
+          "id": "M21.v14.005",
+          "speaker": "report",
+          "text": "알아. 그래도 마지막에 남겠다고 한 건 나야.",
           "expression": "calm",
           "speakerLabel": "강해솔의 기록",
-          "next": "M21.n003"
+          "voiceKey": "haesol_h12",
+          "next": "M21.v14.006"
         },
         {
-          "id": "M21.n003",
-          "text": "네. 먼저 돌아왔어요. 각자의 이름으로 기록도 남겼고요.",
-          "speaker": "operator",
-          "expression": "calm",
-          "next": "M21.n004"
-        },
-        {
-          "id": "M21.n004",
-          "text": "다행이네요. 마지막 문을 닫지 않아서.",
+          "id": "M21.v14.006",
           "speaker": "report",
+          "text": "그러니까 다음엔 서로 남의 몫까지 혼자 들지 말자.",
           "expression": "calm",
           "speakerLabel": "강해솔의 기록",
-          "next": "M21.n005"
+          "voiceKey": "haesol_h13",
+          "next": "M21.v14.007"
         },
         {
-          "id": "M21.n005",
-          "text": "그분은 한동안 회복해야 해요. 하지만 이번에는 혼자 남겨두지 않을 거예요.",
-          "speaker": "operator",
+          "id": "M21.v14.007",
+          "speaker": "report",
+          "text": "내 장비... 주황 테이프까지 뗀 건 아니지?",
           "expression": "calm",
-          "next": "M21.n006"
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h14",
+          "next": "M21.v14.008"
         },
         {
-          "id": "M21.n006",
-          "text": "어떻게 말할까요?",
+          "id": "M21.v14.008",
+          "speaker": "operator",
+          "text": "그건 그대로예요.",
+          "expression": "smile",
+          "next": "M21.v14.009"
+        },
+        {
+          "id": "M21.v14.009",
+          "speaker": "report",
+          "text": "다행이다.",
+          "expression": "calm",
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h15",
+          "next": "M21.v14.010"
+        },
+        {
+          "id": "M21.v14.010",
           "speaker": "hunter",
+          "text": "어떻게 답할까요?",
           "expression": "calm",
           "choices": [
             {
               "id": "M21-A",
               "text": "돌아온 걸 환영한다고 전해주세요.",
-              "next": "M21.n007"
+              "next": "M21.v14.011"
             },
             {
               "id": "M21-B",
               "text": "다음엔 우리도 곁에 있겠다고 전해주세요.",
-              "next": "M21.n008"
+              "next": "M21.v14.012"
             }
           ]
         },
         {
-          "id": "M21.n007",
+          "id": "M21.v14.011",
           "speaker": "operator",
-          "text": "전할게요. 오늘은 그 한마디면 충분할 거예요.",
+          "text": "네.\n그대로 전할게요.",
           "expression": "smile",
-          "next": "M21.n009"
+          "next": "M21.v14.013"
         },
         {
-          "id": "M21.n008",
+          "id": "M21.v14.012",
           "speaker": "operator",
-          "text": "네. 말뿐인 약속이 되지 않도록, 지부의 기록에도 남길게요.",
+          "text": "좋아요.\n그 말도 꼭 전할게요.",
           "expression": "smile",
-          "next": "M21.n009"
+          "next": "M21.v14.013"
         },
         {
-          "id": "M21.n009",
-          "text": "처음엔 작은 표시등 하나뿐이었는데, 이제는 돌아올 사람의 이름을 밝힐 수 있어요.",
+          "id": "M21.v14.013",
           "speaker": "operator",
+          "text": "모르는 건 남겨둘게요. 나중에 함께 확인하면 돼요.",
           "expression": "calm",
-          "next": "M21.n010"
+          "voiceKey": "operator_o23",
+          "next": "M21.v14.014"
         },
         {
-          "id": "M21.n010",
-          "text": "그런데 저 구조 사진, 아직 걸려 있나요? 바로 옆을 지나간 벌레에 놀란 얼굴인데요.",
+          "id": "M21.v14.014",
+          "speaker": "operator",
+          "text": "나머지는 나중에 알아내면 되니까요.",
+          "expression": "smile",
+          "next": "M21.v14.015"
+        },
+        {
+          "id": "M21.v14.015",
           "speaker": "report",
+          "text": "몸 돌아오면…\n다음엔 같은 편으로 봐요.",
           "expression": "calm",
           "speakerLabel": "강해솔의 기록",
-          "next": "M21.n011"
-        },
-        {
-          "id": "M21.n011",
-          "text": "네? 저는 끝까지 여유 있는 표정인 줄 알았어요. …아, 정말요? 이제 보니 손이 조금 올라가 있네요.",
-          "speaker": "operator",
-          "expression": "calm",
           "next": "M21.firstOffice"
         },
         {
@@ -1804,7 +1942,6 @@
           "speaker": "operator",
           "text": "처음 관제실에서 했던 말이 생각나요.",
           "expression": "smile",
-          "next": "M21.n012",
           "variants": [
             {
               "key": "firstOffice",
@@ -1816,13 +1953,16 @@
               "value": "humor",
               "text": "처음엔 프린터부터 토벌할 뻔했는데요. 이제는 돌아올 길까지 같이 찾았네요."
             }
-          ]
+          ],
+          "next": "M21.v14.016"
         },
         {
-          "id": "M21.n012",
-          "text": "사진은 그대로 둘게요. 그분이 웃고 계시니까요. 오늘의 보고는 여기서 닫을게요.",
-          "speaker": "operator",
-          "expression": "calm"
+          "id": "M21.v14.016",
+          "speaker": "report",
+          "text": "몸 돌아오면 다음엔 같은 편으로 보자.",
+          "expression": "calm",
+          "speakerLabel": "강해솔의 기록",
+          "voiceKey": "haesol_h16"
         }
       ]
     },

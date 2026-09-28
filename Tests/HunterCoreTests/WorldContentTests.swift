@@ -68,6 +68,36 @@ final class WorldContentTests: XCTestCase {
         recovery.consume(SensorFrame(timestamp: 100000, speed: 3, distance: 1000, movement: .running, signal: .good))
         XCTAssertEqual(recovery.session.boss?.remainingHP, hp)
     }
+    func testFinalRescueUsesVerifiedStepsWhenGPSFailsAndPausesWithoutThem() throws {
+        let boss = try XCTUnwrap(world().bosses.first { $0.id == "corrupted-hunter" })
+        var session = RunSession(targetSeconds: 600, simulated: false, allowPursuit: false, mode: .gate)
+        session.boss = BossEncounter(definition: boss, state: BossState(maximumHP: boss.maximumHP))
+        let mission = try XCTUnwrap(session.boss?.content.events.first { $0.kind == .boss && $0.targetDistance == nil })
+        var event = RunEvent(template: mission, hp: mission.hp, startingHP: mission.hp, baseline: 2.5)
+        event.stage = .active
+        session.event = event; session.phase = .moving; session.activeSeconds = 100
+        var engine = RunEngine(session: session, content: session.boss!.content)
+        _ = engine.consume(SensorFrame(timestamp: 0, speed: 1.2, distance: 0, movement: .walking, signal: .degraded, steps: 2))
+        for second in 1...Int(mission.duration + 2) {
+            _ = engine.consume(SensorFrame(timestamp: Double(second), speed: 1.2, distance: 2,
+                                           movement: .walking, signal: .degraded, steps: 2))
+        }
+        XCTAssertEqual(engine.session.distance, 0)
+        XCTAssertTrue(engine.session.records.contains { $0.id == mission.id && $0.outcome != .neutral })
+
+        var noSteps = session
+        noSteps.lastTimestamp = nil
+        var paused = RunEngine(session: noSteps, content: noSteps.boss!.content)
+        _ = paused.consume(SensorFrame(timestamp: 0, speed: 0, distance: 0, movement: .stationary, signal: .unavailable))
+        for second in 1...9 {
+            _ = paused.consume(SensorFrame(timestamp: Double(second), speed: 0, distance: 0,
+                                           movement: .stationary, signal: .unavailable))
+        }
+        XCTAssertTrue(paused.session.manualPause)
+        XCTAssertEqual(paused.session.phase, .paused)
+        XCTAssertEqual(paused.session.event?.template.id, mission.id)
+        XCTAssertTrue(paused.session.records.isEmpty)
+    }
     func testStaleSnapshotCannotDamageAnotherCampaignRound() throws {
         let boss = try world().bosses[0]; var profile = Profile()
         let old = run(boss)

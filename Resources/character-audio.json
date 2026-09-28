@@ -1,0 +1,318 @@
+{
+  "schema": 1,
+  "voice": "season-one-approved",
+  "clips": [
+    {
+      "key": "haesol_h01",
+      "role": "haesol",
+      "text": "안 돼.",
+      "file": "haesol_h01.wav",
+      "sha256": "0ebea350055fcec4bc997a841bb4f9b8bee5aca232fe8d3d9689d908b49ce658",
+      "duration": 0.564
+    },
+    {
+      "key": "haesol_h02",
+      "role": "haesol",
+      "text": "다른 방법을 찾아.",
+      "file": "haesol_h02.wav",
+      "sha256": "c27cc4803114effacd69709fa5a9d04784f73dc107b931eefd6e72a8670d61bf",
+      "duration": 1.184
+    },
+    {
+      "key": "haesol_h03",
+      "role": "haesol",
+      "text": "오지 마! 거기 손대면 네 명이 사라져.",
+      "file": "haesol_h03.wav",
+      "sha256": "b77f6c7c72590c4f95ecdff760a47eabdee13f1b0fa642653231e731df48ae8d",
+      "duration": 3.319
+    },
+    {
+      "key": "haesol_h04",
+      "role": "haesol",
+      "text": "그 기록을 어떻게 믿어? 저쪽은 기록부터 바꿔.",
+      "file": "haesol_h04.wav",
+      "sha256": "77607f3283cee82e1fd302a1398c984a02a42f82b25daa5033d063aef38d2b69",
+      "duration": 3.302
+    },
+    {
+      "key": "haesol_h05",
+      "role": "haesol",
+      "text": "내가 붙잡고 있어서 들리는 거야. 놓으면 달라져.",
+      "file": "haesol_h05.wav",
+      "sha256": "65b42eac0bf872b3b0a87e1525c1ce3095d929cc34b7a5b7eb9076987e2e8080",
+      "duration": 3.564
+    },
+    {
+      "key": "haesol_h06",
+      "role": "haesol",
+      "text": "아니. 그럴 리가...",
+      "file": "haesol_h06.wav",
+      "sha256": "947a7e46290866642c49e0298f56864c31c600dd7b8ff67c87c4e339f904738b",
+      "duration": 2.103
+    },
+    {
+      "key": "haesol_h07",
+      "role": "haesol",
+      "text": "내가 놓으면 달라져. 지금도 내가 붙잡아서 살아 있는 거야.",
+      "file": "haesol_h07.wav",
+      "sha256": "924122141a93b3cc28e3e39b202d83b11b333eeb5ff6f450ba5952cd6abc8955",
+      "duration": 4.004
+    },
+    {
+      "key": "haesol_h08",
+      "role": "haesol",
+      "text": "그때 남겠다고 한 건 나야.",
+      "file": "haesol_h08.wav",
+      "sha256": "b3b6a953e268d41ee1960384059c25ab4654e387cf0d36edfc51795443e7ad3e",
+      "duration": 1.684
+    },
+    {
+      "key": "haesol_h09",
+      "role": "haesol",
+      "text": "그땐 내가 남아야 했어.",
+      "file": "haesol_h09.wav",
+      "sha256": "5c85af5c3e279555bb5419b97ec5cc94134db7a06e60bb7a5f9beadcb09d7439",
+      "duration": 1.779
+    },
+    {
+      "key": "haesol_h10",
+      "role": "haesol",
+      "text": "그렇지만 지금까지 남아 있을 필요는 없었네.",
+      "file": "haesol_h10.wav",
+      "sha256": "5b0072e01c7742290fd9e2d332dd3a53d87093836ec081a26e5aa4d831fb0a61",
+      "duration": 3.476
+    },
+    {
+      "key": "haesol_h11",
+      "role": "haesol",
+      "text": "네 명은? 다 여기 있어?",
+      "file": "haesol_h11.wav",
+      "sha256": "003ce9f0ff77a672491218213a12a3c741f939a4351ed869b8ad4f3e5adf5acf",
+      "duration": 1.604
+    },
+    {
+      "key": "haesol_h12",
+      "role": "haesol",
+      "text": "알아. 그래도 마지막에 남겠다고 한 건 나야.",
+      "file": "haesol_h12.wav",
+      "sha256": "c9d539950e55aae671b7777839233a6fb675538430c2e387a0dc97b0272c1d07",
+      "duration": 4.004
+    },
+    {
+      "key": "haesol_h13",
+      "role": "haesol",
+      "text": "그러니까 다음엔 서로 남의 몫까지 혼자 들지 말자.",
+      "file": "haesol_h13.wav",
+      "sha256": "d82fb8d272a4c6d9d7c6dcb79063d3adff0c46af0b74dc2940e40d1d4a32e415",
+      "duration": 3.677
+    },
+    {
+      "key": "haesol_h14",
+      "role": "haesol",
+      "text": "내 장비... 주황 테이프까지 뗀 건 아니지?",
+      "file": "haesol_h14.wav",
+      "sha256": "c19b7c91b95da09efffce1e8c542d4f899269779b5b5094a1f8e353cebaf6fc7",
+      "duration": 3.764
+    },
+    {
+      "key": "haesol_h15",
+      "role": "haesol",
+      "text": "다행이다.",
+      "file": "haesol_h15.wav",
+      "sha256": "8a5f04aa67c4a02d830cc76b58bd8a504c1288476dd6c59f43ef82a5af014068",
+      "duration": 0.664
+    },
+    {
+      "key": "haesol_h16",
+      "role": "haesol",
+      "text": "몸 돌아오면 다음엔 같은 편으로 보자.",
+      "file": "haesol_h16.wav",
+      "sha256": "abf2b78f70b1ad6c6e4180b6fdb3037536f2ea4a855353966308a3a1ba6a196a",
+      "duration": 2.724
+    },
+    {
+      "key": "operator_o01",
+      "role": "operator",
+      "text": "잘했어요! 선발대 전사를 제압했어요. 생체 신호도 확인됐어요. 지원팀을 부를게요.",
+      "file": "operator_o01.wav",
+      "sha256": "0b407f27f756339c030ffc51e0497bef8889cbd2edb8734131a1fab4104848de",
+      "duration": 6.236
+    },
+    {
+      "key": "operator_o02",
+      "role": "operator",
+      "text": "강해솔 헌터님을 확보했어요. 생체 신호도 있어요. 정화는 지부에서 진행할게요.",
+      "file": "operator_o02.wav",
+      "sha256": "93f1d0c5f6b31275e5baa4c17bf6819a4e1c9b3505068673de35febc16785a34",
+      "duration": 5.398
+    },
+    {
+      "key": "operator_o03",
+      "role": "operator",
+      "text": "네 분은 이미 이쪽에 있어요. 그래서 기록 하나만 가져온 게 아니에요.",
+      "file": "operator_o03.wav",
+      "sha256": "f7381cdd8bcc2b2a97038fbd58e23d1f9af5e323e64827b7802399b650fdf2e2",
+      "duration": 4.332
+    },
+    {
+      "key": "operator_o04",
+      "role": "operator",
+      "text": "지금 페이스 그대로 괜찮아요. 안전하게만 이어가 주세요.",
+      "file": "operator_o04.wav",
+      "sha256": "82687f20a048ba99413fb264425953fc3066b72ec9687bcb80a3ca281ae50007",
+      "duration": 3.861
+    },
+    {
+      "key": "operator_o05",
+      "role": "operator",
+      "text": "확인됐어요. 현장 기록, 독립 센서, 현재 생체 신호. 전부 같은 방향을 가리켜요.",
+      "file": "operator_o05.wav",
+      "sha256": "d64dfcb31702f057bacbd036ed270cc7f31e83883518a8995d9ccf5dd5d8ee43",
+      "duration": 6.867
+    },
+    {
+      "key": "operator_o06",
+      "role": "operator",
+      "text": "강해솔 헌터님. 직접 들려드릴게요.",
+      "file": "operator_o06.wav",
+      "sha256": "917383b06394b83c05acb5367c35da238bd8a9bdf5db3555ea2ad2acecdeacfe",
+      "duration": 2.831
+    },
+    {
+      "key": "operator_o07",
+      "role": "operator",
+      "text": "현재 신호예요.",
+      "file": "operator_o07.wav",
+      "sha256": "531da9b6ca5731c7f2fb4e200c5c5d76542eab34542f721fe3aab9dc6127f679",
+      "duration": 1.163
+    },
+    {
+      "key": "operator_o08",
+      "role": "operator",
+      "text": "강해솔 헌터님 신호가 약했던 순간에도, 네 분은 살아 있었어요.",
+      "file": "operator_o08.wav",
+      "sha256": "d2c4f33747dd5ee87134c4407fe485d2afdb255305595eb6a3db29d07728c832",
+      "duration": 4.313
+    },
+    {
+      "key": "operator_o09",
+      "role": "operator",
+      "text": "직접 확인한 기록이에요.",
+      "file": "operator_o09.wav",
+      "sha256": "c643a9d41d4ae7f8f2bc1d292a8f9311a4549bfe49b853401a22d23054de662e",
+      "duration": 1.827
+    },
+    {
+      "key": "operator_o10",
+      "role": "operator",
+      "text": "무리하지 마세요. 걷고 있어도 괜찮아요. 신호만 조금 더 확인할게요.",
+      "file": "operator_o10.wav",
+      "sha256": "f47bd618f6599c0eb26140001e8fc731a25af850cf203e3c205e4ea0d5831b53",
+      "duration": 5.212
+    },
+    {
+      "key": "operator_o11",
+      "role": "operator",
+      "text": "괜찮아요. 여기서 기다릴게요.",
+      "file": "operator_o11.wav",
+      "sha256": "4c1512ffd62e92aeb49d50e1c839269a7601cbdad0d9dfbfc546d4d81e94e9a5",
+      "duration": 2.485
+    },
+    {
+      "key": "operator_o12",
+      "role": "operator",
+      "text": "다시 잡혔어요. 이어갈게요.",
+      "file": "operator_o12.wav",
+      "sha256": "aa16de94c39b3bbe1a797b52990f336249fa8bd50faaf5e288e535b723dae44c",
+      "duration": 2.294
+    },
+    {
+      "key": "operator_o13",
+      "role": "operator",
+      "text": "네 신호 모두 독립적으로 유지되고 있어요.",
+      "file": "operator_o13.wav",
+      "sha256": "635b6673500cee1640f663ca26771918cd13c0389b2d5f133a379555eff855c3",
+      "duration": 2.803
+    },
+    {
+      "key": "operator_o14",
+      "role": "operator",
+      "text": "마지막 결정은 헌터님이 했어요.",
+      "file": "operator_o14.wav",
+      "sha256": "2ba2e5a7fa30f9642acb0d9f16555afebedd7916e8fc9e0e602b28422048bc00",
+      "duration": 2.139
+    },
+    {
+      "key": "operator_o15",
+      "role": "operator",
+      "text": "출력 내려갔어요. 이제 제압할 수 있어요.",
+      "file": "operator_o15.wav",
+      "sha256": "909fd3f1f9094ac65ad0c7170d85964c24461ba9944cb20f47c67f1bc49a995e",
+      "duration": 3.334
+    },
+    {
+      "key": "operator_o16",
+      "role": "operator",
+      "text": "지금 속도 그대로 괜찮아요. 무리하지 말고 유지해 주세요.",
+      "file": "operator_o16.wav",
+      "sha256": "b17ee307e3fc42d6932b24faaf3ea4c005dbdc8a30be976a649125ecccaa9469",
+      "duration": 3.578
+    },
+    {
+      "key": "operator_o17",
+      "role": "operator",
+      "text": "멈춰 있어도 괜찮아요. 안전해지면 다시 이어갈게요.",
+      "file": "operator_o17.wav",
+      "sha256": "4b1e1bc9252d15f5f1e37a28cc95a48236fbd0142761236db0e596f60b402c1f",
+      "duration": 3.976
+    },
+    {
+      "key": "operator_o18",
+      "role": "operator",
+      "text": "신호가 조금 불안정해요. 판정은 잠깐 보류할게요.",
+      "file": "operator_o18.wav",
+      "sha256": "71ca4f4d08a55a4323c40b0b8bd8eaf134757a491f70bd5b7270e2df276e5d79",
+      "duration": 3.678
+    },
+    {
+      "key": "operator_o19",
+      "role": "operator",
+      "text": "다시 확인됐어요.",
+      "file": "operator_o19.wav",
+      "sha256": "f38419d149ecb21d5546a3ccaa54ac76de0a3efa4efe5e015d64b5328a497fd2",
+      "duration": 1.334
+    },
+    {
+      "key": "operator_o20",
+      "role": "operator",
+      "text": "정화된 건 아니에요. 이제 지부로 데려가야 해요.",
+      "file": "operator_o20.wav",
+      "sha256": "f1706789eddef3ce2e457dda8a7c6eb659080cdaaa71f92754470a59b629b1c3",
+      "duration": 3.471
+    },
+    {
+      "key": "operator_o21",
+      "role": "operator",
+      "text": "다섯 분 전부 들어왔어요.",
+      "file": "operator_o21.wav",
+      "sha256": "3c619b741a119f40ff95a9447df7ac938d08cf5d8c2a8cf695ce7c840d76ede0",
+      "duration": 1.692
+    },
+    {
+      "key": "operator_o22",
+      "role": "operator",
+      "text": "됐어요. 다섯 분 모두 안정됐어요. 이번엔 정말로요.",
+      "file": "operator_o22.wav",
+      "sha256": "43106763fd087ceb22161f241eebef291a931a041bf8151147d767446f25661b",
+      "duration": 4.182
+    },
+    {
+      "key": "operator_o23",
+      "role": "operator",
+      "text": "모르는 건 남겨둘게요. 나중에 함께 확인하면 돼요.",
+      "file": "operator_o23.wav",
+      "sha256": "7e4513d58bbaf3884a59d9425168409864fe935eb15d73837f856ace4fc6096d",
+      "duration": 3.633
+    }
+  ]
+}

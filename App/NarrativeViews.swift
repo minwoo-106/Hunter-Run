@@ -165,6 +165,11 @@ struct DialogueView: View {
                 guard !prepared else { return }; prepared = true
                 replay = model.save.profile.journey?.completed.contains(scene.id) == true
                 if replay { replayNode = scene.start } else { model.beginDialogue(scene.id) }
+                model.playDialogueVoice(node?.voiceKey)
+            }
+            .onChange(of: node?.id) { _, _ in
+                model.stopAudioPreview()
+                model.playDialogueVoice(node?.voiceKey)
             }
             .onDisappear { model.stopAudioPreview() }
     }

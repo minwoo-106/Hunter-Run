@@ -31,6 +31,19 @@ for clip in voice["clips"]:
         samples = struct.unpack("<" + "h" * f.getnframes(), f.readframes(f.getnframes()))
         assert 100 < max(abs(s) for s in samples) < 32700
 print(f"Validated {len(voice['clips'])} designed operator clips: transcript mapping, PCM format, duration, peak and SHA256.")
+character = json.loads((root / 'Resources/character-audio.json').read_text(encoding='utf-8'))
+assert character['schema'] == 1 and character['voice'] == 'season-one-approved'
+assert {clip['key'] for clip in character['clips']} == (
+    {f'haesol_h{i:02}' for i in range(1, 17)} | {f'operator_o{i:02}' for i in range(1, 24)}
+)
+assert {p.stem for p in (root / 'Resources/CharacterAudio').glob('*.wav')} == {clip['key'] for clip in character['clips']}
+for clip in character['clips']:
+    path = root / 'Resources/CharacterAudio' / clip['file']
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == clip['sha256']
+    with wave.open(str(path)) as f:
+        assert (f.getnchannels(), f.getsampwidth(), f.getframerate()) == (1, 2, 24000)
+        assert abs(f.getnframes() / f.getframerate() - clip['duration']) < .002
+print('Validated 16 Haesol and 23 operator clips; startled H17 is excluded.')
 with (root / "Config/Info.plist").open("rb") as f:
     info = plistlib.load(f)
 assert set(info["UIBackgroundModes"]) == {"location", "audio"}
@@ -155,6 +168,8 @@ for scene in scenes:
     assert len(nodes) == len(scene['nodes']) and scene['start'] in nodes
     for node in nodes.values():
         assert node['expression'] in expressions and node['text'].strip()
+        if node.get('voiceKey'):
+            assert node['voiceKey'] in {clip['key'] for clip in character['clips']}
         if node.get('next'): assert node['next'] in nodes
         for choice in node.get('choices', []): assert choice['next'] in nodes and choice['text'].strip()
 for expression in expressions - {'calm'}:
@@ -163,3 +178,5 @@ for key in ['ui-select', 'ui-reward', 'ui-gate']:
     with wave.open(str(root/'Resources/Effects'/(key + '.wav'))) as effect:
         assert effect.getnframes() > 0 and effect.getsampwidth() == 2
 print('Validated 33 story scenes, expression/background references and three effect resources.')
+assert next(s for s in scenes if s['id'] == 'M21')['artwork'] == 'PurificationRoom'
+assert all(len([n for n in s['nodes'] if n.get('choices')]) == 1 for s in scenes if s['id'] in ('M10', 'M13'))

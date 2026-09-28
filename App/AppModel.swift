@@ -4,6 +4,11 @@ import CoreLocation
 import CoreMotion
 import UIKit
 
+private struct CharacterVoiceCatalog: Decodable {
+    struct Clip: Decodable { let key: String; let text: String }
+    let clips: [Clip]
+}
+
 @MainActor final class AppModel: ObservableObject {
     static var testHarness: Bool {
         #if DEBUG && targetEnvironment(simulator)
@@ -128,9 +133,11 @@ import UIKit
     @Published var operatorCaption: String?
     private var pendingDistanceMilestones: [Int] = []
     private var playingDistanceMilestone: Int?
+    private var playedHaesolCues: Set<String> = []
     private var voiceVariants = VoiceVariants()
     private let voiceLines: [String: String] = AppModel.resource("audio-lines") ?? [:]
     private let variantCatalog: [String: [String]] = AppModel.resource("audio-variants") ?? [:]
+    private let characterCatalog: CharacterVoiceCatalog? = AppModel.resource("character-audio")
     let narration: NarrationCatalog? = AppModel.resource("narration")
     let narratives: NarrativeCatalog? = AppModel.resource("narrative")
     private var narrationReady: Bool {
@@ -237,10 +244,20 @@ import UIKit
             _ = Settlement.apply(fixture, to: &save.profile)
         }
         #endif
-        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady { notice = "게임 콘텐츠를 읽지 못했습니다." }
-        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && !saveBlocked
+        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady || characterCatalog?.clips.count != 39 { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && characterCatalog?.clips.count == 39 && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
-        if let narratives, (try? narratives.validate()) != nil { narratives.refresh(&save.profile) }
+        if let narratives, (try? narratives.validate()) != nil {
+            if let cursor = save.profile.journey?.cursor,
+               narratives.scene(cursor.sceneID)?.node(cursor.nodeID) == nil {
+                // An older release may have saved the middle of a rewritten scene.
+                // Reopen that scene from its start while retaining completed chapters,
+                // rewards, and all committed choices.
+                save.profile.journey?.cursor = nil
+                try? repository.write(save)
+            }
+            narratives.refresh(&save.profile)
+        }
         else { isReady = false; notice = "이야기 자료를 읽지 못했어요. 앱 파일을 확인해주세요." }
         showWelcome = isReady && !recoverable && (!existingSave || save.profile.introductionSeen == false || save.profile.journey?.registered != true)
         #if targetEnvironment(simulator)
@@ -395,6 +412,7 @@ import UIKit
         lobbyMusic.stop(); testingAudio = false
         displayedPace.reset(); currentSpeed = 0
         pendingDistanceMilestones = []; playingDistanceMilestone = nil
+        playedHaesolCues = []
         session.learnedReference = simulated || environment.isIndoor ? nil : save.profile.paceMemory?.reference
         session.goal = requested
         session.directorVersion = 2
@@ -406,7 +424,12 @@ import UIKit
         if !simulated { sensor.start(environment: environment) }
         persist()
         beginTimer()
-        playOperator(quest?.promotion != nil ? "exam_start" : quest != nil ? "quest_start" : "run_start")
+        let opening = quest?.promotion != nil ? "exam_start" : quest != nil ? "quest_start" : "run_start"
+        if session.boss?.definition.id == "corrupted-hunter", session.boss?.phase == 0 {
+            playHaesol("haesol_h03") { [weak self] in
+                self?.playCastOperator("operator_o03") { [weak self] in self?.playOperator(opening) }
+            }
+        } else { playOperator(opening) }
     }
     private func beginTimer() {
         timer?.invalidate()
@@ -442,16 +465,36 @@ import UIKit
                 let rebrief = key == "resume" && current.session.event?.stage == .briefing
                 let logicalKey = rebrief ? (current.session.event?.instructionAudio ?? key) : key
                 let playbackKey = narration?.response(to: logicalKey, session: current.session) ?? logicalKey
-                let isInstruction = current.session.event?.stage == .briefing && playbackKey == current.session.event?.instructionAudio
-                playOperator(playbackKey) { [weak self] in
-                    DispatchQueue.main.async {
-                        guard isInstruction, let self, self.engine?.session.event?.template.id == id,
-                              self.engine?.session.event?.stage == .briefing,
-                              self.engine?.session.event?.instructionAudio == playbackKey,
-                              self.engine?.session.manualPause == false else { return }
-                        self.engine?.instructionFinished(); self.persist()
+                let rescue = current.session.boss?.definition.id == "corrupted-hunter"
+                let phase = current.session.boss?.phase ?? 0
+                let castKey = rescue ? Self.finalRescueVoice(phase: phase, eventID: id, logicalKey: logicalKey) : nil
+                let instructionAudio = current.session.event?.instructionAudio
+                let isInstruction = current.session.event?.stage == .briefing
+                    && (playbackKey == instructionAudio || (castKey != nil && id?.hasPrefix("major-strike") == true))
+                let announce: () -> Void = { [weak self] in
+                    guard let self else { return }
+                    let completed = { [weak self] in
+                        DispatchQueue.main.async {
+                            guard isInstruction, let self, self.engine?.session.event?.template.id == id,
+                                  self.engine?.session.event?.stage == .briefing,
+                                  self.engine?.session.event?.instructionAudio == instructionAudio,
+                                  self.engine?.session.manualPause == false else { return }
+                            self.engine?.instructionFinished(); self.persist()
+                        }
                     }
+                    if let castKey { self.playCastOperator(castKey, completion: completed) }
+                    else { self.playOperator(playbackKey, completion: completed) }
                 }
+                if let boss = current.session.boss, boss.definition.id == "corrupted-hunter",
+                   let eventID = id, eventID.hasPrefix("major-strike"), isInstruction {
+                    let key = "\(boss.phase)-\(eventID)"
+                    let voice = ["0-major-strike-a": "haesol_h04", "0-major-strike-b": "haesol_h05",
+                                 "1-major-strike-a": "haesol_h06", "1-major-strike-b": "haesol_h07",
+                                 "2-major-strike-a": "haesol_h08", "2-major-strike-b": "haesol_h09"][key]
+                    if let voice, playedHaesolCues.insert(key).inserted {
+                        playHaesol(voice, completion: announce)
+                    } else { announce() }
+                } else { announce() }
             }
         }
         playNextDistanceMilestone()
@@ -493,7 +536,14 @@ import UIKit
             announcedResult = run.id
             if run.simulated || ActivityRecordPolicy.qualifies(run.activeSeconds) {
                 let questDone = run.questID.map { save.profile.journey?.completedQuests.contains($0) == true } ?? false
-                playOperator(questDone ? (run.boss != nil ? "exam_pass" : "quest_complete") : "run_end")
+                let resultKey = questDone ? (run.boss != nil ? "exam_pass" : "quest_complete") : "run_end"
+                if lastSummary?.majorBoss?.bossID == "corrupted-hunter", lastSummary?.majorBoss?.cleared == true {
+                    playHaesol("haesol_h10") { [weak self] in
+                        self?.playCastOperator("operator_o02") { [weak self] in self?.playOperator(resultKey) }
+                    }
+                } else if run.records.contains(where: { $0.catalogID == "corrupted-vanguard-warrior" && $0.defeated == true }) {
+                    playCastOperator("operator_o01") { [weak self] in self?.playOperator(resultKey) }
+                } else { playOperator(resultKey) }
             }
         }
     }
@@ -565,6 +615,34 @@ import UIKit
             DispatchQueue.main.async { self?.playNextDistanceMilestone() }
         }
     }
+    private func playHaesol(_ key: String, completion: @escaping () -> Void) {
+        guard let line = characterCatalog?.clips.first(where: { $0.key == key })?.text else {
+            completion(); return
+        }
+        operatorCaption = "강해솔 · " + line
+        audio.play(key) {
+            DispatchQueue.main.async { completion() }
+        }
+    }
+    private func playCastOperator(_ key: String, completion: @escaping () -> Void) {
+        guard let line = characterCatalog?.clips.first(where: { $0.key == key })?.text else {
+            completion(); return
+        }
+        operatorCaption = line
+        audio.play(key) { DispatchQueue.main.async { completion() } }
+    }
+    private static func finalRescueVoice(phase: Int, eventID: String?, logicalKey: String) -> String? {
+        switch logicalKey {
+        case "signal": return "operator_o18"
+        case "pause": return "operator_o17"
+        case "resume": return "operator_o19"
+        default: break
+        }
+        let voices = ["0-major-strike-a": "operator_o04", "0-major-strike-b": "operator_o05",
+                      "1-major-strike-a": "operator_o06", "1-major-strike-b": "operator_o08",
+                      "2-major-strike-a": "operator_o16", "2-major-strike-b": "operator_o14"]
+        return voices["\(phase)-\(eventID ?? "")"]
+    }
     private func playNextDistanceMilestone() {
         guard showRun, engine != nil, engine?.session.manualPause == false,
               engine?.session.interruption == false, playingDistanceMilestone == nil,
@@ -604,6 +682,15 @@ import UIKit
         let key = ["M01": "story_welcome", "M06": "exam_pass", "M13": "exam_pass", "M16": "story_return"][id]
         guard let key, save.profile.journey?.unlocked.contains(id) == true else { return }
         previewAudio(key)
+    }
+    func playDialogueVoice(_ key: String?) {
+        guard engine == nil, let key,
+              key.hasPrefix("haesol_h") || key.hasPrefix("operator_o") else { return }
+        lobbyMusic.stop(); testingAudio = true
+        audio.ducking = ducking; audio.volume = Float(voiceVolume)
+        audio.play(key) { [weak self] in
+            DispatchQueue.main.async { self?.testingAudio = false; self?.refreshLobbyMusic() }
+        }
     }
     func stopAudioPreview() {
         guard testingAudio, engine == nil else { return }

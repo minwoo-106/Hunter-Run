@@ -77,7 +77,7 @@ struct AssociationFacilitiesView: View {
 private struct HaesolMomentsView: View {
     private let moments: [(asset: String, title: String, detail: String)] = [
         ("HaesolBefore", "평범한 귀갓길", "강해솔은 도시의 오후를 천천히 걸었어요."),
-        ("HaesolHairTie", "출발 전", "긴 머리를 묶고 다시 길을 나설 준비를 해요."),
+        ("HaesolHairTie", "출발 전", "머리를 묶고 다시 길을 나설 준비를 해요."),
         ("HaesolCurious", "궁금한 얼굴", "무슨 이야기를 들었는지 한 걸음 가까이 다가왔어요."),
         ("HaesolBeetle", "작은 예외", "수많은 게이트 앞에서도 침착했지만, 작은 벌레 앞에서는 잠깐 움찔했어요.")
     ]

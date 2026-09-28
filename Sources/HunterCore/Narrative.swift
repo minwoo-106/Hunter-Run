@@ -114,6 +114,7 @@ public struct DialogueNode: Codable, Identifiable {
     public var next: String?
     public var choices: [DialogueChoice]?
     public var variants: [DialogueVariant]?
+    public var voiceKey: String?
     public func rendered(profile: Profile, pending: [String: String] = [:]) -> String {
         let memory = (profile.journey?.memories ?? [:]).merging(pending) { _, new in new }
         let chosen = variants?.first { memory[$0.key] == $0.value }?.text ?? text
@@ -155,6 +156,13 @@ public struct NarrativeCatalog: Codable {
             func visit(_ id: String, path: Set<String>) throws {
                 guard !path.contains(id), let node = scene.node(id), !node.text.isEmpty,
                       ["operator", "hunter", "narrator", "report"].contains(node.speaker) else { throw NarrativeError.invalidContent }
+                if let voiceKey = node.voiceKey {
+                    let haesol = node.speaker == "report" && voiceKey.hasPrefix("haesol_h")
+                        && (1...16).contains(Int(voiceKey.suffix(2)) ?? 0)
+                    let storyOperator = node.speaker == "operator" && voiceKey.hasPrefix("operator_o")
+                        && (1...23).contains(Int(voiceKey.suffix(2)) ?? 0)
+                    guard haesol || storyOperator else { throw NarrativeError.invalidContent }
+                }
                 reached.insert(id)
                 let choices = node.choices ?? []
                 guard choices.isEmpty || (node.next == nil && Set(choices.map(\.id)).count == choices.count && choices.contains { $0.requiresMemory == nil || $0.requiresMemory?.isEmpty == true }) else { throw NarrativeError.invalidContent }
@@ -185,6 +193,14 @@ public struct NarrativeCatalog: Codable {
         }
         for id in ["M03", "M06", "M10", "M13", "M16"] where state.unlocked.contains(id) && !state.milestones.contains(id) {
             state.milestones.insert(id); state.affinity += 4
+        }
+        if state.unlocked.contains("M18"), state.memories["firstVanguardRole"] == nil {
+            let roles = ["warrior", "mage", "archer", "cleric"]
+            if let first = profile.runs.reversed().flatMap(\.records).first(where: {
+                $0.defeated == true && $0.outcome != .neutral && roles.contains($0.catalogID.replacingOccurrences(of: "corrupted-vanguard-", with: ""))
+            }) {
+                state.memories["firstVanguardRole"] = first.catalogID.replacingOccurrences(of: "corrupted-vanguard-", with: "")
+            }
         }
         profile.journey = state
         let currentTier = tier(profile)

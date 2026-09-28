@@ -51,6 +51,22 @@ public struct RunEngine {
             session.movingStreak = 0; return []
         }
         guard !session.manualPause, !session.interruption else { return [] }
+        let finalRescue = session.boss?.definition.id == "corrupted-hunter" && !session.isIndoor
+        if finalRescue && frame.steps > 0 && (frame.movement == .walking || frame.movement == .running) {
+            session.lastVerifiedStepAt = frame.timestamp
+        }
+        let safeMotion = finalRescue && (frame.movement == .walking || frame.movement == .running)
+            && session.lastVerifiedStepAt.map { frame.timestamp - $0 <= 6 } == true
+        if finalRescue && frame.signal != .good && !safeMotion {
+            // Keep the encounter intact. Motion evidence is required before time-based
+            // observation resumes, and the player can resume after a safe pause.
+            session.stationarySeconds += rawDT
+            if session.stationarySeconds >= 8 {
+                session.manualPause = true; session.phase = .paused
+                return [.voice("pause"), .checkpoint]
+            }
+            return []
+        }
         // Also end an older restored session already at the new environment limit.
         if let limit = session.activeTimeLimit, session.activeSeconds >= limit {
             end(); return [.voice("run_end"), .checkpoint, .goalReached]
@@ -76,7 +92,7 @@ public struct RunEngine {
         let representedDistanceTime = frame.distanceDuration.flatMap {
             $0.isFinite && $0 > 0 ? $0 : nil
         } ?? dt
-        var distance = session.isIndoor ? 0 : max(0, min(frame.distance, 8 * max(dt, representedDistanceTime)))
+        var distance = session.isIndoor || (finalRescue && frame.signal != .good) ? 0 : max(0, min(frame.distance, 8 * max(dt, representedDistanceTime)))
         if session.isIndoor { session.steps = (session.steps ?? 0) + min(30, max(0, frame.steps)) }
         if session.activityGoal.kind == .distance {
             let remaining = max(0, session.activityGoal.value - session.distance)
@@ -118,11 +134,11 @@ public struct RunEngine {
         if var event = session.event {
             if event.stage == .briefing { return cues }
             let requiresRunning = event.template.kind != .discovery
-            if frame.signal != .good && requiresRunning {
+            if frame.signal != .good && requiresRunning && !safeMotion {
                 // No evaluation under uncertain sensor evidence. Switch to a neutral route.
                 closeEvent(.neutral); return [.voice("signal"), .checkpoint]
             }
-            if requiresRunning && !session.isIndoor && frame.movement != .running { return cues }
+            if requiresRunning && !session.isIndoor && frame.movement != .running && !safeMotion { return cues }
             if event.stage == .armed {
                 event.elapsed += dt
                 if frame.speed >= event.baseline * 1.08 { event.pushing += dt } else { event.pushing = 0 }
@@ -149,7 +165,7 @@ public struct RunEngine {
             let eventDT = event.template.burstSeconds.map { min(dt, max(0, $0 - event.elapsed)) } ?? dt
             event.elapsed += eventDT; event.evaluatedSeconds += eventDT
             let threshold = event.template.requestsAcceleration ? 1.08 : event.template.kind == .endurance ? 0.75 : 0.85
-            let qualified = session.isIndoor || event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
+            let qualified = session.isIndoor || safeMotion || event.template.kind == .discovery || event.template.kind == .ambush || frame.speed >= event.baseline * threshold
             if qualified { event.qualified += eventDT }
             if event.template.kind == .endurance { event.traveledDistance = (event.traveledDistance ?? 0) + distance }
             session.event = event
@@ -181,6 +197,10 @@ public struct RunEngine {
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
             if session.isIndoor { next = IndoorRules.event(next) }
+            if finalRescue && next.kind == .boss && next.burstSeconds != nil {
+                // The final rescue never requires a speed surge to advance.
+                next.useSteadyAlternative()
+            }
             session.consumed.insert(next.id)
             let remaining = (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds
             if remaining < next.duration + 30 { return [.checkpoint] }
@@ -190,7 +210,7 @@ public struct RunEngine {
             if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || AccelerationRules.needsEasyMovement(session) || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
                 next.kind = .discovery; next.burstSeconds = nil; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
             }
-            if next.kind != .discovery && ((!session.isIndoor && frame.movement != .running) || frame.signal != .good) {
+            if next.kind != .discovery && !safeMotion && ((!session.isIndoor && frame.movement != .running) || frame.signal != .good) {
                 next.kind = .discovery; next.burstSeconds = nil; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
             }
             if next.id.hasPrefix("major-strike"), let boss = session.boss {
