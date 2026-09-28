@@ -125,7 +125,7 @@ final class HomeLayoutTests: XCTestCase {
         for _ in 0..<12 { if mock.isHittable { break }; app.scrollViews.firstMatch.swipeUp() }
         XCTAssertTrue(mock.isHittable); mock.tap()
         XCTAssertTrue(app.staticTexts["현재 페이스"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["활동 평균 페이스"].exists)
+        XCTAssertTrue(app.staticTexts["전체 평균 페이스"].exists)
         let shot = XCTAttachment(screenshot: app.screenshot())
         shot.name = "Outdoor pace metrics"
         shot.lifetime = .keepAlways

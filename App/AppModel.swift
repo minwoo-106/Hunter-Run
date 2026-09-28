@@ -645,7 +645,7 @@ import UIKit
         Location: \(permissionText)
         Signal: \(signal.rawValue)
         Movement: \(movement.rawValue)
-        Activity seconds: \(run?.activeSeconds ?? 0)
+        Activity seconds: \(run?.activeSeconds ?? recorded?.seconds ?? 0)
         Elapsed seconds: \(elapsed)
         Distance meters: \(run?.distance ?? recorded?.distance ?? 0)
         GPS accepted path meters: \(sensor.acceptedGPSMeters)
