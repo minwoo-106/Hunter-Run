@@ -191,14 +191,9 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         // A moderately accurate running velocity is useful for event scoring
         // even when it is too uncertain for the strict pace-only window.
         speed = freshFix ? (gpsSpeed ?? (runSpeed ? rawSpeed : freshSteps ? stepsSpeed : 0)) : freshSteps ? stepsSpeed : 0
-        if freshMotion && motionValue == .vehicle || rawSpeed > 8 { movement = .vehicle }
-        else if freshMotion && motionValue == .stationary && rawSpeed < 0.8 { movement = .stationary }
-        else if rawSpeed >= 0 && rawSpeed < 0.35 { movement = .stationary }
-        else if speed >= 0.5 && (freshFix || freshSteps) {
-            if freshMotion && motionValue == .running { movement = .running }
-            else if runSpeed { movement = .running }
-            else { movement = .walking }
-        } else { movement = freshFix || freshMotion ? .stationary : .unknown }
+        movement = OutdoorMovementClassifier.classify(motion: freshMotion ? motionValue : nil,
+            rawSpeed: rawSpeed, speed: speed, credibleRunning: runSpeed,
+            hasRecentFix: freshFix, hasRecentSteps: freshSteps)
         if movement == .stationary || movement == .vehicle { velocity.reset() }
         let useSteps = signal == .unavailable && freshSteps
         let meters = useSteps ? pendingStepsDistance : signal == .unavailable ? 0 : pendingDistance
