@@ -108,6 +108,7 @@ public struct DialogueChoice: Codable, Identifiable {
 public struct DialogueNode: Codable, Identifiable {
     public var id: String
     public var speaker: String
+    public var speakerLabel: String?
     public var text: String
     public var expression: String
     public var next: String?

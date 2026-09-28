@@ -202,9 +202,10 @@ struct ConversationStage<Content: View>: View {
     var artwork: String
     var expression = "calm"
     var resetKey: String
+    var portraitArtwork: String?
     let content: Content
-    init(artwork: String, expression: String = "calm", resetKey: String = "", @ViewBuilder content: () -> Content) {
-        self.artwork = artwork; self.expression = expression; self.resetKey = resetKey; self.content = content()
+    init(artwork: String, expression: String = "calm", resetKey: String = "", portraitArtwork: String? = nil, @ViewBuilder content: () -> Content) {
+        self.artwork = artwork; self.expression = expression; self.resetKey = resetKey; self.portraitArtwork = portraitArtwork; self.content = content()
     }
     var body: some View {
         GeometryReader { geo in
@@ -213,8 +214,14 @@ struct ConversationStage<Content: View>: View {
                 Image(artwork).resizable().scaledToFill().frame(width: geo.size.width, height: geo.size.height).clipped().overlay(Theme.ink.opacity(0.33)).accessibilityHidden(true)
                 VStack(spacing: 0) {
                     ZStack(alignment: .top) {
-                        OperatorPortrait(expression: expression).frame(width: geo.size.width, height: geo.size.width * 1.5)
-                            .offset(y: -geo.size.width * 0.025)
+                        if let portraitArtwork {
+                            Image(portraitArtwork).resizable().scaledToFill()
+                                .frame(width: geo.size.width, height: geo.size.width * 1.5).clipped()
+                                .offset(y: -geo.size.width * 0.025)
+                        } else {
+                            OperatorPortrait(expression: expression).frame(width: geo.size.width, height: geo.size.width * 1.5)
+                                .offset(y: -geo.size.width * 0.025)
+                        }
                     }.frame(height: portraitHeight, alignment: .top).clipped().overlay(alignment: .bottom) {
                         LinearGradient(colors: [.clear, Theme.ink], startPoint: .top, endPoint: .bottom).frame(height: 45).allowsHitTesting(false)
                     }.accessibilityIdentifier("conversation.portrait")

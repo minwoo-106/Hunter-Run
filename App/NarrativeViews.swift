@@ -127,10 +127,14 @@ struct DialogueView: View {
         return scene.node(replay ? (replayNode ?? scene.start) : (cursor?.sceneID == scene.id ? cursor!.nodeID : scene.start))
     }
     private var pending: [String: String] { replay ? replayMemory : cursor?.pendingMemory ?? [:] }
+    private var recordPortrait: String? {
+        guard node?.speaker == "report" else { return nil }
+        return node?.speakerLabel == "강해솔의 기록" ? "HaesolBefore" : scene.artwork
+    }
     var body: some View {
-        ConversationStage(artwork: scene.artwork, expression: node?.expression ?? "calm", resetKey: node?.id ?? "finished") {
+        ConversationStage(artwork: scene.artwork, expression: node?.expression ?? "calm", resetKey: node?.id ?? "finished", portraitArtwork: recordPortrait) {
                 if let node {
-                    let speaker = node.speaker == "operator" ? model.save.profile.journey?.operatorName ?? "오퍼레이터" : node.speaker == "hunter" ? model.save.profile.name : "관측 기록"
+                    let speaker = node.speaker == "operator" ? model.save.profile.journey?.operatorName ?? "오퍼레이터" : node.speaker == "hunter" ? model.save.profile.name : node.speakerLabel ?? "관측 기록"
                     Label(speaker, systemImage: "diamond.fill").font(.headline).foregroundStyle(Labyrinth.gold)
                     Text(node.rendered(profile: model.save.profile, pending: pending)).font(.title3).lineSpacing(7)
                         .fixedSize(horizontal: false, vertical: true).accessibilityIdentifier("dialogue.text")

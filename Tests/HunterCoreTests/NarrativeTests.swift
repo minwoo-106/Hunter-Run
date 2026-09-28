@@ -33,6 +33,29 @@ final class NarrativeTests: XCTestCase {
         XCTAssertFalse(catalog.scene("M18")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
         XCTAssertTrue(catalog.scene("M19")?.nodes.contains { $0.text.contains("강해솔 님이에요") } == true)
         XCTAssertTrue(catalog.scene("M20")?.nodes.contains { $0.text.contains("해솔 님의 검이 멈췄어요") } == true)
+        XCTAssertTrue(catalog.scene("M06")?.nodes.contains { $0.speakerLabel == "강해솔의 기록" } == true)
+    }
+    func testEarlyChoicesReturnAsOptionalCallbacksWithoutBreakingOlderSaves() throws {
+        let catalog = try catalog()
+        var profile = Profile()
+        try catalog.register(hunter: "새 헌터", operatorName: "하나", profile: &profile)
+        try finish("M01", profile: &profile, catalog: catalog)
+        XCTAssertEqual(profile.journey?.memories["firstOffice"], "teamwork")
+        let closing = try XCTUnwrap(catalog.scene("M21")?.node("M21.firstOffice"))
+        XCTAssertTrue(closing.rendered(profile: profile).contains("함께 왔네요"))
+
+        let search = try XCTUnwrap(catalog.scene("M19")?.node("M19.search"))
+        let vanguard = try XCTUnwrap(catalog.scene("M20")?.node("M20.vanguard"))
+        var oldProfile = Profile()
+        oldProfile.journey = JourneyState()
+        XCTAssertEqual(closing.rendered(profile: oldProfile), closing.text)
+        XCTAssertEqual(search.rendered(profile: oldProfile), search.text)
+        XCTAssertEqual(vanguard.rendered(profile: oldProfile), vanguard.text)
+
+        oldProfile.journey?.memories["searchPriority"] = "records"
+        oldProfile.journey?.memories["vanguardMethod"] = "trace"
+        XCTAssertTrue(search.rendered(profile: oldProfile).contains("봉인 이유"))
+        XCTAssertTrue(vanguard.rendered(profile: oldProfile).contains("각각 추적"))
     }
     func testRegistrationMigratesNamesWithoutErasingExistingProgress() throws {
         let catalog = try catalog(); var profile = Profile()

@@ -81,7 +81,9 @@ def compile_scene(identifier, title, body, kind, index):
         elif match or report:
             chooser = None
             text = match[1] if match else report[2]
-            add(text, 'operator' if match else 'report')
+            node = add(text, 'operator' if match else 'report')
+            if report:
+                node['speakerLabel'] = report[1]
     # Last authored scene acknowledgement always exists; choices cannot award early.
     if branches:
         add('다음에 또 이야기해요.', expression='smile')
@@ -157,6 +159,18 @@ conditional_line(by_id['R12'], '아직 같이 써볼 기록이 많이 남았어�
     dict(key='project', value='reader', text='교육 자료 첫 장도 완성했어요. 첫 독자가 되어주신다는 약속, 기억하고 있어요.'),
     dict(key='project', value='illustrated', text='교육 자료 첫 장에 제 늑대도 넣었어요. 그림을 넣자고 하셔서 조금 용기가 났어요.'),
 ], suffix='project')
+conditional_line(by_id['M19'], '우리가 고른 방법으로 찾은 자료를 다시 맞춰볼게요.', [
+    dict(key='searchPriority', value='people', text='먼저 사람을 찾자고 하셨죠. 네 분의 생체 신호를 따로 모아두길 잘했어요. 아직 이어지는 길이 보여요.'),
+    dict(key='searchPriority', value='records', text='봉인 이유부터 확인하자고 하셨죠. 당시의 긴급 조치와 지금의 미해제 기록을 구분할 수 있게 됐어요.'),
+], suffix='search')
+conditional_line(by_id['M20'], '네 사람의 자료가 마지막 귀환로를 가리키고 있어요.', [
+    dict(key='vanguardMethod', value='original', text='처음 판단까지 지우지 않고 남겨둔 덕분에, 오염된 반응과 원래의 귀환 신호를 분리할 수 있어요.'),
+    dict(key='vanguardMethod', value='trace', text='네 사람의 신호를 각각 추적한 덕분에, 겹쳐 있던 귀환로의 입구가 보여요.'),
+], suffix='vanguard')
+conditional_line(by_id['M21'], '처음 관제실에서 했던 말이 생각나요.', [
+    dict(key='firstOffice', value='teamwork', text='두 번째부터는 같이 해결하자고 하셨죠. 여기까지 정말 함께 왔네요.'),
+    dict(key='firstOffice', value='humor', text='처음엔 프린터부터 토벌할 뻔했는데요. 이제는 돌아올 길까지 같이 찾았네요.'),
+], suffix='firstOffice')
 for scene in scenes:
     mood = {'R02':'thoughtful', 'R03':'playful', 'R07':'worried', 'R08':'smile', 'R09':'thoughtful',
             'R10':'playful', 'R11':'smile', 'R12':'relieved', 'M08':'thoughtful', 'M09':'worried',
