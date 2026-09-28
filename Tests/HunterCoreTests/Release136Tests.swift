@@ -15,7 +15,7 @@ final class Release136Tests: XCTestCase {
         growth.departments[Department.observation.rawValue] = 3
         profile.growth = growth
         var journey = JourneyState()
-        journey.unlocked.insert("M16")
+        journey.unlocked.insert("M19")
         profile.journey = journey
         return profile
     }

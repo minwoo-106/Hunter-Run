@@ -42,10 +42,11 @@ import UIKit
         do { try Expeditions.claim(in: &candidate, at: expeditionDate); try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward") }
         catch { notice = "이번 주 조사 조건과 보상 수령 상태를 확인해주세요." }
     }
-    func acknowledgeReturn() {
-        guard let id = save.profile.expeditions?.briefing?.id else { showReturnBriefing = false; return }
-        var candidate = save; Expeditions.acknowledge(id, in: &candidate)
-        do { try repository.write(candidate); save = candidate; showReturnBriefing = false }
+    func openReturnBriefing() {
+        guard save.profile.expeditions?.briefing?.acknowledged == false else { return }
+        var candidate = save
+        if let id = candidate.profile.expeditions?.briefing?.id { Expeditions.acknowledge(id, in: &candidate) }
+        do { try repository.write(candidate); save = candidate; showReturnBriefing = true }
         catch { notice = "귀환 보고를 저장하지 못했어요. 다시 확인해주세요." }
     }
     var startStoryAfterWelcome = false
@@ -108,7 +109,7 @@ import UIKit
             if engine?.session.isIndoor == true && engine?.session.phase != .finished { pause() }
             if indoorCheckActive { sensor.stop() }
         } else if indoorCheckActive { sensor.start(environment: selectedEnvironment) }
-        if active { lobbyMusic.allowPlayback() }
+        if active { sensor.refreshPermission(); updatePermissions(); lobbyMusic.allowPlayback() }
         refreshLobbyMusic()
         refreshActivityDisplay()
     }
@@ -299,6 +300,14 @@ import UIKit
     }
     func beginDialogue(_ id: String) { updateJourney { try $0.begin(id, profile: &$1) } }
     func advanceDialogue(_ choice: String? = nil) { updateJourney { _ = try $0.advance(choice: choice, profile: &$1) } }
+    func restoreCheongwol() {
+        guard !growthLocked, CheongwolSanctum.available(save.profile), let narratives else { return }
+        var candidate = save
+        guard CheongwolSanctum.restore(&candidate.profile) else { return }
+        narratives.refresh(&candidate.profile)
+        do { try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward") }
+        catch { notice = "시설 기록을 저장하지 못했어요. 다시 시도해주세요." }
+    }
     func rememberPreference(_ key: String, value: String) {
         let allowed = ["drink": ["warm", "cool", "flexible"], "relationshipPreference": ["closer", "partnership", "undecided"]]
         guard allowed[key]?.contains(value) == true else { return }
@@ -312,7 +321,11 @@ import UIKit
         default: permissionText = "위치 권한 미확인"
         }
     }
-    func authorize() { sensor.requestPermission() }
+    func authorize() {
+        if sensor.permission == .denied || sensor.permission == .restricted {
+            if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+        } else { sensor.requestPermission() }
+    }
     func beginIndoorCheck() {
         guard engine == nil, !recoverable else { return }
         stopIndoorCheck(); indoorCheckActive = true; indoorDetected = false
@@ -336,7 +349,8 @@ import UIKit
         guard !simulated || Self.testHarness else { return }
         guard isReady, let content, engine == nil, save.active == nil else { return }
         if !simulated && !environment.isIndoor && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
-            notice = "먼저 위치 권한을 허용해주세요."; sensor.requestPermission(); return
+            notice = "야외 활동에는 위치 권한이 필요해요. iPhone 설정에서 '앱을 사용하는 동안'과 '정확한 위치'를 허용해주세요."
+            authorize(); return
         }
         guard simulated || encounterDemo == nil else { return }
         let requested = goal ?? ActivityGoal(kind: .time, value: seconds)

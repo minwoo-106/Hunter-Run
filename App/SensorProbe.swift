@@ -62,6 +62,10 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         location.pausesLocationUpdatesAutomatically = false
     }
     func requestPermission() { location.requestWhenInUseAuthorization() }
+    func refreshPermission() {
+        permission = location.authorizationStatus
+        precision = location.accuracyAuthorization == .fullAccuracy
+    }
     func start(environment: ActivityEnvironment = .outdoor) {
         stop()
         self.environment = environment
@@ -129,8 +133,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         location.allowsBackgroundLocationUpdates = false
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        permission = manager.authorizationStatus
-        precision = manager.accuracyAuthorization == .fullAccuracy
+        refreshPermission()
         onUpdate?()
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

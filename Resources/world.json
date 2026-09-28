@@ -747,7 +747,7 @@
           ]
         }
       ],
-      "requiredMain": "M16",
+      "requiredMain": "M19",
       "requiredDefeats": [
         "corrupted-vanguard-warrior",
         "corrupted-vanguard-mage",

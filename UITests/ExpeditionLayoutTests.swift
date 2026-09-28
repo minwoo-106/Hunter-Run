@@ -52,7 +52,9 @@ final class ExpeditionLayoutTests: XCTestCase {
             let next = app.buttons["return.next"]
             if !next.exists { break }; reach(next, in: app); next.tap()
         }
-        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 5)); app.buttons["nav.3"].tap()
+        XCTAssertTrue(app.buttons["nav.3"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["home.return"].exists, "Opened reports should leave the home screen")
+        app.buttons["nav.3"].tap()
         app.segmentedControls["association.section"].buttons["주간 조사"].tap()
         capture("Weekly survey objectives", app: app)
         let claim = app.buttons["weekly.claim"]; reach(claim, in: app)

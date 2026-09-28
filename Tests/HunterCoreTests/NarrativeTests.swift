@@ -21,8 +21,8 @@ final class NarrativeTests: XCTestCase {
     func testProductionGraphHasReachableAcyclicChoices() throws {
         let catalog = try catalog()
         try catalog.validate()
-        XCTAssertEqual(catalog.main.count, 16); XCTAssertEqual(catalog.bonds.count, 12)
-        XCTAssertEqual(catalog.scenes.flatMap(\.nodes).flatMap { $0.choices ?? [] }.count, 40)
+        XCTAssertEqual(catalog.main.count, 21); XCTAssertEqual(catalog.bonds.count, 12)
+        XCTAssertEqual(catalog.scenes.flatMap(\.nodes).flatMap { $0.choices ?? [] }.count, 50)
     }
     func testRegistrationMigratesNamesWithoutErasingExistingProgress() throws {
         let catalog = try catalog(); var profile = Profile()
@@ -88,6 +88,49 @@ final class NarrativeTests: XCTestCase {
         XCTAssertFalse(profile.journey!.unlocked.contains("M03"))
         profile.runs = []; catalog.refresh(&profile)
         XCTAssertTrue(profile.journey!.unlocked.contains("M02"))
+    }
+    func testFinalReturnRouteRequiresRealVanguardDefeatsAndOneTimeFacility() throws {
+        let catalog = try catalog()
+        var profile = Profile()
+        var journey = JourneyState(); journey.unlocked = Set(catalog.main.prefix(16).map(\.id)); journey.completed.insert("M16")
+        profile.journey = journey
+        XCTAssertFalse(CheongwolSanctum.available(profile))
+        catalog.refresh(&profile)
+        XCTAssertTrue(profile.journey!.unlocked.contains("M17"))
+        try finish("M17", profile: &profile, catalog: catalog)
+        XCTAssertFalse(profile.journey!.unlocked.contains("M18"))
+
+        func record(_ roles: [String], simulated: Bool, profile: inout Profile) {
+            var run = RunSession(targetSeconds: 300, simulated: simulated, allowPursuit: false, mode: .contract)
+            run.activeSeconds = 300; run.phase = .finished
+            run.records = roles.map { EventRecord(id: "corrupted-vanguard-" + $0, title: "선발대", outcome: .success, damage: 100, defeated: true, kind: .maintain) }
+            _ = Settlement.apply(run, to: &profile)
+        }
+        record(["warrior"], simulated: true, profile: &profile)
+        catalog.refresh(&profile)
+        XCTAssertFalse(profile.journey!.unlocked.contains("M18"))
+        record(["warrior"], simulated: false, profile: &profile)
+        catalog.refresh(&profile)
+        XCTAssertTrue(profile.journey!.unlocked.contains("M18"))
+        try finish("M18", profile: &profile, catalog: catalog)
+        record(["mage", "archer", "cleric"], simulated: false, profile: &profile)
+        catalog.refresh(&profile)
+        XCTAssertTrue(profile.journey!.unlocked.contains("M19"))
+        try finish("M19", profile: &profile, catalog: catalog)
+        XCTAssertFalse(profile.journey!.unlocked.contains("M20"))
+        var bosses = profile.bosses ?? [:]
+        var boss = BossState(maximumHP: 3200); boss.remainingHP = 0; boss.clears = 1
+        bosses["corrupted-hunter"] = boss; profile.bosses = bosses
+        catalog.refresh(&profile)
+        XCTAssertTrue(profile.journey!.unlocked.contains("M20"))
+        XCTAssertFalse(CheongwolSanctum.available(profile))
+        try finish("M20", profile: &profile, catalog: catalog)
+        XCTAssertTrue(CheongwolSanctum.available(profile))
+        XCTAssertTrue(CheongwolSanctum.restore(&profile))
+        XCTAssertFalse(CheongwolSanctum.restore(&profile))
+        catalog.refresh(&profile)
+        XCTAssertTrue(profile.journey!.unlocked.contains("M21"))
+        try finish("M21", profile: &profile, catalog: catalog)
     }
     func testInvalidChoiceCannotAdvanceOrMutateMemory() throws {
         let catalog = try catalog(); var profile = Profile()

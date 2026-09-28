@@ -73,7 +73,7 @@ struct ReturnBriefingView: View {
                     HStack { Text(model.save.profile.journey?.operatorName ?? "서윤").font(.headline); Spacer(); Text("\(min(index + 1, report.lines.count)) / \(report.lines.count)").font(.caption).foregroundStyle(Theme.muted) }
                     Text(report.lines[min(index, report.lines.count - 1)]).font(.title3).lineSpacing(7).fixedSize(horizontal: false, vertical: true).accessibilityIdentifier("return.line")
                     Button(index + 1 < report.lines.count ? "이야기 계속 듣기" : "기록 정리 고마워요") {
-                        if index + 1 < report.lines.count { index += 1 } else { model.acknowledgeReturn() }
+                        if index + 1 < report.lines.count { index += 1 } else { model.showReturnBriefing = false }
                     }.buttonStyle(GameButtonStyle(primary: true)).accessibilityIdentifier("return.next")
                 }.navigationTitle("귀환 보고").navigationBarTitleDisplayMode(.inline)
                     .toolbar { ToolbarItem(placement: .cancellationAction) { Button { model.showReturnBriefing = false } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }.buttonStyle(.plain).accessibilityLabel("귀환 보고 닫기") } }

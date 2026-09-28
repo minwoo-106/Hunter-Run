@@ -81,6 +81,9 @@ public struct StoryRequirement: Codable, Equatable {
         case "departments": return AssociationStage.upgrades(profile)
         case "quest": return profile.journey?.completedQuests.contains(key ?? "") == true ? 1 : 0
         case "boss": return profile.bosses?[key ?? ""]?.clears ?? profile.runs.filter { $0.majorBoss?.bossID == key && $0.majorBoss?.cleared == true }.count
+        case "story": return profile.journey?.completed.contains(key ?? "") == true ? 1 : 0
+        case "memory": return profile.journey?.memories[key ?? ""] == "yes" ? 1 : 0
+        case "vanguard": return ["warrior", "mage", "archer", "cleric"].filter { FieldDiscovery.defeated("corrupted-vanguard-" + $0, in: profile) }.count
         default: return 0
         }
     }
@@ -146,7 +149,7 @@ public struct NarrativeCatalog: Codable {
                   (0...main.count).contains(scene.requiredMain), (1...5).contains(scene.requiredTier),
                   Set(scene.nodes.map(\.id)).count == scene.nodes.count, scene.node(scene.start) != nil,
                   scene.prerequisite.allSatisfy({ id in self.scene(id).map { $0.kind == scene.kind && $0.order < scene.order } ?? false }),
-                  scene.requirements.allSatisfy({ ["seconds", "defeat", "discover", "rank", "departments", "quest", "boss"].contains($0.kind) && $0.value > 0 && !$0.hint.isEmpty }) else { throw NarrativeError.invalidContent }
+                  scene.requirements.allSatisfy({ ["seconds", "defeat", "discover", "rank", "departments", "quest", "boss", "story", "memory", "vanguard"].contains($0.kind) && $0.value > 0 && !$0.hint.isEmpty }) else { throw NarrativeError.invalidContent }
             var reached: Set<String> = []
             func visit(_ id: String, path: Set<String>) throws {
                 guard !path.contains(id), let node = scene.node(id), !node.text.isEmpty,

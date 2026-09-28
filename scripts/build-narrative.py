@@ -31,6 +31,11 @@ REQUIREMENTS = [
     [condition('departments', 4, '네 부서를 Lv.2로 확장'), condition('quest', 1, '안쪽 신호 조사 완료', 'inner-signal')],
     [condition('boss', 1, '공허의 사서 완전 토벌', 'void-librarian')],
     [condition('boss', 1, '마지막 토벌 기록 확인', 'void-librarian')],
+    [condition('story', 1, '이전 이야기 읽기', 'M16')],
+    [condition('story', 1, '이전 이야기 읽기', 'M17'), condition('vanguard', 1, '선발대의 첫 흔적 확인')],
+    [condition('story', 1, '이전 이야기 읽기', 'M18'), condition('vanguard', 4, '선발대 네 사람의 기록 확보')],
+    [condition('story', 1, '이전 이야기 읽기', 'M19'), condition('boss', 1, '마지막 귀환 작전 완료', 'corrupted-hunter')],
+    [condition('story', 1, '이전 이야기 읽기', 'M20'), condition('memory', 1, '지부의 봉인 시설 활성화', 'cheongwolRestored')],
 ]
 
 
@@ -53,7 +58,7 @@ def compile_scene(identifier, title, body, kind, index):
     for raw in body.splitlines():
         line = raw.strip()
         match = re.match(r'(?:오퍼레이터|O): (.+)', line)
-        report = re.match(r'(평가관의 서면|문해진의 기록|환영의 문자|사서의 문자): (.+)', line)
+        report = re.match(r'(평가관의 서면|문해진의 기록|환영의 문자|사서의 문자|청월의 기록): (.+)', line)
         choice = re.match(r'- ([RM]\d{2}-[A-Z]) 「([^」]+)」 → (?:O|오퍼레이터): (.+)', line)
         if choice:
             if chooser is None:
@@ -84,8 +89,9 @@ def compile_scene(identifier, title, body, kind, index):
     tier = 1 if index <= 2 else 2 if index <= 5 else 3 if index <= 8 else 4 if index <= 10 else 5
     main_gate = [1,1,3,3,4,6,6,8,10,12,14,16][index-1] if kind == 'bond' else 0
     dependencies = {'R02':['R01'], 'R07':['R02'], 'R09':['R07'], 'R10':['R06'], 'R12':['R11']}
+    artwork = 'CheongwolBefore' if identifier == 'M21' else 'Monster-corrupted-hunter' if identifier == 'M20' else 'AssociationOffice' if index <= 6 else 'AssociationOperational' if index <= 12 else 'AssociationAdvanced'
     return dict(id=identifier, title=title, kind=kind, order=index,
-                artwork='AssociationOffice' if index <= 6 else 'AssociationOperational' if index <= 12 else 'AssociationAdvanced',
+                artwork=artwork,
                 requiredMain=main_gate, requiredTier=tier if kind == 'bond' else 1,
                 prerequisite=dependencies.get(identifier, []), requirements=REQUIREMENTS[index-1] if kind == 'main' else [],
                 start=nodes[0]['id'], nodes=nodes)
@@ -104,7 +110,7 @@ def conditional_line(scene, text, variants, suffix='memory'):
 
 scenes = []
 for filename, pattern, kind, expected in [
-    ('story-v1-writers-bible.md', r'^### (M\d{2}) · (.+)$', 'main', 16),
+    ('story-v1-writers-bible.md', r'^### (M\d{2}) · (.+)$', 'main', 21),
     ('operator-relationship-scenes.md', r'^## (R\d{2}) · (.+)$', 'bond', 12),
 ]:
     source = (ROOT/'docs'/filename).read_text(encoding='utf-8')

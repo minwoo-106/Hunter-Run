@@ -104,7 +104,7 @@ struct WelcomeView: View {
                         Text(model.permissionText).font(.caption).foregroundStyle(Theme.muted)
                         welcomeItem("소리 확인", "실제 활동을 시작하면 협회 BGM이 멈추고 안내 음성을 듣습니다. 스피커 또는 이어폰으로 아래 미리 듣기로 확인하세요.")
                         Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
-                        Text("권한과 소리는 나중에 활동 준비와 메뉴에서도 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
+                        Text("권한과 소리는 나중에 설정에서도 확인할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
                     }
                     HStack {
                         if page > 0 { Button("이전") { page -= 1 }.buttonStyle(GameButtonStyle()) }

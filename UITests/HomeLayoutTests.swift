@@ -116,6 +116,9 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertTrue(run.isHittable)
         app.buttons["nav.2"].tap()
         XCTAssertTrue(app.buttons["mode.exploration"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["위치 권한 확인"].exists)
+        app.buttons["nav.0"].tap(); app.buttons["home.settings"].tap()
+        XCTAssertTrue(app.buttons["settings.location"].waitForExistence(timeout: 5))
     }
     @MainActor func testOutdoorActivityShowsCurrentAndAveragePace() {
         let app = application(); app.launch()

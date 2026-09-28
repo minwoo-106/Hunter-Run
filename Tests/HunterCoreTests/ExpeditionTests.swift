@@ -97,7 +97,7 @@ final class ExpeditionTests: XCTestCase {
         let variants = BossMutations.all(world); XCTAssertEqual(variants.count, world.bosses.count * 2)
         XCTAssertEqual(Set(variants.map(\.id)).count, variants.count)
         var profile = Profile(); var growth = profile.growth; growth.rank = "S"; growth.departments["observation"] = 2; profile.growth = growth
-        var journey = JourneyState(); journey.unlocked = Set((1...16).map { String(format: "M%02d", $0) }); profile.journey = journey
+        var journey = JourneyState(); journey.unlocked = Set((1...19).map { String(format: "M%02d", $0) }); profile.journey = journey
         for variant in variants {
             try variant.validate(); XCTAssertFalse(variant.available(to: profile, catalog: catalog))
             var parent = BossState(maximumHP: 800); parent.remainingHP = 0; parent.clears = 1

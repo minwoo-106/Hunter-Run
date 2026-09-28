@@ -54,7 +54,6 @@ struct SetupView: View {
                             if model.selectedBoss != nil { Button("일반 게이트로 변경") { model.selectedBoss = nil }.font(.caption) }
                         }.card()
                     }
-                    permission
                     Button { if indoor { indoorCheck = true } else { beginActivity() } } label: {
                         Label(indoor ? "움직임 확인 후 입장" : model.activeExam != nil ? "승급 심사 시작" : model.selectedMode.startTitle(boss: model.selectedBoss != nil), systemImage: "figure.run")
                             .frame(maxWidth: .infinity).padding(10)
@@ -134,16 +133,5 @@ struct SetupView: View {
                 Text("선택적 가속은 10초, 최대 2회예요. 가속하지 않아도 유지 대응으로 진행해요.").font(.caption2).foregroundStyle(Theme.muted)
             } else { Text("실내 전투는 가속 대신 움직임 유지로 진행해요.").font(.caption).foregroundStyle(Theme.muted) }
         }.card()
-    }
-    private var permission: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            if indoor { Label("실내는 GPS 없이 진행해요", systemImage: "figure.walk.motion").accessibilityIdentifier("indoor.no-gps") }
-            else { HStack { Label(model.permissionText, systemImage: "location"); Spacer(); Button("위치 권한 확인") { model.authorize() }.buttonStyle(GameControlStyle()) } }
-            if !indoor { Text("권한을 매번 묻는다면 iPhone 설정에서 Hunter Run의 위치를 ‘앱을 사용하는 동안’으로 바꾸고 ‘정확한 위치’를 켜주세요. ‘한 번 허용’은 다음 실행 때 만료돼요.").font(.caption2).foregroundStyle(Theme.muted) }
-            DisclosureGroup("음성 확인과 활동 안내") {
-                Button("안내 음성 미리 듣기") { model.audioTest() }.buttonStyle(GameButtonStyle())
-                NavigationLink("사건 대응 방법") { EncounterGuideView() }
-            }.font(.caption)
-        }.font(.caption).card()
     }
 }

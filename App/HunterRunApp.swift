@@ -94,9 +94,9 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요.")
                             .font(.headline).accessibilityIdentifier("home.greeting")
-                        if model.save.profile.expeditions?.briefing != nil {
-                            Button { model.showReturnBriefing = true } label: {
-                                Label(model.save.profile.expeditions?.briefing?.acknowledged == false ? "새 귀환 보고" : "지난 귀환 보고", systemImage: "sparkle")
+                        if model.save.profile.expeditions?.briefing?.acknowledged == false {
+                            Button { model.openReturnBriefing() } label: {
+                                Label("새 귀환 보고", systemImage: "sparkle")
                             }.buttonStyle(.plain).foregroundStyle(Theme.teal).accessibilityIdentifier("home.return")
                         }
                         Button { model.showStories = true } label: {
@@ -401,6 +401,12 @@ struct SettingsView: View {
                     Button("안내 음성 미리 듣기") { model.audioTest() }
                     Text("오퍼레이터 · 밝고 다정한 목소리. 상황별 한국어 안내가 오프라인으로 재생돼요.").font(.caption)
                 }
+                GameSection("위치 및 활동 권한") {
+                    Label(model.permissionText, systemImage: "location")
+                    Button("위치 권한 확인") { model.authorize() }.accessibilityIdentifier("settings.location")
+                    Text("야외 활동 시작 시 권한이 없으면 다시 안내해요. iPhone 설정에서 '앱을 사용하는 동안'과 '정확한 위치'를 허용해주세요.").font(.caption)
+                    Text("실내 러닝은 GPS 없이 동작 및 피트니스 센서를 사용해요.").font(.caption)
+                }
                 GameSection("저장") {
                     Button("백업 파일 만들기") { exported = model.exportSave() }
                     if let exported { ShareLink("백업 공유·저장", item: exported) }
@@ -422,7 +428,7 @@ struct SettingsView: View {
                     NavigationLink("활동과 성장 가이드") { FieldGuideView() }
                 }
                 GameSection("앱 정보") {
-                    Text("Hunter Run · 1.3.0")
+                    Text("Hunter Run · \(appVersion)")
                     Text("당신의 발걸음으로 이어지는 지부의 이야기").font(.caption)
                     NavigationLink("데이터와 권한 안내") { DataGuideView() }
                 }

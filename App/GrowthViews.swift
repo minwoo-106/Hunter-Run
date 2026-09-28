@@ -45,6 +45,24 @@ struct AssociationFacilitiesView: View {
                         }
                     }.card()
                 }
+                VStack(alignment: .leading, spacing: 12) {
+                    if model.save.profile.journey?.completed.contains("M20") == true {
+                        Image("CheongwolBefore").resizable().scaledToFit().frame(maxWidth: .infinity).frame(maxHeight: 260).clipped().accessibilityHidden(true)
+                        Label("귀환 정화실", systemImage: "moon.stars.fill").font(.title3.bold()).foregroundStyle(Theme.teal)
+                        if model.save.profile.journey?.memories["cheongwolRestored"] == "yes" {
+                            Text("정화 절차 완료 · 마지막 이야기를 스토리에서 확인해요.").foregroundStyle(Theme.muted)
+                        } else {
+                            Text("봉인된 시설의 기록을 복원하고 귀환 절차를 마무리해요.").foregroundStyle(Theme.muted)
+                            Button("정화실 가동") { model.restoreCheongwol() }
+                                .buttonStyle(GameButtonStyle(primary: true))
+                                .disabled(model.growthLocked || !CheongwolSanctum.available(model.save.profile))
+                                .accessibilityIdentifier("association.sanctum.restore")
+                        }
+                    } else {
+                        Label("봉인 시설", systemImage: "lock.shield").font(.headline)
+                        Text("아직 개방되지 않은 지부의 시설이에요.").font(.caption).foregroundStyle(Theme.muted)
+                    }
+                }.card().accessibilityIdentifier("association.sanctum")
                 Text("이번 버전에서는 각 부서를 Lv.3까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
         }.labyrinthScreen().navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)

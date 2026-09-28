@@ -139,7 +139,7 @@ print('Validated eighteen encounter pools, boss defeat unlocks and four-vanguard
 
 narrative = json.loads((root/'Resources/narrative.json').read_text(encoding='utf-8'))
 scenes = narrative['scenes']
-assert len(scenes) == len({s['id'] for s in scenes}) == 28
+assert len(scenes) == len({s['id'] for s in scenes}) == 33
 expressions = {'calm', 'smile', 'playful', 'thoughtful', 'worried', 'relieved'}
 for scene in scenes:
     assert (catalog / (scene['artwork'] + '.imageset') / 'Contents.json').is_file()
@@ -154,4 +154,4 @@ for expression in expressions - {'calm'}:
 for key in ['ui-select', 'ui-reward', 'ui-gate']:
     with wave.open(str(root/'Resources/Effects'/(key + '.wav'))) as effect:
         assert effect.getnframes() > 0 and effect.getsampwidth() == 2
-print('Validated 28 story scenes, expression/background references and three effect resources.')
+print('Validated 33 story scenes, expression/background references and three effect resources.')
