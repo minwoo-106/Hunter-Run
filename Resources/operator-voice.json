@@ -1868,29 +1868,31 @@
       "key": "ironhide-charger_defeated",
       "file": "ironhide-charger_defeated.wav",
       "text": "대단해요! 철피 돌진수를 제압했어요. 다음 관측 경로가 열렸어요.",
-      "seed": 276850478,
+      "seed": 1745890309,
       "seeds": [
-        276850478
+        1745890309
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.729,
-      "sha256": "6cb1634ca3bfa0e97313016fe7c47a9cc6feb76a575837ff3492b2880e4adc11"
+      "duration": 5.741,
+      "sha256": "d86f2c8eb4fb803286f16f716f42120cc23cb28cb794e721eaea68decfa51c7e",
+      "seed_tag": "hunter-136-repair-b:"
     },
     {
       "key": "ironhide-charger_survey",
       "file": "ironhide-charger_survey.wav",
       "text": "철피 돌진수가 지나간 흔적이에요! 안전하게 이동하며 조사해요.",
-      "seed": 120272522,
+      "seed": 1717662409,
       "seeds": [
-        120272522
+        1717662409
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.4,
-      "sha256": "e171df4c14ff73e909602eb21b35fab322beccd001b3fc66db90828d27cf3f8d"
+      "duration": 4.367,
+      "sha256": "32ad89bb8a4f3846bf92c9530c9ef7a86a6ebe2920006bdec84cd8198fdf59ad",
+      "seed_tag": "hunter-136-repair-a:"
     },
     {
       "key": "mirror-witch_intro",
@@ -1951,16 +1953,17 @@
     {
       "key": "mirror-witch_steady",
       "file": "mirror-witch_steady.wav",
-      "text": "거울마녀의 결계를 유지 공격으로 약화시켜요. 삼십 초 동안 평소 페이스를 이어가요.",
-      "seed": 2132584034,
+      "text": "거울마녀의 결계가 약해지고 있어요! 삼십 초 동안 평소 페이스를 이어가요.",
+      "seed": 1097570817,
       "seeds": [
-        2132584034
+        1097570817
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 5.502,
-      "sha256": "ea2dfd06bd93b24b1f1a1a173f364c5ecb00063dc8c239a949c5a3481ea730a8"
+      "duration": 4.827,
+      "sha256": "d5fd1dd829bd03d522feab8b305cf3f0f7267ea16e1df9ac150567afa5ceeb01",
+      "seed_tag": "hunter-136-repair-f:"
     },
     {
       "key": "ironclad-rhino_intro",
@@ -2008,15 +2011,16 @@
       "key": "ironclad-rhino_survey",
       "file": "ironclad-rhino_survey.wav",
       "text": "철갑 코뿔소의 발자국이에요. 안전하게 이동하며 조사해요.",
-      "seed": 1628555226,
+      "seed": 2324302498,
       "seeds": [
-        1628555226
+        2324302498
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 4.895,
-      "sha256": "6fe918a220f154c7b7844bfaa07133ecca84d16103ca7ed061efbf48689c691d"
+      "duration": 5.139,
+      "sha256": "d58fff387b4f134e6f6eb8da43afeab36f4e0970ff115884bbb06300445746f3",
+      "seed_tag": "hunter-136-repair-a:"
     },
     {
       "key": "ironclad-rhino_short",
@@ -2036,15 +2040,16 @@
       "key": "corrupted-hunter_phase1",
       "file": "corrupted-hunter_phase1.wav",
       "text": "타락 헌터가 검을 들었어요! 안전한 구간이면 십 초 가속으로 검붉은 결계를 공략해요. 유지 공격도 괜찮아요.",
-      "seed": 115900472,
+      "seed": 1815968959,
       "seeds": [
-        115900472
+        1815968959
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 8.474,
-      "sha256": "5bf6a688ee76b9bd5fadfffc0c518105f27658a05436c4b1aad66e2fcc0d8b1e"
+      "duration": 7.465,
+      "sha256": "d276548152d3e19bee565e36c944b2113a60bac9585856b103aa1b16e8d1c523",
+      "seed_tag": "hunter-136-repair-a:"
     },
     {
       "key": "corrupted-hunter_phase2",
@@ -2092,15 +2097,16 @@
       "key": "corrupted-hunter_hit",
       "file": "corrupted-hunter_hit.wav",
       "text": "좋아요! 타락 헌터의 오염을 조금 걷어냈어요. 다음 활동에서도 이어갈 수 있어요.",
-      "seed": 2087516990,
+      "seed": 921311050,
       "seeds": [
-        2087516990
+        921311050
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 7.502,
-      "sha256": "fcab8aac20ea907bdfd652171973f0a53ca39331feca8eda05a2102c63b2ff1b"
+      "duration": 5.49,
+      "sha256": "6837152776f8eecfd2e5dd743eb5fdb4f136df2d4e2ce564c34f3af654e17790",
+      "seed_tag": "hunter-136-repair-a:"
     },
     {
       "key": "corrupted-hunter_defeated",
@@ -2260,15 +2266,16 @@
       "key": "corrupted-vanguard-archer_intro",
       "file": "corrupted-vanguard-archer_intro.wav",
       "text": "선발대 궁수가 화살을 겨눴어요! 방향을 급히 바꾸지 말고 평소 페이스를 이어가요.",
-      "seed": 3312700634,
+      "seed": 2912146737,
       "seeds": [
-        3312700634
+        2912146737
       ],
       "segmented": false,
       "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
       "sample_rate": 24000,
-      "duration": 6.529,
-      "sha256": "134e670d5c987fb99da85021ea388f77e5527c61418bcb6c42a95633bc306130"
+      "duration": 5.635,
+      "sha256": "f905d049d2891b1e82c770b0d169fd714410f841cd88e09126d5136d64edf4e8",
+      "seed_tag": "hunter-136-repair-c:"
     },
     {
       "key": "corrupted-vanguard-archer_hit",

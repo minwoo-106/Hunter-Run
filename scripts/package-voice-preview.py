@@ -36,7 +36,7 @@ local.mkdir(exist_ok=True)
 (local / 'manifest.json').write_text(json.dumps({'schema': 1, 'version': '1.3.6', 'clips': clips}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 if len(sys.argv) > 1:
     out = pathlib.Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
-    target = out / 'HunterRun-1.3.6-voice-preview.zip'
+    target = out / 'HunterRun-1.3.6-build34-voice-preview.zip'
     with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED) as archive:
         archive.writestr('index.html', page('audio/'))
         archive.writestr('manifest.json', json.dumps({'schema': 1, 'version': '1.3.6', 'clips': clips}, ensure_ascii=False, indent=2))
