@@ -27,7 +27,10 @@ public struct RunEngine {
         event.stage = event.template.requestsAcceleration && event.burstStarted != true ? .armed : .active
         session.event = event
     }
-    public mutating func end() {
+    public mutating func end(at date: Date = Date()) {
+        if session.elapsedSeconds == nil {
+            session.elapsedSeconds = max(session.activeSeconds, date.timeIntervalSince(session.startedAt))
+        }
         guard session.phase != .finished else { return }
         closeEvent(.neutral)
         session.phase = .finished; session.lastTimestamp = nil
@@ -224,7 +227,7 @@ public enum Settlement {
         let regularCores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
         let cores = bossReport?.cleared == true ? 2 : regularCores
         let paceReport = PaceLearning.settle(session, profile: &profile)
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent)
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, elapsedSeconds: session.elapsedSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)

@@ -58,7 +58,11 @@ public final class SaveRepository {
               growth.equipped.allSatisfy({ EquipmentSlot(rawValue: $0.key) != nil && growth.owned.contains($0.value) }) else { throw Failure.invalid }
         guard (save.profile.bosses ?? [:]).allSatisfy({ !$0.key.isEmpty && $0.value.isValid }) else { throw Failure.invalid }
         guard save.profile.paceMemory?.isValid ?? true, save.profile.runs.allSatisfy({ $0.paceReport?.isValid ?? true }) else { throw Failure.invalid }
-        guard save.profile.runs.allSatisfy({ ($0.steps ?? 0) >= 0 && ($0.steps ?? 0) <= 100_000_000 && (!$0.activityEnvironment.isIndoor || $0.distance == 0) }) else { throw Failure.invalid }
+        guard save.profile.runs.allSatisfy({ record in
+            (record.steps ?? 0) >= 0 && (record.steps ?? 0) <= 100_000_000 &&
+            (!record.activityEnvironment.isIndoor || record.distance == 0) &&
+            (record.elapsedSeconds.map { $0.isFinite && $0 >= record.seconds } ?? true)
+        }) else { throw Failure.invalid }
         if let run = save.active {
             guard run.indoorAllowance.map({ $0.isFinite && (0...IndoorDailyLimit.seconds).contains($0) }) ?? true else { throw Failure.invalid }
             guard (run.steps ?? 0) >= 0, (run.steps ?? 0) <= 100_000_000,
@@ -70,6 +74,7 @@ public final class SaveRepository {
                   run.paceCooldownUntil.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.targetSeconds.isFinite, run.targetSeconds >= 60, run.activeSeconds.isFinite,
                   run.activeSeconds >= 0, run.activityGoal.isValid,
+                  run.elapsedSeconds.map({ $0.isFinite && $0 >= run.activeSeconds }) ?? true,
                   (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }
             if let stats = run.loadout {

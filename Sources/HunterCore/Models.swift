@@ -99,6 +99,9 @@ public struct RunSession: Codable, Identifiable {
     public var simulated: Bool
     public var allowPursuit: Bool
     public var activeSeconds: Double = 0
+    /// Wall-clock time from start to finish. Kept separate from moving time
+    /// because crossing waits do not earn activity credit.
+    public var elapsedSeconds: Double? = nil
     public var runningSeconds: Double = 0
     public var distance: Double = 0
     /// Last spoken outdoor kilometer; nil only for saves created before distance announcements.
@@ -145,6 +148,8 @@ public struct RunSummary: Codable, Identifiable {
     public var id: UUID
     public var date: Date
     public var seconds: Double
+    /// Nil for records created before elapsed time was saved.
+    public var elapsedSeconds: Double? = nil
     public var distance: Double
     public var xp: Int
     public var crystals: Int

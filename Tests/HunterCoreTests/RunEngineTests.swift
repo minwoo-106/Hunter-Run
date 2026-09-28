@@ -40,6 +40,21 @@ final class RunEngineTests: XCTestCase {
         XCTAssertEqual(e.session.activeSeconds, 1)
         XCTAssertEqual(e.session.distance, distance)
     }
+    func testFinishedOutdoorRunKeepsElapsedTimeSeparateFromMovingTime() throws {
+        var session = RunSession(targetSeconds: 4_000, simulated: false, allowPursuit: false)
+        session.startedAt = Date(timeIntervalSince1970: 1_000)
+        session.activeSeconds = 3_478 // 57:58 moving, including a few crossing waits.
+        session.distance = 5_380
+        var engine = RunEngine(session: session, content: content())
+        engine.end(at: Date(timeIntervalSince1970: 4_694)) // 1:01:34 elapsed.
+        var profile = Profile()
+        let summary = Settlement.apply(engine.session, to: &profile)
+        XCTAssertEqual(summary?.seconds, 3_478)
+        XCTAssertEqual(summary?.elapsedSeconds, 3_694)
+        let encoded = try JSONEncoder().encode(profile)
+        let decoded = try JSONDecoder().decode(Profile.self, from: encoded)
+        XCTAssertEqual(decoded.runs.first?.elapsedSeconds, 3_694)
+    }
     func testBatchedGPSDistanceIsNotClippedByCallbackTiming() {
         var e = make()
         step(&e, 0, movement: .walking, speed: 1.35)

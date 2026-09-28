@@ -34,6 +34,13 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     private var stepsSpeed: Double = 0
     private var velocity = GPSVelocityWindow()
     private var outdoorDistance = OutdoorDistanceAccumulator()
+    private(set) var acceptedGPSMeters: Double = 0
+    private(set) var comparableGPSMeters: Double = 0
+    private(set) var comparableVelocityMeters: Double = 0
+    private(set) var comparableSeconds: Double = 0
+    private(set) var gpsFixCount = 0
+    private var gpsAccuracyTotal: Double = 0
+    var averageGPSAccuracy: Double? { gpsFixCount > 0 ? gpsAccuracyTotal / Double(gpsFixCount) : nil }
     private var active = false
     private var sessionStartedAt = Date.distantPast
     var outdoorSignalHint: String {
@@ -61,6 +68,8 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         let token = UUID(); generation = token
         indoor.reset(); totalSteps = 0; pendingSteps = 0; stepCallbackAt = Date()
         active = true; sessionStartedAt = Date(); latestFix = nil; velocity.reset(); outdoorDistance.reset(); pendingDistance = 0
+        acceptedGPSMeters = 0; comparableGPSMeters = 0; comparableVelocityMeters = 0; comparableSeconds = 0
+        gpsFixCount = 0; gpsAccuracyTotal = 0
         pendingDistanceDuration = 0; stepsDistance = 0; pendingStepsDistance = 0; pendingStepsDuration = 0; stepsAt = .distantPast; motionAt = .distantPast
         motionValue = .unknown; speed = 0; signal = .unavailable
         if !environment.isIndoor {
@@ -134,13 +143,27 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
             guard fix.timestamp >= sessionStartedAt, fix.horizontalAccuracy >= 0, now.timeIntervalSince(fix.timestamp) < 60,
                   now.timeIntervalSince(fix.timestamp) >= -1 else { continue }
             if let old = latestFix, fix.timestamp <= old.timestamp { continue }
-            let meters = latestFix.map { fix.distance(from: $0) }
-            pendingDistance += outdoorDistance.observe(
+            let previousFix = latestFix
+            let meters = previousFix.map { fix.distance(from: $0) }
+            let accepted = outdoorDistance.observe(
                 timestamp: fix.timestamp.timeIntervalSince1970,
                 horizontalAccuracy: fix.horizontalAccuracy,
                 distanceFromPrevious: meters
             )
+            pendingDistance += accepted
             pendingDistanceDuration += outdoorDistance.lastAcceptedDuration
+            acceptedGPSMeters += accepted
+            gpsFixCount += 1; gpsAccuracyTotal += fix.horizontalAccuracy
+            // Aggregate-only comparison for diagnosing path jitter; no coordinates
+            // or individual location samples are written to diagnostics.
+            if let previousFix, outdoorDistance.lastAcceptedDuration > 0,
+               (0...8).contains(previousFix.speed), (0...8).contains(fix.speed),
+               (0...1).contains(previousFix.speedAccuracy), (0...1).contains(fix.speedAccuracy) {
+                let elapsed = outdoorDistance.lastAcceptedDuration
+                comparableGPSMeters += accepted
+                comparableVelocityMeters += (previousFix.speed + fix.speed) * elapsed / 2
+                comparableSeconds += elapsed
+            }
             latestFix = fix
             velocity.observe(time: fix.timestamp.timeIntervalSince1970, speed: fix.speed, accuracy: fix.speedAccuracy)
         }

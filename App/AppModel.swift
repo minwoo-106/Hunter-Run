@@ -636,15 +636,24 @@ import UIKit
     }
     func diagnostics() -> URL? {
         let run = engine?.session
+        let recorded = lastSummary
+        let elapsed = run.map { $0.elapsedSeconds ?? max($0.activeSeconds, Date().timeIntervalSince($0.startedAt)) } ?? recorded?.elapsedSeconds ?? 0
         let report = """
-        Hunter Run 1.0.0
+        Hunter Run \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown")
         Device: \(UIDevice.current.model)
         iOS: \(UIDevice.current.systemVersion)
         Location: \(permissionText)
         Signal: \(signal.rawValue)
         Movement: \(movement.rawValue)
         Activity seconds: \(run?.activeSeconds ?? 0)
-        Distance meters: \(run?.distance ?? 0)
+        Elapsed seconds: \(elapsed)
+        Distance meters: \(run?.distance ?? recorded?.distance ?? 0)
+        GPS accepted path meters: \(sensor.acceptedGPSMeters)
+        GPS comparable path meters: \(sensor.comparableGPSMeters)
+        GPS comparable speed-integral meters: \(sensor.comparableVelocityMeters)
+        GPS comparable seconds: \(sensor.comparableSeconds)
+        GPS fixes: \(sensor.gpsFixCount)
+        GPS average horizontal accuracy meters: \(sensor.averageGPSAccuracy.map { String(format: "%.1f", $0) } ?? "n/a")
         Phase: \(run?.phase.rawValue ?? "idle")
         Simulated: \(run?.simulated ?? false)
         Last location error: \(sensor.lastError ?? "none")

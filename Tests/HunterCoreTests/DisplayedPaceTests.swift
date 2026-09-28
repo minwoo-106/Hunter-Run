@@ -56,7 +56,7 @@ final class DisplayedPaceTests: XCTestCase {
         var display = DisplayedPace()
         for t in 0...15 { display.update(frame(Double(t), 2)) }
         var previous = display.speed ?? 0
-        for t in 16...32 {
+        for t in 16...60 {
             display.update(frame(Double(t), 3.5))
             let current = display.speed ?? 0
             XCTAssertLessThanOrEqual(abs(current - previous), 0.150001)
@@ -67,7 +67,30 @@ final class DisplayedPaceTests: XCTestCase {
     func testCallbackFrequencyDoesNotWeightRecentSpeedMoreHeavily() {
         var regular = DisplayedPace(), frequent = DisplayedPace()
         for t in 0...20 { regular.update(frame(Double(t), t <= 10 ? 2 : 3)) }
-        for step in 0...200 { frequent.update(frame(Double(step) / 10, step <= 100 ? 2 : 3)) }
+        for step in 0...200 {
+            let velocity = step <= 100 ? 2.0 : 3.0
+            frequent.update(SensorFrame(timestamp: Double(step) / 10, speed: velocity,
+                                        distance: velocity / 10, movement: .running, signal: .good))
+        }
         XCTAssertEqual(regular.speed ?? 0, frequent.speed ?? 0, accuracy: 0.001)
+    }
+
+    func testSteadyWalkWithOscillatingGPSVelocityKeepsReadablePace() {
+        var display = DisplayedPace()
+        var paces: [Double] = []
+        for second in 0...180 {
+            // A fix every six seconds reports the same distance traveled, while
+            // CLLocation.speed swings between 8 and 20 minutes per kilometer.
+            let distance = second > 0 && second.isMultiple(of: 6) ? 8.4 : 0
+            let velocity = (second / 24).isMultiple(of: 2) ? 2.08 : 0.83
+            display.update(SensorFrame(timestamp: Double(second), speed: velocity,
+                                       distance: distance, movement: .walking, signal: .good,
+                                       distanceDuration: distance > 0 ? 6 : nil))
+            if second >= 60, let speed = display.speed { paces.append(1000 / speed) }
+        }
+        XCTAssertGreaterThan(paces.count, 100)
+        XCTAssertLessThan((paces.max() ?? 0) - (paces.min() ?? 0), 90,
+                          "steady 1.4 m/s distance must not display 8–20 min/km swings")
+        XCTAssertEqual((paces.last ?? 0) / 60, 11.9, accuracy: 0.75)
     }
 }
