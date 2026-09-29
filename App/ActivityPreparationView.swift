@@ -31,6 +31,26 @@ struct SetupView: View {
                             Button("일반 활동으로 돌아가기") { model.selectQuest(nil) }.buttonStyle(GameButtonStyle())
                         }.card().accessibilityIdentifier("setup.exam")
                     } else { modes }
+                    if model.selectedMode == .contract && model.activeExam == nil && model.canTrackGate {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Toggle("일반 게이트 추적", isOn: Binding(
+                                get: { model.save.profile.gateProgress?.tracking == true },
+                                set: { model.setGateTracking($0) }
+                            )).tint(Theme.teal).accessibilityIdentifier("gate.tracking")
+                            let progress = model.save.profile.gateProgress ?? GateProgress()
+                            if progress.pending {
+                                Text("게이트 위치를 확인했어요. 다음 적격 야외 현장 사냥에서 다시 접근할 수 있어요.")
+                                    .foregroundStyle(Theme.teal)
+                            } else if progress.missedEligibleSessions > 0 {
+                                Text("흔적 분석 1 / 2 · 다음 적격 야외 현장 사냥에서 게이트를 발견해요.")
+                                    .foregroundStyle(Theme.teal)
+                            } else {
+                                Text("야외 현장 사냥에서 게이트 흔적을 추적해요. 두 번의 적격 활동 안에 위치를 특정해요.")
+                                    .foregroundStyle(Theme.muted)
+                            }
+                            if indoor { Text("실내 활동에서는 게이트 추적 횟수가 소모되지 않아요.").foregroundStyle(Theme.muted) }
+                        }.font(.caption).card()
+                    }
                     goal
                     VStack(alignment: .leading, spacing: 10) {
                         Label("함께 진행하는 의뢰", systemImage: "list.clipboard").font(.headline)
@@ -46,12 +66,11 @@ struct SetupView: View {
                     }.card()
                     if model.selectedMode == .gate && model.activeExam == nil {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(model.allBosses.first { $0.id == model.selectedBoss }?.name ?? "일반 게이트").font(.headline)
+                            Text(model.allBosses.first { $0.id == model.selectedBoss }?.name ?? "토벌 대상을 선택해주세요").font(.headline)
                             if indoor && model.allBosses.first(where: { $0.id == model.selectedBoss })?.requiredBossClear != nil {
-                                Text("변이 의뢰는 야외 전용이에요. 야외로 전환하거나 일반 게이트를 선택해주세요.").font(.caption).foregroundStyle(Theme.teal)
+                                Text("변이 재현은 야외 전용이에요. 야외로 전환해주세요.").font(.caption).foregroundStyle(Theme.teal)
                             }
                             Button { bosses = true } label: { Label("토벌 대상 선택", systemImage: "scope") }.buttonStyle(GameButtonStyle()).accessibilityIdentifier("setup.bosses")
-                            if model.selectedBoss != nil { Button("일반 게이트로 변경") { model.selectedBoss = nil }.font(.caption) }
                         }.card()
                     }
                     Button { if indoor { indoorCheck = true } else { beginActivity() } } label: {

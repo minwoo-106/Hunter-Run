@@ -299,6 +299,7 @@ struct ActiveRunView: View {
                 if run.simulated {
                     Text("모의 활동입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
                 } else if let summary = model.lastSummary {
+                    if let completion = summary.completion { Label(completion.title, systemImage: "checkmark.seal.fill").foregroundStyle(Theme.teal) }
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
                     Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
                     if summary.rewardPercent == 50 { Text("실내 활동 보상 50%가 적용됐어요. 의뢰 완료 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted) }

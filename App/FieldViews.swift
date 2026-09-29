@@ -148,6 +148,7 @@ struct RunDetailView: View {
                 Text(run.mode?.title ?? "현장 사냥").font(.largeTitle.bold())
                 Text(run.date, format: .dateTime.year().month().day().hour().minute()).foregroundStyle(Theme.muted)
                 Text(run.activityEnvironment.title).font(.caption).foregroundStyle(Theme.teal)
+                if let completion = run.completion { Label(completion.title, systemImage: "checkmark.seal.fill").foregroundStyle(Theme.teal) }
                 HStack { metric(run.activityEnvironment.isIndoor ? "실내 걸음 수" : "거리", run.activityEnvironment.isIndoor ? "\(run.steps ?? 0)" : String(format: "%.2f km", run.distance / 1000)); Spacer(); metric(run.activityEnvironment.isIndoor ? "활동시간" : run.elapsedSeconds == nil ? "움직인 시간" : "경과시간", clock(run.activityEnvironment.isIndoor ? run.seconds : (run.elapsedSeconds ?? run.seconds))) }.card()
                 if !run.activityEnvironment.isIndoor {
                     HStack {

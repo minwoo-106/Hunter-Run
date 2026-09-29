@@ -213,7 +213,7 @@ struct RankView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         requirement("헌터 레벨", model.save.profile.level, requirements.level)
                         requirement("누적 활동 시간(분)", Progression.activityMinutes(model.save.profile), requirements.runs * 20)
-                        requirement("고위험 게이트 보스 토벌", Progression.gateClears(model.save.profile), requirements.gates)
+                        requirement("누적 게이트 실적", Progression.gateClears(model.save.profile), requirements.gates)
                     }.card()
                     Button("승급 평가 받기") { model.promote() }.buttonStyle(GameButtonStyle(primary: true))
                         .disabled(model.growthLocked || !Progression.canPromote(model.save.profile))

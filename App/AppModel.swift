@@ -94,10 +94,13 @@ private struct CharacterVoiceCatalog: Decodable {
         guard !selectedEnvironment.isIndoor || indoorRemaining > 0 else { return false }
         if let quest = activeExam { return isReady && !recoverable && quest.available(save.profile) }
         guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
-        guard selectedMode == .gate, let id = selectedBoss else { return true }
+        guard selectedMode == .gate else { return true }
+        guard let id = selectedBoss else { return false }
         guard let boss = allBosses.first(where: { $0.id == id }), let catalog = progressionCatalog else { return false }
         guard boss.requiredBossClear == nil || !selectedEnvironment.isIndoor else { return false }
-        return boss.available(to: save.profile, catalog: catalog) && BossCampaign.state(boss, profile: save.profile).remainingHP > 0
+        let state = BossCampaign.state(boss, profile: save.profile)
+        return boss.available(to: save.profile, catalog: catalog) && state.remainingHP > 0
+            && (state.clears == 0 || BossCampaign.allowsReplay(boss))
     }
     func refreshLobbyMusic() {
         var context = LobbyMusicContext()
@@ -152,6 +155,10 @@ private struct CharacterVoiceCatalog: Decodable {
     let content: GameContent?
     let progressionCatalog: ProgressionCatalog?
     let missions: MissionCatalog?
+    let gateBalance: GateBalance = {
+        let loaded: GateBalance? = AppModel.resource("gate-balance")
+        return loaded?.isValid == true ? loaded! : GateBalance()
+    }()
     let fieldEncounters: EncounterCatalog? = AppModel.resource("encounters")
     let world: WorldContent?
     var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
@@ -183,6 +190,17 @@ private struct CharacterVoiceCatalog: Decodable {
     func modeAllowed(_ mode: RunMode) -> Bool {
         guard let progressionCatalog else { return false }
         return Progression.allows(mode, profile: save.profile, catalog: progressionCatalog)
+    }
+    var canTrackGate: Bool {
+        progressionCatalog.map { GateTracking.canTrack(save.profile, catalog: $0) } ?? false
+    }
+    func setGateTracking(_ enabled: Bool) {
+        guard !growthLocked, canTrackGate else { return }
+        var candidate = save
+        GateTracking.migrate(&candidate.profile)
+        candidate.profile.gateProgress?.tracking = enabled
+        do { try repository.write(candidate); save = candidate }
+        catch { notice = "게이트 추적 설정을 저장하지 못했어요." }
     }
     private var timer: Timer?
     private var lastSaveAt = Date.distantPast
@@ -383,10 +401,19 @@ private struct CharacterVoiceCatalog: Decodable {
         let quest = simulated ? nil : activeExam
         guard quest == nil || quest!.available(save.profile) else { notice = "의뢰 조건을 다시 확인해주세요."; return }
         let mode: RunMode = quest == nil ? selectedMode : quest?.promotion == nil ? .contract : .gate
+        if quest == nil && mode == .gate && selectedBoss == nil && !simulated {
+            notice = "고위험 게이트의 토벌 대상을 먼저 선택해주세요."; return
+        }
         guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
         var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
+        session.rulesVersion = 2
+        session.purpose = quest?.promotion != nil ? .rankExam : .normalActivity
         session.environment = environment; session.steps = environment.isIndoor ? 0 : nil
+        if quest == nil && mode == .contract && !simulated {
+            GateTracking.prepare(&session, profile: save.profile, balance: gateBalance)
+            mission = GateTracking.content(mission, session: session, balance: gateBalance)
+        }
         IndoorDailyLimit.prepare(&session, profile: save.profile)
         if environment.isIndoor { session.allowPursuit = false; session.paceObservation = nil }
         session.questID = quest?.id
@@ -404,9 +431,13 @@ private struct CharacterVoiceCatalog: Decodable {
                   (simulated || boss.available(to: save.profile, catalog: catalog)) else { notice = "주요 보스 토벌 조건을 확인해주세요."; return }
             guard boss.requiredBossClear == nil || !environment.isIndoor else { notice = "변이 토벌은 야외에서 진행해요. 일반 실내 활동은 계속 이용할 수 있어요."; return }
             let state = simulated ? BossState(maximumHP: boss.maximumHP) : BossCampaign.state(boss, profile: save.profile)
+            guard state.clears == 0 || BossCampaign.allowsReplay(boss) || simulated else {
+                notice = "이 대상의 토벌 기록은 재현할 수 없어요."; return
+            }
             guard state.remainingHP > 0 else { notice = "토벌을 완료했습니다. 토벌 게시판에서 새로운 회차를 열 수 있습니다."; return }
             let encounter = BossEncounter(definition: boss, state: state)
             session.boss = encounter; mission = encounter.content
+            session.purpose = state.clears > 0 || boss.requiredBossClear != nil ? .replayTraining : .storyObjective
         }
         if session.boss == nil, let catalog = progressionCatalog, let fieldEncounters {
             mission = fieldEncounters.populate(mission, mode: selectedMode, profile: save.profile, catalog: catalog)
@@ -528,13 +559,19 @@ private struct CharacterVoiceCatalog: Decodable {
         guard engine != nil else { return }
         engine?.end(); sensor.stop(); timer?.invalidate(); timer = nil
         guard let run = engine?.session else { return }
-        lastSummary = nil
-        if run.simulated { lastDemo = run }
-        else if let summary = Settlement.apply(run, to: &save.profile) { lastSummary = summary }
-        if !run.simulated { narratives?.refresh(&save.profile) }
-        save.active = nil
-        do { try repository.write(save); lastSaveAt = Date(); resultSaved = true; notice = nil }
-        catch { resultSaved = false; notice = "결과 저장에 실패했습니다. 앱을 종료하지 말고 다시 저장해주세요."; return }
+        var candidate = save
+        let summary = run.simulated ? nil : Settlement.apply(run, to: &candidate.profile)
+        if !run.simulated { narratives?.refresh(&candidate.profile) }
+        candidate.active = nil
+        do {
+            try repository.write(candidate)
+            save = candidate; lastSummary = summary
+            if run.simulated { lastDemo = run }
+            lastSaveAt = Date(); resultSaved = true; notice = nil
+        } catch {
+            // Keep the prior snapshot and finished activity so a retry can settle it once.
+            resultSaved = false; notice = "결과 저장에 실패했습니다. 앱을 종료하지 말고 다시 저장해주세요."; return
+        }
         recoverable = false
         if announcedResult != run.id {
             announcedResult = run.id
@@ -601,7 +638,7 @@ private struct CharacterVoiceCatalog: Decodable {
         selectedFieldDemo = nil; selectedBoss = boss.id; selectedMode = .gate; showAssociation = false; selectedTab = 2
     }
     func restartBoss(_ boss: BossDefinition) {
-        changeGrowth { save, catalog in try BossCampaign.restart(boss, save: &save, catalog: catalog); return "새 토벌 회차를 열었습니다." }
+        changeGrowth { save, catalog in try BossCampaign.restart(boss, save: &save, catalog: catalog); return "새 재현 회차를 열었습니다." }
     }
     func buy(_ id: String) { changeGrowth { save, catalog in try Progression.buy(id, save: &save, catalog: catalog); return "장비를 확보했습니다. 장착하면 다음 활동부터 적용됩니다." } }
     func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }

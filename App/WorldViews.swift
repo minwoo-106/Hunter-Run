@@ -16,10 +16,19 @@ struct BossHPView: View {
 
 struct BossReportView: View {
     let report: BossReport
+    private var status: String {
+        switch report.completion {
+        case .some(.storyBossFirstClear): return "최초 토벌 완료 · 코어와 게이트 실적을 확보했어요."
+        case .some(.echoReplayClear): return "잔향 재현 완료 · 훈련 보상을 확보했어요."
+        case .some(.mutatedReplayClear): return "변이 재현 완료 · 도전 보상을 확보했어요."
+        case .some(.rankExamClear): return "승급 심사를 통과했어요."
+        default: return report.cleared ? "토벌 완료" : "이번 활동의 피해가 다음 토벌로 이어집니다."
+        }
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(report.name + " · \(report.round)회차").font(.headline)
-            Text(report.cleared ? "토벌 완료 · 추가 EXP 120 / 마정석 15 / 코어 2 포함" : "이번 활동의 피해가 다음 토벌로 이어집니다.").font(.caption).foregroundStyle(Theme.teal)
+            Text(status).font(.caption).foregroundStyle(Theme.teal)
             Text("누적 적용 피해 \(Int(report.damage)) · 남은 HP \(Int(report.remainingHP))").font(.callout)
             ProgressView(value: report.remainingHP, total: report.maximumHP).tint(Theme.teal)
         }.card()
@@ -38,7 +47,7 @@ struct BossBoardView: View {
                 Text("활동을 마칠 때 남은 HP를 저장합니다. 목표를 넘겨 달릴 필요는 없습니다.").foregroundStyle(Theme.muted)
                 Picker("토벌 종류", selection: $mutations) { Text("주요 토벌").tag(false); Text("변이 의뢰").tag(true) }
                     .pickerStyle(.segmented).accessibilityIdentifier("boss.category")
-                if mutations { Text("원형 보스를 완전히 토벌하면 새로운 대응 패턴이 열려요. 변이별 토벌 기록은 따로 이어져요.").font(.caption).foregroundStyle(Theme.muted) }
+                if mutations { Text("기록을 강화한 야외 훈련이에요. 실제 대상이 다시 나타난 것은 아니에요.").font(.caption).foregroundStyle(Theme.muted) }
                 ForEach(model.allBosses.filter { ($0.requiredBossClear != nil) == mutations }) { boss in
                     let state = BossCampaign.state(boss, profile: model.save.profile)
                     let unlocked = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
@@ -54,14 +63,17 @@ struct BossBoardView: View {
                         }
                         Text(concealed ? "미확인 최종 대상" : boss.name).font(.title2.bold())
                         Text(concealed ? (boss.requiredBossClear == "corrupted-hunter" ? "원형 대상 토벌 후 확인할 수 있어요." : "선발대 정화 기록 \(defeatCount) / \(boss.requiredDefeats?.count ?? 0)") : boss.description).font(.callout).foregroundStyle(Theme.muted)
-                        if boss.requiredBossClear != nil { Label("변이 의뢰 · 원형 토벌 후 해금", systemImage: "sparkles").font(.caption).foregroundStyle(Theme.teal) }
+                        if boss.requiredBossClear != nil { Label("변이 재현 · 원형 토벌 후 해금", systemImage: "sparkles").font(.caption).foregroundStyle(Theme.teal) }
+                        else if state.clears > 0 && BossCampaign.allowsReplay(boss) { Label("잔향 재현 · 이미 끝난 전투의 훈련 기록", systemImage: "sparkles").font(.caption).foregroundStyle(Theme.teal) }
                         let encounter = BossEncounter(definition: boss, state: state)
                         BossHPView(name: "\(state.round)회차 · 누적 토벌 \(state.clears)회", remaining: state.remainingHP, maximum: state.maximumHP, phase: encounter.phaseName)
                         if !unlocked { Label("\(boss.requiredRank)급 · 관측부 Lv.2 · 관련 지부 이야기" + (concealed ? " · 선발대 정화 필요" : " 진행 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted) }
-                        if state.remainingHP > 0 {
-                            Button("토벌 활동 준비") { model.prepareBoss(boss); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked).accessibilityIdentifier("boss.prepare." + boss.id)
+                        if state.clears > 0 && !BossCampaign.allowsReplay(boss) {
+                            Text("첫 작전 기록은 보존돼요. 이 대상의 전투 재현은 제공하지 않아요.").font(.caption).foregroundStyle(Theme.muted)
+                        } else if state.remainingHP > 0 {
+                            Button(state.clears > 0 || boss.requiredBossClear != nil ? "재현 활동 준비" : "토벌 활동 준비") { model.prepareBoss(boss); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked).accessibilityIdentifier("boss.prepare." + boss.id)
                         } else {
-                            Button("새 토벌 회차 열기") { model.restartBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
+                            Button("새 재현 회차 열기") { model.restartBoss(boss) }.buttonStyle(GameButtonStyle(primary: true)).disabled(!unlocked || model.growthLocked)
                         }
                         if AppModel.testHarness {
                             Button("모의 토벌 준비") { model.prepareBoss(boss, simulated: true); dismiss() }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked).accessibilityIdentifier("boss.demo." + boss.id)
@@ -78,16 +90,16 @@ struct BossSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             Text("게이트 임무 선택").font(.headline)
-            Button { model.selectedBoss = nil } label: { Label("일반 게이트", systemImage: model.selectedBoss == nil ? "checkmark.circle.fill" : "circle") }.buttonStyle(GameButtonStyle())
             ForEach(model.allBosses) { boss in
                 let available = model.progressionCatalog.map { boss.available(to: model.save.profile, catalog: $0) } ?? false
+                let state = BossCampaign.state(boss, profile: model.save.profile)
+                let playable = available && state.remainingHP > 0 && (state.clears == 0 || BossCampaign.allowsReplay(boss))
                 let concealed = (boss.requiredDefeats?.contains { !FieldDiscovery.defeated($0, in: model.save.profile) } ?? false)
                     || (boss.requiredBossClear == "corrupted-hunter" && (model.save.profile.bosses?["corrupted-hunter"]?.clears ?? 0) == 0)
                 Button { model.selectedBoss = boss.id } label: {
                     HStack { Image(systemName: model.selectedBoss == boss.id ? "checkmark.circle.fill" : "circle"); Text(concealed ? "미확인 최종 대상" : boss.name); Spacer(); if !available { Image(systemName: "lock.fill") } }
-                }.buttonStyle(GameButtonStyle()).disabled(!available)
+                }.buttonStyle(GameButtonStyle()).disabled(!playable)
                 if model.selectedBoss == boss.id {
-                    let state = BossCampaign.state(boss, profile: model.save.profile)
                     BossHPView(name: boss.name, remaining: state.remainingHP, maximum: state.maximumHP, phase: BossEncounter(definition: boss, state: state).phaseName)
                     if !available { Text("\(boss.requiredRank)급과 관측부 Lv.2를 갖추고, 관련 지부 이야기를 이어가면 열려요.").font(.caption).foregroundStyle(Theme.muted) }
                 }
