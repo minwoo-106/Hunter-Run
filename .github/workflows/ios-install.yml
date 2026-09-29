@@ -29,7 +29,6 @@ jobs:
             brew install xcodegen
           fi
           xcodegen generate
-          xcodebuild -downloadComponent MetalToolchain
 
       - name: Compile iPhone app
         run: |
