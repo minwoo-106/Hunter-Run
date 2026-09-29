@@ -80,7 +80,10 @@ public struct StoryRequirement: Codable, Equatable {
         case "rank": return Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0
         case "departments": return AssociationStage.upgrades(profile)
         case "quest": return profile.journey?.completedQuests.contains(key ?? "") == true ? 1 : 0
-        case "boss": return profile.bosses?[key ?? ""]?.clears ?? profile.runs.filter { $0.majorBoss?.bossID == key && $0.majorBoss?.cleared == true }.count
+        case "boss":
+            let firstClear = (profile.bosses?[key ?? ""]?.clears ?? 0) > 0
+                || profile.runs.contains { $0.majorBoss?.bossID == key && $0.majorBoss?.cleared == true }
+            return firstClear ? 1 : 0
         case "story": return profile.journey?.completed.contains(key ?? "") == true ? 1 : 0
         case "memory": return profile.journey?.memories[key ?? ""] == "yes" ? 1 : 0
         case "vanguard": return ["warrior", "mage", "archer", "cleric"].filter { FieldDiscovery.defeated("corrupted-vanguard-" + $0, in: profile) }.count

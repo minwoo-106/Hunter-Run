@@ -3,7 +3,8 @@ import Foundation
 /// Reproducible timing variation: recovery never rerolls an in-flight patrol.
 public enum RunDirector {
     public static func events(_ content: GameContent, session: RunSession, cycle: Int) -> [MissionTemplate] {
-        content.events.map { template in
+        content.events.compactMap { template -> MissionTemplate? in
+            if cycle > 0 && template.id == GateTracking.eventID { return nil }
             var event = template
             if session.directorVersion == 2, template.id != session.priorityEncounterID,
                let pool = content.encounterPools?.first(where: { $0.slotID == template.id }) {

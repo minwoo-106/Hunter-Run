@@ -81,7 +81,18 @@ public struct BossEncounter: Codable {
     public var remainingHP: Double { max(0, startingHP - damage) }
     public var phase: Int { remainingHP / maximumHP > 0.7 ? 0 : remainingHP / maximumHP > 0.35 ? 1 : 2 }
     public var phaseName: String { ["경계", "균열", "핵심 노출"][phase] }
-    public var content: GameContent { definition.phases[phase] }
+    public var content: GameContent {
+        var content = definition.phases[phase]
+        let kind: EncounterKind = definition.id.hasPrefix("exam-") ? .rankExamBoss
+            : definition.requiredBossClear != nil ? .mutatedReplayBoss
+            : round > 1 ? .echoReplayBoss : .storyBoss
+        content.events = content.events.map { template in
+            var event = template
+            if event.kind == .boss { event.encounterKind = kind }
+            return event
+        }
+        return content
+    }
     public var isValid: Bool {
         maximumHP.isFinite && startingHP.isFinite && damage.isFinite && (100...100000).contains(maximumHP)
         && (0...maximumHP).contains(startingHP) && (0...startingHP).contains(damage) && (1...1000000).contains(round)
@@ -96,14 +107,19 @@ public struct BossReport: Codable {
     public var remainingHP: Double
     public var maximumHP: Double
     public var cleared: Bool
+    public var completion: CompletionKind? = nil
 }
 
 public enum BossCampaign {
+    public static func allowsReplay(_ boss: BossDefinition) -> Bool {
+        boss.id != "corrupted-hunter" && !boss.id.hasPrefix("exam-")
+    }
     public static func state(_ boss: BossDefinition, profile: Profile) -> BossState {
         profile.bosses?[boss.id] ?? BossState(maximumHP: boss.maximumHP)
     }
     public static func restart(_ boss: BossDefinition, save: inout SaveState, catalog: ProgressionCatalog) throws {
         guard save.active == nil else { throw ProgressionError.activeRun }
+        guard allowsReplay(boss) else { throw ProgressionError.unavailable }
         guard boss.available(to: save.profile, catalog: catalog) else { throw ProgressionError.unavailable }
         var state = state(boss, profile: save.profile)
         guard state.remainingHP == 0, state.round < 1000000 else { throw ProgressionError.unavailable }
@@ -121,9 +137,13 @@ public enum BossCampaign {
         let damage = min(encounter.damage, max(0, verifiedDamage), state.remainingHP)
         state.remainingHP -= damage
         let cleared = encounter.startingHP > 0 && state.remainingHP == 0
+        let completion: CompletionKind? = !cleared ? nil
+            : encounter.definition.id.hasPrefix("exam-") ? .rankExamClear
+            : encounter.definition.requiredBossClear != nil ? .mutatedReplayClear
+            : state.clears == 0 ? .storyBossFirstClear : .echoReplayClear
         if cleared { state.clears += 1 }
         var all = profile.bosses ?? [:]; all[encounter.definition.id] = state; profile.bosses = all
-        return BossReport(bossID: encounter.definition.id, name: encounter.definition.name, round: state.round, damage: damage, remainingHP: state.remainingHP, maximumHP: state.maximumHP, cleared: cleared)
+        return BossReport(bossID: encounter.definition.id, name: encounter.definition.name, round: state.round, damage: damage, remainingHP: state.remainingHP, maximumHP: state.maximumHP, cleared: cleared, completion: completion)
     }
 }
 

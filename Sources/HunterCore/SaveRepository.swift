@@ -14,9 +14,10 @@ public final class SaveRepository {
         var found = false
         for url in candidates where fm.fileExists(atPath: url.path) {
             found = true
-            if let data = try? Data(contentsOf: url), let save = try? JSONDecoder().decode(SaveState.self, from: data) {
+            if let data = try? Data(contentsOf: url), var save = try? JSONDecoder().decode(SaveState.self, from: data) {
                 // Do not silently load an older backup over a save from a newer app.
                 guard save.schema == 1 else { throw Failure.incompatible }
+                GateTracking.migrate(&save.profile)
                 if (try? validate(save)) != nil { return save }
             }
         }
@@ -48,6 +49,7 @@ public final class SaveRepository {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
         guard save.profile.expeditions?.isValid ?? true else { throw Failure.invalid }
+        guard save.profile.gateProgress?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.journey?.isValid ?? true else { throw Failure.invalid }
         guard (save.profile.discoveredEvents?.count ?? 0) <= 1000,
               (save.profile.discoveredEvents ?? []).allSatisfy({ !$0.isEmpty && $0.count <= 200 }) else { throw Failure.invalid }
@@ -67,7 +69,8 @@ public final class SaveRepository {
             guard run.indoorAllowance.map({ $0.isFinite && (0...IndoorDailyLimit.seconds).contains($0) }) ?? true else { throw Failure.invalid }
             guard (run.steps ?? 0) >= 0, (run.steps ?? 0) <= 100_000_000,
                   !run.isIndoor || (run.distance == 0 && run.activityGoal.kind != .distance) else { throw Failure.invalid }
-            guard run.directorVersion == nil || run.directorVersion == 1 || run.directorVersion == 2,
+            guard run.rulesVersion == nil || run.rulesVersion == 2,
+                  run.directorVersion == nil || run.directorVersion == 1 || run.directorVersion == 2,
                   run.event?.traveledDistance.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.paceObservation?.isValid ?? true,
                   run.learnedReference.map(PaceLearning.validSpeed) ?? true,

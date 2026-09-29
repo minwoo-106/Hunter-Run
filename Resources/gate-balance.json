@@ -1,0 +1,6 @@
+{
+  "firstEncounterChance": 0.6,
+  "eligibleSessionsToGuarantee": 2,
+  "encounterFraction": 0.6,
+  "coreHP": 60
+}

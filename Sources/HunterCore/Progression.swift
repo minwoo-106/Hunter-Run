@@ -5,8 +5,8 @@ public enum RunMode: String, Codable, CaseIterable {
     public var title: String { switch self { case .exploration: return "탐험"; case .contract: return "현장 사냥"; case .gate: return "고위험 게이트" } }
     public var detail: String { switch self {
     case .exploration: return "발견과 조사 중심 · 조사 데이터 보상"
-    case .contract: return "조사와 전투를 함께 · 균형 잡힌 보상"
-    case .gate: return "강한 개체와 보스 · 마정석과 코어 보상"
+    case .contract: return "일반·정예 토벌과 일반 게이트 추적"
+    case .gate: return "대상이 확인된 주요 보스 공략"
     } }
 }
 public enum EquipmentSlot: String, Codable, CaseIterable {
@@ -132,6 +132,9 @@ public enum ProgressionError: LocalizedError {
 public enum Progression {
     public static let ranks = ["E", "D", "C", "B", "A", "S"]
     public static func gateClears(_ profile: Profile) -> Int {
+        profile.gateProgress?.totalCredits ?? legacyGateClears(profile)
+    }
+    public static func legacyGateClears(_ profile: Profile) -> Int {
         profile.runs.filter { run in run.mode == .gate && (run.majorBoss?.cleared == true || run.records.contains { $0.catalogID == "gate-core" && $0.defeated == true }) }.count
     }
     public static func nextRank(_ profile: Profile) -> String? {

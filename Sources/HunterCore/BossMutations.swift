@@ -3,7 +3,7 @@ import Foundation
 /// Optional post-clear patterns reuse the world creature and have independent saved HP/rounds.
 public enum BossMutations {
     public static func all(_ world: WorldContent) -> [BossDefinition] {
-        world.bosses.flatMap { parent in
+        world.bosses.filter(BossCampaign.allowsReplay).flatMap { parent in
             (0...1).map { variant in
                 let id = "mutation-" + parent.id + (variant == 0 ? "-echo" : "-seal")
                 let label = variant == 0 ? "잔향 분열" : "봉인 역류"

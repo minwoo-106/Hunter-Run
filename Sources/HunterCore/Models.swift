@@ -34,6 +34,7 @@ public struct MissionTemplate: Codable, Identifiable {
     public var shortAudio: String? = nil
     public var burstSeconds: Double? = nil
     public var steadyAudio: String? = nil
+    public var encounterKind: EncounterKind? = nil
     public var requestsAcceleration: Bool { kind == .pursuit || burstSeconds != nil }
     public mutating func useSteadyAlternative() {
         burstSeconds = nil
@@ -93,6 +94,7 @@ public struct EventRecord: Codable, Identifiable {
     public var defeated: Bool? = nil
     public var kind: EventKind? = nil
     public var accelerated: Bool? = nil
+    public var encounterKind: EncounterKind? = nil
 }
 public struct RunSession: Codable, Identifiable {
     public var id = UUID()
@@ -136,6 +138,14 @@ public struct RunSession: Codable, Identifiable {
     public var paceCooldownUntil: Double? = nil
     public var directorVersion: Int? = nil
     public var questID: String? = nil
+    /// Nil means this activity was saved before the completion-based rules.
+    public var rulesVersion: Int? = nil
+    public var purpose: ActivityPurpose? = nil
+    public var gateTracking: Bool? = nil
+    public var gateScheduled: Bool? = nil
+    public var gateOpportunityQualified: Bool? = nil
+    public var gatePresented: Bool? = nil
+    public var gateWindowFraction: Double? = nil
     /// An actively tracked hunting quest keeps its required encounter available.
     public var priorityEncounterID: String? = nil
     public var environment: ActivityEnvironment? = nil
@@ -175,6 +185,7 @@ public struct RunSummary: Codable, Identifiable {
     public var steps: Int? = nil
     // Nil preserves the full-rate meaning of previously settled activity records.
     public var rewardPercent: Int? = nil
+    public var completion: CompletionKind? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"
@@ -192,6 +203,8 @@ public struct Profile: Codable {
     public var discoveredEvents: Set<String>? = nil
     public var paceMemory: PaceMemory? = nil
     public var journey: JourneyState? = nil
+    /// Nil identifies a profile that still needs its historical gate count frozen.
+    public var gateProgress: GateProgress? = GateProgress()
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
         set { progression = newValue }

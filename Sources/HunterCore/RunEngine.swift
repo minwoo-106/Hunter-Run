@@ -137,6 +137,14 @@ public struct RunEngine {
         }
         if session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
 
+        if session.gateTracking == true
+            && session.patrolCycle == 0 && session.event == nil
+            && frame.movement == .running && frame.signal == .good
+            && session.activeSeconds >= session.patrolDuration * (session.gateWindowFraction ?? GateBalance().encounterFraction)
+            && (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds >= 75 {
+            session.gateOpportunityQualified = true
+        }
+
         if var event = session.event {
             if event.stage == .briefing { return cues }
             let requiresRunning = event.template.kind != .discovery
@@ -214,6 +222,10 @@ public struct RunEngine {
         let patrolContent = session.boss?.content ?? content
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
+            let isNormalGate = next.id.components(separatedBy: "#").first == GateTracking.eventID
+            if isNormalGate && (session.isIndoor || session.withdrawn || frame.movement != .running || frame.signal != .good
+                || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
+                || AccelerationRules.needsEasyMovement(session)) { return cues }
             if next.id.components(separatedBy: "#").first == session.priorityEncounterID,
                !session.isIndoor && (frame.movement != .running || frame.signal != .good
                     || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
@@ -253,6 +265,7 @@ public struct RunEngine {
                 next.hp = boss.remainingHP
             }
             session.event = RunEvent(template: next, hp: next.hp, startingHP: next.hp, baseline: PaceLearning.effectiveBaseline(current: session.baseline, learned: session.learnedReference, fallback: frame.speed))
+            if isNormalGate && next.kind == .boss { session.gatePresented = true }
             cues += [.voice(next.audio), .checkpoint]
         }
         return cues
@@ -261,7 +274,7 @@ public struct RunEngine {
         guard let event = session.event else { return }
         if event.template.kind != .discovery { session.paceCooldownUntil = session.activeSeconds + 60 }
         if event.burstStarted == true { session.lastIntensityAt = session.activeSeconds }
-        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted))
+        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted, encounterKind: event.template.encounterKind))
         session.event = nil
     }
 }
@@ -270,21 +283,30 @@ public enum Settlement {
         guard session.phase == .finished, !session.simulated,
               ActivityRecordPolicy.qualifies(session.activeSeconds),
               !profile.settled.contains(session.id) else { return nil }
+        GateTracking.migrate(&profile)
         FieldDiscovery.record(session, profile: &profile)
         let completed = session.records.filter { $0.outcome != .neutral }.count
         let bossReport = BossCampaign.settle(session, to: &profile)
+        let normalGateClear = session.records.contains {
+            $0.catalogID == GateTracking.eventID && $0.kind == .boss
+                && $0.defeated == true && $0.outcome != .neutral
+                && ($0.encounterKind == .normalGate || session.rulesVersion == nil)
+        } && (session.gatePresented == true || session.rulesVersion == nil && session.mode == .gate)
+        let completion = bossReport?.completion ?? (normalGateClear ? CompletionKind.normalGateClear : nil)
         let percent = session.activityEnvironment.rewardPercent
         // Round once per currency after totaling the activity. One-time quest claims are separate.
-        let xp = (Int(session.activeSeconds / 10) + completed * 20 + (bossReport?.cleared == true ? 120 : 0)) * percent / 100
-        let crystals = (Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2) + (bossReport?.cleared == true ? 15 : 0)) * percent / 100
+        let oldRules = session.rulesVersion == nil
+        let bonus = CompletionRewards.bonus(completion, oldRules: oldRules, bossCleared: bossReport?.cleared == true)
+        let xp = (Int(session.activeSeconds / 10) + completed * 20 + bonus.xp) * percent / 100
+        let crystals = (Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2) + bonus.crystals) * percent / 100
         let discoveries = session.records.filter { $0.kind == .discovery && $0.outcome != .neutral }.count
         let research = (completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)) * percent / 100
-        let regularCores = session.mode == .gate && session.records.contains { $0.catalogID == "gate-core" && $0.defeated == true } ? 1 : 0
-        let cores = bossReport?.cleared == true ? 2 : regularCores
+        let cores = bonus.cores
         let paceReport = PaceLearning.settle(session, profile: &profile)
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, elapsedSeconds: session.elapsedSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent)
+        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, elapsedSeconds: session.elapsedSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent, completion: completion)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
+        GateTracking.settle(session, completion: completion, profile: &profile)
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)
         let previousQuests = profile.journey?.completedQuests ?? []
         Quests.settle(session, profile: &profile)

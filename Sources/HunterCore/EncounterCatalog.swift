@@ -55,7 +55,11 @@ public struct EncounterCatalog: Codable {
         var result = content
         result.encounterPools = content.events.compactMap { slot in
             let alternatives = encounters.filter { $0.slots[mode.rawValue] == slot.id && $0.available(to: profile, catalog: catalog) }
-                .compactMap { mode == .exploration ? $0.survey : $0.event }
+                .compactMap { entry -> MissionTemplate? in
+                    guard var event = mode == .exploration ? entry.survey : entry.event else { return nil }
+                    event.encounterKind = entry.elite ? .eliteMonster : .normalMonster
+                    return event
+                }
             return alternatives.isEmpty ? nil : EncounterPool(slotID: slot.id, alternatives: alternatives)
         }
         return result

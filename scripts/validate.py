@@ -62,6 +62,12 @@ assert icon[25] == 2, "App icon must use opaque RGB"
 print(f"Validated {len(ids)} events, {len(keys)} audio clips, permissions, artwork and app icon.")
 progression = json.loads((root / "Resources/progression.json").read_text(encoding="utf-8"))
 missions = json.loads((root / "Resources/missions.json").read_text(encoding="utf-8"))
+gate_balance = json.loads((root / "Resources/gate-balance.json").read_text(encoding="utf-8"))
+assert gate_balance['eligibleSessionsToGuarantee'] == 2
+assert 0 <= gate_balance['firstEncounterChance'] <= 1
+assert .5 <= gate_balance['encounterFraction'] <= .8
+assert 1 <= gate_balance['coreHP'] <= 1000
+assert (root / 'Resources/Audio/watcher_intro.wav').is_file()
 assert progression['schema'] == missions['schema'] == 1
 assert len(progression['equipment']) == len({e['id'] for e in progression['equipment']}) == 36
 assert {u['department'] for u in progression['upgrades']} == {'observation', 'research', 'equipment', 'contracts'}
