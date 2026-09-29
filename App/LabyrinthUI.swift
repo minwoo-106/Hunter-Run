@@ -161,6 +161,9 @@ struct LaunchGateView: View {
     @EnvironmentObject var model: AppModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var entered = false
+    @State private var entering = false
+    @State private var showingPortal = true
+    @State private var entranceStartedAt: Date?
     private var skip: Bool {
 #if DEBUG && targetEnvironment(simulator)
         return ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-title")
@@ -169,37 +172,67 @@ struct LaunchGateView: View {
 #endif
     }
     var body: some View {
-        if entered || skip { RootView() }
-        else {
-            GeometryReader { geo in
-                ZStack {
-                    LabyrinthBackdrop(dim: 0.02)
-                    VStack(spacing: 18) {
-                        Spacer(minLength: 20)
-                        Text("HUNTER RUN").font(.system(size: min(geo.size.width * 0.09, 42), weight: .semibold, design: .serif)).tracking(4).foregroundStyle(Labyrinth.parchment)
-                        HStack(spacing: 14) {
-                            Rectangle().frame(width: 34, height: 1)
-                            Text("미궁 너머의 기록").font(.subheadline).tracking(3)
-                            Rectangle().frame(width: 34, height: 1)
-                        }.foregroundStyle(Labyrinth.parchment).shadow(color: .black, radius: 4, y: 2)
-                        Spacer(minLength: 80)
-                        Spacer(minLength: 30)
-                        Button {
-                            model.interfaceFeedback()
-                            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) { entered = true }
-                        } label: {
-                            VStack(spacing: 12) {
-                                Image(systemName: "diamond").font(.title3)
-                                Text(model.isReady ? "화면을 터치해 시작" : "기록 확인 후 계속하기").font(.headline).tracking(2)
-                            }.frame(maxWidth: .infinity).frame(minHeight: 90)
-                        }.buttonStyle(.plain).foregroundStyle(Labyrinth.parchment).accessibilityIdentifier("title.enter")
-                        // Keep access to settings / backup recovery even when a save or catalog fails validation.
-                        if !model.isReady { Text("기록을 확인해야 해요. 계속해서 안내를 확인해주세요.").font(.caption).multilineTextAlignment(.center) }
-                        Text("HUNTER RUN  ·  \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")").font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
-                    }.padding(.horizontal, 24).padding(.bottom, 24)
-                }.contentShape(Rectangle()).onTapGesture { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.35)) { entered = true } }
-            }.onAppear { model.refreshLobbyMusic() }
+        ZStack {
+            if entered || skip { RootView() }
+            if showingPortal && !skip {
+                GeometryReader { geo in
+                    ZStack {
+                        LaunchPortalScene(entering: entering, entranceStartedAt: entranceStartedAt,
+                                          reduceMotion: reduceMotion).ignoresSafeArea()
+                        VStack(spacing: 15) {
+                            Spacer().frame(height: geo.size.height * 0.60)
+                            Text("HUNTER RUN")
+                                .font(.system(size: min(geo.size.width * 0.09, 42), weight: .semibold, design: .serif))
+                                .tracking(4).foregroundStyle(Labyrinth.parchment)
+                                .shadow(color: .black, radius: 9)
+                            HStack(spacing: 12) {
+                                Rectangle().frame(width: 22, height: 1)
+                                Text("미궁 너머의 기록").font(.subheadline).tracking(3)
+                                Rectangle().frame(width: 22, height: 1)
+                            }.foregroundStyle(Labyrinth.parchment).shadow(color: .black, radius: 5, y: 2)
+                            Spacer(minLength: 24)
+                            Button(action: beginEntrance) {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "diamond").font(.title3)
+                                    Text(model.isReady ? "화면을 터치해 시작" : "기록 확인 후 계속하기")
+                                        .font(.headline).tracking(2)
+                                }.frame(maxWidth: .infinity).frame(minHeight: 90)
+                            }.buttonStyle(.plain).foregroundStyle(Labyrinth.parchment)
+                                .accessibilityIdentifier("title.enter")
+                            // Preserve entry when catalog recovery is needed.
+                            if !model.isReady {
+                                Text("기록을 확인해야 해요. 계속해서 안내를 확인해주세요.")
+                                    .font(.caption).multilineTextAlignment(.center)
+                            }
+                            Text("HUNTER RUN  ·  \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
+                                .font(.caption2.monospaced()).tracking(2).foregroundStyle(.white.opacity(0.5))
+                        }
+                        .padding(.horizontal, 24).padding(.bottom, 24)
+                        .opacity(entering ? 0 : 1)
+                        .animation(.easeOut(duration: 0.3), value: entering)
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture(perform: beginEntrance)
+                }
+                .ignoresSafeArea()
+                .opacity(entered ? 0 : 1)
+                .allowsHitTesting(!entering)
+            }
         }
+        .background(Theme.ink.ignoresSafeArea())
+        .onAppear { model.refreshLobbyMusic() }
+    }
+
+    private func beginEntrance() {
+        guard !entering && !entered else { return }
+        model.interfaceFeedback()
+        guard !reduceMotion else { entered = true; showingPortal = false; return }
+        entranceStartedAt = Date()
+        entering = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+            withAnimation(.easeOut(duration: 0.22)) { entered = true }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.55) { showingPortal = false }
     }
 }
 

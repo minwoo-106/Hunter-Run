@@ -118,6 +118,13 @@ for asset in transition_art:
     assert width >= 800 and height >= 800, asset
 print('Validated ten navigation transition illustrations.')
 
+launch_art = catalog / 'LaunchPortal.imageset' / 'art.png'
+launch_data = launch_art.read_bytes()
+assert launch_data[:8] == b'\x89PNG\r\n\x1a\n', 'LaunchPortal'
+launch_width, launch_height = struct.unpack('>II', launch_data[16:24])
+assert launch_height > launch_width and launch_width >= 800, 'LaunchPortal'
+print('Validated the animated entrance background.')
+
 variants = json.loads((root / 'Resources/audio-variants.json').read_text(encoding='utf-8'))
 assert set(variants) == {'discovery', 'success', 'partial', 'survey_done'}
 for key, clips in variants.items():
