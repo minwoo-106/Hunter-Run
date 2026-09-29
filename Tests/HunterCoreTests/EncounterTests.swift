@@ -177,4 +177,18 @@ final class EncounterTests: XCTestCase {
         XCTAssertEqual(engine.session.event?.template.kind, .discovery)
         XCTAssertEqual(engine.session.event?.template.id, monster.id)
     }
+    func testShortHuntDoesNotWaitPastItsInvestigationWindow() {
+        let monster = MissionTemplate(id: "dark-elf-scout", title: "정찰병", kind: .ambush,
+            startFraction: 0.4, duration: 25, hp: 70, audio: "scout_intro")
+        let content = GameContent(schema: 1, missionTitle: "Short Hunt", events: [monster])
+        var run = RunSession(targetSeconds: 300, simulated: false, allowPursuit: false, mode: .contract)
+        run.activeSeconds = 120; run.phase = .moving; run.movingStreak = 20
+        var engine = RunEngine(session: run, content: content)
+        for t in 0...45 {
+            engine.consume(frame(Double(t), speed: 1.2, distance: 1.2, movement: .walking))
+            engine.instructionFinished()
+        }
+        XCTAssertEqual(engine.session.records.first?.catalogID, monster.id)
+        XCTAssertEqual(engine.session.records.first?.kind, .discovery)
+    }
 }

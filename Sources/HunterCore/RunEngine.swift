@@ -220,9 +220,13 @@ public struct RunEngine {
                     || AccelerationRules.needsEasyMovement(session)) {
                 return cues
             }
-            if !session.isIndoor && next.kind != .discovery && !safeMotion
+            let scheduledAt = offset + session.patrolDuration * next.startFraction
+            let latestInvestigationStart = (session.activeTimeLimit ?? .greatestFiniteMagnitude)
+                - min(45, next.duration) - 30
+            if !session.isIndoor && (session.mode == .contract || session.boss != nil)
+                && next.kind != .discovery && !safeMotion
                 && (frame.movement != .running || frame.signal != .good)
-                && (session.boss != nil || session.activeSeconds - (offset + session.patrolDuration * next.startFraction) < 90) {
+                && (session.boss != nil || session.activeSeconds < min(scheduledAt + min(90, session.patrolDuration * 0.05), latestInvestigationStart)) {
                 // Hold the unconsumed encounter through a crossing or a brief GPS
                 // dropout. A sustained walk eventually becomes investigation.
                 return cues
@@ -233,8 +237,6 @@ public struct RunEngine {
                 next.useSteadyAlternative()
             }
             session.consumed.insert(next.id)
-            let remaining = (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds
-            if remaining < next.duration + 30 { return [.checkpoint] }
             if next.requestsAcceleration && !AccelerationRules.canOffer(session, frame: frame) {
                 next.useSteadyAlternative()
             }
@@ -244,6 +246,8 @@ public struct RunEngine {
             if next.kind != .discovery && !safeMotion && ((!session.isIndoor && frame.movement != .running) || frame.signal != .good) {
                 next.kind = .discovery; next.burstSeconds = nil; next.audio = "investigate"; next.title = "주변 흔적 조사"; next.duration = min(45, next.duration)
             }
+            let remaining = (session.activeTimeLimit ?? .greatestFiniteMagnitude) - session.activeSeconds
+            if remaining < next.duration + 30 { return [.checkpoint] }
             if next.id.hasPrefix("major-strike"), let boss = session.boss {
                 if boss.remainingHP <= 0 { return [.checkpoint] }
                 next.hp = boss.remainingHP
