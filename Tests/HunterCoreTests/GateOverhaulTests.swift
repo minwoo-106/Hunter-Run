@@ -167,4 +167,153 @@ final class GateOverhaulTests: XCTestCase {
         try repository.write(migrated)
         XCTAssertEqual(try repository.load().profile.gateProgress?.totalCredits, 1)
     }
+
+    func testUntrackedIndoorAndStorySessionsCannotSpendGatePity() {
+        var profile = Profile()
+        var balance = GateBalance(); balance.firstEncounterChance = 1
+        var untracked = finished()
+        GateTracking.prepare(&untracked, profile: profile, balance: balance)
+        XCTAssertNil(untracked.gateTracking)
+        _ = Settlement.apply(untracked, to: &profile)
+
+        profile.gateProgress?.tracking = true
+        var indoor = finished()
+        indoor.environment = .indoor
+        GateTracking.prepare(&indoor, profile: profile, balance: balance)
+        XCTAssertNil(indoor.gateTracking)
+        _ = Settlement.apply(indoor, to: &profile)
+
+        var story = finished(.exploration)
+        story.purpose = .storyObjective
+        GateTracking.prepare(&story, profile: profile, balance: balance)
+        XCTAssertNil(story.gateTracking)
+        _ = Settlement.apply(story, to: &profile)
+        XCTAssertEqual(profile.gateProgress?.missedEligibleSessions, 0)
+        XCTAssertEqual(Progression.gateClears(profile), 0)
+    }
+
+    func testFailedSignalAndShortSessionKeepTrackingPity() {
+        var profile = Profile()
+        profile.gateProgress?.tracking = true
+        var balance = GateBalance(); balance.firstEncounterChance = 0
+        let base = GameContent(schema: 1, missionTitle: "hunt", events: [])
+
+        func observe(seconds: Int, signal: Signal) -> RunSession {
+            var run = RunSession(targetSeconds: Double(seconds), simulated: false, allowPursuit: false, mode: .contract)
+            run.rulesVersion = 2; run.environment = .outdoor
+            GateTracking.prepare(&run, profile: profile, balance: balance)
+            var engine = RunEngine(session: run, content: GateTracking.content(base, session: run, balance: balance))
+            for second in 0...seconds {
+                _ = engine.consume(SensorFrame(timestamp: Double(second), speed: 2.5, distance: 2.5,
+                                               movement: .running, signal: signal))
+                engine.instructionFinished()
+            }
+            engine.end()
+            return engine.session
+        }
+
+        let failedSignal = observe(seconds: 300, signal: .degraded)
+        XCTAssertFalse(failedSignal.gateOpportunityQualified == true)
+        _ = Settlement.apply(failedSignal, to: &profile)
+        XCTAssertEqual(profile.gateProgress?.missedEligibleSessions, 0)
+
+        let short = observe(seconds: 90, signal: .good)
+        XCTAssertFalse(short.gateOpportunityQualified == true)
+        _ = Settlement.apply(short, to: &profile)
+        XCTAssertEqual(profile.gateProgress?.missedEligibleSessions, 0)
+    }
+
+    func testPartialBossAndMutationDoNotChangeCanonicalCredit() throws {
+        let world = try world()
+        let parent = try XCTUnwrap(world.bosses.first { $0.id == "boundary-lord" })
+        var profile = Profile()
+        let parentState = BossState(maximumHP: parent.maximumHP)
+        profile.bosses = [parent.id: parentState]
+        var partial = finished(.gate)
+        var partialEncounter = BossEncounter(definition: parent, state: parentState)
+        partialEncounter.damage = 50
+        partial.boss = partialEncounter
+        partial.records = [EventRecord(id: "major-strike-partial", title: "partial", outcome: .partial,
+                                       damage: 50, defeated: false, kind: .boss)]
+        XCTAssertNil(Settlement.apply(partial, to: &profile)?.completion)
+        XCTAssertEqual(profile.bosses?[parent.id]?.remainingHP, parent.maximumHP - 50)
+        XCTAssertEqual(Progression.gateClears(profile), 0)
+
+        var clearedParent = BossState(maximumHP: parent.maximumHP)
+        clearedParent.remainingHP = 0; clearedParent.clears = 1
+        profile.bosses?[parent.id] = clearedParent
+        let mutation = try XCTUnwrap(BossMutations.all(world).first { $0.requiredBossClear == parent.id })
+        var mutationState = BossState(maximumHP: mutation.maximumHP)
+        mutationState.remainingHP = 40
+        profile.bosses?[mutation.id] = mutationState
+        var replay = finished(.gate)
+        var encounter = BossEncounter(definition: mutation, state: mutationState)
+        encounter.damage = 40
+        replay.boss = encounter
+        replay.records = [EventRecord(id: "major-strike-mutation", title: "mutation", outcome: .success,
+                                      damage: 40, defeated: true, kind: .boss)]
+        let result = Settlement.apply(replay, to: &profile)
+        XCTAssertEqual(result?.completion, .mutatedReplayClear)
+        XCTAssertEqual(result?.cores, 0)
+        XCTAssertEqual(profile.bosses?[parent.id], clearedParent)
+        XCTAssertEqual(Progression.gateClears(profile), 0)
+        XCTAssertNil(Settlement.apply(replay, to: &profile))
+    }
+
+    func testOldExamCreditAndInProgressReplaySurviveMigration() throws {
+        let exam = try XCTUnwrap(Quests.entry("exam-D")?.boss)
+        let parent = try XCTUnwrap(world().bosses.first { $0.id == "boundary-lord" })
+        var save = SaveState()
+        var oldExam = finished(.gate)
+        oldExam.rulesVersion = nil
+        var examEncounter = BossEncounter(definition: exam, state: BossState(maximumHP: exam.maximumHP))
+        examEncounter.damage = exam.maximumHP
+        oldExam.boss = examEncounter
+        oldExam.records = [EventRecord(id: "major-strike-old-exam", title: "exam", outcome: .success,
+                                       damage: exam.maximumHP, defeated: true, kind: .boss)]
+        _ = Settlement.apply(oldExam, to: &save.profile)
+        XCTAssertEqual(Progression.legacyGateClears(save.profile), 1)
+
+        var oldReplay = BossState(maximumHP: parent.maximumHP)
+        oldReplay.round = 2; oldReplay.clears = 1; oldReplay.remainingHP = 40
+        save.profile.bosses?[parent.id] = oldReplay
+        save.profile.gateProgress = nil
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let repository = SaveRepository(directory: folder)
+        try repository.write(save)
+        let restored = try repository.load()
+        XCTAssertEqual(restored.profile.gateProgress?.legacyCredits, 1)
+        XCTAssertEqual(BossCampaign.state(parent, profile: restored.profile), oldReplay)
+        XCTAssertEqual(try repository.load().profile.gateProgress?.totalCredits, 1)
+    }
+
+    func testInterruptedSettlementCanRecoverWithoutDuplicateReward() throws {
+        var save = SaveState()
+        var run = finished()
+        run.records = [EventRecord(id: "trace", title: "trace", outcome: .success,
+                                   damage: 0, defeated: false, kind: .discovery)]
+        save.active = run
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let repository = SaveRepository(directory: folder)
+        try repository.write(save)
+
+        var candidate = save
+        candidate.active = nil
+        let expected = try XCTUnwrap(Settlement.apply(run, to: &candidate.profile))
+        try repository.write(candidate)
+        try Data("interrupted".utf8).write(to: folder.appendingPathComponent("save.json"))
+
+        var recovered = try repository.load()
+        XCTAssertEqual(recovered.active?.id, run.id)
+        recovered.active = nil
+        XCTAssertEqual(Settlement.apply(run, to: &recovered.profile)?.xp, expected.xp)
+        try repository.write(recovered)
+        let final = try repository.load()
+        XCTAssertEqual(final.profile.runs.filter { $0.id == run.id }.count, 1)
+        XCTAssertEqual(final.profile.xp, expected.xp)
+        var retry = final.profile
+        XCTAssertNil(Settlement.apply(run, to: &retry))
+    }
 }
