@@ -150,6 +150,30 @@ final class EncounterTests: XCTestCase {
         XCTAssertEqual(engine.session.records.first?.catalogID, "beast")
         XCTAssertEqual(engine.session.records.first?.defeated, true)
     }
+    func testTrackedWolfSurvivesFreeActivityPatrolBoundary() {
+        let wolf = MissionTemplate(id: "beast", title: "잔향 늑대", kind: .ambush,
+            startFraction: 0.3, duration: 25, hp: 70, audio: "wolf_intro")
+        let trace = MissionTemplate(id: "trace", title: "흔적 조사", kind: .discovery,
+            startFraction: 0.13, duration: 20, hp: 0, audio: "discovery")
+        var run = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false, mode: .contract)
+        run.goal = ActivityGoal(kind: .free)
+        run.priorityEncounterID = "beast"
+        run.directorVersion = 2
+        var engine = RunEngine(session: run, content: GameContent(schema: 1, missionTitle: "Hunt", events: [trace, wolf]))
+
+        for second in 0...1300 {
+            _ = engine.consume(frame(Double(second), speed: 1.2, distance: 1.2, movement: .walking))
+            if engine.session.event?.stage == .briefing { engine.instructionFinished() }
+        }
+        XCTAssertEqual(engine.session.patrolCycle, 1)
+        XCTAssertFalse(engine.session.consumed.contains("beast"))
+
+        for second in 1301...1500 {
+            _ = engine.consume(frame(Double(second)))
+            if engine.session.event?.stage == .briefing { engine.instructionFinished() }
+        }
+        XCTAssertTrue(engine.session.records.contains { $0.catalogID == "beast" && $0.kind == .ambush })
+    }
     func testLaterMonsterWaitsThroughShortWalkAndGPSDip() {
         let monster = MissionTemplate(id: "dark-elf-captain", title: "월영 대장", kind: .ambush,
             startFraction: 0.4, duration: 25, hp: 70, audio: "captain_intro")

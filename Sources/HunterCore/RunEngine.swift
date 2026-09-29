@@ -217,9 +217,19 @@ public struct RunEngine {
             return cues
         }
         guard session.phase != .calibrating, session.movingStreak >= 10 else { return cues }
-        let cycle = session.patrolCycle
-        let offset = Double(cycle) * session.patrolDuration
         let patrolContent = session.boss?.content ?? content
+        let currentCycle = session.patrolCycle
+        // A tracked quest encounter must remain pending when a free/distance
+        // activity enters its next patrol before the signal permits combat.
+        let pendingCycle = session.priorityEncounterID.flatMap { priority in
+            (0..<currentCycle).first { earlier in
+                RunDirector.events(patrolContent, session: session, cycle: earlier).contains {
+                    $0.id.components(separatedBy: "#").first == priority && !session.consumed.contains($0.id)
+                }
+            }
+        }
+        let cycle = pendingCycle ?? currentCycle
+        let offset = Double(cycle) * session.patrolDuration
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
             let isNormalGate = next.id.components(separatedBy: "#").first == GateTracking.eventID
