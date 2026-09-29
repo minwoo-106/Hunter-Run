@@ -104,6 +104,20 @@ for asset in ['HaesolBefore', 'HaesolHairTie', 'HaesolCurious', 'HaesolBeetle']:
     assert height > width and width >= 800, asset
 print('Validated four late-story Haesol portraits.')
 
+transition_art = [
+    'TransitionHomeWork', 'TransitionHomeCoffee', 'TransitionHomeBurger',
+    'TransitionHomeClose', 'TransitionHomeNap', 'TransitionHunterArmory',
+    'TransitionAssociationHall', 'TransitionAssociationGate',
+    'TransitionCodexArchive', 'TransitionCodexScroll',
+]
+for asset in transition_art:
+    art = catalog / (asset + '.imageset') / 'art.png'
+    data = art.read_bytes()
+    assert data[:8] == b'\x89PNG\r\n\x1a\n', asset
+    width, height = struct.unpack('>II', data[16:24])
+    assert width >= 800 and height >= 800, asset
+print('Validated ten navigation transition illustrations.')
+
 variants = json.loads((root / 'Resources/audio-variants.json').read_text(encoding='utf-8'))
 assert set(variants) == {'discovery', 'success', 'partial', 'survey_done'}
 for key, clips in variants.items():
