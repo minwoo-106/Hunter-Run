@@ -21,10 +21,12 @@ struct RelicShape: Shape {
 }
 
 struct LabyrinthBackdrop: View {
+    @Environment(\.labyrinthArtwork) private var inheritedArtwork
     var dim: Double = 0.55
+    var artwork: String? = nil
     var body: some View {
         GeometryReader { geo in
-            Image("LabyrinthEntrance").resizable().scaledToFill()
+            Image(artwork ?? inheritedArtwork).resizable().scaledToFill()
                 .frame(width: geo.size.width, height: geo.size.height).clipped()
                 .overlay(Theme.ink.opacity(dim))
                 .overlay(LinearGradient(colors: [.black.opacity(0.12), Theme.ink.opacity(0.85)], startPoint: .top, endPoint: .bottom))
@@ -33,10 +35,15 @@ struct LabyrinthBackdrop: View {
 }
 
 private struct LabyrinthKey: EnvironmentKey { static let defaultValue = false }
+private struct LabyrinthArtworkKey: EnvironmentKey { static let defaultValue = "LabyrinthEntrance" }
 extension EnvironmentValues {
     var labyrinthStyle: Bool {
         get { self[LabyrinthKey.self] }
         set { self[LabyrinthKey.self] = newValue }
+    }
+    var labyrinthArtwork: String {
+        get { self[LabyrinthArtworkKey.self] }
+        set { self[LabyrinthArtworkKey.self] = newValue }
     }
 }
 
@@ -81,8 +88,8 @@ struct GameControlStyle: ButtonStyle {
 }
 
 extension View {
-    func labyrinthScreen() -> some View {
-        self.background { LabyrinthBackdrop() }.environment(\.labyrinthStyle, true)
+    func labyrinthScreen(artwork: String? = nil) -> some View {
+        self.background { LabyrinthBackdrop(artwork: artwork) }.environment(\.labyrinthStyle, true)
             .tint(Labyrinth.gold).foregroundStyle(Labyrinth.parchment)
             .toolbarBackground(Theme.ink.opacity(0.92), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)

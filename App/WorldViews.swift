@@ -131,7 +131,7 @@ struct CodexView: View {
                     else if category == 2 { ActivityArchiveView() }
                     else { MaterialArchiveView() }
                 }.padding(20)
-            }.labyrinthScreen().navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
+            }.labyrinthScreen(artwork: "TransitionCodexArchive").navigationTitle("도감").navigationBarTitleDisplayMode(.inline)
         }
         .fullScreenCover(isPresented: $archive) { FieldArchiveView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { archive = false }.buttonStyle(GameControlStyle()) } } }
     }

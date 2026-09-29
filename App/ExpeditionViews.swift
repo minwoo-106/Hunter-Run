@@ -10,6 +10,7 @@ struct AssociationView: View {
             else if section == 1 { WeeklySurveyView() }
             else { AssociationFacilitiesView() }
         }.background(Theme.ink).navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
+            .environment(\.labyrinthArtwork, "TransitionAssociationHall")
     }
 }
 struct WeeklySurveyView: View {
