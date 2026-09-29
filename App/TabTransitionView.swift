@@ -10,14 +10,15 @@ struct TabTransition: Identifiable {
 struct TabTransitionSpec {
     let duration: TimeInterval
     let handoff: Double
+    let fadeStart: Double
 
     static func forTab(_ tab: Int) -> Self {
         switch tab {
-        case 0: return .init(duration: 3.7, handoff: 0.94)
-        case 1: return .init(duration: 2.35, handoff: 0.86)
-        case 2: return .init(duration: 2.25, handoff: 0.76)
-        case 3: return .init(duration: 2.55, handoff: 0.70)
-        default: return .init(duration: 2.45, handoff: 0.86)
+        case 0: return .init(duration: 3.7, handoff: 0.78, fadeStart: 0.88)
+        case 1: return .init(duration: 2.35, handoff: 0.72, fadeStart: 0.88)
+        case 2: return .init(duration: 2.25, handoff: 0.70, fadeStart: 0.88)
+        case 3: return .init(duration: 2.55, handoff: 0.70, fadeStart: 0.88)
+        default: return .init(duration: 2.45, handoff: 0.72, fadeStart: 0.88)
         }
     }
 }
@@ -42,7 +43,7 @@ struct TabTransitionView: View {
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .clipped()
-                .opacity(TransitionMath.ramp(progress, 0, 0.07) * (1 - TransitionMath.ramp(progress, transition.spec.handoff, 1)))
+                .opacity(TransitionMath.ramp(progress, 0, 0.07) * (1 - TransitionMath.ramp(progress, transition.spec.fadeStart, 1)))
             }
         }
         .accessibilityHidden(true)

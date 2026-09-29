@@ -34,19 +34,21 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var tabTransition: TabTransition?
     var body: some View {
-        VStack(spacing: 0) {
-        TabView(selection: $model.selectedTab) {
-            HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
-            HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
-            SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
-            NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
-            CodexView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("도감", systemImage: "book") }
-        }
-        .toolbar(.hidden, for: .tabBar)
-        .overlay {
-            if let tabTransition { TabTransitionView(transition: tabTransition) }
-        }
-        HunterTabBar(onSelect: selectTab, isTransitioning: tabTransition != nil)
+        ZStack {
+            VStack(spacing: 0) {
+                TabView(selection: $model.selectedTab) {
+                    HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
+                    HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
+                    SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
+                    NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
+                    CodexView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("도감", systemImage: "book") }
+                }
+                .toolbar(.hidden, for: .tabBar)
+                HunterTabBar(onSelect: selectTab, isTransitioning: tabTransition != nil)
+            }
+            if let tabTransition {
+                TabTransitionView(transition: tabTransition).ignoresSafeArea()
+            }
         }
         .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
