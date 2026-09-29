@@ -46,7 +46,9 @@ public extension RunSession {
         return activityGoal.label
     }
     var reachedGoal: Bool {
-        if let limit = activeTimeLimit { return activeSeconds >= limit }
+        if let limit = activeTimeLimit {
+            return activityEnvironment.isIndoor ? activeSeconds >= limit : (workoutSeconds ?? activeSeconds) >= limit
+        }
         switch activityGoal.kind {
         case .time: return activeSeconds >= activityGoal.value
         case .distance: return distance >= activityGoal.value
@@ -54,7 +56,9 @@ public extension RunSession {
         }
     }
     var goalProgress: Double {
-        if let limit = activeTimeLimit { return min(1, activeSeconds / max(1, limit)) }
+        if let limit = activeTimeLimit {
+            return min(1, (activityEnvironment.isIndoor ? activeSeconds : workoutSeconds ?? activeSeconds) / max(1, limit))
+        }
         switch activityGoal.kind {
         case .time: return min(1, activeSeconds / max(1, activityGoal.value))
         case .distance: return min(1, distance / max(1, activityGoal.value))

@@ -29,7 +29,7 @@ public struct RunEngine {
     }
     public mutating func end(at date: Date = Date()) {
         if session.elapsedSeconds == nil {
-            session.elapsedSeconds = max(session.activeSeconds, date.timeIntervalSince(session.startedAt))
+            session.elapsedSeconds = max(session.activeSeconds, session.workoutSeconds ?? date.timeIntervalSince(session.startedAt))
         }
         guard session.phase != .finished else { return }
         closeEvent(.neutral)
@@ -51,6 +51,12 @@ public struct RunEngine {
             session.movingStreak = 0; return []
         }
         guard !session.manualPause, !session.interruption else { return [] }
+        if session.reachedGoal && session.activityGoal.kind == .time {
+            end(); return [.voice("run_end"), .checkpoint, .goalReached]
+        }
+        if !session.isIndoor {
+            session.workoutSeconds = max(session.activeSeconds, session.workoutSeconds ?? session.activeSeconds) + rawDT
+        }
         let finalRescue = session.boss?.definition.id == "corrupted-hunter" && !session.isIndoor
         if finalRescue && frame.steps > 0 && (frame.movement == .walking || frame.movement == .running) {
             session.lastVerifiedStepAt = frame.timestamp
@@ -68,13 +74,13 @@ public struct RunEngine {
             return []
         }
         // Also end an older restored session already at the new environment limit.
-        if let limit = session.activeTimeLimit, session.activeSeconds >= limit {
-            end(); return [.voice("run_end"), .checkpoint, .goalReached]
-        }
         let moving = (frame.movement == .walking || frame.movement == .running) && (!session.isIndoor || frame.signal == .good)
         guard moving else {
             session.movingStreak = 0
             session.stationarySeconds += rawDT
+            if session.reachedGoal && session.activityGoal.kind == .time {
+                end(); return [.voice("run_end"), .checkpoint, .goalReached]
+            }
             if frame.movement == .vehicle { session.phase = .paused }
             if session.stationarySeconds >= 8, session.phase != .paused {
                 session.phase = .paused; return [.voice("pause"), .checkpoint]

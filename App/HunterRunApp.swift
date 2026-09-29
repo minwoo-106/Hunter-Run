@@ -194,7 +194,7 @@ struct ActiveRunView: View {
                             Text(run.isIndoor ? clock(run.activeSeconds) : String(format: "%.2f", run.distance / 1000)).font(.system(size: 64, weight: .light, design: .rounded)).minimumScaleFactor(0.65)
                             Text(run.isIndoor ? run.activityEnvironment.title : "KILOMETERS").font(.caption.monospaced()).foregroundStyle(Theme.muted)
                             HStack {
-                                metric(run.isIndoor ? "걸음 수" : "경과시간", run.isIndoor ? "\(run.steps ?? 0)" : clock(max(run.activeSeconds, Date().timeIntervalSince(run.startedAt))))
+                                metric(run.isIndoor ? "걸음 수" : "활동시간", run.isIndoor ? "\(run.steps ?? 0)" : clock(run.workoutSeconds ?? run.activeSeconds))
                                 Spacer()
                                 if run.isIndoor { metric("움직임", model.movement == .walking || model.movement == .running ? "감지 중" : "대기") }
                                 else { metric("현재 페이스", model.currentSpeed > 0.5 ? pace(model.currentSpeed) + " /km" : "—") }
@@ -206,10 +206,10 @@ struct ActiveRunView: View {
                                 HStack {
                                     Label("전체 평균 페이스", systemImage: "speedometer")
                                     Spacer()
-                                    Text(averagePace(seconds: max(run.activeSeconds, Date().timeIntervalSince(run.startedAt)), distance: run.distance))
+                                    Text(averagePace(seconds: run.workoutSeconds ?? run.activeSeconds, distance: run.distance))
                                         .monospacedDigit().foregroundStyle(Theme.teal)
                                 }.font(.callout)
-                                Text("평균은 정지 시간을 포함한 경과시간 기준이에요. 1km마다 거리 안내가 나와요.")
+                                Text("평균은 일시정지를 제외한 활동시간 기준이에요. 1km마다 거리 안내가 나와요.")
                                     .font(.caption2).foregroundStyle(Theme.muted)
                             }
                             if !run.isIndoor {

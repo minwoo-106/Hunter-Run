@@ -74,6 +74,7 @@ public final class SaveRepository {
                   run.paceCooldownUntil.map({ $0.isFinite && $0 >= 0 }) ?? true else { throw Failure.invalid }
             guard run.targetSeconds.isFinite, run.targetSeconds >= 60, run.activeSeconds.isFinite,
                   run.activeSeconds >= 0, run.activityGoal.isValid,
+                  run.workoutSeconds.map({ $0.isFinite && $0 >= run.activeSeconds }) ?? true,
                   run.elapsedSeconds.map({ $0.isFinite && $0 >= run.activeSeconds }) ?? true,
                   (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }

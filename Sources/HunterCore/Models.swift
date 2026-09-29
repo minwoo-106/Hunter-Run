@@ -99,8 +99,10 @@ public struct RunSession: Codable, Identifiable {
     public var simulated: Bool
     public var allowPursuit: Bool
     public var activeSeconds: Double = 0
-    /// Wall-clock time from start to finish. Kept separate from moving time
-    /// because crossing waits do not earn activity credit.
+    /// Unpaused workout time, including safe stops. Nil identifies an older save.
+    public var workoutSeconds: Double? = nil
+    /// Workout time from start to finish for new runs; older records retain
+    /// their original wall-clock elapsed time.
     public var elapsedSeconds: Double? = nil
     public var runningSeconds: Double = 0
     public var distance: Double = 0

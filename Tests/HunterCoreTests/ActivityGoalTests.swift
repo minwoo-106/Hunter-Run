@@ -88,6 +88,30 @@ final class ActivityGoalTests: XCTestCase {
         XCTAssertEqual(e.session.distance, original)
         XCTAssertFalse(e.session.reachedGoal)
     }
+    func testOutdoorTimeGoalUsesUnpausedWorkoutClock() {
+        var e = engine(ActivityGoal(kind: .time, value: 60))
+        for t in 0...30 { step(&e, t) }
+        XCTAssertEqual(e.session.workoutSeconds, 30)
+        e.pause(true)
+        for t in 31...50 { step(&e, t) }
+        XCTAssertEqual(e.session.workoutSeconds, 30)
+        e.pause(false)
+        step(&e, 51) // Re-establish the sensor clock without counting the pause.
+        for t in 52...70 { step(&e, t) }
+        XCTAssertEqual(e.session.workoutSeconds, 49)
+        for t in 71...81 { step(&e, t, speed: 0, movement: .stationary) }
+        XCTAssertEqual(e.session.phase, .finished)
+        XCTAssertEqual(e.session.activeSeconds, 49)
+        XCTAssertEqual(e.session.elapsedSeconds, 60)
+    }
+    func testTwentyMinuteGoalEndsAfterUnpausedTimeIncludingTrafficStop() {
+        var e = engine(ActivityGoal(kind: .time, value: 1200))
+        for t in 0...1100 { step(&e, t) }
+        for t in 1101...1200 { step(&e, t, speed: 0, movement: .stationary) }
+        XCTAssertEqual(e.session.phase, .finished)
+        XCTAssertEqual(e.session.elapsedSeconds, 1200)
+        XCTAssertEqual(e.session.activeSeconds, 1100)
+    }
     func testGoalSurvivesEncodingAndRecoveryWithoutProgressJump() throws {
         var e = engine(ActivityGoal(kind: .distance, value: 1000))
         for t in 0...100 { step(&e, t) }
