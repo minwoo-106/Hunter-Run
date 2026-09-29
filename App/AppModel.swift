@@ -390,6 +390,10 @@ private struct CharacterVoiceCatalog: Decodable {
         IndoorDailyLimit.prepare(&session, profile: save.profile)
         if environment.isIndoor { session.allowPursuit = false; session.paceObservation = nil }
         session.questID = quest?.id
+        if selectedMode == .contract && !environment.isIndoor,
+           let focus = activeQuest?.id, ["wolf-first", "wolf-ten"].contains(focus) {
+            session.priorityEncounterID = "beast"
+        }
         if let definition = quest?.boss {
             session.mode = .gate
             let state = BossCampaign.state(definition, profile: save.profile)

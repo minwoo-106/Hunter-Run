@@ -5,7 +5,8 @@ public enum RunDirector {
     public static func events(_ content: GameContent, session: RunSession, cycle: Int) -> [MissionTemplate] {
         content.events.map { template in
             var event = template
-            if session.directorVersion == 2, let pool = content.encounterPools?.first(where: { $0.slotID == template.id }) {
+            if session.directorVersion == 2, template.id != session.priorityEncounterID,
+               let pool = content.encounterPools?.first(where: { $0.slotID == template.id }) {
                 let key = session.id.uuidString + ":" + template.id
                 let hash = key.utf8.reduce(UInt64(14695981039346656037)) { ($0 ^ UInt64($1)) &* 1099511628211 }
                 let options = [template] + pool.alternatives

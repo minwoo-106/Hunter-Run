@@ -20,4 +20,22 @@ final class OutdoorMovementClassifierTests: XCTestCase {
         XCTAssertEqual(OutdoorMovementClassifier.classify(motion: .vehicle, rawSpeed: 3,
             speed: 3, credibleRunning: true, hasRecentFix: true, hasRecentSteps: false), .vehicle)
     }
+
+    func testSustainedAccurateRunningOverridesStaleWalkingVerdict() {
+        var evidence = OutdoorRunningEvidence()
+        evidence.observe(time: 0, speed: 2.3, speedAccuracy: 0.2, horizontalAccuracy: 8, precise: true)
+        XCTAssertFalse(evidence.confirmed(at: 0))
+        for second in 1...6 {
+            evidence.observe(time: Double(second), speed: 2.3, speedAccuracy: 0.2, horizontalAccuracy: 8, precise: true)
+        }
+        XCTAssertTrue(evidence.confirmed(at: 6))
+        XCTAssertEqual(OutdoorMovementClassifier.classify(motion: .walking, rawSpeed: 2.3,
+            speed: 2.3, credibleRunning: true, hasRecentFix: true, hasRecentSteps: true,
+            sustainedRunning: evidence.confirmed(at: 6)), .running)
+        evidence.observe(time: 7, speed: 2.3, speedAccuracy: 3, horizontalAccuracy: 8, precise: true)
+        XCTAssertFalse(evidence.confirmed(at: 7))
+        XCTAssertEqual(OutdoorMovementClassifier.classify(motion: .walking, rawSpeed: 2.3,
+            speed: 2.3, credibleRunning: false, hasRecentFix: true, hasRecentSteps: true,
+            sustainedRunning: evidence.confirmed(at: 7)), .walking)
+    }
 }

@@ -122,4 +122,29 @@ final class EncounterTests: XCTestCase {
             XCTAssertEqual(engine.session.records.first { $0.catalogID == "beast" }?.kind, expectedKind)
         }
     }
+    func testTrackedFirstWolfWaitsForRunningAndGoodSignal() {
+        let wolf = MissionTemplate(id: "beast", title: "잔향 늑대", kind: .ambush,
+            startFraction: 0.3, duration: 25, hp: 70, audio: "wolf_intro")
+        let rival = MissionTemplate(id: "rival", title: "다른 개체", kind: .ambush,
+            startFraction: 0.3, duration: 25, hp: 70, audio: "rival_intro")
+        var content = GameContent(schema: 1, missionTitle: "Hunt", events: [wolf])
+        content.encounterPools = [EncounterPool(slotID: "beast", alternatives: [rival])]
+        var run = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false, mode: .contract)
+        run.activeSeconds = 400; run.phase = .moving; run.movingStreak = 20
+        run.priorityEncounterID = "beast"; run.directorVersion = 2
+        XCTAssertEqual(RunDirector.events(content, session: run, cycle: 0).first?.id, "beast")
+        var engine = RunEngine(session: run, content: content)
+        engine.consume(frame(0))
+        engine.consume(frame(1, movement: .walking))
+        XCTAssertNil(engine.session.event)
+        XCTAssertFalse(engine.session.consumed.contains("beast"))
+        engine.consume(frame(2))
+        XCTAssertEqual(engine.session.event?.template.id, "beast")
+        engine.instructionFinished()
+        engine.consume(frame(3, signal: .degraded))
+        XCTAssertEqual(engine.session.event?.template.id, "beast")
+        for t in 4...28 { engine.consume(frame(Double(t))) }
+        XCTAssertEqual(engine.session.records.first?.catalogID, "beast")
+        XCTAssertEqual(engine.session.records.first?.defeated, true)
+    }
 }

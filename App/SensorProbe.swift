@@ -33,6 +33,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
     private var stepsAt = Date.distantPast
     private var stepsSpeed: Double = 0
     private var velocity = GPSVelocityWindow()
+    private var runningEvidence = OutdoorRunningEvidence()
     private var outdoorDistance = OutdoorDistanceAccumulator()
     private(set) var acceptedGPSMeters: Double = 0
     private(set) var comparableGPSMeters: Double = 0
@@ -71,7 +72,7 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         self.environment = environment
         let token = UUID(); generation = token
         indoor.reset(); totalSteps = 0; pendingSteps = 0; stepCallbackAt = Date()
-        active = true; sessionStartedAt = Date(); latestFix = nil; velocity.reset(); outdoorDistance.reset(); pendingDistance = 0
+        active = true; sessionStartedAt = Date(); latestFix = nil; velocity.reset(); runningEvidence.reset(); outdoorDistance.reset(); pendingDistance = 0
         acceptedGPSMeters = 0; comparableGPSMeters = 0; comparableVelocityMeters = 0; comparableSeconds = 0
         gpsFixCount = 0; gpsAccuracyTotal = 0
         pendingDistanceDuration = 0; stepsDistance = 0; pendingStepsDistance = 0; pendingStepsDuration = 0; stepsAt = .distantPast; motionAt = .distantPast
@@ -169,6 +170,8 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
             }
             latestFix = fix
             velocity.observe(time: fix.timestamp.timeIntervalSince1970, speed: fix.speed, accuracy: fix.speedAccuracy)
+            runningEvidence.observe(time: fix.timestamp.timeIntervalSince1970, speed: fix.speed,
+                speedAccuracy: fix.speedAccuracy, horizontalAccuracy: fix.horizontalAccuracy, precise: precision)
         }
         onUpdate?()
     }
@@ -196,7 +199,8 @@ final class SensorProbe: NSObject, CLLocationManagerDelegate {
         speed = freshFix ? (gpsSpeed ?? (runSpeed ? rawSpeed : freshSteps ? stepsSpeed : 0)) : freshSteps ? stepsSpeed : 0
         movement = OutdoorMovementClassifier.classify(motion: freshMotion ? motionValue : nil,
             rawSpeed: rawSpeed, speed: speed, credibleRunning: runSpeed,
-            hasRecentFix: freshFix, hasRecentSteps: freshSteps)
+            hasRecentFix: freshFix, hasRecentSteps: freshSteps,
+            sustainedRunning: runningEvidence.confirmed(at: date.timeIntervalSince1970))
         if movement == .stationary || movement == .vehicle { velocity.reset() }
         let useSteps = signal == .unavailable && freshSteps
         let meters = useSteps ? pendingStepsDistance : signal == .unavailable ? 0 : pendingDistance

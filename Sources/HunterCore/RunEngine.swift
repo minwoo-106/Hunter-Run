@@ -141,6 +141,7 @@ public struct RunEngine {
             if event.stage == .briefing { return cues }
             let requiresRunning = event.template.kind != .discovery
             if frame.signal != .good && requiresRunning && !safeMotion {
+                if event.template.id.components(separatedBy: "#").first == session.priorityEncounterID { return cues }
                 // No evaluation under uncertain sensor evidence. Switch to a neutral route.
                 closeEvent(.neutral); return [.voice("signal"), .checkpoint]
             }
@@ -202,6 +203,12 @@ public struct RunEngine {
         let patrolContent = session.boss?.content ?? content
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
         if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
+            if next.id.components(separatedBy: "#").first == session.priorityEncounterID,
+               !session.isIndoor && (frame.movement != .running || frame.signal != .good
+                    || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
+                    || AccelerationRules.needsEasyMovement(session)) {
+                return cues
+            }
             if session.isIndoor { next = IndoorRules.event(next) }
             if finalRescue && next.kind == .boss && next.burstSeconds != nil {
                 // The final rescue never requires a speed surge to advance.

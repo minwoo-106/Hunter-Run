@@ -134,6 +134,8 @@ public struct RunSession: Codable, Identifiable {
     public var paceCooldownUntil: Double? = nil
     public var directorVersion: Int? = nil
     public var questID: String? = nil
+    /// An actively tracked hunting quest keeps its required encounter available.
+    public var priorityEncounterID: String? = nil
     public var environment: ActivityEnvironment? = nil
     public var steps: Int? = nil
     /// Recent pedometer evidence for the final rescue's GPS-safe observation route.
