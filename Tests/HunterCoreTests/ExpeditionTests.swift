@@ -94,7 +94,8 @@ final class ExpeditionTests: XCTestCase {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let world = try JSONDecoder().decode(WorldContent.self, from: Data(contentsOf: root.appendingPathComponent("Resources/world.json")))
         let catalog = try JSONDecoder().decode(ProgressionCatalog.self, from: Data(contentsOf: root.appendingPathComponent("Resources/progression.json")))
-        let variants = BossMutations.all(world); XCTAssertEqual(variants.count, world.bosses.count * 2)
+        let variants = BossMutations.all(world)
+        XCTAssertEqual(variants.count, world.bosses.filter(BossCampaign.allowsReplay).count * 2)
         XCTAssertEqual(Set(variants.map(\.id)).count, variants.count)
         var profile = Profile(); var growth = profile.growth; growth.rank = "S"; growth.departments["observation"] = 2; profile.growth = growth
         var journey = JourneyState(); journey.unlocked = Set((1...19).map { String(format: "M%02d", $0) }); profile.journey = journey

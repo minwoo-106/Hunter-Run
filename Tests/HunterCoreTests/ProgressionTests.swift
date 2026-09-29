@@ -124,14 +124,23 @@ final class ProgressionTests: XCTestCase {
     }
     func testWalkingInvestigationCannotAwardBossCore() throws {
         let missions = try load("missions.json", as: MissionCatalog.self)
-        var engine = RunEngine(session: RunSession(targetSeconds: 300, simulated: false, allowPursuit: false, mode: .gate), content: missions.content(for: .gate, extended: false))
+        var profile = Profile()
+        profile.gateProgress?.tracking = true
+        var balance = GateBalance()
+        balance.firstEncounterChance = 1
+        var session = RunSession(targetSeconds: 300, simulated: false, allowPursuit: false, mode: .contract)
+        session.rulesVersion = 2
+        session.environment = .outdoor
+        GateTracking.prepare(&session, profile: profile, balance: balance)
+        let content = GateTracking.content(missions.content(for: .contract, extended: false), session: session, balance: balance)
+        var engine = RunEngine(session: session, content: content)
         for t in 0...300 {
             engine.consume(SensorFrame(timestamp: Double(t), speed: 1.2, distance: 1.2, movement: .walking, signal: .good))
             engine.instructionFinished()
         }
-        var profile = Profile(); Settlement.apply(engine.session, to: &profile)
-        XCTAssertTrue(engine.session.records.contains { $0.id == "gate-core" })
+        Settlement.apply(engine.session, to: &profile)
+        XCTAssertFalse(engine.session.records.contains { $0.catalogID == GateTracking.eventID })
         XCTAssertEqual(profile.growth.cores, 0)
-        XCTAssertEqual(engine.session.records.reduce(0) { $0 + $1.damage }, 0)
+        XCTAssertEqual(profile.gateProgress?.missedEligibleSessions, 0)
     }
 }
