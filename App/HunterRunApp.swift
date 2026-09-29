@@ -30,6 +30,9 @@ enum Theme {
 }
 struct RootView: View {
     @EnvironmentObject var model: AppModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var tabTransition: TabTransition?
     var body: some View {
         VStack(spacing: 0) {
         TabView(selection: $model.selectedTab) {
@@ -40,12 +43,24 @@ struct RootView: View {
             CodexView().toolbar(.hidden, for: .tabBar).tag(4).tabItem { Label("도감", systemImage: "book") }
         }
         .toolbar(.hidden, for: .tabBar)
-        HunterTabBar()
+        .overlay {
+            if let tabTransition { TabTransitionView(transition: tabTransition) }
+        }
+        HunterTabBar(onSelect: selectTab, isTransitioning: tabTransition != nil)
         }
         .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
         .onAppear { model.refreshLobbyMusic(); model.refreshActivityDisplay() }
-        .onChange(of: model.selectedTab) { _, _ in model.refreshLobbyMusic() }
+        .onChange(of: model.selectedTab) { _, selected in
+            model.refreshLobbyMusic()
+            if let tabTransition, selected != tabTransition.destination { self.tabTransition = nil }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active, let tabTransition {
+                model.selectedTab = tabTransition.destination
+                self.tabTransition = nil
+            }
+        }
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic(); model.refreshActivityDisplay() }
         .onChange(of: model.engine?.session.phase) { _, _ in model.refreshActivityDisplay() }
@@ -64,6 +79,25 @@ struct RootView: View {
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             Button("확인") { model.notice = nil }
         } message: { Text(model.notice ?? "") }
+    }
+
+    private func selectTab(_ destination: Int) {
+        guard destination != model.selectedTab, tabTransition == nil else { return }
+        model.interfaceFeedback()
+        if reduceMotion || ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-title") {
+            model.selectedTab = destination
+            return
+        }
+        let transition = TabTransition(destination: destination, spec: .forTab(destination))
+        tabTransition = transition
+        DispatchQueue.main.asyncAfter(deadline: .now() + transition.spec.duration * transition.spec.handoff) {
+            guard tabTransition?.id == transition.id else { return }
+            model.selectedTab = destination
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + transition.spec.duration) {
+            guard tabTransition?.id == transition.id else { return }
+            tabTransition = nil
+        }
     }
 }
 struct HomeView: View {
@@ -337,7 +371,7 @@ struct HunterView: View {
                         }.card() }.buttonStyle(.plain)
                     }
                 }.padding(22)
-            }.labyrinthScreen().navigationTitle("헌터").navigationBarTitleDisplayMode(.inline)
+            }.labyrinthScreen(artwork: "TransitionHunterArmory").navigationTitle("헌터").navigationBarTitleDisplayMode(.inline)
         }
     }
 }

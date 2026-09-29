@@ -2,12 +2,14 @@ import SwiftUI
 
 struct HunterTabBar: View {
     @EnvironmentObject var model: AppModel
+    let onSelect: (Int) -> Void
+    var isTransitioning = false
     private let labels = ["홈", "헌터", "헌터 활동", "협회 관리", "도감"]
     private let icons = ["house", "person.crop.circle", "figure.run", "building.2", "book"]
     var body: some View {
         HStack(alignment: .center, spacing: 2) {
             ForEach(0..<5) { index in
-                Button { model.interfaceFeedback(); model.selectedTab = index } label: {
+                Button { onSelect(index) } label: {
                     VStack(spacing: 4) {
                         Image(systemName: icons[index]).font(.system(size: index == 2 ? 27 : 21, weight: .semibold))
                         Text(labels[index]).font(.system(size: 11, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
@@ -19,7 +21,8 @@ struct HunterTabBar: View {
                         else if model.selectedTab == index { RoundedRectangle(cornerRadius: 18).fill(.white.opacity(0.07)) }
                     }
                     .offset(y: index == 2 ? -4 : 0)
-                }.buttonStyle(.plain).accessibilityLabel(labels[index]).accessibilityIdentifier("nav.\(index)")
+                }.buttonStyle(.plain).disabled(isTransitioning)
+                    .accessibilityLabel(labels[index]).accessibilityIdentifier("nav.\(index)")
                     .accessibilityAddTraits((model.selectedTab == index) ? .isSelected : [])
             }
         }.padding(.horizontal, 12).padding(.top, 10).padding(.bottom, 4)
