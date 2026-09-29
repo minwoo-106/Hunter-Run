@@ -111,49 +111,94 @@ struct EquipmentView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 ResourceStrip()
-                HStack {
-                    metric("HP", "\(Int(model.stats.hp))"); Spacer()
-                    metric("공격", String(format: "×%.2f", model.stats.attack)); Spacer()
-                    metric("피해 경감", "\(Int(model.stats.defense * 100))%")
-                }.card()
-                Picker("장비 슬롯", selection: $slot) {
-                    ForEach(EquipmentSlot.allCases, id: \.rawValue) { Text($0.title).tag($0) }
-                }.pickerStyle(.segmented)
+                statsCard
+                slotPicker
                 Toggle("보유 장비만 보기", isOn: $ownedOnly).font(.callout)
-                if ownedOnly && !(model.progressionCatalog?.equipment.contains { $0.slot == slot && model.save.profile.growth.owned.contains($0.id) } ?? false) { Text("이 종류의 보유 장비가 없습니다.").foregroundStyle(Theme.muted) }
-                ForEach(model.progressionCatalog?.equipment.filter { $0.slot == slot && (!ownedOnly || model.save.profile.growth.owned.contains($0.id)) } ?? []) { item in
-                    let owned = model.save.profile.growth.owned.contains(item.id)
-                    let equipped = model.save.profile.growth.equipped[item.slot.rawValue] == item.id
-                    let unlocked = item.available(to: model.save.profile)
-                    VStack(alignment: .leading, spacing: 12) {
-                        NavigationLink { EquipmentDetailView(item: item) } label: { HStack(spacing: 14) {
-                            GearArtwork(item: item)
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(item.name).font(.headline)
-                                Text(item.detail).font(.caption).foregroundStyle(Theme.muted)
-                                Text("단계 \(item.tier ?? 1) · \(item.stageName)").font(.caption2).foregroundStyle(Theme.teal)
-                            }
-                            Spacer(minLength: 0)
-                            Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.muted)
-                        } }.buttonStyle(.plain).accessibilityIdentifier("gear." + item.id)
-                        if owned {
-                            Button(equipped ? "장착 해제" : "장착") { model.equip(item.id) }
-                                .buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked)
-                            if equipped { Label("장착 중", systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(Theme.teal) }
-                        } else if unlocked {
-                            Text("마정석 \(item.crystals) · 조사 \(item.research) · 코어 \(item.cores)").font(.caption)
-                            Button("장비 확보") { model.buy(item.id) }.buttonStyle(GameButtonStyle())
-                                .disabled(model.growthLocked || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
-                        } else {
-                            Label("장비지원부 Lv.\(item.supportLevel)" + (item.requiredRank.map { " · " + $0 + "급" } ?? "") + (item.discoveryHint.map { " · " + $0 } ?? " 필요"), systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
-                        }
-                    }.card()
-                }
+                equipmentList
                 Text("장비 효과는 다음 활동 시작 시 적용됩니다. 신발은 게임 피해량만 보정하며 실제 목표 속도를 바꾸지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
         }.labyrinthScreen().navigationTitle("장비 보관함").navigationBarTitleDisplayMode(.inline)
     }
+
+    private var statsCard: some View {
+        HStack {
+            metric("HP", "\(Int(model.stats.hp))"); Spacer()
+            metric("공격", String(format: "×%.2f", model.stats.attack)); Spacer()
+            metric("피해 경감", "\(Int(model.stats.defense * 100))%")
+        }.card()
+    }
+
+    private var slotPicker: some View {
+        Picker("장비 슬롯", selection: $slot) {
+            ForEach(EquipmentSlot.allCases, id: \.rawValue) { Text($0.title).tag($0) }
+        }.pickerStyle(.segmented)
+    }
+
+    private var equipmentList: some View {
+        Group {
+            if ownedOnly && equipment.isEmpty {
+                Text("이 종류의 보유 장비가 없습니다.").foregroundStyle(Theme.muted)
+            }
+            ForEach(equipment) { item in
+                EquipmentListRow(item: item)
+            }
+        }
+    }
+
+    private var equipment: [EquipmentDefinition] {
+        model.progressionCatalog?.equipment.filter { item in
+            item.slot == slot && (!ownedOnly || model.save.profile.growth.owned.contains(item.id))
+        } ?? []
+    }
 }
+
+private struct EquipmentListRow: View {
+    @EnvironmentObject var model: AppModel
+    let item: EquipmentDefinition
+
+    private var owned: Bool { model.save.profile.growth.owned.contains(item.id) }
+    private var equipped: Bool { model.save.profile.growth.equipped[item.slot.rawValue] == item.id }
+    private var unlocked: Bool { item.available(to: model.save.profile) }
+
+    private var lockHint: String {
+        let rank = item.requiredRank.map { " · " + $0 + "급" } ?? ""
+        let discovery = item.discoveryHint.map { " · " + $0 } ?? " 필요"
+        return "장비지원부 Lv.\(item.supportLevel)" + rank + discovery
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            detailLink
+            if owned {
+                Button(equipped ? "장착 해제" : "장착") { model.equip(item.id) }
+                    .buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked)
+                if equipped { Label("장착 중", systemImage: "checkmark.circle.fill").font(.caption).foregroundStyle(Theme.teal) }
+            } else if unlocked {
+                Text("마정석 \(item.crystals) · 조사 \(item.research) · 코어 \(item.cores)").font(.caption)
+                Button("장비 확보") { model.buy(item.id) }.buttonStyle(GameButtonStyle())
+                    .disabled(model.growthLocked || model.save.profile.crystals < item.crystals || model.save.profile.research < item.research || model.save.profile.growth.cores < item.cores)
+            } else {
+                Label(lockHint, systemImage: "lock.fill").font(.caption).foregroundStyle(Theme.muted)
+            }
+        }.card()
+    }
+
+    private var detailLink: some View {
+        NavigationLink { EquipmentDetailView(item: item) } label: {
+            HStack(spacing: 14) {
+                GearArtwork(item: item)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(item.name).font(.headline)
+                    Text(item.detail).font(.caption).foregroundStyle(Theme.muted)
+                    Text("단계 \(item.tier ?? 1) · \(item.stageName)").font(.caption2).foregroundStyle(Theme.teal)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.muted)
+            }
+        }.buttonStyle(.plain).accessibilityIdentifier("gear." + item.id)
+    }
+}
+
 struct RankView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {

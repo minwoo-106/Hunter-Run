@@ -5,23 +5,46 @@ struct EquipmentArchiveView: View {
     var body: some View {
         ForEach(EquipmentSlot.allCases, id: \.rawValue) { slot in
             Text(slot.title).font(.title2.bold()).frame(maxWidth: .infinity, alignment: .leading)
-            ForEach(model.progressionCatalog?.equipment.filter { $0.slot == slot } ?? []) { item in
-                let owned = model.save.profile.growth.owned.contains(item.id)
-                let known = owned || item.available(to: model.save.profile)
-                NavigationLink { EquipmentDetailView(item: item) } label: {
-                    HStack(spacing: 14) {
-                        if known { GearArtwork(item: item, size: 72) }
-                        else { Image(systemName: "lock.shield").font(.title).frame(width: 72, height: 72) }
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(known ? item.name : "미해금 " + slot.title).font(.headline)
-                            Text(owned ? "보유 중" : "장비지원부 Lv." + String(item.supportLevel) + (item.requiredRank.map { " · " + $0 + "급" } ?? "")).font(.caption).foregroundStyle(Theme.muted)
-                            if let hint = item.discoveryHint, !owned { Text(hint).font(.caption).foregroundStyle(Theme.muted) }
-                        }
-                        Spacer(minLength: 0)
-                    }.card()
-                }.buttonStyle(.plain).disabled(!known)
+            ForEach(equipment(in: slot)) { item in
+                EquipmentArchiveRow(item: item, slot: slot)
             }
         }
+    }
+
+    private func equipment(in slot: EquipmentSlot) -> [EquipmentDefinition] {
+        model.progressionCatalog?.equipment.filter { $0.slot == slot } ?? []
+    }
+}
+
+private struct EquipmentArchiveRow: View {
+    @EnvironmentObject var model: AppModel
+    let item: EquipmentDefinition
+    let slot: EquipmentSlot
+
+    private var owned: Bool { model.save.profile.growth.owned.contains(item.id) }
+    private var known: Bool { owned || item.available(to: model.save.profile) }
+
+    private var status: String {
+        if owned { return "보유 중" }
+        let rank = item.requiredRank.map { " · " + $0 + "급" } ?? ""
+        return "장비지원부 Lv.\(item.supportLevel)" + rank
+    }
+
+    var body: some View {
+        NavigationLink { EquipmentDetailView(item: item) } label: {
+            HStack(spacing: 14) {
+                if known { GearArtwork(item: item, size: 72) }
+                else { Image(systemName: "lock.shield").font(.title).frame(width: 72, height: 72) }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(known ? item.name : "미해금 " + slot.title).font(.headline)
+                    Text(status).font(.caption).foregroundStyle(Theme.muted)
+                    if let hint = item.discoveryHint, !owned {
+                        Text(hint).font(.caption).foregroundStyle(Theme.muted)
+                    }
+                }
+                Spacer(minLength: 0)
+            }.card()
+        }.buttonStyle(.plain).disabled(!known)
     }
 }
 struct ActivityArchiveView: View {
