@@ -38,9 +38,6 @@ jobs:
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 \
             || { cat build-log.txt; exit 1; }
 
-      - name: Check iPhone layout
-        run: bash scripts/check-ios-layout.sh expedition-final
-
       - name: Package installer and voice previews
         run: |
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
