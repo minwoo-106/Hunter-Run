@@ -1,0 +1,60 @@
+name: Hunter Run iPhone installer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hunter-run-ios-install
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate game content
+        run: python3 scripts/validate.py
+
+      - name: Test game engine
+        run: swift test
+
+      - name: Prepare Xcode project
+        run: |
+          if ! command -v xcodegen >/dev/null; then
+            brew install xcodegen
+          fi
+          xcodegen generate
+          xcodebuild -downloadComponent MetalToolchain
+
+      - name: Compile iPhone app
+        run: |
+          set -euo pipefail
+          xcodebuild -project HunterRun.xcodeproj -scheme HunterRun \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 \
+            || { cat build-log.txt; exit 1; }
+
+      - name: Check iPhone layout
+        run: bash scripts/check-ios-layout.sh expedition-final
+
+      - name: Package installer and voice previews
+        run: |
+          python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
+          python3 scripts/package-character-preview.py build
+
+      - name: Upload verified installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: HunterRun-1.4.0-build42-iPhone
+          path: |
+            build/HunterRun-1.4.0-build42-unsigned.ipa
+            build/HunterRun-1.4.0-build42-manifest.json
+            build/HunterRun-1.4.0-build42-voice-preview.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
