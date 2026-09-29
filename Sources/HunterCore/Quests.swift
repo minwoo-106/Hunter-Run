@@ -71,6 +71,13 @@ public enum Quests {
         QuestDefinition(id: "exam-" + rank, title: rank + "급 승급 심사", detail: "전용 감시체를 완전히 토벌해요. 피해량은 다음 활동으로 이어져요.", main: index == 0 ? 5 : index == 1 ? 12 : 16, seconds: 0, samples: 0, xp: 120 + index * 60, crystals: 10 + index * 5, research: 5 + index * 2, promotion: rank)
     }
     public static func entry(_ id: String?) -> QuestDefinition? { entries.first { $0.id == id } }
+    public static func priorityEncounterID(for profile: Profile) -> String? {
+        let state = profile.journey ?? JourneyState()
+        return ["wolf-first", "wolf-ten"].contains { id in
+            guard let quest = entry(id) else { return false }
+            return quest.available(profile) && !state.completedQuests.contains(id)
+        } ? "beast" : nil
+    }
     public static func defeats(_ profile: Profile) -> Int {
         profile.runs.flatMap(\.records).filter { $0.catalogID == "beast" && $0.defeated == true && $0.outcome != .neutral }.count
     }

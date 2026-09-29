@@ -2,6 +2,21 @@ import XCTest
 @testable import HunterCore
 
 final class QuestTests: XCTestCase {
+    func testOpenWolfQuestKeepsPriorityWithoutBeingSelected() {
+        var profile = Profile()
+        var journey = JourneyState()
+        journey.unlocked.insert("M01")
+        profile.journey = journey
+        XCTAssertEqual(Quests.priorityEncounterID(for: profile), "beast")
+
+        profile.journey?.completedQuests.insert("wolf-first")
+        XCTAssertNil(Quests.priorityEncounterID(for: profile))
+
+        profile.journey?.unlocked.insert("M03")
+        XCTAssertEqual(Quests.priorityEncounterID(for: profile), "beast")
+        profile.journey?.completedQuests.insert("wolf-ten")
+        XCTAssertNil(Quests.priorityEncounterID(for: profile))
+    }
     func testQuestCatalogMissionValidationAndSeparateExamAccess() throws {
         XCTAssertEqual(Set(Quests.entries.map(\.id)).count, Quests.entries.count)
         for quest in Quests.entries {
