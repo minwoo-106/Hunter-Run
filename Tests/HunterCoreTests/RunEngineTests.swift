@@ -78,11 +78,19 @@ final class RunEngineTests: XCTestCase {
         e.instructionFinished(); step(&e, 106)
         XCTAssertEqual(e.session.event!.elapsed, 1)
     }
-    func testBadGPSClosesCombatNeutrally() {
+    func testBriefGPSLossPreservesCombatButSustainedLossEndsNeutrally() throws {
         var e = make()
         for t in 0...95 { step(&e, Double(t)) }
         e.instructionFinished()
         step(&e, 96, signal: .unavailable)
+        XCTAssertNotNil(e.session.event)
+        XCTAssertTrue(e.session.records.isEmpty)
+        let saved = try JSONDecoder().decode(RunSession.self, from: JSONEncoder().encode(e.session))
+        e = RunEngine(session: saved, content: e.content)
+        step(&e, 97)
+        XCTAssertNotNil(e.session.event)
+        XCTAssertNil(e.session.event?.signalDegradedSince)
+        for t in 98...158 { step(&e, Double(t), signal: .unavailable) }
         XCTAssertNil(e.session.event)
         XCTAssertEqual(e.session.records.first?.outcome, .neutral)
         XCTAssertEqual(e.session.hp, 100)

@@ -141,10 +141,21 @@ public struct RunEngine {
             if event.stage == .briefing { return cues }
             let requiresRunning = event.template.kind != .discovery
             if frame.signal != .good && requiresRunning && !safeMotion {
-                if event.template.id.components(separatedBy: "#").first == session.priorityEncounterID { return cues }
-                // No evaluation under uncertain sensor evidence. Switch to a neutral route.
+                // A single poor fix must not erase a field encounter. An active
+                // acceleration is cancelled immediately because its effort cannot
+                // be judged safely without a reliable signal.
+                if event.template.requestsAcceleration {
+                    closeEvent(.neutral); return [.voice("signal"), .checkpoint]
+                }
+                if event.signalDegradedSince == nil { event.signalDegradedSince = session.activeSeconds }
+                session.event = event
+                if event.template.id.components(separatedBy: "#").first == session.priorityEncounterID
+                    || session.boss != nil || session.activeSeconds - (event.signalDegradedSince ?? session.activeSeconds) < 60 {
+                    return cues
+                }
                 closeEvent(.neutral); return [.voice("signal"), .checkpoint]
             }
+            if event.signalDegradedSince != nil { event.signalDegradedSince = nil; session.event = event }
             if requiresRunning && !session.isIndoor && frame.movement != .running && !safeMotion { return cues }
             if event.stage == .armed {
                 event.elapsed += dt
@@ -207,6 +218,13 @@ public struct RunEngine {
                !session.isIndoor && (frame.movement != .running || frame.signal != .good
                     || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
                     || AccelerationRules.needsEasyMovement(session)) {
+                return cues
+            }
+            if !session.isIndoor && next.kind != .discovery && !safeMotion
+                && (frame.movement != .running || frame.signal != .good)
+                && (session.boss != nil || session.activeSeconds - (offset + session.patrolDuration * next.startFraction) < 90) {
+                // Hold the unconsumed encounter through a crossing or a brief GPS
+                // dropout. A sustained walk eventually becomes investigation.
                 return cues
             }
             if session.isIndoor { next = IndoorRules.event(next) }

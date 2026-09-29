@@ -74,6 +74,8 @@ public struct RunEvent: Codable {
     public var evaluatedSeconds: Double = 0
     public var traveledDistance: Double? = nil
     public var burstStarted: Bool? = nil
+    /// Active workout time when a non-accelerating encounter first lost GPS.
+    public var signalDegradedSince: Double? = nil
     public var instructionAudio: String {
         burstStarted == true && elapsed > 0 ? "burst_resume" : template.audio
     }

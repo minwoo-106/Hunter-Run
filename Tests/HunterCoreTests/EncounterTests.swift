@@ -45,11 +45,14 @@ final class EncounterTests: XCTestCase {
         recovery.instructionFinished(); recovery.consume(frame(61))
         XCTAssertEqual(recovery.session.event?.traveledDistance, 153)
     }
-    func testWeakSignalEndsDistanceBattleNeutrally() {
+    func testWeakSignalPausesDistanceBattleUntilGPSRecovers() {
         var engine = battle(.endurance)
         engine.consume(frame(0)); engine.consume(frame(1, signal: .degraded))
-        XCTAssertEqual(engine.session.records.first?.outcome, .neutral)
-        XCTAssertEqual(engine.session.records.first?.damage, 0)
+        XCTAssertNotNil(engine.session.event)
+        XCTAssertEqual(engine.session.event?.traveledDistance ?? 0, 0)
+        engine.consume(frame(2))
+        XCTAssertEqual(engine.session.event?.traveledDistance, 3)
+        XCTAssertTrue(engine.session.records.isEmpty)
     }
     func testAmbushRequiresRunningWithoutAcceleration() {
         var engine = battle(.ambush)
@@ -113,7 +116,7 @@ final class EncounterTests: XCTestCase {
             run.directorVersion = 2
             var engine = RunEngine(session: run, content: content)
             var wolfIntroduction = false
-            for second in 0...650 {
+            for second in 0...700 {
                 _ = engine.consume(SensorFrame(timestamp: Double(second), speed: movement == .running ? 2.6 : 1.2, distance: movement == .running ? 2.6 : 1.2, movement: movement, signal: .good))
                 if engine.session.event?.template.audio == "wolf_intro" { wolfIntroduction = true }
                 if engine.session.event?.stage == .briefing { engine.instructionFinished() }
@@ -146,5 +149,32 @@ final class EncounterTests: XCTestCase {
         for t in 4...28 { engine.consume(frame(Double(t))) }
         XCTAssertEqual(engine.session.records.first?.catalogID, "beast")
         XCTAssertEqual(engine.session.records.first?.defeated, true)
+    }
+    func testLaterMonsterWaitsThroughShortWalkAndGPSDip() {
+        let monster = MissionTemplate(id: "dark-elf-captain", title: "월영 대장", kind: .ambush,
+            startFraction: 0.4, duration: 25, hp: 70, audio: "captain_intro")
+        let content = GameContent(schema: 1, missionTitle: "Hunt", events: [monster])
+        var run = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false, mode: .contract)
+        run.activeSeconds = 480; run.phase = .moving; run.movingStreak = 20
+        var engine = RunEngine(session: run, content: content)
+        engine.consume(frame(0))
+        engine.consume(frame(1, movement: .walking))
+        engine.consume(frame(2, signal: .degraded))
+        XCTAssertNil(engine.session.event)
+        XCTAssertFalse(engine.session.consumed.contains(monster.id))
+        engine.consume(frame(3))
+        XCTAssertEqual(engine.session.event?.template.id, monster.id)
+        XCTAssertEqual(engine.session.event?.template.kind, .ambush)
+    }
+    func testSustainedWalkingEventuallyChangesUntrackedMonsterToInvestigation() {
+        let monster = MissionTemplate(id: "dark-elf-captain", title: "월영 대장", kind: .ambush,
+            startFraction: 0.4, duration: 25, hp: 70, audio: "captain_intro")
+        let content = GameContent(schema: 1, missionTitle: "Hunt", events: [monster])
+        var run = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false, mode: .contract)
+        run.activeSeconds = 480; run.phase = .moving; run.movingStreak = 20
+        var engine = RunEngine(session: run, content: content)
+        for t in 0...91 { engine.consume(frame(Double(t), speed: 1.2, distance: 1.2, movement: .walking)) }
+        XCTAssertEqual(engine.session.event?.template.kind, .discovery)
+        XCTAssertEqual(engine.session.event?.template.id, monster.id)
     }
 }
