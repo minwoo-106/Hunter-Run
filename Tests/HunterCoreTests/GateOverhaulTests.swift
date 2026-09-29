@@ -51,6 +51,31 @@ final class GateOverhaulTests: XCTestCase {
         XCTAssertEqual(profile.growth.cores, 1)
     }
 
+    func testOutdoorDirectorActuallyOffersTrackedGate() {
+        var profile = Profile()
+        profile.gateProgress?.tracking = true
+        var balance = GateBalance(); balance.firstEncounterChance = 1
+        var run = RunSession(targetSeconds: 300, simulated: false, allowPursuit: false, mode: .contract)
+        run.environment = .outdoor; run.rulesVersion = 2; run.directorVersion = 2
+        GateTracking.prepare(&run, profile: profile, balance: balance)
+        let base = GameContent(schema: 1, missionTitle: "hunt", events: [
+            MissionTemplate(id: "trace", title: "trace", kind: .discovery,
+                            startFraction: 0.13, duration: 20, hp: 0, audio: "investigate")
+        ])
+        let mission = GateTracking.content(base, session: run, balance: balance)
+        var engine = RunEngine(session: run, content: mission)
+        for second in 0...300 {
+            _ = engine.consume(SensorFrame(timestamp: Double(second), speed: 2.5, distance: 2.5,
+                                           movement: .running, signal: .good))
+            engine.instructionFinished()
+        }
+        engine.end()
+        XCTAssertEqual(engine.session.gatePresented, true)
+        XCTAssertTrue(engine.session.records.contains { $0.catalogID == GateTracking.eventID && $0.defeated == true })
+        XCTAssertEqual(Settlement.apply(engine.session, to: &profile)?.completion, .normalGateClear)
+        XCTAssertEqual(Progression.gateClears(profile), 1)
+    }
+
     func testIneligibleHuntDoesNotSpendPityAndRetreatPreservesAccess() {
         var profile = Profile()
         profile.gateProgress?.tracking = true
