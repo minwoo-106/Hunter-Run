@@ -1,74 +1,59 @@
-# Validated PoC — 2026-09-30
+# Approved posture PoC validation — 2026-09-30
 
-Compiled implementation: `2350984cb139853947eb8348612ecc16457b8278`.
-Successful [build and UI verification](https://github.com/minwoo-106/Hunter-Run/actions/runs/36685240440).
-This branch is a separate prototype; it has not been merged into main.
+Compiled implementation: `737eb3bd04908854209f5117f4ba154cc3e9f2d7`.
+Successful [build and UI verification](https://github.com/minwoo-106/Hunter-Run/actions/runs/36693518471).
+Prototype branch only; not merged into main.
 
 ## Results
 
-| Check | Result |
-| --- | --- |
-| Existing game engine | 193 tests passed |
-| Isolated life sequence | 6 tests passed |
-| iPhone 16 Pro, iOS 18.5 simulator | 4 UI tests passed |
-| iPhone SE (3rd generation), iOS 18.5 simulator | Same 4 UI tests passed |
-| Normal iPhone app with PoC flag disabled | Release compilation passed |
-| Separate PoC iPhone app | Release compilation passed |
-| Installer | ZIP CRC, manifest SHA-256, bundle/version/executable verified after download |
-| Compiled pose assets | All four asset names confirmed in the packaged Assets.car |
-| Cue data | Packaged JSON matches the authored data exactly |
-| Existing operator voice data | All 177 clip SHA-256 hashes verified in the downloaded IPA |
+- Existing engine: 193 tests passed; life sequence: 6 tests passed.
+- iPhone 16 Pro and iPhone SE (3rd generation), iOS 18.5: four UI tests each passed.
+- Normal app with PoC disabled and separate PoC: Release compilation passed.
+- Downloaded installer: ZIP CRC, SHA-256, bundle/version/Mach-O checked.
+- Six compiled posture/blink assets present; cue JSON matches source.
+- All 177 existing voice clip hashes match the catalog.
 
-UI checks cover timed doze/wake/idle, first-tap consumption, repeated reaction
-tap, all pose canvases and existing home controls, backgrounding during idle for
-longer than the idle duration, returning from settings, Reduce Motion via a
-simulator-only override combined with the actual system setting, and ordinary
-conversation opening with operator motion disabled. The ordinary conversation
-was verified with its existing `operator.continue` identifier; its navigation
-title is intentionally empty.
+The UI checks exercise doze/wake/idle, consumed first tap and repeated taps,
+background suspension, settings return, Reduce Motion, motion-disabled ordinary
+conversation, and non-overlapping existing home controls. The natural capture
+waits four seconds after doze begins so eyes/shoulders have settled.
 
-Manual screenshot inspection: stretch, settled doze, surprised and embarrassed
-poses render over the existing office with the existing header, greeting card,
-story button and tab bar. Both device sizes keep the existing control regions
-separate; no extra full-screen touch layer was added. The settled doze fixture
-shows closed eyes/lowered chin. A natural-sequence screenshot taken immediately
-on entering doze can still show open eyes, because the eye close settles over
-3.5 seconds. Wait about 14 seconds from launch to see a fully settled doze.
+Manual inspection of large/compact screenshots confirms that overhead hands
+fit below the header, the operator remains behind the greeting card, and
+settings, story and tab controls remain visible. All five body poses differ;
+the old pocket/headset posture is not used by this renderer. The native
+recording begins at the settled doze and shows waking/reaction/idle; the full
+stretch and all five phases also have separate actual-app screenshots.
 
-The illustrated head, belt and sleeve details vary slightly between generated
-poses. Pose crossfades are therefore perceptible, especially around the arm.
-This verifies interaction/life flow; it does not establish final rigging quality.
+This remains a raster key-pose illusion: crossfades, small whole-portrait
+movement and a masked eyelid drawing. It is not continuous joint animation
+or Cubism. Generated face/sleeve/belt details can vary between drawings.
 
-## Performance observations and limits
+## Simulator metrics and limits
 
-Five large-device samples: Timeline callback schedule **29.80–30.00 Hz**,
-simulator app-process physical footprint **26.71–26.84 MiB**.
-Four compact-device samples: schedule **30.00 Hz**, process footprint
-**26.38–26.40 MiB**. Logged simulator thermal state was nominal (0).
+Large device: 8 samples; Timeline callbacks
+25.23–30.00 Hz;
+app physical footprint 26.77–47.44 MiB.
+Compact device: 5 samples;
+callbacks 30.00–30.00 Hz;
+footprint 26.24–46.54 MiB.
 
-These are brief simulator diagnostics, not GPU-presented FPS or a whole-system
-GPU/texture memory total. Simulator rendering services and shared resources can
-be accounted outside the app process. They do not demonstrate physical iPhone
-peak memory, temperature, energy use or long-session stability. Those physical
-device measurements remain unverified; no real iPhone was remotely controlled.
+These are simulator callback/process observations, not GPU-presented FPS,
+whole-system texture memory, physical-device peak memory, temperature or energy.
+Actual iPhone FPS, heating and battery behavior remain unverified.
 
-## Downloads
+## Installer and review
 
-- [PoC installer artifact](https://github.com/minwoo-106/Hunter-Run/actions/runs/36685240440/artifacts/11084875235)
-- [Screenshots and diagnostics artifact](https://github.com/minwoo-106/Hunter-Run/actions/runs/36685240440/artifacts/11083809575)
+Bundle `com.hunterrun.operatorpoc`, display name **Hunter Run PoC**,
+version 1.6.0 / build 51. Separate sandbox; install alongside normal Hunter Run.
+File: `HunterRun-OperatorLife-PoC-build51-unsigned.ipa`, 248,597,523 bytes.
+SHA-256: `fcf6db1e055431127891e6a3f4781f38ed1e5bbf8e914345a6383a12bbd001ed`.
 
-GitHub artifacts expire on 2026-10-07; the downloaded files are also retained in
-the local workspace's `outputs/operator-life-poc` folder. Artifact access uses
-the repository's existing access permissions. Extract the installer ZIP and use
-the `.ipa`; the manifest is a verification record.
+- [Installer ZIP](https://github.com/minwoo-106/Hunter-Run/actions/runs/36693518471/artifacts/11088176543)
+- [Native video, screenshots and diagnostics](https://github.com/minwoo-106/Hunter-Run/actions/runs/36693518471/artifacts/11087626702)
 
-Installer: `HunterRun-OperatorLife-PoC-build50-unsigned.ipa` (246,569,536 bytes).
-Bundle: `com.hunterrun.operatorpoc`, display name **Hunter Run PoC**,
-version 1.6.0 / build 50. Install alongside the normal game.
-
-SHA-256:
-`256ac836eefeb7172efdf206b2519ff19b313509b9432032aecdc32bcc033617`.
-
-Assets and normalized generation prompts are recorded in `asset-prompts.md`;
-the rendering/rigging boundaries and future asset requirements are in `README.md`.
-Only documentation is added after the successful compiled implementation.
+Artifacts expire 2026-10-07. Copies are retained in the workspace
+`outputs/operator-life-poc/build51`. Extract installer ZIP and use only the IPA.
+`README.md` describes implemented controls, raster illusions, required Cubism
+parts and the future renderer seam. `pose-prompts-v2.json` and
+`asset-manifest.json` record the approved generation/copy provenance.
