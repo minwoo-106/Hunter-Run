@@ -205,5 +205,14 @@ for key in ['ui-select', 'ui-reward', 'ui-gate']:
     with wave.open(str(root/'Resources/Effects'/(key + '.wav'))) as effect:
         assert effect.getnframes() > 0 and effect.getsampwidth() == 2
 print('Validated 33 story scenes, expression/background references and three effect resources.')
+for name in [f'FacilityBase-{lv}' for lv in [1,2,3]] + ['FacilityBase-Sanctum'] + [f'Facility-{department}-{lv}' for department in ['observation','research','equipment','contracts'] for lv in [1,2,3]]:
+    folder = catalog / (name + '.imageset')
+    manifest = json.loads((folder / 'Contents.json').read_text(encoding='utf-8'))
+    image = folder / manifest['images'][0]['filename']
+    assert image.read_bytes()[:8] == b'\x89PNG\r\n\x1a\n', name
+for department in ['observation','research','equipment','contracts']:
+    hashes = {hashlib.sha256((catalog / f'Facility-{department}-{lv}.imageset/art.png').read_bytes()).hexdigest() for lv in [1,2,3]}
+    assert len(hashes) == 3, department
+print('Validated 16 facility assets and distinct interiors at all three levels.')
 assert next(s for s in scenes if s['id'] == 'M21')['artwork'] == 'PurificationRoom'
 assert all(len([n for n in s['nodes'] if n.get('choices')]) == 1 for s in scenes if s['id'] in ('M10', 'M13'))

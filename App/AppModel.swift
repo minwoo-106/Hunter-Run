@@ -261,6 +261,18 @@ private struct CharacterVoiceCatalog: Decodable {
             fixture.environment = .indoor; fixture.activeSeconds = 3600; fixture.phase = .finished
             _ = Settlement.apply(fixture, to: &save.profile)
         }
+        if Self.testHarness && !existingSave && arguments.contains("--ui-testing-facilities") {
+            save.profile.crystals = 200; save.profile.research = 200
+            var growth = save.profile.growth; growth.rank = "C"; save.profile.growth = growth
+            var journey = JourneyState(); journey.registered = true
+            if arguments.contains("--ui-testing-sanctum-ready") {
+                journey.completed.insert("M20")
+                var boss = BossState(maximumHP: 3200); boss.remainingHP = 0; boss.clears = 1
+                save.profile.bosses = ["corrupted-hunter": boss]
+            }
+            if arguments.contains("--ui-testing-sanctum-legacy") { journey.memories[HaesolSanctum.restorationKey] = "yes" }
+            save.profile.journey = journey
+        }
         #endif
         if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady || characterCatalog?.clips.count != 39 { notice = "게임 콘텐츠를 읽지 못했습니다." }
         isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && characterCatalog?.clips.count == 39 && !saveBlocked
