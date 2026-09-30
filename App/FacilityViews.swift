@@ -217,8 +217,8 @@ private struct FacilityDust: View {
                 let time = context.date.timeIntervalSinceReferenceDate
                 for index in 0..<10 {
                     let phase = (time / (12 + Double(index)) + Double(index) * 0.173).truncatingRemainder(dividingBy: 1)
-                    let x = size.width * (Double(index) + 0.5) / 10 + sin(time * 0.25 + Double(index)) * 5
-                    let y = size.height * (1 - phase)
+                    let x = size.width * CGFloat((Double(index) + 0.5) / 10) + CGFloat(sin(time * 0.25 + Double(index)) * 5)
+                    let y = size.height * CGFloat(1 - phase)
                     let opacity = sin(phase * .pi) * 0.28
                     canvas.fill(Path(ellipseIn: CGRect(x: x, y: y, width: 1.8, height: 1.8)), with: .color(Labyrinth.parchment.opacity(opacity)))
                 }

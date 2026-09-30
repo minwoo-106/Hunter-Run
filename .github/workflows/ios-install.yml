@@ -43,13 +43,30 @@ jobs:
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
           python3 scripts/package-character-preview.py build
 
+      - name: Verify facility screens on two iPhone sizes
+        run: bash scripts/check-ios-layout.sh facilities
+
+      - name: Upload facility screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HunterRun-1.6.0-build49-screen-review
+          path: |
+            build/ui-review/
+            build/ui-review-small/
+            build/layout-log.txt
+            build/small-layout-log.txt
+            build-log.txt
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.5.1-build48-iPhone
+          name: HunterRun-1.6.0-build49-iPhone
           path: |
-            build/HunterRun-1.5.1-build48-unsigned.ipa
-            build/HunterRun-1.5.1-build48-manifest.json
+            build/HunterRun-1.6.0-build49-unsigned.ipa
+            build/HunterRun-1.6.0-build49-manifest.json
             build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0

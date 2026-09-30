@@ -30,7 +30,7 @@ workflows:
       - build/Small-layout.xcresult
       - build/portrait-checks/*.png
   ios-demo:
-    name: Hunter Run 1.5.1 - wolf encounter continuity
+    name: Hunter Run 1.6.0 - guild facility spaces
     instance_type: mac_mini_m2
     max_build_duration: 30
     triggering:
@@ -60,7 +60,7 @@ workflows:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 || { cat build-log.txt; exit 1; }
       - name: Check home layout in iPhone simulator
-        script: bash scripts/check-ios-layout.sh expedition-final
+        script: bash scripts/check-ios-layout.sh facilities
       - name: Package unsigned IPA for personal signing
         script: |
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
