@@ -60,7 +60,9 @@ final class LifeSequenceTests: XCTestCase {
         XCTAssertTrue(m.consumeTap()); XCTAssertEqual(m.phase, .burgerSurprised)
         m.advance(0.5); XCTAssertTrue(m.consumeTap())
         XCTAssertEqual(m.elapsed, 0.5, accuracy: 0.001)
-        m.advance(0.91); XCTAssertEqual(m.phase, .cola)
+        m.advance(0.91); XCTAssertEqual(m.phase, .burgerFlustered)
+        XCTAssertTrue(m.consumeTap()); XCTAssertLessThan(m.elapsed, 0.02)
+        m.advance(3.2); XCTAssertEqual(m.phase, .cola)
         XCTAssertTrue(m.consumeTap()); XCTAssertLessThan(m.elapsed, 0.02)
         m.advance(2.7); XCTAssertTrue(m.cue?.contains("삼킬 뻔") == true)
         m.advance(2.1); XCTAssertEqual(m.phase, .idle); XCTAssertNil(m.cue)
@@ -74,7 +76,7 @@ final class LifeSequenceTests: XCTestCase {
             m.advance(duration); XCTAssertEqual(m.phase, .idle)
         }
         m.advance(14); XCTAssertEqual(m.phase, .burger)
-        XCTAssertTrue(m.consumeTap()); m.advance(6.21)
+        XCTAssertTrue(m.consumeTap()); m.advance(9.41)
         XCTAssertEqual(m.phase, .idle); m.advance(14); XCTAssertEqual(m.phase, .dozing)
     }
     func testLunchFreezesInBackgroundAndWorksWithReducedMotion() throws {
@@ -86,7 +88,21 @@ final class LifeSequenceTests: XCTestCase {
         m.advance(600); XCTAssertEqual(m.phase, .burgerSurprised)
         XCTAssertEqual(m.elapsed, 0.5, accuracy: 0.001); XCTAssertFalse(m.consumeTap())
         m.configure(available: true, motionEnabled: true, reducedMotion: true)
-        m.advance(6); XCTAssertEqual(m.phase, .idle); XCTAssertTrue(m.frame.reducedMotion)
+        m.advance(9); XCTAssertEqual(m.phase, .idle); XCTAssertTrue(m.frame.reducedMotion)
+    }
+
+    func testChestPatFreezesWithoutRestartAndResumesIntoCola() throws {
+        var m = try machine()
+        m = LifeStateMachine(sequence: m.sequence, initialPhase: .burgerFlustered, initialElapsed: 1)
+        m.configure(available: true, motionEnabled: true, reducedMotion: false)
+        XCTAssertTrue(m.consumeTap()); XCTAssertEqual(m.elapsed, 1)
+        m.configure(available: false, motionEnabled: true, reducedMotion: false)
+        m.advance(600); XCTAssertEqual(m.phase, .burgerFlustered); XCTAssertEqual(m.elapsed, 1)
+        XCTAssertFalse(m.consumeTap())
+        m.configure(available: true, motionEnabled: true, reducedMotion: true)
+        m.advance(2.21); XCTAssertEqual(m.phase, .cola)
+        XCTAssertTrue(m.frame.reducedMotion); XCTAssertTrue(m.consumeTap())
+        m.advance(4.8); XCTAssertEqual(m.phase, .idle)
     }
 
 }

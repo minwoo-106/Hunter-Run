@@ -1,7 +1,7 @@
 import Foundation
 
 // Throwaway, in-memory PoC. No game/save types or rendering assets are referenced here.
-public enum LifePhase: String, Codable, CaseIterable { case stretching, idle, dozing, surprised, embarrassed, coffee, tablet, spacingOut, hairSweep, burger, burgerSurprised, cola }
+public enum LifePhase: String, Codable, CaseIterable { case stretching, idle, dozing, surprised, embarrassed, coffee, tablet, spacingOut, hairSweep, burger, burgerSurprised, burgerFlustered, cola }
 public struct LifeCue: Codable, Equatable {
     public var phase: LifePhase
     public var at: Double
@@ -69,7 +69,8 @@ public struct LifeStateMachine {
                 case .embarrassed: phase = .idle; hasWoken = true
                 case .coffee, .tablet, .spacingOut, .hairSweep, .cola:
                     phase = .idle; hasWoken = true
-                case .burgerSurprised: phase = .cola
+                case .burgerSurprised: phase = .burgerFlustered
+                case .burgerFlustered: phase = .cola
                 case .dozing, .burger: return
                 }
                 elapsed = 0
@@ -82,7 +83,7 @@ public struct LifeStateMachine {
         switch phase {
         case .dozing: phase = .surprised; elapsed = 0; return true
         case .burger: phase = .burgerSurprised; elapsed = 0; return true
-        case .surprised, .embarrassed, .burgerSurprised, .cola: return true // repeated taps cannot restart the reaction
+        case .surprised, .embarrassed, .burgerSurprised, .burgerFlustered, .cola: return true // repeated taps cannot restart the reaction
         default: return false
         }
     }
@@ -101,7 +102,7 @@ public struct LifeStateMachine {
         case .dozing, .burger: return .infinity
         case .surprised: return max(0.1, sequence.surprisedSeconds)
         case .embarrassed: return max(0.1, sequence.embarrassedSeconds)
-        case .coffee, .tablet, .spacingOut, .hairSweep, .burgerSurprised, .cola:
+        case .coffee, .tablet, .spacingOut, .hairSweep, .burgerSurprised, .burgerFlustered, .cola:
             return max(0.1, sequence.activitySeconds?[phase.rawValue] ?? 4)
         }
     }

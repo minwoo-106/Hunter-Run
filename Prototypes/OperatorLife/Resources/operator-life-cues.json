@@ -24,7 +24,7 @@
     {
       "phase": "coffee",
       "at": 0,
-      "text": "잠깐 커피 한 모금만 마실게요."
+      "text": "음… 커피 향이 좋네요."
     },
     {
       "phase": "tablet",
@@ -54,12 +54,17 @@
     {
       "phase": "cola",
       "at": 0,
-      "text": "…"
+      "text": "…쪼옵."
     },
     {
       "phase": "cola",
       "at": 2.6,
       "text": "후우… 놀라서 급하게 삼킬 뻔했어요."
+    },
+    {
+      "phase": "burgerFlustered",
+      "at": 0,
+      "text": "읍… 잠깐만요…!"
     }
   ],
   "activities": [
@@ -76,6 +81,7 @@
     "spacingOut": 5,
     "hairSweep": 3.5,
     "burgerSurprised": 1.4,
-    "cola": 4.8
+    "cola": 4.8,
+    "burgerFlustered": 3.2
   }
 }

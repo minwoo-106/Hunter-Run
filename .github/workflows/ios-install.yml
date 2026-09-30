@@ -44,7 +44,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-OperatorLife-PoC-build52-review
+          name: HunterRun-OperatorLife-PoC-build53-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -63,10 +63,10 @@ jobs:
       - name: Upload verified PoC installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-OperatorLife-PoC-build52-iPhone
+          name: HunterRun-OperatorLife-PoC-build53-iPhone
           path: |
-            build/HunterRun-OperatorLife-PoC-build52-unsigned.ipa
-            build/HunterRun-OperatorLife-PoC-build52-manifest.json
+            build/HunterRun-OperatorLife-PoC-build53-unsigned.ipa
+            build/HunterRun-OperatorLife-PoC-build53-manifest.json
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
