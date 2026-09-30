@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 mkdir -p build
-xcrun simctl list devices available --json > build/simulators.json
-xcrun simctl list devicetypes --json > build/device-types.json
-xcrun simctl list runtimes --json > build/runtimes.json
+python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list devices available --json > build/simulators.json
+python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list devicetypes --json > build/device-types.json
+python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list runtimes --json > build/runtimes.json
 DEVICE_ID=$(python3 - <<'PY'
 import json
 with open('build/simulators.json') as source:
@@ -12,8 +12,8 @@ device = next((d for d in devices if d['name'] == 'iPhone 17 Pro'), devices[0])
 print(device['udid'])
 PY
 )
-xcrun simctl boot "$DEVICE_ID" || true
-xcrun simctl bootstatus "$DEVICE_ID" -b
+python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl boot "$DEVICE_ID" || true
+python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl bootstatus "$DEVICE_ID" -b
 status=0
 UI_SCOPE=()
 if [ "${1:-}" = "labyrinth" ] || [ "${1:-}" = "indoor" ]; then
@@ -111,8 +111,8 @@ PY
 )
 if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   xcrun simctl shutdown "$DEVICE_ID" || true
-  xcrun simctl boot "$SMALL_DEVICE_ID" || true
-  xcrun simctl bootstatus "$SMALL_DEVICE_ID" -b
+  python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl boot "$SMALL_DEVICE_ID" || true
+  python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl bootstatus "$SMALL_DEVICE_ID" -b
   SMALL_SCOPE=(
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
     -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory
