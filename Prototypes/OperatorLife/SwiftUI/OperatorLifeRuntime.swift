@@ -24,6 +24,9 @@ import Darwin
            let initial = LifePhase(rawValue: args[index + 1]) {
             machine = LifeStateMachine(sequence: sequence, initialPhase: initial, initialElapsed: initial == .dozing ? 5 : 1.2)
             inspecting = true
+        } else if let index = args.firstIndex(of: "--life-start-phase"), index + 1 < args.count,
+                  let initial = LifePhase(rawValue: args[index + 1]) {
+            machine = LifeStateMachine(sequence: sequence, initialPhase: initial)
         }
 #endif
         phase = machine.phase

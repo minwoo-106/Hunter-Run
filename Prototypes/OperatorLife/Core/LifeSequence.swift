@@ -1,7 +1,7 @@
 import Foundation
 
 // Throwaway, in-memory PoC. No game/save types or rendering assets are referenced here.
-public enum LifePhase: String, Codable, CaseIterable { case stretching, idle, dozing, surprised, embarrassed }
+public enum LifePhase: String, Codable, CaseIterable { case stretching, idle, dozing, surprised, embarrassed, coffee, tablet, spacingOut, hairSweep, burger, burgerSurprised, cola }
 public struct LifeCue: Codable, Equatable {
     public var phase: LifePhase
     public var at: Double
@@ -14,6 +14,8 @@ public struct LifeSequence: Codable {
     public var dozeSettleSeconds: Double
     public var surprisedSeconds: Double
     public var embarrassedSeconds: Double
+    public var activities: [LifePhase]?
+    public var activitySeconds: [String: Double]?
     public var cues: [LifeCue]
 }
 
@@ -37,6 +39,7 @@ public struct LifeStateMachine {
     public private(set) var motionEnabled = true
     public private(set) var reducedMotion = false
     private var hasWoken = false
+    private var nextActivityIndex = 0
 
     public init(sequence: LifeSequence, initialPhase: LifePhase = .stretching, initialElapsed: Double = 0) {
         self.sequence = sequence; phase = initialPhase; elapsed = initialElapsed
@@ -57,10 +60,17 @@ public struct LifeStateMachine {
             if elapsed >= duration {
                 switch phase {
                 case .stretching: phase = .idle
-                case .idle: phase = .dozing
+                case .idle:
+                    if hasWoken, let activities = sequence.activities, !activities.isEmpty {
+                        phase = activities[nextActivityIndex % activities.count]
+                        nextActivityIndex += 1
+                    } else { phase = .dozing }
                 case .surprised: phase = .embarrassed
                 case .embarrassed: phase = .idle; hasWoken = true
-                case .dozing: return
+                case .coffee, .tablet, .spacingOut, .hairSweep, .cola:
+                    phase = .idle; hasWoken = true
+                case .burgerSurprised: phase = .cola
+                case .dozing, .burger: return
                 }
                 elapsed = 0
             }
@@ -71,7 +81,8 @@ public struct LifeStateMachine {
         guard available, motionEnabled else { return false }
         switch phase {
         case .dozing: phase = .surprised; elapsed = 0; return true
-        case .surprised, .embarrassed: return true // repeated taps cannot restart the reaction
+        case .burger: phase = .burgerSurprised; elapsed = 0; return true
+        case .surprised, .embarrassed, .burgerSurprised, .cola: return true // repeated taps cannot restart the reaction
         default: return false
         }
     }
@@ -87,9 +98,11 @@ public struct LifeStateMachine {
         switch phase {
         case .stretching: return max(0.1, sequence.stretchSeconds)
         case .idle: return max(0.1, hasWoken ? sequence.idleAfterWakeSeconds : sequence.idleSeconds)
-        case .dozing: return .infinity
+        case .dozing, .burger: return .infinity
         case .surprised: return max(0.1, sequence.surprisedSeconds)
         case .embarrassed: return max(0.1, sequence.embarrassedSeconds)
+        case .coffee, .tablet, .spacingOut, .hairSweep, .burgerSurprised, .cola:
+            return max(0.1, sequence.activitySeconds?[phase.rawValue] ?? 4)
         }
     }
 }

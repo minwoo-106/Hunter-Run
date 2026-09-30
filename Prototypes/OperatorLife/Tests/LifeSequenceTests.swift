@@ -52,4 +52,41 @@ final class LifeSequenceTests: XCTestCase {
         m.advance(.infinity); m.advance(.nan); m.advance(-1)
         XCTAssertEqual(m.elapsed, before)
     }
+    func testLunchTapConsumesReactionThenReturnsToIdle() throws {
+        var m = try machine()
+        m = LifeStateMachine(sequence: m.sequence, initialPhase: .burger)
+        m.configure(available: true, motionEnabled: true, reducedMotion: false)
+        m.advance(90); XCTAssertEqual(m.phase, .burger)
+        XCTAssertTrue(m.consumeTap()); XCTAssertEqual(m.phase, .burgerSurprised)
+        m.advance(0.5); XCTAssertTrue(m.consumeTap())
+        XCTAssertEqual(m.elapsed, 0.5, accuracy: 0.001)
+        m.advance(0.91); XCTAssertEqual(m.phase, .cola)
+        XCTAssertTrue(m.consumeTap()); XCTAssertLessThan(m.elapsed, 0.02)
+        m.advance(2.7); XCTAssertTrue(m.cue?.contains("삼킬 뻔") == true)
+        m.advance(2.1); XCTAssertEqual(m.phase, .idle); XCTAssertNil(m.cue)
+        XCTAssertFalse(m.consumeTap())
+    }
+    func testActivitiesRotateBetweenIdlePeriodsAfterWake() throws {
+        var m = try machine(); m.advance(11); XCTAssertTrue(m.consumeTap())
+        m.advance(7.21); XCTAssertEqual(m.phase, .idle)
+        for (phase, duration) in [(LifePhase.coffee, 4.5), (.tablet, 6.0), (.spacingOut, 5.0), (.hairSweep, 3.5)] {
+            m.advance(14); XCTAssertEqual(m.phase, phase)
+            m.advance(duration); XCTAssertEqual(m.phase, .idle)
+        }
+        m.advance(14); XCTAssertEqual(m.phase, .burger)
+        XCTAssertTrue(m.consumeTap()); m.advance(6.21)
+        XCTAssertEqual(m.phase, .idle); m.advance(14); XCTAssertEqual(m.phase, .dozing)
+    }
+    func testLunchFreezesInBackgroundAndWorksWithReducedMotion() throws {
+        var m = try machine()
+        m = LifeStateMachine(sequence: m.sequence, initialPhase: .burger)
+        m.configure(available: true, motionEnabled: true, reducedMotion: true)
+        XCTAssertTrue(m.consumeTap()); m.advance(0.5)
+        m.configure(available: false, motionEnabled: true, reducedMotion: true)
+        m.advance(600); XCTAssertEqual(m.phase, .burgerSurprised)
+        XCTAssertEqual(m.elapsed, 0.5, accuracy: 0.001); XCTAssertFalse(m.consumeTap())
+        m.configure(available: true, motionEnabled: true, reducedMotion: true)
+        m.advance(6); XCTAssertEqual(m.phase, .idle); XCTAssertTrue(m.frame.reducedMotion)
+    }
+
 }

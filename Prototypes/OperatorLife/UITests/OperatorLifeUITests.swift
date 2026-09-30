@@ -56,7 +56,7 @@ final class OperatorLifeUITests: XCTestCase {
         XCTAssertTrue(stopped.buttons["operator.continue"].waitForExistence(timeout: 5))
     }
     @MainActor func testPoseCanvasAndHomeControls() {
-        for phase in ["stretching", "idle", "dozing", "surprised", "embarrassed"] {
+        for phase in ["stretching", "idle", "dozing", "surprised", "embarrassed", "coffee", "tablet", "spacingOut", "hairSweep", "burger", "burgerSurprised", "cola"] {
             let app = app(["--life-inspect-phase", phase])
             let character = app.buttons["home.operator"]
             for id in ["home.settings", "home.stories", "nav.0", "nav.2"] {
@@ -68,4 +68,17 @@ final class OperatorLifeUITests: XCTestCase {
             app.terminate()
         }
     }
+    @MainActor func testLunchInterruptionAndBackgroundRecovery() {
+        let app = app(["--life-start-phase", "burger"])
+        wait("burger", app); capture("Lunch eating", app)
+        XCUIDevice.shared.press(.home); Thread.sleep(forTimeInterval: 6)
+        app.activate(); wait("burger", app, seconds: 3)
+        app.buttons["home.operator"].tap()
+        wait("cola", app, seconds: 5)
+        app.buttons["home.operator"].tap()
+        XCTAssertFalse(app.buttons["operator.continue"].exists)
+        capture("Lunch cola", app)
+        wait("idle", app, seconds: 8)
+    }
+
 }

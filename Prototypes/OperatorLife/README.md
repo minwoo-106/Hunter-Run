@@ -5,20 +5,29 @@ Question: does the existing Hunter Run home portrait feel like a person living i
 This is an isolated **raster-pose prototype**, not a Live2D model. Its branch is
 `prototype/operator-life-poc`; the normal 1.6.0 app/project remains unchanged.
 The installer has bundle `com.hunterrun.operatorpoc`, display name `HunterRun PoC`,
-version 1.6.0 / build 51. Install alongside Hunter Run. Its sandbox and preferences
+version 1.6.0 / build 52. Install alongside Hunter Run. Its sandbox and preferences
 are separate, so it cannot change the installed game's save. Registration is
 bypassed only in this PoC. No life state is saved, no affinity/reward/story API is called.
 
-## Position follow-up (after build 51)
+## Expanded life preview — build 52
 
-User feedback: preserving all overhead fingertips pushed the ordinary portrait too low.
-The renderer now anchors the resting portrait higher. Its drawing surface extends
-above the original character box, so a raised hand is not cut at an arbitrary
-interior boundary. The browser allows visual overflow while retaining the existing
-touch box; the outer phone screen still clips normally. Blink and all resting
-poses share the same raised anchor. No state, controls,
-cue data or game code changed. This follow-up is not included in the downloadable
-build 51 and has not yet been compiled or checked on iOS.
+The resting portrait remains raised. Rendering extends above the old character box;
+only the outer screen edge clips naturally. The existing touch box stays unchanged.
+After the first doze/wake sequence, idle intervals rotate through coffee, tablet,
+spacing out, hair sweep, burger, then doze. Burger waits for a tap; that tap is
+consumed by puffed-cheek surprise, then a straw/cola sip, then idle. Repeated taps
+cannot restart either wake or lunch reactions. Optional JSON activity data leaves
+the old five-state sequence valid when absent.
+
+Eight new transparent key poses were produced using built-in image generation.
+Exact prompts: `activity-prompts.json`; file hashes/sizes: `asset-manifest.json`.
+Hamburger alternates bite and closed-mouth chewing drawings. These remain raster
+crossfades and tiny whole-portrait motion, not articulated limbs or a Cubism model.
+There are no new sound effects or TTS. Original 177 voice files are unchanged.
+
+The browser preview has direct action buttons outside the reference phone UI.
+The real PoC home has no extra menus; it plays the timed sequence. New native
+build/tests are pending; build 51 has only the previous stretch/doze/wake poses.
 
 ## Try it
 
@@ -70,8 +79,8 @@ Implemented: real timed state transitions, wake-only first tap, three independen
 text cues, no repeated-tap restart, lifecycle suspension, static Reduce Motion,
 existing breath shader/blink in idle, and bounded rendering/touch geometry.
 
-Illusion: five approved transparent full-character body poses are crossfaded;
-a sixth drawing supplies closed eyelids for the new idle face.
+Illusion: thirteen transparent full-character body drawings are crossfaded;
+a fourteenth drawing supplies closed eyelids for the idle face.
 Tiny rotation/translation applies to the whole portrait. Eyelids are a mask from
 the matching newly generated idle blink illustration; closing is an opacity fade, not an articulated
 eyelid rig. Shoulder stretching and head nod are alternate drawn poses, not
@@ -106,7 +115,7 @@ mesh/mask counts and draw frequency determine its device cost.
 
 The animation target is 30 Hz, not a promise of measured 30 GPU FPS. Diagnostic
 logs explicitly report **Timeline callback cadence**, process physical footprint,
-and system thermal state. Six 1024×1536 RGBA drawings amount to roughly 36 MiB of
+and system thermal state. Fourteen 1024×1536 RGBA drawings amount to roughly 84 MiB of
 decoded pixels if all are resident, plus existing textures/offscreen buffers;
 the PNG files add about 11 MiB to the source assets. Those estimates are not
 measured app memory. No real iPhone is controlled from this Windows workspace;

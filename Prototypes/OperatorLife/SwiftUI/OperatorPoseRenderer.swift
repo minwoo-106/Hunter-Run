@@ -28,6 +28,12 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
                 if frame.phase == .embarrassed {
                     portrait("OperatorLifeEmbarrassed", width, height, restTop + headRoom, embarrassedWeight)
                 }
+                if let asset = activityAsset {
+                    portrait(asset, width, height, restTop + headRoom, frame.phase == .burger ? 1 - chewWeight : 1)
+                    if frame.phase == .burger {
+                        portrait("OperatorLifeBurgerChew", width, height, restTop + headRoom, chewWeight)
+                    }
+                }
                 // The new blink drawing matches the new idle face. Never use
                 // the old pocket-pose eyelids on this new body/head position.
                 Image("OperatorLifeBlink").resizable().scaledToFit()
@@ -39,7 +45,7 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
             .frame(width: geo.size.width, height: geo.size.height + headRoom)
             .drawingGroup()
             .distortionEffect(ShaderLibrary.operatorBreath(.float(Float(frame.activeTime)), .float2(Float(geo.size.width), Float(geo.size.height + headRoom))),
-                              maxSampleOffset: CGSize(width: 4, height: 4), isEnabled: animating && frame.phase != .surprised)
+                              maxSampleOffset: CGSize(width: 4, height: 4), isEnabled: animating && frame.phase != .surprised && frame.phase != .burgerSurprised)
             .offset(y: -headRoom)
             .rotationEffect(.degrees(rotation), anchor: UnitPoint(x: 0.5, y: 0.7))
             .offset(x: animating && frame.phase == .idle ? sin(frame.activeTime / 6.1) * 1.2 : 0,
@@ -63,6 +69,7 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
         case .dozing: return frame.reducedMotion ? 0 : 1 - smooth((frame.dozeProgress - 0.35) / 0.65)
         case .surprised: return 0
         case .embarrassed: return 1 - embarrassedWeight
+        case .coffee, .tablet, .spacingOut, .hairSweep, .burger, .burgerSurprised, .cola: return 0
         }
     }
     private var eyeClosure: Double {
@@ -83,6 +90,26 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
         case .dozing: return frame.dozeProgress * (0.5 + max(0, sin(frame.elapsed * 1.35)) * 0.65)
         case .surprised: return 0
         case .embarrassed: return sin(frame.progress * .pi) * -0.45
+        case .coffee, .tablet, .cola: return sin(frame.elapsed * 1.2) * 0.18
+        case .spacingOut: return sin(frame.elapsed * 0.7) * 0.25
+        case .hairSweep: return sin(frame.progress * .pi) * -0.35
+        case .burger: return sin(frame.elapsed * 5.5) * 0.20
+        case .burgerSurprised: return 0
+        }
+    }
+    private var chewWeight: Double {
+        animating ? (1 - cos(frame.elapsed * .pi / 1.2)) / 2 : 0
+    }
+    private var activityAsset: String? {
+        switch frame.phase {
+        case .coffee: return "OperatorLifeCoffee"
+        case .tablet: return "OperatorLifeTablet"
+        case .spacingOut: return "OperatorLifeSpacingOut"
+        case .hairSweep: return "OperatorLifeHairSweep"
+        case .burger: return "OperatorLifeBurger"
+        case .burgerSurprised: return "OperatorLifeBurgerSurprised"
+        case .cola: return "OperatorLifeCola"
+        default: return nil
         }
     }
     private func smooth(_ value: Double) -> Double { let x = min(1, max(0, value)); return x * x * (3 - 2 * x) }
