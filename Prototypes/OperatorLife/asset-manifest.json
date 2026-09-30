@@ -167,5 +167,18 @@
       0,
       254
     ]
+  },
+  {
+    "asset": "OperatorLifeBurgerChew",
+    "source": "exec-add7afed-64b1-4351-9652-566db1599677.png",
+    "sha256": "24e3f89b74c679af47db0796beccb990589c39f6c5154de32e7e901794f4892b",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
   }
 ]
