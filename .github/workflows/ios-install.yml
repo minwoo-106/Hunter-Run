@@ -1,4 +1,4 @@
-name: Hunter Run operator life PoC
+name: Hunter Run iPhone installer
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: hunter-run-operator-life-poc
+  group: hunter-run-ios-install
   cancel-in-progress: true
 
 jobs:
@@ -18,55 +18,63 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
-      - name: Validate unchanged game content
-        run: python3 scripts/validate.py
-      - name: Test game engine and life sequence
+
+      - name: Validate game content
         run: |
-          swift test
-          swift test --package-path Prototypes/OperatorLife
-      - name: Prepare XcodeGen
+          python3 scripts/validate.py
+          python3 scripts/validate-operator-life.py
+
+      - name: Test game engine
+        run: swift test
+
+      - name: Prepare Xcode project
         run: |
-          if ! command -v xcodegen >/dev/null; then brew install xcodegen; fi
+          if ! command -v xcodegen >/dev/null; then
+            brew install xcodegen
+          fi
           xcodegen generate
-      - name: Compile normal app with PoC disabled
+
+      - name: Compile iPhone app
         run: |
           set -euo pipefail
-          xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/production CODE_SIGNING_ALLOWED=NO build > production-build-log.txt 2>&1 || { cat production-build-log.txt; exit 1; }
-      - name: Compile isolated iPhone PoC
+          xcodebuild -project HunterRun.xcodeproj -scheme HunterRun \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 \
+            || { cat build-log.txt; exit 1; }
+
+      - name: Package installer and voice previews
         run: |
-          set -euo pipefail
-          xcodegen generate --spec project-operator-poc.yml
-          xcodebuild -project HunterRunOperatorPoC.xcodeproj -scheme HunterRun -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/poc CODE_SIGNING_ALLOWED=NO build > poc-build-log.txt 2>&1 || { cat poc-build-log.txt; exit 1; }
-          python3 Prototypes/OperatorLife/package-poc.py build/poc/Build/Products/Release-iphoneos/HunterRun.app build
-      - name: Verify life sequence on two iPhone sizes
-        run: bash Prototypes/OperatorLife/check-ios-poc.sh facilities
-      - name: Upload screenshots and diagnostics
+          python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
+          python3 scripts/package-character-preview.py build
+
+      - name: Verify operator life and registration on two iPhone sizes
+        run: bash scripts/check-ios-layout.sh operator-life
+
+      - name: Upload operator life and registrationhots and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-OperatorLife-PoC-build53-review
+          name: HunterRun-1.6.1-build54-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
             build/layout-log.txt
             build/small-layout-log.txt
-            build/life-metrics*.txt
-            build/life-preview*.mp4
-            build/*layout.png
-            production-build-log.txt
-            poc-build-log.txt
+            build-log.txt
             build/simulators.json
             build/runtimes.json
             build/device-types.json
           if-no-files-found: warn
           retention-days: 7
-      - name: Upload verified PoC installer
+
+      - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-OperatorLife-PoC-build53-iPhone
+          name: HunterRun-1.6.1-build54-iPhone
           path: |
-            build/HunterRun-OperatorLife-PoC-build53-unsigned.ipa
-            build/HunterRun-OperatorLife-PoC-build53-manifest.json
+            build/HunterRun-1.6.1-build54-unsigned.ipa
+            build/HunterRun-1.6.1-build54-manifest.json
+            build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
