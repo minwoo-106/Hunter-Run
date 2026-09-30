@@ -9,6 +9,15 @@ version 1.6.0 / build 51. Install alongside Hunter Run. Its sandbox and preferen
 are separate, so it cannot change the installed game's save. Registration is
 bypassed only in this PoC. No life state is saved, no affinity/reward/story API is called.
 
+## Position follow-up (after build 51)
+
+User feedback: preserving all overhead fingertips pushed the ordinary portrait too low.
+The renderer now anchors the resting portrait higher and permits a modest hand crop
+during the stretch. Blink and all resting poses share the same raised anchor.
+The browser preview has the matching composition adjustment. No state, controls,
+cue data or game code changed. This follow-up is not included in the downloadable
+build 51 and has not yet been compiled or checked on iOS.
+
 ## Try it
 
 Open the app and leave Home visible: overhead full-body stretch (2.6 s), idle (7.5 s),

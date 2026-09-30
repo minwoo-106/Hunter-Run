@@ -6,11 +6,11 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
     let animating: Bool
     var body: some View {
         GeometryReader { geo in
-            // Reserve real overhead room instead of clipping the raised hands.
+            // Keep the resting portrait high; allow a modest hand crop during stretching.
             let width = min(geo.size.width * 0.90, geo.size.height * 0.61)
             let height = width * 1.5
-            let raisedTop = max(92, geo.size.height * 0.14)
-            let restTop = raisedTop + height * 0.19
+            let restTop = height * 0.105
+            let raisedTop = restTop - height * 0.19
             let dozeBlend = frame.phase == .dozing ? (frame.reducedMotion ? 1 : smooth((frame.dozeProgress - 0.35) / 0.65)) : 0
             ZStack(alignment: .topLeading) {
                 portrait("OperatorLifeIdle", width, height, restTop, baseOpacity)
