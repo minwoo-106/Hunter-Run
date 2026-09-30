@@ -16,7 +16,7 @@ assert (app / 'Assets.car').is_file()
 assert (app / info['CFBundleExecutable']).read_bytes()[:4] in (b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe')
 cues = list(app.rglob('operator-life-cues.json'))
 assert len(cues) == 1
-assert json.loads(cues[0].read_text()) == json.loads(pathlib.Path('Prototypes/OperatorLife/Resources/operator-life-cues.json').read_text())
+assert json.loads(cues[0].read_text()) == json.loads(pathlib.Path('Resources/operator-life-cues.json').read_text())
 catalogs = list(app.rglob('operator-voice.json'))
 assert len(catalogs) == 1
 voice = json.loads(catalogs[0].read_text())

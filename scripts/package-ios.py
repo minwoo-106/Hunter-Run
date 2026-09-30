@@ -5,6 +5,13 @@ info=plistlib.loads((app/'Info.plist').read_bytes())
 version=info['CFBundleShortVersionString']; build=info['CFBundleVersion']
 assert all(c.isdigit() or c=='.' for c in version) and str(build).isdigit()
 assert info['CFBundleIdentifier']=='com.hunterrun.demo'
+assert (app/info['CFBundleExecutable']).read_bytes()[:4] in (b'\xcf\xfa\xed\xfe',b'\xca\xfe\xba\xbe')
+assert (app/'Assets.car').is_file()
+cue_paths=list(app.rglob('operator-life-cues.json')); assert len(cue_paths)==1
+root=pathlib.Path(__file__).resolve().parent.parent
+assert json.loads(cue_paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources/operator-life-cues.json').read_text(encoding='utf-8'))
+life_assets=json.loads((root/'Prototypes/OperatorLife/asset-manifest.json').read_text(encoding='utf-8'))
+assert len(life_assets)==16
 manifest_paths=list(app.rglob('operator-voice.json')); assert len(manifest_paths)==1
 voice=json.loads(manifest_paths[0].read_text())
 assert len(voice['clips'])==177
@@ -25,7 +32,7 @@ with zipfile.ZipFile(install) as z:
         packed=plistlib.loads(inner.read('Payload/HunterRun.app/Info.plist'))
         assert packed['CFBundleShortVersionString']==version and packed['CFBundleVersion']==build
         assert 'Payload/HunterRun.app/'+info['CFBundleExecutable'] in inner.namelist()
-report=dict(version=version,build=build,voice=voice['voice'],clips=len(voice['clips']),files=[dict(name=p.name,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in [ipa,install]])
+report=dict(version=version,build=build,bundle=info['CFBundleIdentifier'],voice=voice['voice'],clips=len(voice['clips']),lifePoses=len(life_assets),lifeCuesSHA256=hashlib.sha256(cue_paths[0].read_bytes()).hexdigest(),files=[dict(name=p.name,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in [ipa,install]])
 (out/(stem+'-manifest.json')).write_text(json.dumps(report,indent=2))
 print(json.dumps(report,indent=2))
 print(f"Verified versioned installer, inner IPA, executable and all {len(voice['clips'])} designed voice hashes.")

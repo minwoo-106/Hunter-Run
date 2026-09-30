@@ -29,6 +29,7 @@ workflows:
       - build/small-layout-log.txt
       - build/Small-layout.xcresult
       - build/portrait-checks/*.png
+      - build/life-metrics*.txt
   ios-demo:
     name: Hunter Run 1.6.1 - operator daily life
     instance_type: mac_mini_m2
@@ -85,3 +86,4 @@ workflows:
       - build/small-layout-log.txt
       - build/Small-layout.xcresult
       - build/portrait-checks/*.png
+      - build/life-metrics*.txt

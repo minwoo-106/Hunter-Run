@@ -85,4 +85,22 @@ final class OperatorLifeUITests: XCTestCase {
         wait("idle", app, seconds: 8)
     }
 
+    @MainActor func testFullActivityRotationAndNavigationRecovery() {
+        // Exercise real consecutive textures in one process, rather than
+        // treating isolated pose screenshots as a full-cycle memory check.
+        let app = app(["--life-start-phase", "coffee"])
+        wait("coffee", app, seconds: 5)
+        for phase in ["tablet", "spacingOut", "hairSweep", "burger"] {
+            wait(phase, app, seconds: 24)
+        }
+        app.buttons["nav.1"].tap()
+        XCTAssertFalse(app.buttons["home.operator"].isHittable)
+        app.buttons["nav.0"].tap()
+        wait("burger", app, seconds: 5)
+        app.buttons["home.operator"].tap()
+        wait("cola", app, seconds: 10)
+        capture("Full cycle cola", app)
+        wait("idle", app, seconds: 8)
+    }
+
 }

@@ -82,6 +82,9 @@ xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
 mkdir -p build/ui-review
 xcrun xcresulttool export attachments --path build/Layout.xcresult --output-path build/ui-review || true
+if [ "${1:-}" = "operator-life" ]; then
+  xcrun simctl spawn "$DEVICE_ID" log show --last 30m --style compact --info --predicate 'subsystem == "com.hunterrun.demo" AND category == "OperatorLife"' > build/life-metrics-large.txt || true
+fi
 # Keep a directly downloadable screenshot even when the assertion fails.
 xcrun simctl terminate "$DEVICE_ID" com.hunterrun.demo || true
 xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
@@ -154,6 +157,9 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-layout.png || true
   mkdir -p build/ui-review-small
   xcrun xcresulttool export attachments --path build/Small-layout.xcresult --output-path build/ui-review-small || true
+  if [ "${1:-}" = "operator-life" ]; then
+    xcrun simctl spawn "$SMALL_DEVICE_ID" log show --last 30m --style compact --info --predicate 'subsystem == "com.hunterrun.demo" AND category == "OperatorLife"' > build/life-metrics-small.txt || true
+  fi
 fi
 fi
 exit "$status"
