@@ -9,6 +9,8 @@
   <img src="Resources/Assets.xcassets/LabyrinthEntrance.imageset/art.png" width="360" alt="Hunter Run 미궁 입구">
 </p>
 
+개발 중인 1.6.1은 홈 오퍼레이터 생활 모션을 추가합니다. [적용 및 빌드 검증 상태](docs/1.6.1-release.md)를 확인할 수 있습니다.
+
 ## 게임 소개
 
 대한민국 곳곳에 정체불명의 게이트가 나타난 뒤, 플레이어는 헌터 협회의 신규 조사 인원으로 배정됩니다. 현실에서 걷고 달리는 동안 오퍼레이터의 음성 안내를 받아 마력 흔적을 조사하고, 몬스터와 조우하며, 장기 토벌과 지부 성장에 참여합니다.

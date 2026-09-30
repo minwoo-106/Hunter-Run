@@ -1,3 +1,5 @@
+> **Integration update:** approved life motions now live in the normal 1.6.1 source tree. Runtime/rendering: `App/OperatorLife`; pure state control: `Sources/OperatorLifeCore`; assets/cues: `Resources`; tests: root `swift test` and `UITests/OperatorLifeUITests.swift`. See [current release status](../../docs/1.6.1-release.md). The notes below describe historical isolated PoC builds, not a verified 1.6.1 installer. Legacy PoC scripts are retained as archival material; use the normal project/CI for new builds.
+
 # Operator life motion PoC
 
 Question: does the existing Hunter Run home portrait feel like a person living in the branch?
@@ -22,10 +24,10 @@ The four assets were generated/edited with the built-in image_gen tool and
 copied into the project, preserving their RGBA alpha. Exact prompts:
 [lunch-refinement-prompts.json](lunch-refinement-prompts.json).
 
-- [Coffee aroma pose](Resources/Assets.xcassets/OperatorLifeCoffee.imageset/art.png)
-- [Chest pat contact](Resources/Assets.xcassets/OperatorLifeChestPat.imageset/art.png)
-- [Chest pat released](Resources/Assets.xcassets/OperatorLifeChestPatAway.imageset/art.png)
-- [Hurried cola sip](Resources/Assets.xcassets/OperatorLifeCola.imageset/art.png)
+- [Coffee aroma pose](../../Resources/Assets.xcassets/OperatorLifeCoffee.imageset/art.png)
+- [Chest pat contact](../../Resources/Assets.xcassets/OperatorLifeChestPat.imageset/art.png)
+- [Chest pat released](../../Resources/Assets.xcassets/OperatorLifeChestPatAway.imageset/art.png)
+- [Hurried cola sip](../../Resources/Assets.xcassets/OperatorLifeCola.imageset/art.png)
 
 Browser flow/JavaScript checks, all sixteen asset hashes/alpha/dimensions, normal
 game-content validation, and interactive coffee/lunch/Reduce Motion checks pass.
