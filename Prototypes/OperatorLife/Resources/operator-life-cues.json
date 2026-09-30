@@ -1,0 +1,13 @@
+{
+  "stretchSeconds": 2.6,
+  "idleSeconds": 7.5,
+  "idleAfterWakeSeconds": 14.0,
+  "dozeSettleSeconds": 3.5,
+  "surprisedSeconds": 1.0,
+  "embarrassedSeconds": 6.2,
+  "cues": [
+    { "phase": "surprised", "at": 0, "text": "어…?!" },
+    { "phase": "embarrassed", "at": 0, "text": "아, 오셨어요?" },
+    { "phase": "embarrassed", "at": 1.7, "text": "저 안 잤어요. 잠깐 눈만 감고 있었어요…" }
+  ]
+}
