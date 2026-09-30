@@ -25,7 +25,9 @@ project = (root/'project.yml').read_text(encoding='utf-8')
 assert 'com.hunterrun.demo' in project and 'MARKETING_VERSION: "1.6.1"' in project
 assert 'CURRENT_PROJECT_VERSION: 54' in project and 'OPERATOR_LIFE_POC' not in project
 home = (root/'App/HunterRunApp.swift').read_text(encoding='utf-8').split('struct HomeView: View')[1].split('struct ActiveRunView: View')[0]
-assert 'OPERATOR_LIFE_POC' not in home and 'OperatorPortrait(' not in home
+assert 'OPERATOR_LIFE_POC' not in (root/'App/HunterRunApp.swift').read_text(encoding='utf-8')
+assert 'OPERATOR_LIFE_POC' not in (root/'App/AppModel.swift').read_text(encoding='utf-8')
+assert 'OperatorPortrait(' not in home
 assert 'OperatorLifeStage<OperatorPoseRenderer>' in home
 assert 'if life.consumeTap() { return }' in home
 assert 'lifeScenePhase == .active' in home and 'transitionCovered' in home

@@ -11,11 +11,3 @@ extension EnvironmentValues {
         set { self[OperatorLifeReduceMotionOverride.self] = newValue }
     }
 }
-struct OperatorLifeRootView: View {
-    var body: some View {
-        RootView()
-#if DEBUG && targetEnvironment(simulator)
-            .environment(\.operatorLifeReduceMotionOverride, ProcessInfo.processInfo.arguments.contains("--life-reduce-motion"))
-#endif
-    }
-}

@@ -47,6 +47,8 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
                     .position(x: geo.size.width / 2, y: restTop + headRoom + height / 2)
             }
             .frame(width: geo.size.width, height: geo.size.height + headRoom)
+            .animation(animating && frame.phase != .surprised && frame.phase != .burgerSurprised
+                       ? .easeInOut(duration: 0.20) : nil, value: frame.phase)
             .drawingGroup()
             .distortionEffect(ShaderLibrary.operatorBreath(.float(Float(frame.activeTime)), .float2(Float(geo.size.width), Float(geo.size.height + headRoom))),
                               maxSampleOffset: CGSize(width: 4, height: 4), isEnabled: animating && frame.phase != .surprised && frame.phase != .burgerSurprised && frame.phase != .burgerFlustered)

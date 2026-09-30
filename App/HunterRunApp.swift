@@ -14,16 +14,12 @@ import UniformTypeIdentifiers
         }
     }
     @ViewBuilder private var content: some View {
-#if OPERATOR_LIFE_POC
-        OperatorLifeRootView()
-#else
 #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
             OperatorVisualCheckView()
         } else { LaunchGateView().environment(\.operatorLifeReduceMotionOverride, ProcessInfo.processInfo.arguments.contains("--life-reduce-motion")) }
 #else
         LaunchGateView()
-#endif
 #endif
     }
 }
