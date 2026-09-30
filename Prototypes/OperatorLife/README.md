@@ -26,8 +26,8 @@ crossfades and tiny whole-portrait motion, not articulated limbs or a Cubism mod
 There are no new sound effects or TTS. Original 177 voice files are unchanged.
 
 The browser preview has direct action buttons outside the reference phone UI.
-The real PoC home has no extra menus; it plays the timed sequence. New native
-build/tests are pending; build 51 has only the previous stretch/doze/wake poses.
+The real PoC home has no extra menus; it plays the timed sequence. Build 52 passed native
+compilation and all ten UI tests on two iPhone sizes; build 51 has only the previous stretch/doze/wake poses.
 
 ## Try it
 
@@ -35,7 +35,7 @@ Open the app and leave Home visible: overhead full-body stretch (2.6 s), idle (7
 slow eye close and doze settle (3.5 s), then wait indefinitely for a character tap.
 The existing clear character button consumes the first tap to wake up; repeated
 taps during surprised/embarrassed cannot open the conversation or restart it.
-Surprised lasts 1 s, embarrassment 6.2 s, then idle 14 s before another doze.
+Surprised lasts 1 s, embarrassment 6.2 s, then idle 14 s before the next lifestyle action.
 Ordinary taps during idle/stretch still open the existing conversation.
 The three temporary lines replace the existing greeting card, without another panel/menu.
 No new TTS clips are played.
@@ -117,7 +117,7 @@ The animation target is 30 Hz, not a promise of measured 30 GPU FPS. Diagnostic
 logs explicitly report **Timeline callback cadence**, process physical footprint,
 and system thermal state. Fourteen 1024×1536 RGBA drawings amount to roughly 84 MiB of
 decoded pixels if all are resident, plus existing textures/offscreen buffers;
-the PNG files add about 11 MiB to the source assets. Those estimates are not
+the PNG files total 25.7 MiB in the source assets. Those estimates are not
 measured app memory. No real iPhone is controlled from this Windows workspace;
 simulator cadence/memory cannot prove iPhone GPU performance or temperature.
 Physical-device FPS, peak memory and thermal/energy checks still require an
