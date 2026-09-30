@@ -161,11 +161,33 @@ private struct FacilityRoomView: View {
     @ViewBuilder private var destination: some View {
         switch department {
         case .observation:
-            if level == 1 { FieldArchiveView() } else if level == 2 { BossBoardView() } else { EncounterBoardView() }
+            if level == 1 { FacilityFieldRecordsView() } else if level == 2 { BossBoardView() } else { EncounterBoardView() }
         case .research: FacilityResearchView()
         case .equipment: EquipmentView()
         case .contracts: QuestBoardView()
         }
+    }
+}
+
+private struct FacilityFieldRecordsView: View {
+    @EnvironmentObject var model: AppModel
+    private var records: [EventRecord] {
+        Array(Dictionary(model.save.profile.runs.flatMap(\.records).map { ($0.catalogID, $0) },
+                         uniquingKeysWith: { _, latest in latest }).values).sorted { $0.title < $1.title }
+    }
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                if records.isEmpty { Text("현장에서 확인한 신호가 이곳에 쌓여요. 다음 활동 뒤에 다시 살펴봐요.").foregroundStyle(Theme.muted).card() }
+                ForEach(records, id: \.catalogID) { record in
+                    VStack(alignment: .leading, spacing: 7) {
+                        Label(record.title, systemImage: "waveform").font(.headline)
+                        let count = model.save.profile.runs.flatMap(\.records).filter { $0.catalogID == record.catalogID }.count
+                        Text("현장 기록 \(count)회").font(.caption.monospacedDigit()).foregroundStyle(Theme.teal)
+                    }.card()
+                }
+            }.padding(20)
+        }.labyrinthScreen(artwork: "Facility-observation-1").navigationTitle("현장 관측 기록").navigationBarTitleDisplayMode(.inline)
     }
 }
 

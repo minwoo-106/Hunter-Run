@@ -33,6 +33,10 @@ final class FacilityLayoutTests: XCTestCase {
         capture("Facility map before story", app: app)
         reach(app.buttons["facility.observation"], app: app); app.buttons["facility.observation"].tap()
         capture("Observatory Lv1", app: app)
+        reach(app.buttons["facility.work"], app: app); app.buttons["facility.work"].tap()
+        XCTAssertTrue(app.navigationBars["현장 관측 기록"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["facility.upgrade"].waitForExistence(timeout: 5))
         for level in 2...3 {
             let expand = app.buttons["facility.upgrade"]; reach(expand, app: app); XCTAssertTrue(expand.isEnabled); expand.tap()
             let alert = app.alerts.firstMatch; XCTAssertTrue(alert.waitForExistence(timeout: 5)); alert.buttons["확인"].tap()
