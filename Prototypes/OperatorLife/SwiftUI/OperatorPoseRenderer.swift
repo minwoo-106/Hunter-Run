@@ -6,25 +6,27 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
     let animating: Bool
     var body: some View {
         GeometryReader { geo in
-            // Keep the resting portrait high; allow a modest hand crop during stretching.
+            // Preserve the resting anchor. Extend the drawing surface above the
+            // character box so only the physical screen edge can crop raised hands.
             let width = min(geo.size.width * 0.90, geo.size.height * 0.61)
             let height = width * 1.5
             let restTop = height * 0.105
             let raisedTop = restTop - height * 0.19
+            let headRoom = height * 0.10
             let dozeBlend = frame.phase == .dozing ? (frame.reducedMotion ? 1 : smooth((frame.dozeProgress - 0.35) / 0.65)) : 0
             ZStack(alignment: .topLeading) {
-                portrait("OperatorLifeIdle", width, height, restTop, baseOpacity)
+                portrait("OperatorLifeIdle", width, height, restTop + headRoom, baseOpacity)
                 if frame.phase == .stretching {
-                    portrait("OperatorLifeStretch", width, height, raisedTop, stretchWeight)
+                    portrait("OperatorLifeStretch", width, height, raisedTop + headRoom, stretchWeight)
                 }
                 if frame.phase == .dozing {
-                    portrait("OperatorLifeDoze", width, height, restTop, dozeBlend)
+                    portrait("OperatorLifeDoze", width, height, restTop + headRoom, dozeBlend)
                 }
                 if frame.phase == .surprised {
-                    portrait("OperatorLifeSurprised", width, height, restTop, 1)
+                    portrait("OperatorLifeSurprised", width, height, restTop + headRoom, 1)
                 }
                 if frame.phase == .embarrassed {
-                    portrait("OperatorLifeEmbarrassed", width, height, restTop, embarrassedWeight)
+                    portrait("OperatorLifeEmbarrassed", width, height, restTop + headRoom, embarrassedWeight)
                 }
                 // The new blink drawing matches the new idle face. Never use
                 // the old pocket-pose eyelids on this new body/head position.
@@ -32,16 +34,17 @@ struct OperatorPoseRenderer: OperatorLifeRendering {
                     .frame(width: width, height: height)
                     .mask(LifeEyelids().fill(.white).blur(radius: width * 0.004))
                     .opacity(eyeClosure * baseOpacity)
-                    .position(x: geo.size.width / 2, y: restTop + height / 2)
+                    .position(x: geo.size.width / 2, y: restTop + headRoom + height / 2)
             }
-            .frame(width: geo.size.width, height: geo.size.height)
+            .frame(width: geo.size.width, height: geo.size.height + headRoom)
             .drawingGroup()
-            .distortionEffect(ShaderLibrary.operatorBreath(.float(Float(frame.activeTime)), .float2(Float(geo.size.width), Float(geo.size.height))),
+            .distortionEffect(ShaderLibrary.operatorBreath(.float(Float(frame.activeTime)), .float2(Float(geo.size.width), Float(geo.size.height + headRoom))),
                               maxSampleOffset: CGSize(width: 4, height: 4), isEnabled: animating && frame.phase != .surprised)
+            .offset(y: -headRoom)
             .rotationEffect(.degrees(rotation), anchor: UnitPoint(x: 0.5, y: 0.7))
             .offset(x: animating && frame.phase == .idle ? sin(frame.activeTime / 6.1) * 1.2 : 0,
                     y: animating && frame.phase == .dozing ? 2.5 * frame.dozeProgress + max(0, sin(frame.elapsed * 1.35)) * 2.0 : 0)
-        }.clipped()
+        }
     }
     private func portrait(_ name: String, _ width: Double, _ height: Double, _ top: Double, _ opacity: Double) -> some View {
         GeometryReader { geo in

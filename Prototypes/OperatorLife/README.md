@@ -12,9 +12,11 @@ bypassed only in this PoC. No life state is saved, no affinity/reward/story API 
 ## Position follow-up (after build 51)
 
 User feedback: preserving all overhead fingertips pushed the ordinary portrait too low.
-The renderer now anchors the resting portrait higher and permits a modest hand crop
-during the stretch. Blink and all resting poses share the same raised anchor.
-The browser preview has the matching composition adjustment. No state, controls,
+The renderer now anchors the resting portrait higher. Its drawing surface extends
+above the original character box, so a raised hand is not cut at an arbitrary
+interior boundary. The browser allows visual overflow while retaining the existing
+touch box; the outer phone screen still clips normally. Blink and all resting
+poses share the same raised anchor. No state, controls,
 cue data or game code changed. This follow-up is not included in the downloadable
 build 51 and has not yet been compiled or checked on iOS.
 
