@@ -14,12 +14,16 @@ import UniformTypeIdentifiers
         }
     }
     @ViewBuilder private var content: some View {
+#if OPERATOR_LIFE_POC
+        OperatorLifeRootView()
+#else
 #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
             OperatorVisualCheckView()
         } else { LaunchGateView() }
 #else
         LaunchGateView()
+#endif
 #endif
     }
 }
@@ -104,6 +108,38 @@ struct RootView: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model: AppModel
+#if OPERATOR_LIFE_POC
+    @Environment(\.scenePhase) private var lifeScenePhase
+    @Environment(\.accessibilityReduceMotion) private var lifeReduceMotion
+    @AppStorage("operatorMotionEnabled") private var lifeMotionEnabled = true
+    @StateObject private var life = OperatorLifeRuntime()
+    private var lifeVisible: Bool {
+        model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings
+        && !model.showAssociation && !model.showRun && !model.showWelcome && !model.showReturnBriefing
+        && lifeScenePhase == .active
+    }
+    private func configureLife() { life.configure(available: lifeVisible, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
+#endif
+    private var homeGreeting: String {
+#if OPERATOR_LIFE_POC
+        if let cue = life.cue { return (model.save.profile.journey?.operatorName ?? "서윤") + "\n" + cue }
+#endif
+        return model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요."
+    }
+    private var homeVersion: String {
+#if OPERATOR_LIFE_POC
+        return "HUNTER RUN · 생활 모션 PoC · \(life.phase.rawValue)"
+#else
+        return "HUNTER RUN · \(appVersion)"
+#endif
+    }
+    @ViewBuilder private var homePortrait: some View {
+#if OPERATOR_LIFE_POC
+        OperatorLifeStage<OperatorPoseRenderer>(runtime: life)
+#else
+        OperatorPortrait(active: model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings && !model.showAssociation && !model.showRun && !model.showWelcome)
+#endif
+    }
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -124,11 +160,19 @@ struct HomeView: View {
                             }.buttonStyle(.plain).accessibilityLabel("설정").accessibilityIdentifier("home.settings")
                         }
                     }
-                    Button { model.showOperator = true } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
+                    Button {
+#if OPERATOR_LIFE_POC
+                        if life.consumeTap() { return }
+#endif
+                        model.showOperator = true
+                    } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
+#if OPERATOR_LIFE_POC
+                        .accessibilityValue(life.phase.rawValue)
+#endif
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요.")
+                        Text(homeGreeting)
                             .font(.headline).accessibilityIdentifier("home.greeting")
                         if model.save.profile.expeditions?.briefing?.acknowledged == false {
                             Button { model.openReturnBriefing() } label: {
@@ -150,7 +194,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · \(appVersion)").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text(homeVersion).font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -161,7 +205,7 @@ struct HomeView: View {
                         Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill()
                             .frame(width: geo.size.width, height: geo.size.height).clipped()
                             .ignoresSafeArea(edges: .top)
-                        OperatorPortrait(active: model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings && !model.showAssociation && !model.showRun && !model.showWelcome)
+                        homePortrait
                             .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
                             .offset(y: -geo.size.height * 0.015)
                         LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
@@ -171,6 +215,13 @@ struct HomeView: View {
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
                 }
+#if OPERATOR_LIFE_POC
+                .onAppear(perform: configureLife)
+                .onDisappear { life.configure(available: false, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
+                .onChange(of: lifeVisible) { _, _ in configureLife() }
+                .onChange(of: lifeMotionEnabled) { _, _ in configureLife() }
+                .onChange(of: lifeReduceMotion) { _, _ in configureLife() }
+#endif
         }
     }
 }

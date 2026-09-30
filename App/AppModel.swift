@@ -290,6 +290,10 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         else { isReady = false; notice = "이야기 자료를 읽지 못했어요. 앱 파일을 확인해주세요." }
         showWelcome = isReady && !recoverable && (!existingSave || save.profile.introductionSeen == false || save.profile.journey?.registered != true)
+#if OPERATOR_LIFE_POC
+        // Separate PoC application sandbox; bypass registration without changing the profile.
+        showWelcome = false
+#endif
         #if targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-welcome") { showWelcome = false }
         #endif
