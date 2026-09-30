@@ -335,6 +335,13 @@ private struct CharacterVoiceCatalog: Decodable {
     }
     func beginDialogue(_ id: String) { updateJourney { try $0.begin(id, profile: &$1) } }
     func advanceDialogue(_ choice: String? = nil) { updateJourney { _ = try $0.advance(choice: choice, profile: &$1) } }
+    func buildSanctum() {
+        guard !growthLocked, HaesolSanctum.stage(save.profile) == .buildable else { return }
+        var candidate = save
+        guard HaesolSanctum.build(&candidate.profile) else { return }
+        do { try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward") }
+        catch { notice = "정화실 건설 기록을 저장하지 못했어요. 다시 시도해주세요." }
+    }
     func restoreHaesol() {
         guard !growthLocked, HaesolSanctum.available(save.profile), let narratives else { return }
         var candidate = save
