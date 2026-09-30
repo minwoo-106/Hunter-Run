@@ -26,7 +26,7 @@ final class OperatorLifeUITests: XCTestCase {
         app.buttons["home.operator"].tap()
         wait("embarrassed", app, seconds: 8)
         app.buttons["home.operator"].tap()
-        XCTAssertFalse(app.navigationBars["오퍼레이터와 대화"].exists)
+        XCTAssertFalse(app.buttons["operator.continue"].exists)
         XCTAssertTrue(app.staticTexts["home.greeting"].label.contains("오셨어요") || app.staticTexts["home.greeting"].label.contains("저 안 잤어요"))
         capture("Wake reaction", app)
         wait("idle", app, seconds: 10)
@@ -52,7 +52,7 @@ final class OperatorLifeUITests: XCTestCase {
         let stopped = app(moving: false)
         XCTAssertEqual(stopped.buttons["home.operator"].value as? String, "idle")
         stopped.buttons["home.operator"].tap()
-        XCTAssertTrue(stopped.navigationBars["오퍼레이터와 대화"].waitForExistence(timeout: 5))
+        XCTAssertTrue(stopped.buttons["operator.continue"].waitForExistence(timeout: 5))
     }
     @MainActor func testPoseCanvasAndHomeControls() {
         for phase in ["stretching", "idle", "dozing", "surprised", "embarrassed"] {
