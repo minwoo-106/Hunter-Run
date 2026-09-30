@@ -76,5 +76,96 @@
       0,
       254
     ]
+  },
+  {
+    "asset": "OperatorLifeCoffee",
+    "source": "exec-96794763-b3d9-473f-a32e-2a9083bdc842.png",
+    "sha256": "20021b2c99c4485ab24b56a653ea63e7946272d516a5a27ab3a1cecf463e065c",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeTablet",
+    "source": "exec-fc8cddbb-bfae-4f95-8a6b-85350b864eff.png",
+    "sha256": "6322ec1d306e9e714e6fff83df51b0b7e09d75322658ffe345dbf92af3cdfe9b",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeSpacingOut",
+    "source": "exec-0aac7689-2efc-47b3-b5a3-b772e491d1a3.png",
+    "sha256": "a2c612883fe18cb99d7a607ac576fe647ccbaffcfdc3a6d8e5816d93d2188a14",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeHairSweep",
+    "source": "exec-2e350472-1920-4ba6-bf48-fd96042394d7.png",
+    "sha256": "aa43723692d7d1c90290b706c00ca22c414eee28a773b5b163c496ac3218a475",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeBurger",
+    "source": "exec-7e665a9c-0f0a-400a-98f5-f9bede259b4f.png",
+    "sha256": "fafedab8cfb3c63638403bf70e257bd46acb22916d20d00cd253ab4ccc1d3ff3",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeBurgerSurprised",
+    "source": "exec-fbfb8891-bd6e-46ea-932a-3936de307465.png",
+    "sha256": "9778a673ea47039d6eba9ec8c63903d9631317417afd9dda88a9e83c3a8ba535",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeCola",
+    "source": "exec-36a7b02c-df96-4fd1-9e88-64f81c3e4335.png",
+    "sha256": "a4eb931f48d41825ca2e7bdcc4355c5ca1582a2bcf5f50b79ba35429d01f76ba",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
   }
 ]
