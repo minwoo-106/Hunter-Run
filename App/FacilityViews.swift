@@ -61,7 +61,7 @@ private struct FacilityMap: View {
                         .accessibilityIdentifier("facility.sanctum")
                 }
             }
-        }.aspectRatio(2.0 / 3.0, contentMode: .fit).accessibilityIdentifier("facility.map")
+        }.aspectRatio(2.0 / 3.0, contentMode: .fit)
     }
     private func position(_ department: Department) -> CGPoint {
         switch department {
