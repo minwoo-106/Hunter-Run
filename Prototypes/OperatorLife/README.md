@@ -5,9 +5,31 @@ Question: does the existing Hunter Run home portrait feel like a person living i
 This is an isolated **raster-pose prototype**, not a Live2D model. Its branch is
 `prototype/operator-life-poc`; the normal 1.6.0 app/project remains unchanged.
 The installer has bundle `com.hunterrun.operatorpoc`, display name `HunterRun PoC`,
-version 1.6.0 / build 52. Install alongside Hunter Run. Its sandbox and preferences
+planned version 1.6.0 / build 53. The latest verified installer remains build 52. Install alongside Hunter Run. Its sandbox and preferences
 are separate, so it cannot change the installed game's save. Registration is
 bypassed only in this PoC. No life state is saved, no affinity/reward/story API is called.
+
+## Coffee and lunch refinement - build 53 source
+
+Coffee now closes the eyes softly, holds the mug below the nose, and savors the
+aroma. Lunch runs burger -> puffed-cheek surprise (1.4 s) -> chest pat (3.2 s)
+-> hurried cola sip (4.8 s) -> idle. The chest-pat renderer alternates contact
+and released fist drawings every 0.65 s; this is raster crossfading, not a rigged
+arm. Reduce Motion shows a still contact pose while retaining the reaction.
+Repeated taps throughout the reaction are consumed. Dialogue remains text only.
+
+The four assets were generated/edited with the built-in image_gen tool and
+copied into the project, preserving their RGBA alpha. Exact prompts:
+[lunch-refinement-prompts.json](lunch-refinement-prompts.json).
+
+- [Coffee aroma pose](Resources/Assets.xcassets/OperatorLifeCoffee.imageset/art.png)
+- [Chest pat contact](Resources/Assets.xcassets/OperatorLifeChestPat.imageset/art.png)
+- [Chest pat released](Resources/Assets.xcassets/OperatorLifeChestPatAway.imageset/art.png)
+- [Hurried cola sip](Resources/Assets.xcassets/OperatorLifeCola.imageset/art.png)
+
+Browser flow/JavaScript checks, all sixteen asset hashes/alpha/dimensions, normal
+game-content validation, and interactive coffee/lunch/Reduce Motion checks pass.
+Updated Swift and iOS tests are committed, but have not executed for build 53.
 
 ## Expanded life preview — build 52
 
@@ -27,7 +49,9 @@ There are no new sound effects or TTS. Original 177 voice files are unchanged.
 
 The browser preview has direct action buttons outside the reference phone UI.
 The real PoC home has no extra menus; it plays the timed sequence. Build 52 passed native
-compilation and all ten UI tests on two iPhone sizes; build 51 has only the previous stretch/doze/wake poses.
+compilation and ten UI tests on two iPhone sizes. Build 53 source changes are not
+yet compiled: GitHub refused to start its runner because of account billing or
+spending limits. The interactive browser preview has been verified.
 
 ## Try it
 
@@ -79,8 +103,8 @@ Implemented: real timed state transitions, wake-only first tap, three independen
 text cues, no repeated-tap restart, lifecycle suspension, static Reduce Motion,
 existing breath shader/blink in idle, and bounded rendering/touch geometry.
 
-Illusion: thirteen transparent full-character body drawings are crossfaded;
-a fourteenth drawing supplies closed eyelids for the idle face.
+Illusion: fifteen transparent full-character body drawings are crossfaded;
+a sixteenth drawing supplies closed eyelids for the idle face.
 Tiny rotation/translation applies to the whole portrait. Eyelids are a mask from
 the matching newly generated idle blink illustration; closing is an opacity fade, not an articulated
 eyelid rig. Shoulder stretching and head nod are alternate drawn poses, not
@@ -115,9 +139,9 @@ mesh/mask counts and draw frequency determine its device cost.
 
 The animation target is 30 Hz, not a promise of measured 30 GPU FPS. Diagnostic
 logs explicitly report **Timeline callback cadence**, process physical footprint,
-and system thermal state. Fourteen 1024×1536 RGBA drawings amount to roughly 84 MiB of
+and system thermal state. Sixteen 1024×1536 RGBA drawings amount to roughly 96 MiB of
 decoded pixels if all are resident, plus existing textures/offscreen buffers;
-the PNG files total 25.7 MiB in the source assets. Those estimates are not
+the PNG files total 29.4 MiB in the source assets. Those estimates are not
 measured app memory. No real iPhone is controlled from this Windows workspace;
 simulator cadence/memory cannot prove iPhone GPU performance or temperature.
 Physical-device FPS, peak memory and thermal/energy checks still require an

@@ -3,24 +3,28 @@
     "key": "coffee53",
     "prompt": "Use case: identity-preserve. Edit target: the supplied transparent Hunter Run operator portrait. Preserve exactly this adult 22-year-old woman's face identity, short dark bob with navy highlights, white rolled-sleeve shirt, black tie with gold clip, gold insignia, wristwatch, dark trousers, painterly anime game style, lighting, portrait framing, torso scale and transparent background. Change only the coffee pose and expression: she leisurely savors the coffee aroma, eyes softly closed with relaxed curved eyelids (not tightly squinting), a small contented closed-mouth smile, shoulders relaxed. Hold the same plain white ceramic mug upright several centimeters BELOW her nose and AWAY from her lips, gently supporting the mug with both hands. Natural anatomical hands and mug handle. A very subtle thin curl of warm steam from the mug, no effects elsewhere. This is smelling warm coffee before a sip, not smiling at the viewer, not drinking through the mug edge. Keep the full top-of-head to mid-thigh composition, centered. Transparent PNG, no words or logos.",
     "method": "built-in image_gen",
-    "referenceRole": "edit target / identity reference"
+    "referenceRole": "edit target / identity reference",
+    "savedAsset": "Resources/Assets.xcassets/OperatorLifeCoffee.imageset/art.png"
   },
   {
     "key": "chestPatA53",
     "prompt": "Use case: identity-preserve. Supporting identity/style/framing reference: supplied transparent Hunter Run operator portrait. Create an alternate whole-character game key pose of EXACTLY the same adult woman and clothes, navy-highlight dark bob, face identity, gold badge, tie, watch, dark trousers, same detailed painterly anime finish and centered top-of-head to mid-thigh framing. She was startled while chewing lunch and swallowed too fast: humorous fleeting flustered expression, both eyes tightly squeezed shut in a clear >_< scrunch, eyebrows lifted inward, lips pursed in a small closed 'mmph', slightly puffed cheeks, a little blush. Shoulders hunched slightly forward. Her right hand is a loosely closed fist gently touching the upper center chest OVER her clothed shirt as she pats her chest; her left hand holds the same half-eaten sesame hamburger with plain wrapper LOW near her waist, away from the chest and face. Natural five-finger hands, no dramatic distress or medical scene. The chest-patting gesture must be unmistakable. Keep head scale, pelvis position, hairstyle and outfit consistent with the reference. True transparent background, no graphics, text, motion streaks or logos.",
     "method": "built-in image_gen",
-    "referenceRole": "edit target / identity reference"
+    "referenceRole": "edit target / identity reference",
+    "savedAsset": "Resources/Assets.xcassets/OperatorLifeChestPat.imageset/art.png"
   },
   {
     "key": "chestPatB53",
     "prompt": "Use case: identity-preserve. Edit this transparent operator key pose with an extremely small localized change. Keep her face, >_< tightly squeezed eyes, puffed cheeks, lips, head, hairstyle, shoulders, shirt, tie, badge, watch, trousers, left hand and hamburger, lighting, rendering style, scale, and exact framing IDENTICAL. Change ONLY her RIGHT forearm and loosely closed fist (the arm on viewer left): move the fist a few centimeters down and slightly outward, hovering a few centimeters in front of the center upper chest to show the released phase of gently patting her chest. Her fist must NOT grasp or pull the necktie. The shirt/neckline should remain undisturbed. Natural fist anatomy. This is the alternating second frame of a chest-pat animation; no facial changes, no extra hands, no motion lines, no text. Preserve genuinely transparent background, 1024x1536 portrait.",
     "method": "built-in image_gen",
-    "referenceRole": "edit target / identity reference"
+    "referenceRole": "edit target / identity reference",
+    "savedAsset": "Resources/Assets.xcassets/OperatorLifeChestPatAway.imageset/art.png"
   },
   {
     "key": "cola53",
     "prompt": "Use case: identity-preserve. Edit target: this transparent Hunter Run adult operator sipping cola. Preserve EXACT character identity, face proportions, dark bob/navy streaks, white shirt, black tie, gold badge/clip, wristwatch/trousers, painterly game illustration style, natural head/body proportions, lighting, centered top-of-head to mid-thigh composition, true transparent background. Change her leisurely expression and pose to hurriedly sipping cola after swallowing lunch too quickly: brows raised at inner corners, both eyes squeezed closed in a cute >_< flustered expression, lightly pink cheeks, lips firmly sealed naturally around the thin straw, cheek muscles slightly drawn in from urgently sucking. Lean shoulders/head forward just a LITTLE. Her right hand holds the SAME plain red cola cup nearer to the mouth so the straw is SHORT and perfectly connected from lid to lips; her left hand supports the side/bottom of the same cup. Natural hands, one cup only. Cute flustered hurried action, NOT smiling calmly at viewer, not injury or a medical scene. No text, logos, motion lines, additional objects or background.",
     "method": "built-in image_gen",
-    "referenceRole": "edit target / identity reference"
+    "referenceRole": "edit target / identity reference",
+    "savedAsset": "Resources/Assets.xcassets/OperatorLifeCola.imageset/art.png"
   }
 ]

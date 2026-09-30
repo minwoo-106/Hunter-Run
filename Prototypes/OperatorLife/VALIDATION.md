@@ -1,3 +1,23 @@
+# Build 53 refinement status - 2026-09-30
+
+Source revision: `612c6652606cbff3c8a69e08c8ba684613b82bd5`.
+[Build attempt](https://github.com/minwoo-106/Hunter-Run/actions/runs/36707129003)
+did not start a runner. GitHub reports: "The job was not started because recent
+account payments have failed or your spending limit needs to be increased."
+No build 53 IPA, Swift test results or simulator results exist yet. No payment,
+spending-limit or repository-visibility settings were changed.
+
+Verified locally: all sixteen source asset hashes/alpha/dimensions, browser
+JavaScript syntax and actual shared-data flow, normal game content, displayed
+coffee-aroma pose, chest-pat reaction, hurried cola, repeated-tap consumption,
+idle return and reduced-motion static reaction. Four edited/generated images
+and exact prompts are preserved; see README and lunch-refinement-prompts.json.
+
+The following successful native results belong to **build 52**, before this
+coffee/lunch refinement. They must not be reported as build 53 results.
+
+---
+
 # Expanded operator life PoC validation - 2026-09-30
 
 Compiled implementation: `091b179c33f78a86227c3e9939e0c47cce270f62`.
