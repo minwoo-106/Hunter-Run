@@ -1,9 +1,26 @@
 import XCTest
-@testable import OperatorLifePrototypeCore
+@testable import OperatorLifeCore
 
 final class LifeSequenceTests: XCTestCase {
+    func testMalformedSequenceCannotDriveTheRuntime() throws {
+        var invalid = LifeSequence.standby
+        invalid.idleSeconds = 0
+        XCTAssertThrowsError(try LifeSequence.decode(JSONEncoder().encode(invalid)))
+        invalid = .standby
+        invalid.activities = [.idle]
+        XCTAssertThrowsError(try LifeSequence.decode(JSONEncoder().encode(invalid)))
+        invalid = .standby
+        invalid.cues = [LifeCue(phase: .cola, at: -1, text: "invalid")]
+        XCTAssertThrowsError(try LifeSequence.decode(JSONEncoder().encode(invalid)))
+        XCTAssertThrowsError(try LifeSequence.decode(Data("{}".utf8)))
+        var fallback = LifeStateMachine(sequence: .standby, initialPhase: .idle)
+        fallback.configure(available: true, motionEnabled: false, reducedMotion: false)
+        fallback.advance(3600)
+        XCTAssertEqual(fallback.phase, .idle)
+        XCTAssertFalse(fallback.consumeTap()) // ordinary conversation remains available
+    }
     private func machine() throws -> LifeStateMachine {
-        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Resources/operator-life-cues.json")
+        let url = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().appendingPathComponent("Resources/operator-life-cues.json")
         var m = LifeStateMachine(sequence: try JSONDecoder().decode(LifeSequence.self, from: Data(contentsOf: url)))
         m.configure(available: true, motionEnabled: true, reducedMotion: false)
         return m

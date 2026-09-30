@@ -16,12 +16,13 @@ targets:
     sources:
       - path: App
       - path: Sources/HunterCore
+      - path: Sources/OperatorLifeCore
       - path: Resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hunterrun.demo
-        MARKETING_VERSION: "1.6.0"
-        CURRENT_PROJECT_VERSION: 49
+        MARKETING_VERSION: "1.6.1"
+        CURRENT_PROJECT_VERSION: 54
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Config/Info.plist
         CODE_SIGNING_ALLOWED: NO

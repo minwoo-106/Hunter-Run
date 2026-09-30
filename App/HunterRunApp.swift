@@ -20,7 +20,7 @@ import UniformTypeIdentifiers
 #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
             OperatorVisualCheckView()
-        } else { LaunchGateView() }
+        } else { LaunchGateView().environment(\.operatorLifeReduceMotionOverride, ProcessInfo.processInfo.arguments.contains("--life-reduce-motion")) }
 #else
         LaunchGateView()
 #endif
@@ -41,7 +41,7 @@ struct RootView: View {
         ZStack {
             VStack(spacing: 0) {
                 TabView(selection: $model.selectedTab) {
-                    HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
+                    HomeView(transitionCovered: tabTransition != nil).toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
                     HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
                     SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
                     NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
@@ -108,7 +108,7 @@ struct RootView: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model: AppModel
-#if OPERATOR_LIFE_POC
+    var transitionCovered = false
     @Environment(\.scenePhase) private var lifeScenePhase
     @Environment(\.accessibilityReduceMotion) private var lifeSystemReduceMotion
     @Environment(\.operatorLifeReduceMotionOverride) private var lifeReduceMotionOverride
@@ -118,29 +118,16 @@ struct HomeView: View {
     private var lifeVisible: Bool {
         model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings
         && !model.showAssociation && !model.showRun && !model.showWelcome && !model.showReturnBriefing
-        && lifeScenePhase == .active
+        && lifeScenePhase == .active && !transitionCovered && model.notice == nil
     }
     private func configureLife() { life.configure(available: lifeVisible, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
-#endif
     private var homeGreeting: String {
-#if OPERATOR_LIFE_POC
-        if let cue = life.cue { return (model.save.profile.journey?.operatorName ?? "서윤") + "\n" + cue }
-#endif
+        if lifeMotionEnabled, let cue = life.cue { return (model.save.profile.journey?.operatorName ?? "서윤") + "\n" + cue }
         return model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요."
     }
-    private var homeVersion: String {
-#if OPERATOR_LIFE_POC
-        return "HUNTER RUN · 생활 모션 PoC · \(life.phase.rawValue)"
-#else
-        return "HUNTER RUN · \(appVersion)"
-#endif
-    }
+    private var homeVersion: String { "HUNTER RUN · \(appVersion)" }
     @ViewBuilder private var homePortrait: some View {
-#if OPERATOR_LIFE_POC
         OperatorLifeStage<OperatorPoseRenderer>(runtime: life)
-#else
-        OperatorPortrait(active: model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings && !model.showAssociation && !model.showRun && !model.showWelcome)
-#endif
     }
     var body: some View {
         GeometryReader { geo in
@@ -163,13 +150,11 @@ struct HomeView: View {
                         }
                     }
                     Button {
-#if OPERATOR_LIFE_POC
                         if life.consumeTap() { return }
-#endif
                         model.showOperator = true
                     } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
-#if OPERATOR_LIFE_POC
+#if DEBUG && targetEnvironment(simulator)
                         .accessibilityValue(life.phase.rawValue)
 #endif
                     Spacer(minLength: 0)
@@ -217,13 +202,11 @@ struct HomeView: View {
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
                 }
-#if OPERATOR_LIFE_POC
                 .onAppear(perform: configureLife)
                 .onDisappear { life.configure(available: false, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
                 .onChange(of: lifeVisible) { _, _ in configureLife() }
                 .onChange(of: lifeMotionEnabled) { _, _ in configureLife() }
                 .onChange(of: lifeReduceMotion) { _, _ in configureLife() }
-#endif
         }
     }
 }

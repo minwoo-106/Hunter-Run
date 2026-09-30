@@ -10,14 +10,17 @@ import Darwin
     private var lastTick: TimeInterval?
     private var ticker: Task<Void, Never>?
     private var inspecting = false
+    private let configurationLoaded: Bool
     private var renderWindow: Date?
     private var scheduledFrames = 0
-    private let log = Logger(subsystem: "com.hunterrun.operatorpoc", category: "OperatorLife")
+    private let log = Logger(subsystem: "com.hunterrun.demo", category: "OperatorLife")
 
     init() {
-        let url = Bundle.main.url(forResource: "operator-life-cues", withExtension: "json")!
-        let sequence = try! JSONDecoder().decode(LifeSequence.self, from: Data(contentsOf: url))
-        machine = LifeStateMachine(sequence: sequence)
+        let loaded = Bundle.main.url(forResource: "operator-life-cues", withExtension: "json")
+            .flatMap { try? Data(contentsOf: $0) }.flatMap { try? LifeSequence.decode($0) }
+        configurationLoaded = loaded != nil
+        let sequence = loaded ?? .standby
+        machine = LifeStateMachine(sequence: sequence, initialPhase: loaded == nil ? .idle : .stretching)
 #if DEBUG && targetEnvironment(simulator)
         let args = ProcessInfo.processInfo.arguments
         if let index = args.firstIndex(of: "--life-inspect-phase"), index + 1 < args.count,
@@ -34,13 +37,14 @@ import Darwin
     deinit { ticker?.cancel() }
     func configure(available: Bool, motionEnabled: Bool, reducedMotion: Bool) {
         tick()
-        machine.configure(available: available && !inspecting, motionEnabled: motionEnabled, reducedMotion: reducedMotion)
-        animating = available && motionEnabled && !reducedMotion && !inspecting
+        let enabled = motionEnabled && configurationLoaded
+        machine.configure(available: available && !inspecting, motionEnabled: enabled, reducedMotion: reducedMotion)
+        animating = available && enabled && !reducedMotion && !inspecting
         lastTick = ProcessInfo.processInfo.systemUptime
         publish()
         ticker?.cancel(); ticker = nil
         renderWindow = nil; scheduledFrames = 0
-        guard available && motionEnabled && !inspecting else { return }
+        guard available && enabled && !inspecting else { return }
         ticker = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 100_000_000)
@@ -61,6 +65,7 @@ import Darwin
         return projected.frame
     }
     func observeRenderTick(_ date: Date) {
+#if DEBUG
         guard animating else { return }
         guard let start = renderWindow else { renderWindow = date; return }
         scheduledFrames += 1
@@ -72,6 +77,7 @@ import Darwin
             log.info("Render schedule Hz: \(cadence); process footprint MiB: \(memory); thermalState: \(ProcessInfo.processInfo.thermalState.rawValue)")
             renderWindow = date; scheduledFrames = 0
         }
+#endif
     }
     private func footprintMiB() -> Double {
         var info = task_vm_info_data_t()

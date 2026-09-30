@@ -21,9 +21,7 @@ targets:
       - path: App
       - path: Sources/HunterCore
       - path: Resources
-      - path: Prototypes/OperatorLife/Core
-      - path: Prototypes/OperatorLife/SwiftUI
-      - path: Prototypes/OperatorLife/Resources
+      - path: Sources/OperatorLifeCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hunterrun.operatorpoc
@@ -42,7 +40,7 @@ targets:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: Prototypes/OperatorLife/UITests
+      - path: UITests/OperatorLifeUITests.swift
     dependencies:
       - target: HunterRun
     settings:

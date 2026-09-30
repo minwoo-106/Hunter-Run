@@ -1,6 +1,6 @@
 import Foundation
 
-// Throwaway, in-memory PoC. No game/save types or rendering assets are referenced here.
+// Transient home presentation state. No game/save types or rendering assets are referenced here.
 public enum LifePhase: String, Codable, CaseIterable { case stretching, idle, dozing, surprised, embarrassed, coffee, tablet, spacingOut, hairSweep, burger, burgerSurprised, burgerFlustered, cola }
 public struct LifeCue: Codable, Equatable {
     public var phase: LifePhase
@@ -17,6 +17,26 @@ public struct LifeSequence: Codable {
     public var activities: [LifePhase]?
     public var activitySeconds: [String: Double]?
     public var cues: [LifeCue]
+
+    // Reject malformed timing/rotation data before entering an advancing loop.
+    public static func decode(_ data: Data) throws -> LifeSequence {
+        let sequence = try JSONDecoder().decode(LifeSequence.self, from: data)
+        let durations = [sequence.stretchSeconds, sequence.idleSeconds, sequence.idleAfterWakeSeconds,
+                         sequence.dozeSettleSeconds, sequence.surprisedSeconds, sequence.embarrassedSeconds]
+        let activities: Set<LifePhase> = [.coffee, .tablet, .spacingOut, .hairSweep, .burger, .dozing]
+        guard durations.allSatisfy({ $0.isFinite && $0 > 0 }),
+              (sequence.activitySeconds ?? [:]).values.allSatisfy({ $0.isFinite && $0 > 0 }),
+              (sequence.activities ?? []).allSatisfy({ activities.contains($0) }),
+              sequence.cues.allSatisfy({ $0.at.isFinite && $0.at >= 0 }) else {
+            throw ConfigurationError.invalidSequence
+        }
+        return sequence
+    }
+    public enum ConfigurationError: Error { case invalidSequence }
+    public static var standby: LifeSequence {
+        LifeSequence(stretchSeconds: 1, idleSeconds: 1, idleAfterWakeSeconds: 1,
+                     dozeSettleSeconds: 1, surprisedSeconds: 1, embarrassedSeconds: 1, cues: [])
+    }
 }
 
 // Semantic input to a renderer. A future Cubism adapter maps these values to rig
