@@ -46,10 +46,10 @@ jobs:
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.5.0-build47-iPhone
+          name: HunterRun-1.5.1-build48-iPhone
           path: |
-            build/HunterRun-1.5.0-build47-unsigned.ipa
-            build/HunterRun-1.5.0-build47-manifest.json
+            build/HunterRun-1.5.1-build48-unsigned.ipa
+            build/HunterRun-1.5.1-build48-manifest.json
             build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0
