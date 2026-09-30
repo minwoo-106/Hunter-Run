@@ -4,11 +4,18 @@ mkdir -p build
 python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list devices available --json > build/simulators.json
 python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list devicetypes --json > build/device-types.json
 python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl list runtimes --json > build/runtimes.json
+export HUNTER_SIMULATOR_SDK=$(xcrun --sdk iphonesimulator --show-sdk-version)
 DEVICE_ID=$(python3 - <<'PY'
-import json
+import json, os, sys
+sdk = os.environ['HUNTER_SIMULATOR_SDK']
+runtimes = [r for r in json.load(open('build/runtimes.json'))['runtimes']
+            if r['isAvailable'] and r['name'].startswith('iOS') and (r['version'] == sdk or r['version'].startswith(sdk + '.'))]
+if not runtimes: raise SystemExit('No iOS runtime matching the selected Xcode simulator SDK: ' + sdk)
 with open('build/simulators.json') as source:
-    devices = [d for ds in json.load(source)['devices'].values() for d in ds if d['isAvailable'] and 'iPhone' in d['name']]
-device = next((d for d in devices if d['name'] == 'iPhone 17 Pro'), devices[0])
+    devices = [d for d in json.load(source)['devices'].get(runtimes[0]['identifier'], []) if d['isAvailable'] and 'iPhone' in d['name']]
+if not devices: raise SystemExit('No available iPhone on the selected runtime')
+device = next((d for name in ['iPhone 16 Pro', 'iPhone 17 Pro', 'iPhone 16'] for d in devices if d['name'] == name), devices[0])
+print('UI simulator: ' + device['name'] + ' / iOS ' + sdk, file=sys.stderr)
 print(device['udid'])
 PY
 )
@@ -87,21 +94,24 @@ sleep 1
 xcrun simctl io "$DEVICE_ID" screenshot build/portrait-checks/breath.png
 fi
 SMALL_DEVICE_ID=$(python3 - <<'PY'
-import json, subprocess
+import json, os, subprocess
+sdk = os.environ['HUNTER_SIMULATOR_SDK']
+runtimes = [r for r in json.load(open('build/runtimes.json'))['runtimes'] if r['isAvailable'] and r['name'].startswith('iOS')
+            and (r['version'] == sdk or r['version'].startswith(sdk + '.'))]
+if not runtimes: raise SystemExit('No matching compact iPhone runtime')
 with open('build/simulators.json') as source:
-    devices = [d for ds in json.load(source)['devices'].values() for d in ds if d['isAvailable'] and 'iPhone' in d['name']]
+    devices = [d for d in json.load(source)['devices'].get(runtimes[0]['identifier'], []) if d['isAvailable'] and 'iPhone' in d['name']]
 preferred = ['iPhone SE (3rd generation)', 'iPhone 16e', 'iPhone 16']
 device = next((d for name in preferred for d in devices if d['name'] == name), None)
 if device:
     print(device['udid'])
 else:
     types = json.load(open('build/device-types.json'))['devicetypes']
-    runtimes = [r for r in json.load(open('build/runtimes.json'))['runtimes'] if r['isAvailable'] and r['name'].startswith('iOS')]
     created = None
     for name in preferred:
         kind = next((t for t in types if t['name'] == name), None)
         if kind and runtimes:
-            attempt = subprocess.run(['xcrun', 'simctl', 'create', 'HunterRun Compact QA', kind['identifier'], runtimes[-1]['identifier']], capture_output=True, text=True)
+            attempt = subprocess.run(['xcrun', 'simctl', 'create', 'HunterRun Compact QA', kind['identifier'], runtimes[0]['identifier']], capture_output=True, text=True, timeout=60)
             if attempt.returncode == 0:
                 created = attempt.stdout.strip()
                 print(created)

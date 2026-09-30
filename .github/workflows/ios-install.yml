@@ -14,6 +14,8 @@ jobs:
   build:
     runs-on: macos-15
     timeout-minutes: 50
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
 
@@ -57,6 +59,9 @@ jobs:
             build/layout-log.txt
             build/small-layout-log.txt
             build-log.txt
+            build/simulators.json
+            build/runtimes.json
+            build/device-types.json
           if-no-files-found: warn
           retention-days: 7
 
