@@ -66,11 +66,15 @@ fi
 if [ "${1:-}" = "facilities" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/OperatorLifeUITests)
 fi
+python3 Prototypes/OperatorLife/capture-life-test.py build/layout-log.txt "$DEVICE_ID" build/life-preview-large.mp4 &
+LIFE_CAPTURE_PID=$!
 xcodebuild -project HunterRunOperatorPoC.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
   "${UI_SCOPE[@]}" \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
+if [ "$status" -ne 0 ]; then kill "$LIFE_CAPTURE_PID" 2>/dev/null || true; fi
+wait "$LIFE_CAPTURE_PID" || true
 mkdir -p build/ui-review
 xcrun xcresulttool export attachments --path build/Layout.xcresult --output-path build/ui-review || true
 # Keep a directly downloadable screenshot even when the assertion fails.

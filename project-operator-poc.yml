@@ -28,7 +28,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hunterrun.operatorpoc
         MARKETING_VERSION: "1.6.0"
-        CURRENT_PROJECT_VERSION: 50
+        CURRENT_PROJECT_VERSION: 51
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Prototypes/OperatorLife/Info.plist
         CODE_SIGNING_ALLOWED: NO

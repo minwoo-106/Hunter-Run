@@ -22,6 +22,7 @@ final class OperatorLifeUITests: XCTestCase {
     @MainActor func testNaturalSequenceConsumesWakeTapAndReturnsToIdle() {
         let app = app()
         wait("dozing", app)
+        Thread.sleep(forTimeInterval: 4) // capture settled shoulders/eyes, not the beginning of dozing
         capture("Natural dozing", app)
         app.buttons["home.operator"].tap()
         wait("embarrassed", app, seconds: 8)
