@@ -1,8 +1,21 @@
 [
   {
+    "asset": "OperatorLifeIdle",
+    "source": "idle.png",
+    "sha256": "3c0a96d91fee91946c68c46d0418bed761e177fecc0d91f8ec4f41fb9a6d5bb5",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
     "asset": "OperatorLifeStretch",
-    "source": "exec-96745ff0-8204-4580-ae70-4685fcf83d6c.png",
-    "sha256": "6d8a60cd2e1f31eb74a23b12b13d2406ecacc37cab59fd09c2b88650ff059947",
+    "source": "stretching-overhead.png",
+    "sha256": "fee2ce7117dc8074e7d0c3640c92498faf07cb317bc6f7d246bab9f8df369abc",
     "size": [
       1024,
       1536
@@ -14,8 +27,8 @@
   },
   {
     "asset": "OperatorLifeDoze",
-    "source": "exec-4000017d-fe23-4374-8e64-397f5e580967.png",
-    "sha256": "69ff68d26e7cd2a7e164186d4eb23cfebeccb55f56f7f0faf7dca4affdfd7d7d",
+    "source": "dozing.png",
+    "sha256": "2e49564200efe5b0063328ce7a558018f232d99dbdd3baf7d2fb3dfb7e22575c",
     "size": [
       1024,
       1536
@@ -27,8 +40,8 @@
   },
   {
     "asset": "OperatorLifeSurprised",
-    "source": "exec-9f5acf30-bd31-4315-b28f-fa2c50ffad2e.png",
-    "sha256": "4b432b5247b0de7b2079973dbf8cd3a4a0348d6caead0e521723fd373f701bfa",
+    "source": "surprised.png",
+    "sha256": "6bcc81e90de7a41cb02c6ca462d178b1522eb40c7fb5486d84c6346b42b080dd",
     "size": [
       1024,
       1536
@@ -40,8 +53,21 @@
   },
   {
     "asset": "OperatorLifeEmbarrassed",
-    "source": "exec-c0fe1262-d19d-40b9-b337-31478021f4b1.png",
-    "sha256": "3f424f2652643fa6e2aed58c07104002fc2f54a9e4ff45d2491be70521bbeba3",
+    "source": "embarrassed.png",
+    "sha256": "f910024d5cf5f203285d359dbfaf4d53d911144143aad5e88124c1aa582fe65d",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeBlink",
+    "source": "exec-9a708641-50bf-4b9a-9105-b9e3ac3a0080.png",
+    "sha256": "fcdf45ee641723d84ab715523c05ea7147dda1e91e3f17a7cf8b7afc9b5d29b3",
     "size": [
       1024,
       1536
