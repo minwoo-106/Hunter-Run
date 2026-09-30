@@ -1,0 +1,54 @@
+[
+  {
+    "asset": "OperatorLifeStretch",
+    "source": "exec-96745ff0-8204-4580-ae70-4685fcf83d6c.png",
+    "sha256": "6d8a60cd2e1f31eb74a23b12b13d2406ecacc37cab59fd09c2b88650ff059947",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeDoze",
+    "source": "exec-4000017d-fe23-4374-8e64-397f5e580967.png",
+    "sha256": "69ff68d26e7cd2a7e164186d4eb23cfebeccb55f56f7f0faf7dca4affdfd7d7d",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeSurprised",
+    "source": "exec-9f5acf30-bd31-4315-b28f-fa2c50ffad2e.png",
+    "sha256": "4b432b5247b0de7b2079973dbf8cd3a4a0348d6caead0e521723fd373f701bfa",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeEmbarrassed",
+    "source": "exec-c0fe1262-d19d-40b9-b337-31478021f4b1.png",
+    "sha256": "3f424f2652643fa6e2aed58c07104002fc2f54a9e4ff45d2491be70521bbeba3",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  }
+]
