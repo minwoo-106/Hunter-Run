@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AssociationView: View {
-    @State private var section = 0
+    @State private var section = 2
     var body: some View {
         VStack(spacing: 0) {
             Picker("협회 업무", selection: $section) { Text("의뢰").tag(0); Text("주간 조사").tag(1); Text("시설").tag(2) }

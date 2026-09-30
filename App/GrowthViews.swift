@@ -11,70 +11,7 @@ struct ResourceStrip: View {
             .accessibilityLabel("마정석 \(model.save.profile.crystals), 조사 데이터 \(model.save.profile.research), 코어 \(model.save.profile.growth.cores)")
     }
 }
-struct AssociationFacilitiesView: View {
-    @EnvironmentObject var model: AppModel
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                BeaconPanel()
-                eyebrow("ASSOCIATION")
-                Text(AssociationStage.name(model.save.profile)).font(.headline).foregroundStyle(Theme.teal)
-                Text("지부 성장 \(AssociationStage.level(model.save.profile) + 1) / 5 · 시설을 Lv.2와 Lv.3으로 확장하면 공간도 함께 성장해요.").font(.caption).foregroundStyle(Theme.muted)
-                Text("우리의 지부를\n키워갑니다.").font(.largeTitle.bold())
-                Text("현장에서 얻은 자원으로 새로운 기능을 열어보세요.").foregroundStyle(Theme.muted)
-                ResourceStrip()
-                ForEach(Department.allCases, id: \.rawValue) { department in
-                    let level = model.save.profile.growth.level(department)
-                    let next = model.progressionCatalog?.upgrades.first { $0.department == department && $0.level == level + 1 }
-                    VStack(alignment: .leading, spacing: 14) {
-                        HStack {
-                            Image(systemName: department.symbol).font(.title2).foregroundStyle(Theme.teal)
-                            Text(department.title).font(.title3.bold())
-                            Spacer(); Text("Lv.\(level)").font(.headline.monospacedDigit())
-                        }
-                        if let next {
-                            Text(next.playerHint).foregroundStyle(Theme.muted)
-                            if let rank = next.requiredRank { Text("\(rank)급부터 확장 가능").font(.caption).foregroundStyle(Theme.teal) }
-                            Text("마정석 \(next.crystals) · 조사 데이터 \(next.research)").font(.caption)
-                            Button("시설 확장") { model.upgrade(department) }
-                                .buttonStyle(GameButtonStyle(primary: true))
-                                .disabled(model.growthLocked || !next.available(to: model.save.profile) || model.save.profile.crystals < next.crystals || model.save.profile.research < next.research)
-                        } else {
-                            Text(model.progressionCatalog?.upgrades.first { $0.department == department && $0.level == level }?.reveal ?? "확장 완료")
-                                .font(.callout).foregroundStyle(Theme.teal)
-                        }
-                    }.card()
-                }
-                VStack(alignment: .leading, spacing: 12) {
-                    if model.save.profile.journey?.completed.contains("M20") == true {
-                        Image(model.save.profile.journey?.memories[HaesolSanctum.restorationKey] == "yes" ? "HaesolBefore" : "Monster-corrupted-hunter")
-                            .resizable().scaledToFit().frame(maxWidth: .infinity).frame(maxHeight: 260).clipped().accessibilityHidden(true)
-                        Label("귀환 정화실", systemImage: "moon.stars.fill").font(.title3.bold()).foregroundStyle(Theme.teal)
-                        if model.save.profile.journey?.memories[HaesolSanctum.restorationKey] == "yes" {
-                            Text("정화 절차 완료 · 마지막 이야기를 스토리에서 확인해요.").foregroundStyle(Theme.muted)
-                            if model.save.profile.journey?.completed.contains("M21") == true {
-                                NavigationLink("강해솔의 일상 보기") { HaesolMomentsView() }
-                                    .buttonStyle(GameButtonStyle()).accessibilityIdentifier("association.haesol.moments")
-                            }
-                        } else {
-                            Text("봉인된 시설의 기록을 복원하고 귀환 절차를 마무리해요.").foregroundStyle(Theme.muted)
-                            Button("정화실 가동") { model.restoreHaesol() }
-                                .buttonStyle(GameButtonStyle(primary: true))
-                                .disabled(model.growthLocked || !HaesolSanctum.available(model.save.profile))
-                                .accessibilityIdentifier("association.sanctum.restore")
-                        }
-                    } else {
-                        Label("봉인 시설", systemImage: "lock.shield").font(.headline)
-                        Text("아직 개방되지 않은 지부의 시설이에요.").font(.caption).foregroundStyle(Theme.muted)
-                    }
-                }.card().accessibilityIdentifier("association.sanctum")
-                Text("이번 버전에서는 각 부서를 Lv.3까지 확장할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)
-            }.padding(20)
-        }.labyrinthScreen().navigationTitle("협회 관리").navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-private struct HaesolMomentsView: View {
+struct HaesolMomentsView: View {
     private let moments: [(asset: String, title: String, detail: String)] = [
         ("HaesolBefore", "평범한 귀갓길", "강해솔은 도시의 오후를 천천히 걸었어요."),
         ("HaesolHairTie", "출발 전", "머리를 묶고 다시 길을 나설 준비를 해요."),

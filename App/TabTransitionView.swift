@@ -157,6 +157,7 @@ private struct HunterActivityTransition: View {
 
 private struct AssociationGateTransition: View {
     let progress: Double
+    @EnvironmentObject var model: AppModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -166,9 +167,15 @@ private struct AssociationGateTransition: View {
             let shake = CGFloat(sin(progress * 110) * 4 * TransitionMath.pose(progress, 0.24, 0.38))
             ZStack {
                 Color.black
-                Image("TransitionAssociationHall").resizable().scaledToFill()
+                Image("FacilityBase-2").resizable().scaledToFill()
                     .frame(width: width, height: height).overlay(Theme.ink.opacity(0.48))
+                    .scaleEffect(1 + CGFloat(0.08 * TransitionMath.smooth(progress, 0.52, 0.95)))
                     .opacity(TransitionMath.ramp(progress, 0.45, 0.83))
+                VStack(spacing: 9) {
+                    Text("협회 지하 · 안정화 게이트").font(.caption).tracking(3)
+                    Text("시설 구역으로").font(.title2.weight(.medium))
+                }.foregroundStyle(Labyrinth.parchment)
+                    .opacity(TransitionMath.pose(progress, 0.08, 0.50))
                 gateLeaf(width: width, height: height, left: true)
                     .offset(x: -width * 0.55 * opened + shake)
                 gateLeaf(width: width, height: height, left: false)
