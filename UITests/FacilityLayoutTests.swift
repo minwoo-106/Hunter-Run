@@ -13,10 +13,16 @@ final class FacilityLayoutTests: XCTestCase {
     }
     @MainActor private func reach(_ element: XCUIElement, app: XCUIApplication) {
         for _ in 0..<12 {
-            if element.isHittable { break }
-            app.scrollViews.firstMatch.swipeUp()
+            let scroll = app.scrollViews.firstMatch
+            let top = max(scroll.frame.minY, app.navigationBars.firstMatch.frame.maxY) + 12
+            let bottom = min(scroll.frame.maxY, app.buttons["nav.2"].frame.minY) - 12
+            let frame = element.frame
+            // A one-pixel edge can be "hittable" while the synthesized center tap lands on the tab bar.
+            if element.isHittable && frame.minY >= top && frame.maxY <= bottom { return }
+            if frame.minY < top && frame.maxY > 0 { scroll.swipeDown() }
+            else { scroll.swipeUp() }
         }
-        XCTAssertTrue(element.isHittable)
+        XCTFail("Facility control did not fit inside the visible content area: " + element.identifier)
     }
     @MainActor private func capture(_ name: String, app: XCUIApplication) {
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = name; shot.lifetime = .keepAlways; add(shot)
