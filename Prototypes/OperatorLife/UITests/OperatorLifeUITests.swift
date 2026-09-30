@@ -25,6 +25,7 @@ final class OperatorLifeUITests: XCTestCase {
         capture("Natural dozing", app)
         app.buttons["home.operator"].tap()
         wait("embarrassed", app, seconds: 8)
+        app.buttons["home.operator"].tap()
         XCTAssertFalse(app.navigationBars["오퍼레이터와 대화"].exists)
         XCTAssertTrue(app.staticTexts["home.greeting"].label.contains("오셨어요") || app.staticTexts["home.greeting"].label.contains("저 안 잤어요"))
         capture("Wake reaction", app)
@@ -32,10 +33,11 @@ final class OperatorLifeUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["home.greeting"].label.contains("저 안 잤어요"))
     }
     @MainActor func testBackgroundAndSettingsDoNotStealCharacterTap() {
-        let app = app(); wait("dozing", app)
+        let app = app(); wait("idle", app)
         XCUIDevice.shared.press(.home)
-        Thread.sleep(forTimeInterval: 3)
-        app.activate(); wait("dozing", app, seconds: 5)
+        Thread.sleep(forTimeInterval: 10) // longer than idle duration; offscreen time must not count
+        app.activate(); wait("idle", app, seconds: 3)
+        wait("dozing", app)
         app.buttons["home.settings"].tap()
         XCTAssertTrue(app.navigationBars["설정"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap(); wait("dozing", app, seconds: 5)

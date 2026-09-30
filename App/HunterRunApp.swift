@@ -110,7 +110,9 @@ struct HomeView: View {
     @EnvironmentObject var model: AppModel
 #if OPERATOR_LIFE_POC
     @Environment(\.scenePhase) private var lifeScenePhase
-    @Environment(\.accessibilityReduceMotion) private var lifeReduceMotion
+    @Environment(\.accessibilityReduceMotion) private var lifeSystemReduceMotion
+    @Environment(\.operatorLifeReduceMotionOverride) private var lifeReduceMotionOverride
+    private var lifeReduceMotion: Bool { lifeSystemReduceMotion || lifeReduceMotionOverride }
     @AppStorage("operatorMotionEnabled") private var lifeMotionEnabled = true
     @StateObject private var life = OperatorLifeRuntime()
     private var lifeVisible: Bool {
