@@ -5,13 +5,13 @@ Question: does the existing Hunter Run home portrait feel like a person living i
 This is an isolated **raster-pose prototype**, not a Live2D model. Its branch is
 `prototype/operator-life-poc`; the normal 1.6.0 app/project remains unchanged.
 The installer has bundle `com.hunterrun.operatorpoc`, display name `HunterRun PoC`,
-version 1.6.0 / build 50. Install alongside Hunter Run. Its sandbox and preferences
+version 1.6.0 / build 51. Install alongside Hunter Run. Its sandbox and preferences
 are separate, so it cannot change the installed game's save. Registration is
 bypassed only in this PoC. No life state is saved, no affinity/reward/story API is called.
 
 ## Try it
 
-Open the app and leave Home visible: shoulder stretch (2.6 s), idle (7.5 s),
+Open the app and leave Home visible: overhead full-body stretch (2.6 s), idle (7.5 s),
 slow eye close and doze settle (3.5 s), then wait indefinitely for a character tap.
 The existing clear character button consumes the first tap to wake up; repeated
 taps during surprised/embarrassed cannot open the conversation or restart it.
@@ -59,9 +59,10 @@ Implemented: real timed state transitions, wake-only first tap, three independen
 text cues, no repeated-tap restart, lifecycle suspension, static Reduce Motion,
 existing breath shader/blink in idle, and bounded rendering/touch geometry.
 
-Illusion: four newly generated transparent full-character PNG poses are crossfaded.
+Illusion: five approved transparent full-character body poses are crossfaded;
+a sixth drawing supplies closed eyelids for the new idle face.
 Tiny rotation/translation applies to the whole portrait. Eyelids are a mask from
-the existing blink illustration; closing is an opacity fade, not an articulated
+the matching newly generated idle blink illustration; closing is an opacity fade, not an articulated
 eyelid rig. Shoulder stretching and head nod are alternate drawn poses, not
 independent body joints. Idle gaze comes from a tiny whole-portrait drift; pupils
 do not independently track the user. Small differences between generated faces/
@@ -94,12 +95,27 @@ mesh/mask counts and draw frequency determine its device cost.
 
 The animation target is 30 Hz, not a promise of measured 30 GPU FPS. Diagnostic
 logs explicitly report **Timeline callback cadence**, process physical footprint,
-and system thermal state. Four 1024×1536 RGBA poses amount to roughly 24 MiB of
+and system thermal state. Six 1024×1536 RGBA drawings amount to roughly 36 MiB of
 decoded pixels if all are resident, plus existing textures/offscreen buffers;
-the PNG files add about 7.3 MiB to the source assets. Those estimates are not
+the PNG files add about 11 MiB to the source assets. Those estimates are not
 measured app memory. No real iPhone is controlled from this Windows workspace;
 simulator cadence/memory cannot prove iPhone GPU performance or temperature.
 Physical-device FPS, peak memory and thermal/energy checks still require an
 installed PoC on an iPhone with Instruments/device observation.
 
 See `VALIDATION.md` after a successful build for actual test/screenshot results.
+
+## Approved posture revision
+
+Build 51 removes the pocket/headset stance from every life pose. Stretch uses
+both arms overhead with an effort expression; idle lowers both arms; doze
+relaxes shoulders, head and hands; waking raises both hands; embarrassment
+adjusts the tie. The renderer reserves overhead room and aligns resting faces.
+It does not morph individual joints or claim continuous arm articulation.
+The original game and its production portrait assets remain untouched.
+
+`pose-prompts-v2.json` and `asset-manifest.json` record the new generation and
+copy verification. `capture-life-test.py` records the native simulator wake test
+as `life-preview-large.mp4`; recordings/screenshots are build artifacts, not
+synthesized gameplay. Windows can also preview the accepted poses in the
+self-contained browser demo under the workspace `outputs/operator-life-poc`.

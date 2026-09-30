@@ -1,3 +1,14 @@
+# Current approved posture prompts — build 51
+
+The current six files are documented in `pose-prompts-v2.json` and
+`asset-manifest.json`. Five distinct body poses replace the old pocket stance,
+and the closed-eye drawing matches the new idle face. All are built-in imagegen
+reference edits with genuine transparency. PNG bytes were copied unchanged; no
+local image redraw or cutout was performed.
+
+The following build-50 prompt history is retained only to explain the rejected
+first PoC. These poses are no longer selected.
+
 # Selected image prompt set
 
 Generated with the built-in `image_gen` tool; four separate reference-based edits,
