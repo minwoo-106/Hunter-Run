@@ -78,19 +78,6 @@
     ]
   },
   {
-    "asset": "OperatorLifeCoffee",
-    "source": "exec-96794763-b3d9-473f-a32e-2a9083bdc842.png",
-    "sha256": "20021b2c99c4485ab24b56a653ea63e7946272d516a5a27ab3a1cecf463e065c",
-    "size": [
-      1024,
-      1536
-    ],
-    "alpha": [
-      0,
-      254
-    ]
-  },
-  {
     "asset": "OperatorLifeTablet",
     "source": "exec-fc8cddbb-bfae-4f95-8a6b-85350b864eff.png",
     "sha256": "6322ec1d306e9e714e6fff83df51b0b7e09d75322658ffe345dbf92af3cdfe9b",
@@ -156,9 +143,9 @@
     ]
   },
   {
-    "asset": "OperatorLifeCola",
-    "source": "exec-36a7b02c-df96-4fd1-9e88-64f81c3e4335.png",
-    "sha256": "a4eb931f48d41825ca2e7bdcc4355c5ca1582a2bcf5f50b79ba35429d01f76ba",
+    "asset": "OperatorLifeBurgerChew",
+    "source": "exec-add7afed-64b1-4351-9652-566db1599677.png",
+    "sha256": "24e3f89b74c679af47db0796beccb990589c39f6c5154de32e7e901794f4892b",
     "size": [
       1024,
       1536
@@ -169,9 +156,48 @@
     ]
   },
   {
-    "asset": "OperatorLifeBurgerChew",
-    "source": "exec-add7afed-64b1-4351-9652-566db1599677.png",
-    "sha256": "24e3f89b74c679af47db0796beccb990589c39f6c5154de32e7e901794f4892b",
+    "asset": "OperatorLifeCoffee",
+    "source": "exec-ab303282-2cfb-4faf-85e8-9d3f1f2fef26.png",
+    "sha256": "61ff5dd63f29062dd6dee8ad5af35686441986d4b4ff1928e8ef3e708a233115",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeChestPat",
+    "source": "exec-8e3a46c5-db6f-4228-a434-ac590af8b5f9.png",
+    "sha256": "83ef99eac31209220992c01a6a72341ecbaf7aac8bc24b4da402889d76bf1490",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeChestPatAway",
+    "source": "exec-4da1cc04-419a-492e-8625-905bdfb1a16c.png",
+    "sha256": "d2e3c67cbf8548c09a8ea3e5eec63ac1e7e318aefe66b5243586f247d28f351e",
+    "size": [
+      1024,
+      1536
+    ],
+    "alpha": [
+      0,
+      254
+    ]
+  },
+  {
+    "asset": "OperatorLifeCola",
+    "source": "exec-0d8caee2-7c82-431b-939d-922041bc1f4c.png",
+    "sha256": "241b2a700e6477ecdb56abb4447b36330ccfe9e5a880e30fdb8c9f28d7cc2500",
     "size": [
       1024,
       1536
