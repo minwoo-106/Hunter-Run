@@ -198,7 +198,7 @@ public struct NarrativeCatalog: Codable {
             if !state.unlocked.contains(entry.id) { break }
         }
         for id in ["M03", "M06", "M10", "M13", "M16"] where state.unlocked.contains(id) && !state.milestones.contains(id) {
-            state.milestones.insert(id); state.affinity += 4
+            state.milestones.insert(id); state.affinity = min(1000, state.affinity + 4)
         }
         if state.unlocked.contains("M18"), state.memories["firstVanguardRole"] == nil {
             let roles = ["warrior", "mage", "archer", "cleric"]
@@ -253,7 +253,7 @@ public struct NarrativeCatalog: Codable {
         }
         state.completed.insert(scene.id)
         state.memories.merge(cursor.pendingMemory) { _, new in new }
-        if scene.kind == "bond" { state.affinity += 4 }
+        if scene.kind == "bond" { state.affinity = min(1000, state.affinity + 4) }
         state.cursor = nil; profile.journey = state; refresh(&profile)
         return true
     }

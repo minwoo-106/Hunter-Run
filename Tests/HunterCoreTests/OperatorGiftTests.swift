@@ -83,4 +83,23 @@ final class OperatorGiftTests: XCTestCase {
         XCTAssertEqual(profile.journey?.affinity, 1000)
         XCTAssertTrue(profile.journey?.isValid ?? false)
     }
+    func testStoryRewardsAtAffinityCapKeepSaveValidAndCannotRepeat() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let catalog = try JSONDecoder().decode(NarrativeCatalog.self, from: Data(contentsOf: root.appendingPathComponent("Resources/narrative.json")))
+        var profile = Profile(); var state = JourneyState()
+        state.affinity = 1000; state.unlocked = ["M01", "M02", "M03", "R01"]; profile.journey = state
+        catalog.refresh(&profile)
+        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertTrue(profile.journey?.milestones.contains("M03") ?? false)
+        let scene = try XCTUnwrap(catalog.scene("R01"))
+        let ending = try XCTUnwrap(scene.nodes.first { $0.next == nil && ($0.choices ?? []).isEmpty })
+        profile.journey?.cursor = DialogueCursor(sceneID: scene.id, nodeID: ending.id)
+        XCTAssertTrue(try catalog.advance(profile: &profile))
+        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertTrue(profile.journey?.isValid ?? false)
+        XCTAssertTrue(profile.journey?.completed.contains("R01") ?? false)
+        catalog.refresh(&profile)
+        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertThrowsError(try catalog.begin("R01", profile: &profile))
+    }
 }
