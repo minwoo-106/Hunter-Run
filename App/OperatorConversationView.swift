@@ -49,7 +49,7 @@ struct OperatorConversationView: View {
                 OperatorGiftView { response in
                     showGifts = false; chatEpisode = nil
                     say(response.text, face: response.expression)
-                    giftNote = "친밀도 +\(response.affinity)"
+                    giftNote = response.affinity > 0 ? "친밀도 +\(response.affinity)" : "친밀도 MAX"
                 }.environmentObject(model)
             }
             .toolbar {
@@ -170,15 +170,35 @@ struct OperatorMemoriesView: View {
                 Text("함께 나눌 이야기").font(.title.bold())
                 VStack(alignment: .leading, spacing: 12) {
                     Label("\(state.operatorName) · \(NarrativeCatalog.tierNames[tier - 1])", systemImage: "heart.fill").foregroundStyle(Theme.teal)
-                    Text("친밀도 \(state.affinity)").font(.title2.bold()).accessibilityIdentifier("operator.relationship-affinity")
+                    Text("친밀도 \(state.affinity) / 1,000").font(.title2.bold()).accessibilityIdentifier("operator.relationship-affinity")
+                    if state.affinity >= 1000 {
+                        HStack {
+                            Image(systemName: "sparkles")
+                            Text("친밀도 MAX").accessibilityIdentifier("operator.affinity-max")
+                        }.font(.headline).foregroundStyle(Labyrinth.gold)
+                    }
                     if tier < NarrativeCatalog.tierNames.count {
                         let gate = NarrativeCatalog.relationshipGates[tier - 1]
                         ProgressView(value: Double(min(gate.0, state.affinity)), total: Double(gate.0))
                             .accessibilityLabel("다음 관계까지 친밀도 \(state.affinity) / \(gate.0)")
                         Text(state.affinity < gate.0 ? "다음 관계까지 친밀도 \(gate.0 - state.affinity) 더 필요해요." : "친밀도 조건은 채웠어요. 함께 새로운 사건을 겪으면 다음 관계로 이어져요.")
                             .font(.caption).foregroundStyle(Theme.muted)
-                    } else { Text("함께 쌓은 이야기로 가장 가까운 관계가 되었어요.").font(.caption).foregroundStyle(Theme.muted) }
+                    } else {
+                        Text("관계 MAX · 5 / 5단계").font(.headline).foregroundStyle(Theme.teal)
+                            .accessibilityIdentifier("operator.relationship-max")
+                        Text("함께 쌓은 이야기로 가장 가까운 관계가 되었어요. 친밀도는 1,000까지 계속 쌓을 수 있어요.")
+                            .font(.caption).foregroundStyle(Theme.muted)
+                    }
                     Text("함께한 이야기와 새로운 사건, 작은 선물로 가까워져요. 관계 변화에는 이야기 진행도 필요해요.")
+                        .font(.caption).foregroundStyle(Theme.muted)
+                }.card()
+                VStack(alignment: .leading, spacing: 14) {
+                    Text("관계 체크포인트").font(.headline)
+                    ForEach(NarrativeCatalog.tierNames.indices, id: \.self) { index in
+                        if index > 0 { Divider().overlay(Labyrinth.gold.opacity(0.25)) }
+                        checkpoint(index: index, state: state, tier: tier)
+                    }
+                    Text("친밀도 기준을 채운 뒤에도 함께한 이야기의 진행 조건이 필요해요.")
                         .font(.caption).foregroundStyle(Theme.muted)
                 }.card()
                 ForEach(model.narratives?.bonds ?? []) { entry in
@@ -195,6 +215,23 @@ struct OperatorMemoriesView: View {
             }.padding(22)
         }.labyrinthScreen().navigationTitle("함께한 기록").navigationBarTitleDisplayMode(.inline).modifier(GameBackModifier())
     }
+    private func checkpoint(index: Int, state: JourneyState, tier: Int) -> some View {
+        let threshold = index == 0 ? 0 : NarrativeCatalog.relationshipGates[index - 1].0
+        let reached = index + 1 <= tier
+        let current = index + 1 == tier
+        let status = current ? (tier == 5 ? "현재 단계 · 관계 MAX" : "현재 단계")
+            : reached ? "달성" : state.affinity >= threshold ? "친밀도 충족 · 이야기 진행 필요" : "친밀도 \(threshold - state.affinity) 더 필요"
+        return HStack(alignment: .top, spacing: 12) {
+            Image(systemName: current ? "largecircle.fill.circle" : reached ? "checkmark.circle.fill" : "lock.circle")
+                .foregroundStyle(reached ? Theme.teal : Theme.muted).font(.title3).frame(width: 24)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("\(index + 1)단계 · \(NarrativeCatalog.tierNames[index])").font(.headline)
+                Text(index == 0 ? "시작 · 친밀도 0" : "기준 · 친밀도 \(threshold)").font(.caption).foregroundStyle(Theme.muted)
+                Text(status).font(.caption).foregroundStyle(current ? Theme.teal : Theme.muted)
+                    .accessibilityIdentifier("operator.relationship-checkpoint.\(index + 1)")
+            }.fixedSize(horizontal: false, vertical: true)
+        }
+    }
 }
 
 struct OperatorGiftView: View {
@@ -208,6 +245,10 @@ struct OperatorGiftView: View {
                     Text("작은 마음을 전해요").font(.title2.bold())
                     Text("야외 탐험에서 실제로 움직인 시간이 30분 쌓일 때마다 작은 선물을 발견해요. 여러 활동의 시간이 합산돼요.")
                         .font(.callout).foregroundStyle(Theme.muted)
+                    if (model.save.profile.journey?.affinity ?? 0) >= 1000 {
+                        Text("친밀도 MAX예요. 선물은 건넬 수 있지만 친밀도는 더 오르지 않아요.")
+                            .font(.callout).foregroundStyle(Labyrinth.gold).accessibilityIdentifier("operator.gifts-max")
+                    }
                     let inventory = model.save.profile.journey?.gifts?.inventory ?? [:]
                     if inventory.values.reduce(0, +) == 0 {
                         Text("아직 보관 중인 선물이 없어요.").card().accessibilityIdentifier("operator.gifts-empty")
@@ -218,7 +259,7 @@ struct OperatorGiftView: View {
                             HStack { Label(gift.name, systemImage: gift.symbol).font(.headline); Spacer(); Text("×\(inventory[gift.id, default: 0])").monospacedDigit() }
                             Text(gift.detail).font(.callout).foregroundStyle(Theme.muted)
                             let gain = min(2, max(0, 1000 - (model.save.profile.journey?.affinity ?? 0)))
-                            Button(gain > 0 ? "건네기 · 친밀도 +\(gain)" : "건네기") {
+                            Button(gain > 0 ? "건네기 · 친밀도 +\(gain)" : "건네기 · 친밀도 MAX") {
                                 if let response = model.giveOperatorGift(gift) { onGiven(response) }
                             }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked)
                                 .accessibilityIdentifier("operator.give." + gift.id)

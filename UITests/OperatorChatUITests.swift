@@ -2,11 +2,12 @@ import XCTest
 
 final class OperatorChatUITests: XCTestCase {
     override func setUp() { super.setUp(); continueAfterFailure = false }
-    @MainActor private func launch(large: Bool = false) -> XCUIApplication {
+    @MainActor private func launch(large: Bool = false, extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing-skip-title", "--ui-testing-skip-welcome", "--ui-testing-silent-audio",
             "--ui-testing-save", UUID().uuidString, "-operatorMotionEnabled", "NO"]
         if large { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        app.launchArguments += extra
         app.launch()
         XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 15))
         app.buttons["home.operator"].tap()
@@ -59,6 +60,33 @@ final class OperatorChatUITests: XCTestCase {
     }
     @MainActor func testSmallTalkLinesRepliesAndTopicRotation() { exerciseConversation(large: false) }
     @MainActor func testLargeTextCanReadAndReplyWithoutLosingControls() { exerciseConversation(large: true) }
+    @MainActor func testRelationshipAndAffinityMaxAreDistinctAndCheckpointsRemainReachable() {
+        let final = launch(extra: ["--ui-testing-operator-relationship", "final"])
+        final.buttons["operator.memories"].tap()
+        XCTAssertTrue(final.staticTexts["operator.relationship-max"].waitForExistence(timeout: 5))
+        XCTAssertFalse(final.staticTexts["operator.affinity-max"].exists, "Final relationship does not mean affinity is capped")
+        capture(final, "Relationship final below affinity cap")
+        final.terminate()
+
+        let capped = launch(large: true, extra: ["--ui-testing-operator-relationship", "waiting", "--ui-testing-operator-gifts"])
+        capped.buttons["operator.memories"].tap()
+        XCTAssertTrue(capped.staticTexts["operator.affinity-max"].waitForExistence(timeout: 5))
+        XCTAssertFalse(capped.staticTexts["operator.relationship-max"].exists, "High affinity must not skip story gates")
+        capture(capped, "Affinity MAX waiting for story large text")
+        let checkpoint = capped.staticTexts["operator.relationship-checkpoint.5"]
+        for _ in 0..<16 { if checkpoint.isHittable { break }; capped.scrollViews.firstMatch.swipeUp() }
+        XCTAssertTrue(checkpoint.isHittable)
+        XCTAssertTrue(checkpoint.label.contains("이야기 진행 필요"))
+        capture(capped, "Relationship checkpoints large text")
+        capped.buttons["이전"].tap()
+        capped.buttons["operator.gifts"].tap()
+        XCTAssertTrue(capped.staticTexts["operator.gifts-max"].waitForExistence(timeout: 5))
+        let gift = capped.buttons["operator.give.flower"]
+        XCTAssertTrue(gift.label.contains("친밀도 MAX")); tap(gift, app: capped)
+        XCTAssertTrue(capped.staticTexts["operator.gift-gain"].waitForExistence(timeout: 5))
+        XCTAssertEqual(capped.staticTexts["operator.gift-gain"].label, "친밀도 MAX")
+        capture(capped, "Gift affinity MAX")
+    }
     @MainActor func testGiftIsConsumedAndRelationshipPageShowsSavedAffinity() {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-testing-skip-title", "--ui-testing-skip-welcome", "--ui-testing-silent-audio",

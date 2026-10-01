@@ -277,6 +277,16 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
         #if DEBUG && targetEnvironment(simulator)
+        if !existingSave, let marker = arguments.firstIndex(of: "--ui-testing-operator-relationship"),
+           marker + 1 < arguments.count, ["final", "waiting"].contains(arguments[marker + 1]) {
+            var journey = save.profile.journey ?? JourneyState()
+            journey.affinity = arguments[marker + 1] == "final" ? 52 : 1000
+            if arguments[marker + 1] == "final" {
+                journey.unlocked.formUnion((1...14).map { String(format: "M%02d", $0) })
+                journey.milestones.formUnion(["M03", "M06", "M10", "M13"])
+            }
+            save.profile.journey = journey
+        }
         if arguments.contains("--ui-testing-operator-gifts") && !existingSave {
             var journey = save.profile.journey ?? JourneyState()
             var gifts = OperatorGiftState(); gifts.inventory[OperatorGift.flower.id] = 1
