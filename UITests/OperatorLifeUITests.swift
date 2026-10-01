@@ -88,8 +88,13 @@ final class OperatorLifeUITests: XCTestCase {
     @MainActor func testFullActivityRotationAndNavigationRecovery() {
         // Exercise real consecutive textures in one process, rather than
         // treating isolated pose screenshots as a full-cycle memory check.
-        let app = app(["--life-start-phase", "coffee"])
-        wait("coffee", app, seconds: 5)
+        // Enter the rotation through the real wake path. A forced coffee pose
+        // does not seed the activity cursor and would replay coffee first.
+        let app = app()
+        wait("dozing", app)
+        app.buttons["home.operator"].tap()
+        wait("idle", app, seconds: 10)
+        wait("coffee", app, seconds: 18)
         for phase in ["tablet", "spacingOut", "hairSweep", "burger"] {
             wait(phase, app, seconds: 24)
         }
