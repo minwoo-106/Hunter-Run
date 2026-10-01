@@ -29,6 +29,9 @@ private struct CharacterVoiceCatalog: Decodable {
     @Published var showWelcome = false
     @Published var showStories = false
     @Published var showOperator = false
+    // Presentation context and recent small-talk choices are transient, never save data.
+    var operatorChatActivity = "idle"
+    private var recentChatTopics: [String] = []
     @Published var showReturnBriefing = false
     var allBosses: [BossDefinition] { (world?.bosses ?? []) + (world.map(BossMutations.all) ?? []) }
     var activeExam: QuestDefinition? { activeQuest?.promotion != nil ? activeQuest : nil }
@@ -143,6 +146,32 @@ private struct CharacterVoiceCatalog: Decodable {
     private let characterCatalog: CharacterVoiceCatalog? = AppModel.resource("character-audio")
     let narration: NarrationCatalog? = AppModel.resource("narration")
     let narratives: NarrativeCatalog? = AppModel.resource("narrative")
+    let operatorChats: OperatorChatCatalog? = {
+        let catalog: OperatorChatCatalog? = AppModel.resource("operator-chat")
+        guard let catalog, (try? catalog.validate()) != nil else { return nil }
+        return catalog
+    }()
+    func chatSuggestions() -> [OperatorChatEpisode] {
+        let recent = OperatorChatCatalog.recentActivity(save.profile, now: Date())
+        return operatorChats?.suggestions(tier: narratives?.tier(save.profile) ?? 1,
+            activity: operatorChatActivity == "idle" && recent != nil ? "postRun" : operatorChatActivity,
+            hasRecentActivity: recent != nil, recent: recentChatTopics,
+            deck: operatorChats?.episodes.map(\.id).shuffled() ?? []) ?? []
+    }
+    func selectedChatTopic(_ id: String) {
+        recentChatTopics.removeAll { $0 == id }
+        recentChatTopics.append(id)
+        recentChatTopics = Array(recentChatTopics.suffix(4))
+    }
+    func chatText(_ text: String) -> String {
+        let summary: String
+        if let run = OperatorChatCatalog.recentActivity(save.profile, now: Date()) {
+            summary = run.environment?.isIndoor == true
+                ? "최근 실내 활동 기록도 잘 받아뒀어요."
+                : "최근 활동에서 \(String(format: "%.2f", run.distance / 1000))km 이동하셨네요. 기록은 잘 받아뒀어요."
+        } else { summary = "요즘 활동은 어떠세요?" }
+        return Names.render(text.replacingOccurrences(of: "{activitySummary}", with: summary), profile: save.profile)
+    }
     private var narrationReady: Bool {
         guard let narration else { return false }
         return (try? narration.validate()) != nil && !voiceLines.isEmpty

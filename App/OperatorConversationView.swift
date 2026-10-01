@@ -7,6 +7,12 @@ struct OperatorConversationView: View {
     @State private var expression = "calm"
     @State private var choosing = false
     @State private var topic = "greeting"
+    @State private var opening: String?
+    @State private var smallTalk: [OperatorChatEpisode] = []
+    @State private var chatEpisode: OperatorChatEpisode?
+    @State private var chatNodeID = "start"
+    @State private var chatLineIndex = 0
+    private var chatNode: OperatorChatNode? { chatEpisode?.node(chatNodeID) }
     private var state: JourneyState { model.save.profile.journey ?? JourneyState() }
     private var tier: Int { model.narratives?.tier(model.save.profile) ?? 1 }
     private var greeting: String { tier < 3 ? "부르셨어요? 마침 기록 정리가 끝났어요. 잠깐 이야기할까요?" : "왔어요? 문소리 듣고 혹시나 했어요. 오늘은 무슨 이야기부터 할까요?" }
@@ -19,15 +25,23 @@ struct OperatorConversationView: View {
             }
             Button {
                 guard !choosing else { return }
-                withAnimation(.easeOut(duration: 0.18)) { choosing = true }
+                if topic == "smalltalk", let node = chatNode, chatLineIndex + 1 < node.lines.count {
+                    chatLineIndex += 1
+                    say(model.chatText(node.lines[chatLineIndex]), face: node.expression, next: "smalltalk")
+                } else { withAnimation(.easeOut(duration: 0.18)) { choosing = true } }
             } label: {
-                Text(line ?? greeting).font(.title3).lineSpacing(7).fixedSize(horizontal: false, vertical: true)
+                Text(line ?? opening ?? greeting).font(.title3).lineSpacing(7).fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, minHeight: 85, alignment: .topLeading).contentShape(Rectangle())
                     .foregroundStyle(Labyrinth.parchment)
             }.buttonStyle(.plain).accessibilityIdentifier("operator.continue")
             if choosing { choices }
             else { HStack { Spacer(); Image(systemName: "chevron.down").font(.caption).foregroundStyle(Labyrinth.gold) }.allowsHitTesting(false) }
         }.navigationTitle("").navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                guard opening == nil else { return }
+                smallTalk = model.chatSuggestions()
+                opening = openingLine()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     NavigationLink { OperatorMemoriesView() } label: { Image(systemName: "book.closed") }
@@ -44,10 +58,13 @@ struct OperatorConversationView: View {
             reply("잠깐 쉬어요") {
                 say(tier < 3 ? "좋아요. 지금은 급한 연락도 없어요. 보고서는 잠깐 덮어둘게요." : "그 말 기다렸어요. 사실 같은 줄을 세 번이나 읽고 있었거든요. 잠깐, 같이 쉬어요.", face: "relieved", next: "rest")
             }
-            reply("오늘 기분은 어때요?") {
-                say(tier < 3 ? "관측값이 잘 정리돼서 마음이 놓여요. 이렇게 먼저 물어봐 주시니까 조금 더요." : "아까까진 조금 피곤했는데… 지금은 괜찮아요. 일 말고 제 기분부터 물어봐 줘서요.", next: "mood")
+            if let episode = smallTalk.first {
+                reply(model.chatText(episode.prompt)) { startChat(episode) }
+                    .accessibilityIdentifier("operator.chat.featured." + episode.id)
+            } else {
+                reply("오늘 기분은 어때요?") { say("아까는 좀 피곤했는데, 잠깐 쉬니까 괜찮아졌어요. 헌터님은요?", next: "mood") }
             }
-            reply("오늘은 다른 이야기도 하고 싶어요.") { say("좋아요. 의뢰 말고도 나눌 이야기는 많으니까요.", next: "topics") }
+            reply("오늘은 다른 이야기도 하고 싶어요.") { openTopics() }
         case "rest":
             reply("말없이 같이 쉬어도 좋아요.") { say("네. 무슨 말을 해야 할지 고민하지 않아도 되는 시간도 좋네요.", face: "relieved") }
             reply("차 한 잔 마실까요?") { askDrink() }
@@ -57,33 +74,71 @@ struct OperatorConversationView: View {
             reply("저도 이야기하니까 좋네요.") { say(tier < 3 ? "그렇게 말씀해 주시니 기뻐요. 다음에도 편하게 불러주세요." : "그럼 다음에도 그냥 들러요. 특별한 일이 없어도요.") }
             reply("차라도 준비할까요?") { askDrink() }
         case "topics":
-            reply("오늘은 어떤 음료 마실까요?") { askDrink() }
-            reply("책상 위에 있는 건 뭐예요?") { say(state.memories["desk"] == "cup" ? "컵 놓을 자리예요. 서류는 조금 떨어뜨려뒀어요. 이제 누가 오면 어디에 앉을지도 정해졌네요." : "처음 받았던 보고서예요. 지나간 일인데도 꺼내보면 그때 생각이 나서 남겨뒀어요.", face: "thoughtful", next: "desk") }
-            reply(state.completed.contains("R11") ? "우리 다음 약속도 이야기해요." : "오늘 맡을 일도 알려주세요.") {
-                if state.completed.contains("R11") { say("좋아요. 지난번 약속은 어떻게 이어가고 싶어요?", next: "relationship") }
-                else { say("지금 맡을 수 있는 의뢰를 정리해뒀어요. 준비되면 같이 살펴봐요.", next: "work") }
+            ForEach(smallTalk) { episode in
+                reply(model.chatText(episode.prompt)) { startChat(episode) }
+                    .accessibilityIdentifier("operator.chat.topic." + episode.id)
             }
-        case "drink":
-            reply("따뜻한 게 좋아요.") { drink("warm", "그럼 따뜻하게 준비할게요. 컵 잡고 손을 녹이는 시간도 좋더라고요.") }
-            reply("시원한 게 좋아요.") { drink("cool", "알겠어요. 받침도 같이 둘게요. 서류는 제가 먼저 치워둘게요.") }
-            reply("오늘은 추천해 주세요.") { drink("flexible", "그럼 오늘은 제가 골라볼게요. 다음번에는 당신 차례예요.") }
+        case "smalltalk":
+            if let node = chatNode, !node.replies.isEmpty {
+                ForEach(node.replies) { answer in
+                    reply(model.chatText(answer.text)) { showChatNode(answer.next) }
+                        .accessibilityIdentifier("operator.chat.reply." + answer.id)
+                }
+            } else {
+                reply("다른 이야기도 듣고 싶어요.") { openTopics() }
+                reply("같이 잠깐 쉬어요.") { say("좋아요. 보고서는 잠깐 덮어둘게요.", face: "relieved", next: "rest") }
+                reply(state.completed.contains("R11") ? "우리 다음 약속도 이야기해요." : "오늘 맡을 일도 같이 볼까요?") {
+                    if state.completed.contains("R11") { say("좋아요. 다음에는 어떤 시간을 보내고 싶어요?", next: "relationship") }
+                    else { say("네. 준비해둔 의뢰를 같이 봐요.", next: "work") }
+                }
+            }
         case "desk":
-            reply("우리 기록도 더 쌓이겠네요.") { say("네. 아직 비어 있는 칸이 많아요. 서두르지 말고 하나씩 채워가요.") }
+            reply("우리 기록도 더 쌓이겠네요.") { say("네. 사진 옆에 붙일 이야기도 많아지겠죠. 하나씩 남겨봐요.") }
             reply("필요한 일부터 같이 볼까요?") { say("좋아요. 정리해둔 의뢰를 꺼내볼게요.", next: "work") }
-            reply("다른 이야기도 듣고 싶어요.") { say("얼마든지요. 무엇부터 이야기할까요?", next: "topics") }
+            reply("다른 이야기도 듣고 싶어요.") { openTopics() }
         case "work":
             NavigationLink { QuestBoardView() } label: { Text("의뢰 기록을 같이 볼게요.") }.buttonStyle(GameButtonStyle())
-            reply("조금 더 이야기하다 갈게요.") { say("그럼 기록은 잠깐 내려둘게요. 지금은 이야기부터 해요.", next: "topics") }
+            reply("조금 더 이야기하다 갈게요.") { openTopics() }
         case "relationship":
-            reply("조금 더 개인적인 시간으로요.") { preference("closer", "좋아요. 저도 우리 이야기부터 하고 싶어요.") }
-            reply("든든한 동료로 함께해요.") { preference("partnership", "네. 그 말도 저한테는 특별해요. 앞으로도 잘 부탁해요.") }
-            reply("아직은 천천히 생각할게요.") { preference("undecided", "괜찮아요. 오늘 대화부터 편하게 해요.") }
+            reply("다음엔 일 얘기 말고 우리 얘기해요.") { preference("closer", "좋아요. 그때는 보고서부터 덮어둘게요. 저도 하고 싶은 얘기가 있어요.") }
+            reply("든든한 동료로 함께해요.") { preference("partnership", "네. 서로 믿고 맡길 수 있는 사이, 저도 좋아요. 앞으로도 잘 부탁해요.") }
+            reply("아직은 천천히 생각할게요.") { preference("undecided", "괜찮아요. 급하게 정하지 않아도 돼요. 오늘은 그냥 같이 쉬어요.") }
+        case "drink":
+            reply("따뜻한 게 좋아요.") { drink("warm", "좋아요. 조금 식혀서 가져올게요. 저처럼 급하게 마시다가 데지 말고요.") }
+            reply("시원한 게 좋아요.") { drink("cool", "얼음 넣어서 준비할게요. 컵에 물방울 맺히니까 받침도 같이요.") }
+            reply("오늘은 추천해 주세요.") { drink("flexible", "그럼 오늘은 제가 좋아하는 걸로요. 마셔보고 별로면 솔직하게 말해줘요.") }
         default: EmptyView()
         }
     }
     private func reply(_ text: String, action: @escaping () -> Void) -> some View { Button(text, action: action).buttonStyle(GameButtonStyle()) }
+    private func openingLine() -> String {
+        switch model.operatorChatActivity {
+        case "coffee": return "커피 한 모금 마시던 참이에요. 같이 잠깐 쉬실래요?"
+        case "tablet": return "마침 읽던 데까지 다 봤어요. 태블릿은 내려둘게요."
+        case "spacingOut": return "아, 오셨어요? 창밖 보고 있었어요. 잠깐 멍때렸네요."
+        case "hairSweep": return "머리가 자꾸 내려와서요. 자, 됐어요. 무슨 얘기 할까요?"
+        default: return (tier < 3
+            ? ["오셨어요? 급한 일은 정리해뒀어요. 잠깐 앉으실래요?", "부르셨어요? 마침 쉬려던 참이에요. 이야기해요.", "오늘은 일 얘기 말고 다른 얘기도 해봐요. 뭐부터 이야기할까요?"]
+            : ["왔어요? 여기 앉아요. 오늘은 어떤 하루였어요?", "마침 잘 왔어요. 잠깐 같이 쉬고 싶었거든요.", "문소리 듣고 고개부터 들었네요. 오늘은 무슨 얘기부터 할까요?"]).randomElement() ?? greeting
+        }
+    }
+    private func openTopics() {
+        chatEpisode = nil
+        smallTalk = model.chatSuggestions()
+        say("좋아요. 오늘은 어떤 얘기가 궁금해요?", next: "topics")
+    }
+    private func startChat(_ episode: OperatorChatEpisode) {
+        chatEpisode = episode
+        model.selectedChatTopic(episode.id)
+        showChatNode(episode.start)
+    }
+    private func showChatNode(_ id: String) {
+        guard let node = chatEpisode?.node(id), let first = node.lines.first else { return }
+        chatNodeID = id; chatLineIndex = 0
+        say(model.chatText(first), face: node.expression, next: "smalltalk")
+    }
     private func askDrink() {
-        let remembered = state.memories["drink"] == "warm" ? "따뜻한 걸 좋아한다고 했죠? 오늘도 그렇게 할까요?" : state.memories["drink"] == "cool" ? "시원한 걸 좋아했죠? 오늘은 어떤 기분이에요?" : "오늘은 어떤 걸로 할까요? 취향을 알려주면 기억해둘게요."
+        let remembered = state.memories["drink"] == "warm" ? "따뜻한 걸 좋아한다고 했죠? 오늘도 따뜻하게 준비할까요?" : state.memories["drink"] == "cool" ? "지난번엔 시원한 걸 골랐죠? 오늘도 얼음 넣을까요?" : "따뜻한 거랑 시원한 거, 어느 쪽이 좋아요? 알려주시면 기억해둘게요."
         say(remembered, next: "drink")
     }
     private func drink(_ value: String, _ text: String) { model.rememberPreference("drink", value: value); say(text) }

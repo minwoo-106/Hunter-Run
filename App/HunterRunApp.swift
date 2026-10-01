@@ -147,6 +147,7 @@ struct HomeView: View {
                     }
                     Button {
                         if life.consumeTap() { return }
+                        model.operatorChatActivity = life.phase.rawValue
                         model.showOperator = true
                     } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
