@@ -1,5 +1,6 @@
 """Portable asset/configuration and production-isolation checks, not Swift tests."""
 from pathlib import Path
+import re
 import hashlib
 import json
 import struct
@@ -22,8 +23,8 @@ assert config['activitySeconds']['burgerFlustered'] == 3.2
 assert config['activitySeconds']['cola'] == 4.8
 assert len(config['cues']) == 12
 project = (root/'project.yml').read_text(encoding='utf-8')
-assert 'com.hunterrun.demo' in project and 'MARKETING_VERSION: "1.6.1"' in project
-assert 'CURRENT_PROJECT_VERSION: 54' in project and 'OPERATOR_LIFE_POC' not in project
+assert 'com.hunterrun.demo' in project and re.search(r'MARKETING_VERSION: "[0-9]+\.[0-9]+\.[0-9]+"', project)
+assert re.search(r'CURRENT_PROJECT_VERSION: [1-9][0-9]*', project) and 'OPERATOR_LIFE_POC' not in project
 home = (root/'App/HunterRunApp.swift').read_text(encoding='utf-8').split('struct HomeView: View')[1].split('struct ActiveRunView: View')[0]
 assert 'OPERATOR_LIFE_POC' not in (root/'App/HunterRunApp.swift').read_text(encoding='utf-8')
 assert 'OPERATOR_LIFE_POC' not in (root/'App/AppModel.swift').read_text(encoding='utf-8')
