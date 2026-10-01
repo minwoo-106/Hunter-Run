@@ -186,6 +186,7 @@ public struct RunSummary: Codable, Identifiable {
     // Nil preserves the full-rate meaning of previously settled activity records.
     public var rewardPercent: Int? = nil
     public var completion: CompletionKind? = nil
+    public var foundGifts: [OperatorGift]? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"

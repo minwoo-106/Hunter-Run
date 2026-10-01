@@ -313,10 +313,12 @@ public enum Settlement {
         let research = (completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)) * percent / 100
         let cores = bonus.cores
         let paceReport = PaceLearning.settle(session, profile: &profile)
-        let summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, elapsedSeconds: session.elapsedSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent, completion: completion)
+        var summary = RunSummary(id: session.id, date: session.startedAt, seconds: session.activeSeconds, elapsedSeconds: session.elapsedSeconds, distance: session.distance, xp: xp, crystals: crystals, records: session.records, goal: session.activityGoal, runningSeconds: session.runningSeconds, completedGoal: session.reachedGoal, mode: session.mode, research: research, cores: cores, majorBoss: bossReport, paceReport: paceReport, questID: session.questID, environment: session.environment, steps: session.steps, rewardPercent: percent, completion: completion)
         profile.xp += xp; profile.crystals += crystals; profile.research += research
         if cores > 0 { var growth = profile.growth; growth.cores += cores; profile.growth = growth }
         GateTracking.settle(session, completion: completion, profile: &profile)
+        let foundGifts = OperatorGifts.collect(session, profile: &profile)
+        summary.foundGifts = foundGifts.isEmpty ? nil : foundGifts
         profile.settled.insert(session.id); profile.runs.insert(summary, at: 0)
         let previousQuests = profile.journey?.completedQuests ?? []
         Quests.settle(session, profile: &profile)

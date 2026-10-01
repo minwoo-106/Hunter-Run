@@ -63,7 +63,8 @@ public final class SaveRepository {
         guard save.profile.runs.allSatisfy({ record in
             (record.steps ?? 0) >= 0 && (record.steps ?? 0) <= 100_000_000 &&
             (!record.activityEnvironment.isIndoor || record.distance == 0) &&
-            (record.elapsedSeconds.map { $0.isFinite && $0 >= record.seconds } ?? true)
+            (record.elapsedSeconds.map { $0.isFinite && $0 >= record.seconds } ?? true) &&
+            (record.foundGifts.map { $0.count <= 396 } ?? true)
         }) else { throw Failure.invalid }
         if let run = save.active {
             guard run.indoorAllowance.map({ $0.isFinite && (0...IndoorDailyLimit.seconds).contains($0) }) ?? true else { throw Failure.invalid }

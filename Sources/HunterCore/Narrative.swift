@@ -16,6 +16,7 @@ public struct JourneyState: Codable, Equatable {
     public var claimedQuests: Set<String> = []
     public var selectedQuest: String?
     public var questRecords: [String: QuestRecord] = [:]
+    public var gifts: OperatorGiftState? = nil
     public init() {}
     public var isValid: Bool {
         version == 1 && Names.valid(operatorName) && (0...1000).contains(affinity)
@@ -24,6 +25,7 @@ public struct JourneyState: Codable, Equatable {
         } && memories.count <= 100 && memories.allSatisfy { !$0.key.isEmpty && $0.key.count <= 80 && $0.value.count <= 100 }
         && (cursor?.isValid ?? true) && (selectedQuest.map { !$0.isEmpty && $0.count <= 100 } ?? true)
         && questRecords.count <= 100 && questRecords.allSatisfy { $0.value.isValid }
+        && (gifts?.isValid ?? true)
     }
 }
 
@@ -179,12 +181,13 @@ public struct NarrativeCatalog: Codable {
     public func tier(_ profile: Profile) -> Int {
         let state = profile.journey ?? JourneyState()
         var tier = 1
-        for (index, gate) in [(8, "M03"), (20, "M06"), (36, "M10"), (52, "M14")].enumerated() {
+        for (index, gate) in Self.relationshipGates.enumerated() {
             if state.affinity >= gate.0 && state.unlocked.contains(gate.1) { tier = index + 2 }
         }
         return tier
     }
     public static let tierNames = ["배정된 파트너", "익숙한 동료", "믿고 기대는 사이", "특별한 파트너", "서로의 편"]
+    public static let relationshipGates = [(8, "M03"), (20, "M06"), (36, "M10"), (52, "M14")]
     @discardableResult public func refresh(_ profile: inout Profile) -> Bool {
         let before = profile.journey
         var state = before ?? JourneyState()
