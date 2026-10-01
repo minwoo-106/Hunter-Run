@@ -59,7 +59,7 @@ jobs:
           UI_SCOPE_NAME: ${{ inputs.validation_scope }}
         run: bash scripts/check-ios-layout.sh "$UI_SCOPE_NAME"
 
-      - name: Upload operator life and registrationhots and diagnostics
+      - name: Upload interaction screenshots and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
