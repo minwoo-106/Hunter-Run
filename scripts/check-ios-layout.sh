@@ -135,6 +135,16 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   xcrun simctl shutdown "$DEVICE_ID" || true
   python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl boot "$SMALL_DEVICE_ID" || true
   python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl bootstatus "$SMALL_DEVICE_ID" -b
+  if [ "${1:-}" = "operator-life" ]; then
+    # Let the newly-created compact device finish its first app lifecycle before
+    # XCTest requests RunningBoard background assertions. This preflight uses
+    # an isolated simulator-only save, never a registration bypass in Release.
+    python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl install "$SMALL_DEVICE_ID" build/layout/Build/Products/Debug-iphonesimulator/HunterRun.app
+    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio --ui-testing-save life-layout-preflight
+    sleep 5
+    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-warmup.png
+    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl terminate "$SMALL_DEVICE_ID" com.hunterrun.demo
+  fi
   SMALL_SCOPE=(
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
     -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory
