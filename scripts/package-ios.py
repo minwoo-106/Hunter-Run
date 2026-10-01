@@ -10,6 +10,8 @@ assert (app/'Assets.car').is_file()
 cue_paths=list(app.rglob('operator-life-cues.json')); assert len(cue_paths)==1
 root=pathlib.Path(__file__).resolve().parent.parent
 assert json.loads(cue_paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources/operator-life-cues.json').read_text(encoding='utf-8'))
+chat_paths=list(app.rglob('operator-chat.json')); assert len(chat_paths)==1
+assert json.loads(chat_paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources/operator-chat.json').read_text(encoding='utf-8'))
 life_assets=json.loads((root/'Prototypes/OperatorLife/asset-manifest.json').read_text(encoding='utf-8'))
 assert len(life_assets)==16
 manifest_paths=list(app.rglob('operator-voice.json')); assert len(manifest_paths)==1

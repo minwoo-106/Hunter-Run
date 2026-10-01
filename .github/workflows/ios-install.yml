@@ -2,6 +2,12 @@ name: Hunter Run iPhone installer
 
 on:
   workflow_dispatch:
+    inputs:
+      validation_scope:
+        description: Native validation scope
+        type: choice
+        options: [operator-life, operator-chat]
+        default: operator-life
 
 permissions:
   contents: read
@@ -23,6 +29,7 @@ jobs:
         run: |
           python3 scripts/validate.py
           python3 scripts/validate-operator-life.py
+          python3 scripts/validate-operator-chat.py
 
       - name: Test game engine
         run: swift test
@@ -47,14 +54,16 @@ jobs:
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
           python3 scripts/package-character-preview.py build
 
-      - name: Verify operator life and registration on two iPhone sizes
-        run: bash scripts/check-ios-layout.sh operator-life
+      - name: Verify operator interactions on two iPhone sizes
+        env:
+          UI_SCOPE_NAME: ${{ inputs.validation_scope }}
+        run: bash scripts/check-ios-layout.sh "$UI_SCOPE_NAME"
 
       - name: Upload operator life and registrationhots and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.1-build54-screen-review
+          name: HunterRun-1.6.2-build55-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -72,10 +81,10 @@ jobs:
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.1-build54-iPhone
+          name: HunterRun-1.6.2-build55-iPhone
           path: |
-            build/HunterRun-1.6.1-build54-unsigned.ipa
-            build/HunterRun-1.6.1-build54-manifest.json
+            build/HunterRun-1.6.2-build55-unsigned.ipa
+            build/HunterRun-1.6.2-build55-manifest.json
             build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0
