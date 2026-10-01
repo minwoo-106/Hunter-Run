@@ -140,7 +140,10 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
     # XCTest requests RunningBoard background assertions. This preflight uses
     # an isolated simulator-only save, never a registration bypass in Release.
     python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl install "$SMALL_DEVICE_ID" build/layout/Build/Products/Debug-iphonesimulator/HunterRun.app
-    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio --ui-testing-save life-layout-preflight
+    # bootstatus can finish before the new device's first SpringBoard launch.
+    # Preserve a bounded wait for that infrastructure startup; do not retry or
+    # suppress XCTest assertions and do not change app animation durations.
+    python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio --ui-testing-save life-layout-preflight
     sleep 5
     python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-warmup.png
     python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl terminate "$SMALL_DEVICE_ID" com.hunterrun.demo
