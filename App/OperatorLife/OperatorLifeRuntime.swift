@@ -8,8 +8,13 @@ import Darwin
     @Published private(set) var animating = false
 #if DEBUG && targetEnvironment(simulator)
     @Published private(set) var testingActiveTime: TimeInterval?
+    @Published private(set) var testingVisitedPhases: [LifePhase] = []
+    private var exposesHistory = false
     var testingAccessibilityValue: String {
-        testingActiveTime.map { phase.rawValue + "|" + String($0) } ?? phase.rawValue
+        if exposesHistory {
+            return phase.rawValue + "|seen=," + testingVisitedPhases.map(\.rawValue).joined(separator: ",") + ","
+        }
+        return testingActiveTime.map { phase.rawValue + "|" + String($0) } ?? phase.rawValue
     }
 #endif
     private var machine: LifeStateMachine
@@ -40,6 +45,12 @@ import Darwin
         }
 #endif
         phase = machine.phase
+#if DEBUG && targetEnvironment(simulator)
+        if args.contains("--life-inspect-history") {
+            exposesHistory = true
+            testingVisitedPhases = [machine.phase]
+        }
+#endif
     }
     deinit { ticker?.cancel() }
     func configure(available: Bool, motionEnabled: Bool, reducedMotion: Bool) {
@@ -106,6 +117,11 @@ import Darwin
     private func publish() {
         if phase != machine.phase {
             phase = machine.phase
+#if DEBUG && targetEnvironment(simulator)
+            // Retain only phases actually published by the live runtime. Short
+            // poses must remain observable when an XCTest AX snapshot is slow.
+            if exposesHistory { testingVisitedPhases.append(phase) }
+#endif
             log.info("Phase: \(self.phase.rawValue, privacy: .public); thermalState: \(ProcessInfo.processInfo.thermalState.rawValue)")
         }
         if cue != machine.cue { cue = machine.cue }
