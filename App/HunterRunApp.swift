@@ -332,6 +332,13 @@ struct ActiveRunView: View {
                 if run.simulated {
                     Text("모의 활동입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
                 } else if let summary = model.lastSummary {
+                    if let gifts = summary.foundGifts, !gifts.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Label("탐험에서 발견한 작은 선물", systemImage: "gift").font(.headline)
+                            ForEach(Array(gifts.enumerated()), id: \.offset) { _, gift in Label(gift.name, systemImage: gift.symbol) }
+                            Text("오퍼레이터와 대화할 때 건넬 수 있어요.").font(.caption).foregroundStyle(Theme.muted)
+                        }.card().accessibilityIdentifier("activity.found-gifts")
+                    }
                     if let completion = summary.completion { Label(completion.title, systemImage: "checkmark.seal.fill").foregroundStyle(Theme.teal) }
                     Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
                     Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)

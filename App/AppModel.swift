@@ -163,6 +163,14 @@ private struct CharacterVoiceCatalog: Decodable {
         recentChatTopics.append(id)
         recentChatTopics = Array(recentChatTopics.suffix(4))
     }
+    func giveOperatorGift(_ gift: OperatorGift) -> GiftReaction? {
+        guard !growthLocked else { return nil }
+        var candidate = save
+        guard let response = OperatorGifts.give(gift, profile: &candidate.profile) else { return nil }
+        narratives?.refresh(&candidate.profile)
+        do { try repository.write(candidate); save = candidate; interfaceFeedback("ui-reward"); return response }
+        catch { notice = "선물 기록을 저장하지 못했어요. 선물은 그대로 보관돼 있어요."; return nil }
+    }
     func chatText(_ text: String) -> String {
         let summary: String
         if let run = OperatorChatCatalog.recentActivity(save.profile, now: Date()) {
@@ -269,6 +277,11 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         catch { notice = "저장 파일을 읽지 못했습니다. 원본 보호를 위해 새 활동을 막았습니다."; saveBlocked = true }
         #if DEBUG && targetEnvironment(simulator)
+        if arguments.contains("--ui-testing-operator-gifts") && !existingSave {
+            var journey = save.profile.journey ?? JourneyState()
+            var gifts = OperatorGiftState(); gifts.inventory[OperatorGift.flower.id] = 1
+            journey.gifts = gifts; save.profile.journey = journey
+        }
         if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-expedition") {
             var journey = JourneyState(); journey.unlocked = Set((1...16).map { String(format: "M%02d", $0) }); journey.selectedQuest = "wolf-first"
             save.profile.journey = journey

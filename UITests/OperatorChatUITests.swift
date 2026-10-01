@@ -59,4 +59,28 @@ final class OperatorChatUITests: XCTestCase {
     }
     @MainActor func testSmallTalkLinesRepliesAndTopicRotation() { exerciseConversation(large: false) }
     @MainActor func testLargeTextCanReadAndReplyWithoutLosingControls() { exerciseConversation(large: true) }
+    @MainActor func testGiftIsConsumedAndRelationshipPageShowsSavedAffinity() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--ui-testing-skip-title", "--ui-testing-skip-welcome", "--ui-testing-silent-audio",
+            "--ui-testing-save", UUID().uuidString, "--ui-testing-operator-gifts", "-operatorMotionEnabled", "NO"]
+        app.launch()
+        XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 15)); app.buttons["home.operator"].tap()
+        XCTAssertTrue(app.buttons["operator.gifts"].waitForExistence(timeout: 8)); app.buttons["operator.gifts"].tap()
+        let gift = app.buttons["operator.give.flower"]
+        XCTAssertTrue(gift.waitForExistence(timeout: 5)); tap(gift, app: app)
+        XCTAssertTrue(app.staticTexts["operator.gift-gain"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["operator.continue"].label.contains("첫 선물"))
+        capture(app, "Gift reaction")
+        app.buttons["operator.gifts"].tap()
+        XCTAssertTrue(app.staticTexts["operator.gifts-empty"].waitForExistence(timeout: 5))
+        app.buttons["닫기"].tap()
+        app.buttons["operator.memories"].tap()
+        XCTAssertTrue(app.staticTexts["operator.relationship-affinity"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["operator.relationship-affinity"].label.contains("2"))
+        capture(app, "Relationship overview")
+        app.terminate(); app.launch()
+        XCTAssertTrue(app.buttons["home.operator"].waitForExistence(timeout: 15)); app.buttons["home.operator"].tap()
+        app.buttons["operator.gifts"].tap()
+        XCTAssertTrue(app.staticTexts["operator.gifts-empty"].waitForExistence(timeout: 5))
+    }
 }

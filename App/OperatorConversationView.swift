@@ -12,6 +12,8 @@ struct OperatorConversationView: View {
     @State private var chatEpisode: OperatorChatEpisode?
     @State private var chatNodeID = "start"
     @State private var chatLineIndex = 0
+    @State private var showGifts = false
+    @State private var giftNote: String?
     private var chatNode: OperatorChatNode? { chatEpisode?.node(chatNodeID) }
     private var state: JourneyState { model.save.profile.journey ?? JourneyState() }
     private var tier: Int { model.narratives?.tier(model.save.profile) ?? 1 }
@@ -20,6 +22,7 @@ struct OperatorConversationView: View {
         NovelStage(expression: expression, resetKey: (line ?? "") + String(choosing)) {
             HStack {
                 Text(state.operatorName).font(.headline).foregroundStyle(Labyrinth.parchment)
+                if let giftNote { Text(giftNote).font(.caption).foregroundStyle(Theme.teal).accessibilityIdentifier("operator.gift-gain") }
                 Spacer()
                 Text(choosing ? "당신의 대답" : "터치해 계속").font(.caption2).foregroundStyle(Theme.muted)
             }
@@ -42,14 +45,26 @@ struct OperatorConversationView: View {
                 smallTalk = model.chatSuggestions()
                 opening = openingLine()
             }
+            .sheet(isPresented: $showGifts) {
+                OperatorGiftView { response in
+                    showGifts = false; chatEpisode = nil
+                    say(response.text, face: response.expression)
+                    giftNote = "친밀도 +\(response.affinity)"
+                }.environmentObject(model)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink { OperatorMemoriesView() } label: { Image(systemName: "book.closed") }
-                        .buttonStyle(GameControlStyle()).accessibilityLabel("함께한 기록").accessibilityIdentifier("operator.memories")
+                    HStack(spacing: 8) {
+                        NavigationLink { OperatorMemoriesView() } label: { Label("관계", systemImage: "heart") }
+                            .buttonStyle(GameControlStyle()).accessibilityLabel("친밀도와 함께한 기록").accessibilityIdentifier("operator.memories")
+                        Button { showGifts = true } label: { Image(systemName: "gift") }
+                            .buttonStyle(GameControlStyle()).accessibilityLabel("선물 건네기").accessibilityIdentifier("operator.gifts")
+                    }
                 }
             }
     }
     private func say(_ text: String, face: String = "smile", next: String = "greeting") {
+        giftNote = nil
         withAnimation(.easeOut(duration: 0.18)) { line = text; expression = face; topic = next; choosing = false }
     }
     @ViewBuilder private var choices: some View {
@@ -153,8 +168,19 @@ struct OperatorMemoriesView: View {
                 let state = model.save.profile.journey ?? JourneyState()
                 let tier = model.narratives?.tier(model.save.profile) ?? 1
                 Text("함께 나눌 이야기").font(.title.bold())
-                Label(NarrativeCatalog.tierNames[tier - 1], systemImage: "heart").foregroundStyle(Theme.teal)
-                ProgressView(value: Double(min(68, state.affinity)), total: 68).accessibilityLabel("호감도 \(state.affinity)")
+                VStack(alignment: .leading, spacing: 12) {
+                    Label("\(state.operatorName) · \(NarrativeCatalog.tierNames[tier - 1])", systemImage: "heart.fill").foregroundStyle(Theme.teal)
+                    Text("친밀도 \(state.affinity)").font(.title2.bold()).accessibilityIdentifier("operator.relationship-affinity")
+                    if tier < NarrativeCatalog.tierNames.count {
+                        let gate = NarrativeCatalog.relationshipGates[tier - 1]
+                        ProgressView(value: Double(min(gate.0, state.affinity)), total: Double(gate.0))
+                            .accessibilityLabel("다음 관계까지 친밀도 \(state.affinity) / \(gate.0)")
+                        Text(state.affinity < gate.0 ? "다음 관계까지 친밀도 \(gate.0 - state.affinity) 더 필요해요." : "친밀도 조건은 채웠어요. 함께 새로운 사건을 겪으면 다음 관계로 이어져요.")
+                            .font(.caption).foregroundStyle(Theme.muted)
+                    } else { Text("함께 쌓은 이야기로 가장 가까운 관계가 되었어요.").font(.caption).foregroundStyle(Theme.muted) }
+                    Text("함께한 이야기와 새로운 사건, 작은 선물로 가까워져요. 관계 변화에는 이야기 진행도 필요해요.")
+                        .font(.caption).foregroundStyle(Theme.muted)
+                }.card()
                 ForEach(model.narratives?.bonds ?? []) { entry in
                     if state.unlocked.contains(entry.id) {
                         NavigationLink { DialogueView(scene: entry) } label: {
@@ -168,6 +194,39 @@ struct OperatorMemoriesView: View {
                 Text("함께 겪은 사건과 새로운 이야기로 가까워져요. 같은 대화를 반복해서 호감도가 쌓이지는 않아요.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(22)
         }.labyrinthScreen().navigationTitle("함께한 기록").navigationBarTitleDisplayMode(.inline).modifier(GameBackModifier())
+    }
+}
+
+struct OperatorGiftView: View {
+    @EnvironmentObject var model: AppModel
+    @Environment(\.dismiss) private var dismiss
+    var onGiven: (GiftReaction) -> Void
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("작은 마음을 전해요").font(.title2.bold())
+                    Text("야외 탐험에서 실제로 움직인 시간이 30분 쌓일 때마다 작은 선물을 발견해요. 여러 활동의 시간이 합산돼요.")
+                        .font(.callout).foregroundStyle(Theme.muted)
+                    let inventory = model.save.profile.journey?.gifts?.inventory ?? [:]
+                    if inventory.values.reduce(0, +) == 0 {
+                        Text("아직 보관 중인 선물이 없어요.").card().accessibilityIdentifier("operator.gifts-empty")
+                        Text("발견한 선물은 귀환 보고에서 확인할 수 있어요.").font(.caption).foregroundStyle(Theme.muted)
+                    }
+                    ForEach(OperatorGift.allCases.filter { inventory[$0.id, default: 0] > 0 }) { gift in
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack { Label(gift.name, systemImage: gift.symbol).font(.headline); Spacer(); Text("×\(inventory[gift.id, default: 0])").monospacedDigit() }
+                            Text(gift.detail).font(.callout).foregroundStyle(Theme.muted)
+                            Button("건네기 · 친밀도 +2") {
+                                if let response = model.giveOperatorGift(gift) { onGiven(response) }
+                            }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked)
+                                .accessibilityIdentifier("operator.give." + gift.id)
+                        }.card()
+                    }
+                }.padding(22)
+            }.labyrinthScreen().navigationTitle("선물 건네기").navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() }.buttonStyle(GameControlStyle()) } }
+        }
     }
 }
 
