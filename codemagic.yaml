@@ -31,7 +31,7 @@ workflows:
       - build/portrait-checks/*.png
       - build/life-metrics*.txt
   ios-demo:
-    name: Hunter Run 1.6.2 - operator conversation and gifts
+    name: Hunter Run 1.6.3 - relationship checkpoints
     instance_type: mac_mini_m2
     max_build_duration: 45
     triggering:

@@ -63,7 +63,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.2-build55-screen-review
+          name: HunterRun-1.6.3-build56-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -81,10 +81,10 @@ jobs:
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.2-build55-iPhone
+          name: HunterRun-1.6.3-build56-iPhone
           path: |
-            build/HunterRun-1.6.2-build55-unsigned.ipa
-            build/HunterRun-1.6.2-build55-manifest.json
+            build/HunterRun-1.6.3-build56-unsigned.ipa
+            build/HunterRun-1.6.3-build56-manifest.json
             build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0
