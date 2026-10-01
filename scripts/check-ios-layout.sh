@@ -66,6 +66,15 @@ fi
 if [ "${1:-}" = "facilities" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/FacilityLayoutTests)
 fi
+if [ "${1:-}" = "operator-life" ]; then
+  UI_SCOPE=(
+    -only-testing:HunterRunUITests/OperatorLifeUITests
+    -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory
+    -only-testing:HunterRunUITests/HomeLayoutTests/testLargeTextKeepsStoryAndSettingsReachable
+    -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
+  )
+fi
 xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   -destination "platform=iOS Simulator,id=$DEVICE_ID" -derivedDataPath build/layout \
   -resultBundlePath build/Layout.xcresult -parallel-testing-enabled NO \
@@ -73,13 +82,16 @@ xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
   CODE_SIGNING_ALLOWED=NO test 2>&1 | tee build/layout-log.txt || status=$?
 mkdir -p build/ui-review
 xcrun xcresulttool export attachments --path build/Layout.xcresult --output-path build/ui-review || true
+if [ "${1:-}" = "operator-life" ]; then
+  xcrun simctl spawn "$DEVICE_ID" log show --last 30m --style compact --info --predicate 'subsystem == "com.hunterrun.demo" AND category == "OperatorLife"' > build/life-metrics-large.txt || true
+fi
 # Keep a directly downloadable screenshot even when the assertion fails.
 xcrun simctl terminate "$DEVICE_ID" com.hunterrun.demo || true
 xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio || true
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
-if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ]; then
+if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ]; then
 mkdir -p build/portrait-checks
 for expression in calm smile playful thoughtful worried relieved; do
   xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression "$expression" --time 0
@@ -123,6 +135,19 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   xcrun simctl shutdown "$DEVICE_ID" || true
   python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl boot "$SMALL_DEVICE_ID" || true
   python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl bootstatus "$SMALL_DEVICE_ID" -b
+  if [ "${1:-}" = "operator-life" ]; then
+    # Let the newly-created compact device finish its first app lifecycle before
+    # XCTest requests RunningBoard background assertions. This preflight uses
+    # an isolated simulator-only save, never a registration bypass in Release.
+    python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl install "$SMALL_DEVICE_ID" build/layout/Build/Products/Debug-iphonesimulator/HunterRun.app
+    # bootstatus can finish before the new device's first SpringBoard launch.
+    # Preserve a bounded wait for that infrastructure startup; do not retry or
+    # suppress XCTest assertions and do not change app animation durations.
+    python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl launch "$SMALL_DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio --ui-testing-save life-layout-preflight
+    sleep 5
+    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-warmup.png
+    python3 scripts/run-bounded.py --timeout 60 -- xcrun simctl terminate "$SMALL_DEVICE_ID" com.hunterrun.demo
+  fi
   SMALL_SCOPE=(
     -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
     -only-testing:HunterRunUITests/HomeLayoutTests/testFirstRegistrationAcceptsCustomNamesAndOpensStory
@@ -135,6 +160,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   if [ "${1:-}" = "expedition" ]; then SMALL_SCOPE=(-only-testing:HunterRunUITests/ExpeditionLayoutTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen); fi
   if [ "${1:-}" = "expedition-final" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "facilities" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
+  if [ "${1:-}" = "operator-life" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
     -destination "platform=iOS Simulator,id=$SMALL_DEVICE_ID" -derivedDataPath build/layout \
     -resultBundlePath build/Small-layout.xcresult -parallel-testing-enabled NO \
@@ -144,6 +170,9 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   xcrun simctl io "$SMALL_DEVICE_ID" screenshot build/Small-layout.png || true
   mkdir -p build/ui-review-small
   xcrun xcresulttool export attachments --path build/Small-layout.xcresult --output-path build/ui-review-small || true
+  if [ "${1:-}" = "operator-life" ]; then
+    xcrun simctl spawn "$SMALL_DEVICE_ID" log show --last 30m --style compact --info --predicate 'subsystem == "com.hunterrun.demo" AND category == "OperatorLife"' > build/life-metrics-small.txt || true
+  fi
 fi
 fi
 exit "$status"

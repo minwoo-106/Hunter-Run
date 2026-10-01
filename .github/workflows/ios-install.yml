@@ -20,7 +20,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Validate game content
-        run: python3 scripts/validate.py
+        run: |
+          python3 scripts/validate.py
+          python3 scripts/validate-operator-life.py
 
       - name: Test game engine
         run: swift test
@@ -45,14 +47,14 @@ jobs:
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
           python3 scripts/package-character-preview.py build
 
-      - name: Verify facility screens on two iPhone sizes
-        run: bash scripts/check-ios-layout.sh facilities
+      - name: Verify operator life and registration on two iPhone sizes
+        run: bash scripts/check-ios-layout.sh operator-life
 
-      - name: Upload facility screenshots and diagnostics
+      - name: Upload operator life and registrationhots and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.0-build49-screen-review
+          name: HunterRun-1.6.1-build54-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -62,16 +64,18 @@ jobs:
             build/simulators.json
             build/runtimes.json
             build/device-types.json
+            build/life-metrics*.txt
+            build/Small-warmup.png
           if-no-files-found: warn
           retention-days: 7
 
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.0-build49-iPhone
+          name: HunterRun-1.6.1-build54-iPhone
           path: |
-            build/HunterRun-1.6.0-build49-unsigned.ipa
-            build/HunterRun-1.6.0-build49-manifest.json
+            build/HunterRun-1.6.1-build54-unsigned.ipa
+            build/HunterRun-1.6.1-build54-manifest.json
             build/HunterRun-1.4.0-build42-voice-preview.zip
           if-no-files-found: error
           compression-level: 0

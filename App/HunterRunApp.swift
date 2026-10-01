@@ -17,7 +17,7 @@ import UniformTypeIdentifiers
 #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
             OperatorVisualCheckView()
-        } else { LaunchGateView() }
+        } else { LaunchGateView().environment(\.operatorLifeReduceMotionOverride, ProcessInfo.processInfo.arguments.contains("--life-reduce-motion")) }
 #else
         LaunchGateView()
 #endif
@@ -37,7 +37,7 @@ struct RootView: View {
         ZStack {
             VStack(spacing: 0) {
                 TabView(selection: $model.selectedTab) {
-                    HomeView().toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
+                    HomeView(transitionCovered: tabTransition != nil).toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
                     HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
                     SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
                     NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
@@ -104,6 +104,27 @@ struct RootView: View {
 }
 struct HomeView: View {
     @EnvironmentObject var model: AppModel
+    var transitionCovered = false
+    @Environment(\.scenePhase) private var lifeScenePhase
+    @Environment(\.accessibilityReduceMotion) private var lifeSystemReduceMotion
+    @Environment(\.operatorLifeReduceMotionOverride) private var lifeReduceMotionOverride
+    private var lifeReduceMotion: Bool { lifeSystemReduceMotion || lifeReduceMotionOverride }
+    @AppStorage("operatorMotionEnabled") private var lifeMotionEnabled = true
+    @StateObject private var life = OperatorLifeRuntime()
+    private var lifeVisible: Bool {
+        model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings
+        && !model.showAssociation && !model.showRun && !model.showWelcome && !model.showReturnBriefing
+        && lifeScenePhase == .active && !transitionCovered && model.notice == nil
+    }
+    private func configureLife() { life.configure(available: lifeVisible, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
+    private var homeGreeting: String {
+        if lifeMotionEnabled, let cue = life.cue { return (model.save.profile.journey?.operatorName ?? "서윤") + "\n" + cue }
+        return model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요."
+    }
+    private var homeVersion: String { "HUNTER RUN · \(appVersion)" }
+    @ViewBuilder private var homePortrait: some View {
+        OperatorLifeStage<OperatorPoseRenderer>(runtime: life)
+    }
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -124,11 +145,17 @@ struct HomeView: View {
                             }.buttonStyle(.plain).accessibilityLabel("설정").accessibilityIdentifier("home.settings")
                         }
                     }
-                    Button { model.showOperator = true } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
+                    Button {
+                        if life.consumeTap() { return }
+                        model.showOperator = true
+                    } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
+#if DEBUG && targetEnvironment(simulator)
+                        .accessibilityValue(life.testingAccessibilityValue)
+#endif
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(model.save.profile.expeditions?.briefing?.acknowledged == false ? "다녀오셨어요! 오늘의 기록을 함께 볼까요?" : "오셨네요! 오늘도 함께해요.")
+                        Text(homeGreeting)
                             .font(.headline).accessibilityIdentifier("home.greeting")
                         if model.save.profile.expeditions?.briefing?.acknowledged == false {
                             Button { model.openReturnBriefing() } label: {
@@ -150,7 +177,7 @@ struct HomeView: View {
                         }.padding().background(Theme.ink.opacity(0.9), in: RoundedRectangle(cornerRadius: 18))
                     }
                     ResourceStrip()
-                    Text("HUNTER RUN · \(appVersion)").font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
+                    Text(homeVersion).font(.caption2.monospaced()).foregroundStyle(Theme.muted).accessibilityIdentifier("home.version")
                 }.padding(20)
                 .frame(width: geo.size.width).frame(minHeight: geo.size.height)
             }.scrollIndicators(.hidden)
@@ -161,7 +188,7 @@ struct HomeView: View {
                         Image(AssociationStage.artwork(model.save.profile)).resizable().scaledToFill()
                             .frame(width: geo.size.width, height: geo.size.height).clipped()
                             .ignoresSafeArea(edges: .top)
-                        OperatorPortrait(active: model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings && !model.showAssociation && !model.showRun && !model.showWelcome)
+                        homePortrait
                             .frame(width: geo.size.width * 1.08, height: geo.size.height * 0.88)
                             .offset(y: -geo.size.height * 0.015)
                         LinearGradient(colors: [.black.opacity(0.5), .clear, Theme.ink], startPoint: .top, endPoint: .bottom)
@@ -171,6 +198,11 @@ struct HomeView: View {
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
                 }
+                .onAppear(perform: configureLife)
+                .onDisappear { life.configure(available: false, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
+                .onChange(of: lifeVisible) { _, _ in configureLife() }
+                .onChange(of: lifeMotionEnabled) { _, _ in configureLife() }
+                .onChange(of: lifeReduceMotion) { _, _ in configureLife() }
         }
     }
 }

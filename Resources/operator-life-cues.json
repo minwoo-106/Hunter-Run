@@ -1,0 +1,87 @@
+{
+  "stretchSeconds": 2.6,
+  "idleSeconds": 7.5,
+  "idleAfterWakeSeconds": 14.0,
+  "dozeSettleSeconds": 3.5,
+  "surprisedSeconds": 1.0,
+  "embarrassedSeconds": 6.2,
+  "cues": [
+    {
+      "phase": "surprised",
+      "at": 0,
+      "text": "어…?!"
+    },
+    {
+      "phase": "embarrassed",
+      "at": 0,
+      "text": "아, 오셨어요?"
+    },
+    {
+      "phase": "embarrassed",
+      "at": 1.7,
+      "text": "저 안 잤어요. 잠깐 눈만 감고 있었어요…"
+    },
+    {
+      "phase": "coffee",
+      "at": 0,
+      "text": "음… 커피 향이 좋네요."
+    },
+    {
+      "phase": "tablet",
+      "at": 0,
+      "text": "오늘 기록을 확인하고 있어요. 조금만 기다려주세요."
+    },
+    {
+      "phase": "spacingOut",
+      "at": 0,
+      "text": "…"
+    },
+    {
+      "phase": "hairSweep",
+      "at": 0,
+      "text": "머리카락이 자꾸 내려오네요."
+    },
+    {
+      "phase": "burger",
+      "at": 0,
+      "text": "잠깐 점심 먹고 있어요. 한 입만 더요!"
+    },
+    {
+      "phase": "burgerSurprised",
+      "at": 0,
+      "text": "으읍…?!"
+    },
+    {
+      "phase": "cola",
+      "at": 0,
+      "text": "…쪼옵."
+    },
+    {
+      "phase": "cola",
+      "at": 2.6,
+      "text": "후우… 놀라서 급하게 삼킬 뻔했어요."
+    },
+    {
+      "phase": "burgerFlustered",
+      "at": 0,
+      "text": "읍… 잠깐만요…!"
+    }
+  ],
+  "activities": [
+    "coffee",
+    "tablet",
+    "spacingOut",
+    "hairSweep",
+    "burger",
+    "dozing"
+  ],
+  "activitySeconds": {
+    "coffee": 4.5,
+    "tablet": 6,
+    "spacingOut": 5,
+    "hairSweep": 3.5,
+    "burgerSurprised": 1.4,
+    "cola": 4.8,
+    "burgerFlustered": 3.2
+  }
+}
