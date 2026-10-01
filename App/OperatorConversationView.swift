@@ -170,8 +170,8 @@ struct OperatorMemoriesView: View {
                 Text("함께 나눌 이야기").font(.title.bold())
                 VStack(alignment: .leading, spacing: 12) {
                     Label("\(state.operatorName) · \(NarrativeCatalog.tierNames[tier - 1])", systemImage: "heart.fill").foregroundStyle(Theme.teal)
-                    Text("친밀도 \(state.affinity) / 1,000").font(.title2.bold()).accessibilityIdentifier("operator.relationship-affinity")
-                    if state.affinity >= 1000 {
+                    Text("친밀도 \(min(state.affinity, NarrativeCatalog.affinityMaximum)) / \(NarrativeCatalog.affinityMaximum)").font(.title2.bold()).accessibilityIdentifier("operator.relationship-affinity")
+                    if state.affinity >= NarrativeCatalog.affinityMaximum {
                         HStack {
                             Image(systemName: "sparkles")
                             Text("친밀도 MAX").accessibilityIdentifier("operator.affinity-max")
@@ -186,8 +186,11 @@ struct OperatorMemoriesView: View {
                     } else {
                         Text("관계 MAX · 5 / 5단계").font(.headline).foregroundStyle(Theme.teal)
                             .accessibilityIdentifier("operator.relationship-max")
-                        Text("함께 쌓은 이야기로 가장 가까운 관계가 되었어요. 친밀도는 1,000까지 계속 쌓을 수 있어요.")
+                        Text("함께 쌓은 이야기로 가장 가까운 관계가 되었어요.")
                             .font(.caption).foregroundStyle(Theme.muted)
+                    }
+                    if tier > 1 && state.affinity < NarrativeCatalog.relationshipGates[tier - 2].0 {
+                        Text("이전 버전에서 달성한 관계는 그대로 유지돼요.").font(.caption).foregroundStyle(Theme.teal)
                     }
                     Text("함께한 이야기와 새로운 사건, 작은 선물로 가까워져요. 관계 변화에는 이야기 진행도 필요해요.")
                         .font(.caption).foregroundStyle(Theme.muted)
@@ -245,7 +248,7 @@ struct OperatorGiftView: View {
                     Text("작은 마음을 전해요").font(.title2.bold())
                     Text("야외 탐험에서 실제로 움직인 시간이 30분 쌓일 때마다 작은 선물을 발견해요. 여러 활동의 시간이 합산돼요.")
                         .font(.callout).foregroundStyle(Theme.muted)
-                    if (model.save.profile.journey?.affinity ?? 0) >= 1000 {
+                    if (model.save.profile.journey?.affinity ?? 0) >= NarrativeCatalog.affinityMaximum {
                         Text("친밀도 MAX예요. 선물은 건넬 수 있지만 친밀도는 더 오르지 않아요.")
                             .font(.callout).foregroundStyle(Labyrinth.gold).accessibilityIdentifier("operator.gifts-max")
                     }
@@ -258,7 +261,7 @@ struct OperatorGiftView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack { Label(gift.name, systemImage: gift.symbol).font(.headline); Spacer(); Text("×\(inventory[gift.id, default: 0])").monospacedDigit() }
                             Text(gift.detail).font(.callout).foregroundStyle(Theme.muted)
-                            let gain = min(2, max(0, 1000 - (model.save.profile.journey?.affinity ?? 0)))
+                            let gain = min(2, max(0, NarrativeCatalog.affinityMaximum - (model.save.profile.journey?.affinity ?? 0)))
                             Button(gain > 0 ? "건네기 · 친밀도 +\(gain)" : "건네기 · 친밀도 MAX") {
                                 if let response = model.giveOperatorGift(gift) { onGiven(response) }
                             }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked)

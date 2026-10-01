@@ -280,7 +280,7 @@ private struct CharacterVoiceCatalog: Decodable {
         if !existingSave, let marker = arguments.firstIndex(of: "--ui-testing-operator-relationship"),
            marker + 1 < arguments.count, ["final", "waiting"].contains(arguments[marker + 1]) {
             var journey = save.profile.journey ?? JourneyState()
-            journey.affinity = arguments[marker + 1] == "final" ? 52 : 1000
+            journey.affinity = NarrativeCatalog.affinityMaximum
             if arguments[marker + 1] == "final" {
                 journey.unlocked.formUnion((1...14).map { String(format: "M%02d", $0) })
                 journey.milestones.formUnion(["M03", "M06", "M10", "M13"])

@@ -64,8 +64,9 @@ final class OperatorChatUITests: XCTestCase {
         let final = launch(extra: ["--ui-testing-operator-relationship", "final"])
         final.buttons["operator.memories"].tap()
         XCTAssertTrue(final.staticTexts["operator.relationship-max"].waitForExistence(timeout: 5))
-        XCTAssertFalse(final.staticTexts["operator.affinity-max"].exists, "Final relationship does not mean affinity is capped")
-        capture(final, "Relationship final below affinity cap")
+        XCTAssertTrue(final.staticTexts["operator.affinity-max"].exists)
+        XCTAssertEqual(final.staticTexts["operator.relationship-affinity"].label, "친밀도 100 / 100")
+        capture(final, "Relationship and affinity MAX")
         final.terminate()
 
         let capped = launch(large: true, extra: ["--ui-testing-operator-relationship", "waiting", "--ui-testing-operator-gifts"])
