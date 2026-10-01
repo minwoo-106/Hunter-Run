@@ -73,7 +73,7 @@ final class OperatorChatUITests: XCTestCase {
         capture(app, "Gift reaction")
         app.buttons["operator.gifts"].tap()
         XCTAssertTrue(app.staticTexts["operator.gifts-empty"].waitForExistence(timeout: 5))
-        app.buttons["닫기"].tap()
+        app.buttons["operator.gifts-close"].tap()
         app.buttons["operator.memories"].tap()
         XCTAssertTrue(app.staticTexts["operator.relationship-affinity"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["operator.relationship-affinity"].label.contains("2"))
