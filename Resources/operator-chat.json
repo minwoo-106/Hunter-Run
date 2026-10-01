@@ -1,0 +1,869 @@
+{
+  "schema": 1,
+  "episodes": [
+    {
+      "id": "coffee-aroma",
+      "prompt": "커피 향이 여기까지 나네요.",
+      "minimumTier": 1,
+      "activity": "coffee",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "오늘은 내려놓기 전에 향부터 맡고 있어요.",
+            "아까는 급하게 마셨다가 혀를 데었거든요. 이번엔 좀 천천히요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "또 일하면서 마셨죠?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "저도 잠깐 같이 쉬어도 돼요?",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "한 모금만 마시고 시작하려고 했는데, 메일이 와서요.",
+            "이제 컵 들고 있을 때는 메일 안 볼 거예요. …가능하면요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "그럼요. 여기 의자 당겨드릴게요.",
+            "커피 다 식기 전까지는 일 얘기 금지예요. 저도 지켜볼게요."
+          ],
+          "expression": "relieved",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "lunch",
+      "prompt": "점심은 맛있게 먹었어요?",
+      "minimumTier": 1,
+      "activity": "burger",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "네. 이번엔 서류부터 치우고 먹었어요.",
+            "햄버거 소스가 보고서에 묻으면 얼룩도 설명해야 하잖아요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "그런 적 있었어요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "다 먹고 나서 이야기해요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "…한 번이요.",
+            "사진에는 빨간 얼룩만 보여서, 현장에 이상이 생긴 줄 아셨대요. 그 뒤로는 꼭 치워요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "고마워요. 급하게 먹으면 꼭 사레가 들리더라고요.",
+            "콜라도 여기 있고요. 오늘은 천천히 먹을게요."
+          ],
+          "expression": "relieved",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "tablet",
+      "prompt": "태블릿으로 뭐 보고 있어요?",
+      "minimumTier": 1,
+      "activity": "tablet",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "새 장비 사용 설명서요.",
+            "버튼은 세 개뿐인데 설명은 스무 장이에요. 눌러보기 전에 읽고는 있어요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "맨 뒤에 요약 없어요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "같이 읽으면 좀 낫겠네요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "있어요! …설명서 앞부분을 충분히 숙지하래요.",
+            "이럴 거면 요약이라고 쓰지 말았어야죠."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "좋아요. 제가 읽고, 헌터님이 그림을 봐주세요.",
+            "그림 속 사람도 저희처럼 고민하는 표정인데요?"
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "window",
+      "prompt": "방금 무슨 생각 했어요?",
+      "minimumTier": 1,
+      "activity": "spacingOut",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "창밖에 구름이 꼭 고양이처럼 생겼길래 보고 있었어요.",
+            "귀까지 있었는데… 지금은 그냥 감자 같네요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "저쪽은 햄버거 같은데요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "잠깐 멍때리는 것도 좋죠.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "아, 진짜요. 옆에 작은 건 감자튀김이고요.",
+            "지금 배고픈 건 헌터님이에요, 저예요?"
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "네. 아무것도 안 정리해도 되는 시간이요.",
+            "조금만 더 보고 돌아갈게요. 구름은 기다려주질 않네요."
+          ],
+          "expression": "relieved",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "hair",
+      "prompt": "머리 때문에 불편해 보여요.",
+      "minimumTier": 1,
+      "activity": "hairSweep",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "고개 숙일 때마다 같은 가닥이 내려와요.",
+            "아까 분명 넘겼는데 또 여기 있어요. 참 끈질기죠."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "머리끈 하나 두면 어때요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "잠깐 쉬라는 신호 아닐까요?",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "서랍에 있긴 한데… 어디 넣었더라.",
+            "머리끈 찾으려고 서랍 정리부터 하게 생겼어요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "머리카락한테까지 잔소리 듣는 거예요?",
+            "알겠어요. 이번엔 제가 졌어요. 잠깐 쉴게요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "stretch",
+      "prompt": "기지개 시원하게 켰네요.",
+      "minimumTier": 1,
+      "activity": "stretching",
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "의자에 오래 앉아 있었더니 어깨가 굳었어요.",
+            "팔 한 번 쭉 뻗으니까 살 것 같네요. 옆에 컵 없는지도 먼저 봤어요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "컵 엎을 뻔했어요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "조금씩 자주 쉬어요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "지난번엔 팔꿈치가 스쳤어요. 간신히 잡았죠.",
+            "그때만큼은 제 반응도 꽤 빨랐어요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "네. 한꺼번에 몰아서 쉬려고 하면 결국 못 쉬더라고요.",
+            "이번 문서만 마치면 자리에서 일어날게요."
+          ],
+          "expression": "relieved",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "printer",
+      "prompt": "오늘 지부는 조용했어요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "대체로요. 프린터가 잠깐 종이를 안 내줬어요.",
+            "분명 한 장만 눌렀는데, 고치고 나니까 일곱 장이 나왔어요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "기다리면서 계속 눌렀군요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "남는 종이는 메모지로 쓰죠.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "…들켰네요. 눌러도 반응이 없길래요.",
+            "이제 기다릴게요. 프린터도 생각할 시간이 필요한가 봐요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "뒷면은 깨끗하니까요. 반으로 잘라둘게요.",
+            "오늘 프린터가 메모지까지 준비해준 셈이네요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "doodle",
+      "prompt": "메모 구석에 그린 건 뭐예요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "지부 마스코트를 그려봤어요. 씩씩한 늑대요.",
+            "그런데 옆 부서에서는 식빵이냐고 묻더라고요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "귀를 좀 더 뾰족하게 해봐요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "식빵 마스코트도 귀엽겠는데요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "좋아요. 이렇게… 어, 이젠 고양이 같네요.",
+            "늑대가 되기까지 시간이 좀 걸리겠어요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "그럼 발을 네 개 그릴까요?",
+            "…이거 보고 웃으시면, 식빵도 계속 그려볼게요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "lost-pen",
+      "prompt": "또 펜 찾고 있어요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "파란 펜만 자꾸 없어져요. 검은 펜은 이렇게 많은데요.",
+            "방금까지 분명 쓰고 있었거든요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "귀에 꽂혀 있는 거 아니에요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "제가 같이 찾아볼게요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "…어머.",
+            "찾은 건 고마운데, 얼마나 오래 그러고 있었는지는 말하지 말아주세요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "고마워요. 책상 오른쪽은 제가 볼게요.",
+            "잠깐만요. 제 손에 쥔 건… 아, 찾았어요. 미안해요."
+          ],
+          "expression": "playful",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "snack",
+      "prompt": "서랍에 간식 숨겨뒀어요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "숨긴 건 아니고요. 비상용이에요.",
+            "배고픈 상태로 숫자를 보면 이상하게 자꾸 틀리더라고요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "비상 상황이 자주 생기겠네요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "어떤 간식이 제일 좋아요?",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "하루에 한 번 정도요. 보통 세 시쯤에요.",
+            "지금도 슬슬 비상 상황인데, 하나 드실래요?"
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "초콜릿이요. 포장 뜯을 때부터 기분이 좋아요.",
+            "다만 키보드 위에서 먹으면 안 돼요. 그건 제가 확인했어요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "umbrella",
+      "prompt": "문 옆 우산은 누구 거예요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "제 거예요. 비 그친 날 가져와놓고 또 두고 갔어요.",
+            "집에 갈 때는 하늘이 맑으니까 생각이 안 나더라고요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "집에 우산이 없어지겠어요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "나갈 때 제가 알려드릴게요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "맞아요. 집에는 하나, 지부에는 세 개예요.",
+            "이 정도면 우산도 출근한 채로 안 돌아가는 거죠."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "고마워요. 그럼 문 앞에 가면 우산부터 잡을게요.",
+            "그런데 헌터님도 놓고 가신 건 없는지 같이 확인해요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "music",
+      "prompt": "혼자 일할 때 음악도 들어요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "연락이 뜸할 때는 작게 틀어둬요.",
+            "너무 아는 노래면 따라 부르다가 보고서가 안 써져서, 가사 없는 곡으로요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "따라 부르는 것도 듣고 싶은데요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "조용한 음악이 집중하기 좋죠.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "그건 좀 더 친해진 뒤에요.",
+            "노래까지 잘할 거라고 기대하시면 곤란해요. 정말로요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "네. 그렇다고 너무 잔잔하면 졸려요.",
+            "집중이 잘 되는 건지 잠이 잘 오는 건지 구분해야겠더라고요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "tidy",
+      "prompt": "책상 정리는 잘돼가요?",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "정리하려고 상자를 샀는데, 그 상자를 어디 둘지 고민 중이에요.",
+            "정리할 물건이 하나 더 늘었네요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "일단 상자부터 치울까요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "컵 놓을 자리부터 만들어요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "제가 시작한 일을 너무 정확하게 요약하셨어요.",
+            "좋아요. 이번엔 정말 필요한 것만 꺼내둘게요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "맞아요. 그 정도는 바로 할 수 있겠네요.",
+            "여기 서류를 옮기면… 됐어요. 헌터님 컵도 놓을 수 있어요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "field-chat",
+      "prompt": "최근 활동 얘기 좀 할까요?",
+      "minimumTier": 1,
+      "activity": "postRun",
+      "requiresRecentActivity": true,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "{activitySummary}",
+            "보고서 숫자 말고, 직접 다녀오신 느낌도 듣고 싶어요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "생각보다 힘들었어요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "그래도 다녀오니 기분은 좋네요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "그랬군요. 오늘은 일단 편하게 앉아요.",
+            "다음 활동은 몸 상태 보고 정하면 돼요. 오늘 기록은 제가 정리해둘게요."
+          ],
+          "expression": "worried",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "그럼 잘 다녀오신 거네요.",
+            "오늘 제일 기억나는 순간도 나중에 들려주세요. 그런 얘기는 보고서에 안 나오니까요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "quiet",
+      "prompt": "그냥 잠깐 들렀어요.",
+      "minimumTier": 1,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "그냥 들러도 돼요. 특별한 용건이 있어야 하는 건 아니니까요.",
+            "지금은 전화도 안 오고요. 의자 하나 당겨둘게요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "말없이 같이 있어도 괜찮아요?",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "그러면 작은 얘기 하나만 해줘요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "네. 저도 가끔은 말 안 하고 쉬고 싶어요.",
+            "컵 내려놓는 소리만 들리는 것도 괜찮네요."
+          ],
+          "expression": "relieved",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "아까 복도에서 인사했는데, 유리문에 비친 저였어요.",
+            "아무도 못 봤길 바라면서 바로 들어왔죠."
+          ],
+          "expression": "playful",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "welcome-back",
+      "prompt": "제가 올 줄 알았어요?",
+      "minimumTier": 3,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "문 열리는 소리에 고개부터 들었어요.",
+            "다른 분이면 화면 보고 있던 척하려고 했는데… 헌터님이네요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "기다렸다고 해도 되잖아요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "다음엔 먼저 연락할까요?",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "그렇게 말하면 좀 부끄럽잖아요.",
+            "…네. 언제 오실까 하긴 했어요."
+          ],
+          "expression": "smile",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "그래주시면 좋죠. 커피를 한 잔 더 준비해둘게요.",
+            "아, 꼭 연락하고 와야 한다는 뜻은 아니에요. 그냥 와도 반가워요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "nickname",
+      "prompt": "일 안 할 때는 뭐라고 부를까요?",
+      "minimumTier": 3,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "지금처럼 이름으로 불러주셔도 좋아요.",
+            "통신에서 들을 때랑 바로 앞에서 들을 때는 조금 다르네요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "그럼, {operatorName}.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "너무 편하게 불러도 괜찮아요?",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "네. 여기 있어요.",
+            "…이상하네요. 이름만 불렀는데도 괜히 웃음이 나요."
+          ],
+          "expression": "smile",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "괜찮아요. 둘이 이야기할 때까지 딱딱할 필요는 없죠.",
+            "대신 제가 엉뚱한 소리 해도 너무 놀리지는 말아주세요."
+          ],
+          "expression": "playful",
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "day-off",
+      "prompt": "쉬는 날엔 뭘 하고 싶어요?",
+      "minimumTier": 2,
+      "activity": null,
+      "requiresRecentActivity": false,
+      "start": "start",
+      "nodes": [
+        {
+          "id": "start",
+          "lines": [
+            "늦게 일어나서, 갈 곳 안 정하고 산책하고 싶어요.",
+            "걷다가 괜찮은 가게가 보이면 들어가는 식으로요."
+          ],
+          "expression": "smile",
+          "replies": [
+            {
+              "id": "a",
+              "text": "같이 가면 제가 길을 볼게요.",
+              "next": "a"
+            },
+            {
+              "id": "b",
+              "text": "이번에는 보고서 쓰면 안 돼요.",
+              "next": "b"
+            }
+          ]
+        },
+        {
+          "id": "a",
+          "lines": [
+            "그럼 저는 먹을 곳을 볼게요.",
+            "서로 보고 있는 게 달라도 목적지는 같겠네요."
+          ],
+          "expression": "playful",
+          "replies": []
+        },
+        {
+          "id": "b",
+          "lines": [
+            "맞아요. 사진만 찍고 돌아올게요.",
+            "사진 설명을 길게 쓰기 시작하면 꼭 말려주세요."
+          ],
+          "expression": "smile",
+          "replies": []
+        }
+      ]
+    }
+  ]
+}
