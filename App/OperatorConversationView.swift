@@ -266,7 +266,7 @@ struct OperatorGiftView: View {
                         }.card()
                     }
                 }.padding(22)
-            }.labyrinthScreen().navigationTitle("선물 건네기").navigationBarTitleDisplayMode(.inline)
+            }.accessibilityIdentifier("operator.gifts-scroll").labyrinthScreen().navigationTitle("선물 건네기").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() }.buttonStyle(GameControlStyle()).accessibilityIdentifier("operator.gifts-close") } }
         }
     }

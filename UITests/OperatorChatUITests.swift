@@ -14,10 +14,10 @@ final class OperatorChatUITests: XCTestCase {
         XCTAssertTrue(app.buttons["operator.continue"].waitForExistence(timeout: 8))
         return app
     }
-    @MainActor private func tap(_ button: XCUIElement, app: XCUIApplication) {
+    @MainActor private func tap(_ button: XCUIElement, app: XCUIApplication, scroll: XCUIElement? = nil) {
         for _ in 0..<16 {
             if button.isHittable { break }
-            app.scrollViews.firstMatch.swipeUp()
+            (scroll ?? app.scrollViews.firstMatch).swipeUp()
         }
         XCTAssertTrue(button.isHittable); button.tap()
     }
@@ -82,7 +82,7 @@ final class OperatorChatUITests: XCTestCase {
         capped.buttons["operator.gifts"].tap()
         XCTAssertTrue(capped.staticTexts["operator.gifts-max"].waitForExistence(timeout: 5))
         let gift = capped.buttons["operator.give.flower"]
-        XCTAssertTrue(gift.label.contains("친밀도 MAX")); tap(gift, app: capped)
+        XCTAssertTrue(gift.label.contains("친밀도 MAX")); tap(gift, app: capped, scroll: capped.scrollViews["operator.gifts-scroll"])
         XCTAssertTrue(capped.staticTexts["operator.gift-gain"].waitForExistence(timeout: 5))
         XCTAssertEqual(capped.staticTexts["operator.gift-gain"].label, "친밀도 MAX")
         capture(capped, "Gift affinity MAX")
