@@ -11,7 +11,7 @@ final class OperatorLifeUITests: XCTestCase {
         return app
     }
     @MainActor private func wait(_ phase: String, _ app: XCUIApplication, seconds: Double = 20) {
-        let predicate = NSPredicate(format: "value == %@", phase)
+        let predicate = NSPredicate(format: "value == %@ OR value BEGINSWITH %@", phase, phase + "|")
         expectation(for: predicate, evaluatedWith: app.buttons["home.operator"])
         waitForExpectations(timeout: seconds)
     }
@@ -34,16 +34,30 @@ final class OperatorLifeUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["home.greeting"].label.contains("저 안 잤어요"))
     }
     @MainActor func testBackgroundAndSettingsDoNotStealCharacterTap() {
-        let app = app(); wait("idle", app)
+        let app = app(["--life-inspect-clock"]); wait("idle", app)
+        let before = activeTime(app)
         XCUIDevice.shared.press(.home)
+        XCTAssertTrue(app.wait(for: .runningBackground, timeout: 2)
+                      || app.wait(for: .runningBackgroundSuspended, timeout: 3))
         Thread.sleep(forTimeInterval: 10) // longer than idle duration; offscreen time must not count
-        app.activate(); wait("idle", app, seconds: 3)
+        app.activate()
+        let elapsed = activeTime(app) - before
+        print("LIFE_BACKGROUND active-time increase: \(elapsed), suspended seconds: 10")
+        XCTAssertGreaterThanOrEqual(elapsed, 0)
+        XCTAssertLessThan(elapsed, 8, "Suspended time must not enter the life clock")
+        // Slow automation may reach the idle/doze boundary before pressing Home.
+        // Assert the clock rather than demanding one short-lived pose on return.
         wait("dozing", app)
         app.buttons["home.settings"].tap()
         XCTAssertTrue(app.navigationBars["설정"].waitForExistence(timeout: 5))
         app.buttons["닫기"].tap(); wait("dozing", app, seconds: 5)
         app.buttons["home.operator"].tap(); wait("embarrassed", app, seconds: 8)
         capture("Resumed reaction", app)
+    }
+    @MainActor private func activeTime(_ app: XCUIApplication) -> Double {
+        let parts = (app.buttons["home.operator"].value as? String ?? "").split(separator: "|")
+        XCTAssertEqual(parts.count, 2, "Life clock diagnostic must be available")
+        return Double(parts.last.map(String.init) ?? "") ?? .nan
     }
     @MainActor func testReducedMotionAndMotionOffPreserveInteraction() {
         let reduced = app(["--life-reduce-motion"])

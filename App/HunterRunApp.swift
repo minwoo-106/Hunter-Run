@@ -151,7 +151,7 @@ struct HomeView: View {
                     } label: { Color.clear.frame(maxWidth: .infinity).frame(minHeight: 180).contentShape(Rectangle()) }
                         .buttonStyle(.plain).accessibilityLabel("오퍼레이터와 대화").accessibilityIdentifier("home.operator").disabled(model.growthLocked)
 #if DEBUG && targetEnvironment(simulator)
-                        .accessibilityValue(life.phase.rawValue)
+                        .accessibilityValue(life.testingAccessibilityValue)
 #endif
                     Spacer(minLength: 0)
                     VStack(alignment: .leading, spacing: 8) {

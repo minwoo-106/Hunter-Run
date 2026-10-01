@@ -6,6 +6,12 @@ import Darwin
     @Published private(set) var phase: LifePhase
     @Published private(set) var cue: String?
     @Published private(set) var animating = false
+#if DEBUG && targetEnvironment(simulator)
+    @Published private(set) var testingActiveTime: TimeInterval?
+    var testingAccessibilityValue: String {
+        testingActiveTime.map { phase.rawValue + "|" + String($0) } ?? phase.rawValue
+    }
+#endif
     private var machine: LifeStateMachine
     private var lastTick: TimeInterval?
     private var ticker: Task<Void, Never>?
@@ -23,6 +29,7 @@ import Darwin
         machine = LifeStateMachine(sequence: sequence, initialPhase: loaded == nil ? .idle : .stretching)
 #if DEBUG && targetEnvironment(simulator)
         let args = ProcessInfo.processInfo.arguments
+        if args.contains("--life-inspect-clock") { testingActiveTime = 0 }
         if let index = args.firstIndex(of: "--life-inspect-phase"), index + 1 < args.count,
            let initial = LifePhase(rawValue: args[index + 1]) {
             machine = LifeStateMachine(sequence: sequence, initialPhase: initial, initialElapsed: initial == .dozing ? 5 : 1.2)
@@ -102,6 +109,11 @@ import Darwin
             log.info("Phase: \(self.phase.rawValue, privacy: .public); thermalState: \(ProcessInfo.processInfo.thermalState.rawValue)")
         }
         if cue != machine.cue { cue = machine.cue }
+#if DEBUG && targetEnvironment(simulator)
+        if testingActiveTime != nil, testingActiveTime != machine.activeTime {
+            testingActiveTime = machine.activeTime
+        }
+#endif
     }
 }
 
