@@ -7,6 +7,8 @@ public struct JourneyState: Codable, Equatable {
     public var operatorName = "서윤"
     public var registered = false
     public var affinity = 0
+    // Missing only in legacy saves; migrate the achieved tier before applying new gates.
+    public var relationshipTier: Int? = nil
     public var unlocked: Set<String> = []
     public var completed: Set<String> = []
     public var milestones: Set<String> = []
@@ -17,8 +19,14 @@ public struct JourneyState: Codable, Equatable {
     public var selectedQuest: String?
     public var questRecords: [String: QuestRecord] = [:]
     public var gifts: OperatorGiftState? = nil
-    public init() {}
+    public init() { relationshipTier = 1 }
+    @discardableResult public mutating func gainAffinity(_ amount: Int) -> Int {
+        let gained = min(max(0, amount), max(0, NarrativeCatalog.affinityMaximum - affinity))
+        affinity += gained
+        return gained
+    }
     public var isValid: Bool {
+        // Legacy scores above the new cap remain readable; future rewards add zero.
         version == 1 && Names.valid(operatorName) && (0...1000).contains(affinity)
         && [unlocked, completed, milestones, completedQuests, claimedQuests].allSatisfy { set in
             set.count <= 500 && set.allSatisfy { !$0.isEmpty && $0.count <= 100 }
@@ -26,6 +34,7 @@ public struct JourneyState: Codable, Equatable {
         && (cursor?.isValid ?? true) && (selectedQuest.map { !$0.isEmpty && $0.count <= 100 } ?? true)
         && questRecords.count <= 100 && questRecords.allSatisfy { $0.value.isValid }
         && (gifts?.isValid ?? true)
+        && (relationshipTier.map { (1...5).contains($0) } ?? true)
     }
 }
 
@@ -180,17 +189,26 @@ public struct NarrativeCatalog: Codable {
 
     public func tier(_ profile: Profile) -> Int {
         let state = profile.journey ?? JourneyState()
-        var tier = 1
+        var tier = state.relationshipTier ?? Self.legacyTier(state)
         for (index, gate) in Self.relationshipGates.enumerated() {
-            if state.affinity >= gate.0 && state.unlocked.contains(gate.1) { tier = index + 2 }
+            if state.affinity >= gate.0 && state.unlocked.contains(gate.1) { tier = max(tier, index + 2) }
         }
         return tier
     }
     public static let tierNames = ["배정된 파트너", "익숙한 동료", "믿고 기대는 사이", "특별한 파트너", "서로의 편"]
-    public static let relationshipGates = [(8, "M03"), (20, "M06"), (36, "M10"), (52, "M14")]
+    public static let affinityMaximum = 100
+    public static let relationshipGates = [(20, "M03"), (40, "M06"), (70, "M10"), (100, "M14")]
+    private static func legacyTier(_ state: JourneyState) -> Int {
+        var tier = 1
+        for (index, gate) in [(8, "M03"), (20, "M06"), (36, "M10"), (52, "M14")].enumerated() {
+            if state.affinity >= gate.0 && state.unlocked.contains(gate.1) { tier = index + 2 }
+        }
+        return tier
+    }
     @discardableResult public func refresh(_ profile: inout Profile) -> Bool {
         let before = profile.journey
         var state = before ?? JourneyState()
+        if state.relationshipTier == nil { state.relationshipTier = Self.legacyTier(state) }
         for entry in main {
             guard entry.order == 1 || state.unlocked.contains(main[entry.order - 2].id) else { break }
             if entry.requirements.allSatisfy({ $0.satisfied(profile) }) { state.unlocked.insert(entry.id) }
@@ -198,7 +216,7 @@ public struct NarrativeCatalog: Codable {
             if !state.unlocked.contains(entry.id) { break }
         }
         for id in ["M03", "M06", "M10", "M13", "M16"] where state.unlocked.contains(id) && !state.milestones.contains(id) {
-            state.milestones.insert(id); state.affinity = min(1000, state.affinity + 4)
+            state.milestones.insert(id); state.gainAffinity(4)
         }
         if state.unlocked.contains("M18"), state.memories["firstVanguardRole"] == nil {
             let roles = ["warrior", "mage", "archer", "cleric"]
@@ -210,6 +228,7 @@ public struct NarrativeCatalog: Codable {
         }
         profile.journey = state
         let currentTier = tier(profile)
+        state.relationshipTier = currentTier
         for entry in bonds where entry.requiredTier <= currentTier {
             let mainReady = entry.requiredMain == 0 || state.unlocked.contains(String(format: "M%02d", entry.requiredMain))
             if mainReady && entry.prerequisite.allSatisfy(state.completed.contains) { state.unlocked.insert(entry.id) }
@@ -253,7 +272,7 @@ public struct NarrativeCatalog: Codable {
         }
         state.completed.insert(scene.id)
         state.memories.merge(cursor.pendingMemory) { _, new in new }
-        if scene.kind == "bond" { state.affinity = min(1000, state.affinity + 4) }
+        if scene.kind == "bond" { state.gainAffinity(4) }
         state.cursor = nil; profile.journey = state; refresh(&profile)
         return true
     }

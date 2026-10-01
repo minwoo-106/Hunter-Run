@@ -74,12 +74,13 @@ final class NarrativeTests: XCTestCase {
             var profile = Profile(); var journey = JourneyState()
             // Isolate bond gating from field quest gating: all main milestones verified.
             journey.unlocked = Set(catalog.main.map(\.id)); journey.memories["relationshipPreference"] = preference
+            journey.affinity = NarrativeCatalog.affinityMaximum
             profile.journey = journey; catalog.refresh(&profile)
             for entry in catalog.bonds {
                 XCTAssertTrue(profile.journey!.unlocked.contains(entry.id), entry.id)
                 try finish(entry.id, profile: &profile, catalog: catalog, lastChoice: preference == "undecided", preference: preference)
             }
-            XCTAssertEqual(profile.journey?.affinity, 68)
+            XCTAssertEqual(profile.journey?.affinity, NarrativeCatalog.affinityMaximum)
             XCTAssertEqual(catalog.tier(profile), 5)
             XCTAssertEqual(profile.journey?.memories["relationshipPreference"], preference)
             let state = profile.journey
@@ -181,5 +182,61 @@ final class NarrativeTests: XCTestCase {
         XCTAssertThrowsError(try catalog.advance(choice: "R11-A", profile: &profile))
         XCTAssertEqual(before, profile.journey)
         XCTAssertThrowsError(try catalog.begin("R12", profile: &profile))
+    }
+    func testNewRelationshipsRequireWiderCheckpointsAndStoryProgress() throws {
+        let catalog = try catalog()
+        for (index, gate) in NarrativeCatalog.relationshipGates.enumerated() {
+            var profile = Profile(); var state = JourneyState()
+            state.unlocked = Set(catalog.main.map(\.id)); state.affinity = gate.0 - 1
+            profile.journey = state
+            XCTAssertEqual(catalog.tier(profile), index + 1)
+            profile.journey?.affinity = gate.0
+            XCTAssertEqual(catalog.tier(profile), index + 2)
+            profile.journey?.unlocked = ["M01"]
+            XCTAssertEqual(catalog.tier(profile), 1, "Affinity alone cannot unlock a relationship")
+        }
+        var profile = Profile(); var state = JourneyState()
+        state.affinity = 52; state.unlocked = Set(catalog.main.map(\.id)); profile.journey = state
+        XCTAssertEqual(catalog.tier(profile), 3, "New profiles must not use legacy thresholds")
+    }
+    func testLegacyAchievedRelationshipsAndUnlockedStoriesSurviveUpgradeAndReload() throws {
+        let catalog = try catalog()
+        for (affinity, expectedTier) in [(8, 2), (20, 3), (36, 4), (52, 5), (1000, 5)] {
+            var state = JourneyState(); state.affinity = affinity
+            state.unlocked = Set(catalog.main.map(\.id)).union(["R01", "R02"])
+            state.completed = ["M01", "R01"]; state.memories["desk"] = "cup"
+            state.milestones = ["M03", "M06", "M10", "M13", "M16"]
+            var raw = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(state)) as? [String: Any])
+            raw.removeValue(forKey: "relationshipTier")
+            var save = SaveState()
+            save.profile.journey = try JSONDecoder().decode(JourneyState.self, from: JSONSerialization.data(withJSONObject: raw))
+            XCTAssertNil(save.profile.journey?.relationshipTier)
+            XCTAssertEqual(catalog.tier(save.profile), expectedTier)
+            XCTAssertTrue(catalog.refresh(&save.profile))
+            XCTAssertEqual(save.profile.journey?.relationshipTier, expectedTier)
+            XCTAssertEqual(save.profile.journey?.affinity, affinity)
+            XCTAssertTrue(state.unlocked.isSubset(of: save.profile.journey!.unlocked))
+            XCTAssertEqual(save.profile.journey?.completed, state.completed)
+            XCTAssertEqual(save.profile.journey?.memories, state.memories)
+            let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+            defer { try? FileManager.default.removeItem(at: directory) }
+            let repository = SaveRepository(directory: directory)
+            try repository.write(save)
+            var restored = try repository.load()
+            catalog.refresh(&restored.profile)
+            XCTAssertEqual(catalog.tier(restored.profile), expectedTier)
+            XCTAssertEqual(restored.profile.journey?.affinity, affinity)
+            XCTAssertFalse(catalog.refresh(&restored.profile), "Migration and rewards must not repeat")
+        }
+    }
+    func testAffinityStopsAtOneHundredAndLegacyExcessIsNeverReduced() throws {
+        for (initial, expectedGain, final) in [(99, 1, 100), (100, 0, 100), (999, 0, 999)] {
+            var state = JourneyState(); state.affinity = initial
+            XCTAssertEqual(state.gainAffinity(4), expectedGain)
+            XCTAssertEqual(state.affinity, final)
+            XCTAssertTrue(state.isValid)
+        }
+        var invalid = JourneyState(); invalid.relationshipTier = 6
+        XCTAssertFalse(invalid.isValid)
     }
 }

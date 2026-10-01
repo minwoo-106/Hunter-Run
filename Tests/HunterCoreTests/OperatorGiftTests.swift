@@ -78,28 +78,28 @@ final class OperatorGiftTests: XCTestCase {
         gifts.inventory = ["flower": 100]; XCTAssertFalse(gifts.isValid)
         gifts.inventory = ["flower": 1]; gifts.explorationSeconds = .infinity; XCTAssertFalse(gifts.isValid)
         gifts.explorationSeconds = 0
-        var profile = Profile(); var state = JourneyState(); state.gifts = gifts; state.affinity = 999; profile.journey = state
+        var profile = Profile(); var state = JourneyState(); state.gifts = gifts; state.affinity = 99; profile.journey = state
         XCTAssertEqual(OperatorGifts.give(.flower, profile: &profile)?.affinity, 1)
-        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertEqual(profile.journey?.affinity, NarrativeCatalog.affinityMaximum)
         XCTAssertTrue(profile.journey?.isValid ?? false)
     }
     func testStoryRewardsAtAffinityCapKeepSaveValidAndCannotRepeat() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let catalog = try JSONDecoder().decode(NarrativeCatalog.self, from: Data(contentsOf: root.appendingPathComponent("Resources/narrative.json")))
         var profile = Profile(); var state = JourneyState()
-        state.affinity = 1000; state.unlocked = ["M01", "M02", "M03", "R01"]; profile.journey = state
+        state.affinity = NarrativeCatalog.affinityMaximum; state.unlocked = ["M01", "M02", "M03", "R01"]; profile.journey = state
         catalog.refresh(&profile)
-        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertEqual(profile.journey?.affinity, NarrativeCatalog.affinityMaximum)
         XCTAssertTrue(profile.journey?.milestones.contains("M03") ?? false)
         let scene = try XCTUnwrap(catalog.scene("R01"))
         let ending = try XCTUnwrap(scene.nodes.first { $0.next == nil && ($0.choices ?? []).isEmpty })
         profile.journey?.cursor = DialogueCursor(sceneID: scene.id, nodeID: ending.id)
         XCTAssertTrue(try catalog.advance(profile: &profile))
-        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertEqual(profile.journey?.affinity, NarrativeCatalog.affinityMaximum)
         XCTAssertTrue(profile.journey?.isValid ?? false)
         XCTAssertTrue(profile.journey?.completed.contains("R01") ?? false)
         catalog.refresh(&profile)
-        XCTAssertEqual(profile.journey?.affinity, 1000)
+        XCTAssertEqual(profile.journey?.affinity, NarrativeCatalog.affinityMaximum)
         XCTAssertThrowsError(try catalog.begin("R01", profile: &profile))
     }
 }

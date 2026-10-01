@@ -74,8 +74,8 @@ public enum OperatorGifts {
               gifts.inventory[gift.id, default: 0] > 0, gifts.given < 1_000_000 else { return nil }
         let first = gifts.given == 0
         gifts.inventory[gift.id, default: 0] -= 1; gifts.given += 1
-        let gained = min(2, max(0, 1000 - journey.affinity))
-        journey.affinity += gained; journey.gifts = gifts
+        let gained = journey.gainAffinity(2)
+        journey.gifts = gifts
         let text: String
         switch gift {
         case .flower:
