@@ -191,7 +191,7 @@ struct OperatorMemoriesView: View {
                         }.buttonStyle(.plain).accessibilityIdentifier("bond." + entry.id)
                     } else { Label("아직 나누지 않은 이야기", systemImage: "lock.fill").foregroundStyle(Theme.muted).card() }
                 }
-                Text("함께 겪은 사건과 새로운 이야기로 가까워져요. 같은 대화를 반복해서 호감도가 쌓이지는 않아요.").font(.caption).foregroundStyle(Theme.muted)
+                Text("함께 겪은 사건과 새로운 이야기로 가까워져요. 같은 대화를 반복해서 친밀도가 쌓이지는 않아요.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(22)
         }.labyrinthScreen().navigationTitle("함께한 기록").navigationBarTitleDisplayMode(.inline).modifier(GameBackModifier())
     }
@@ -217,7 +217,8 @@ struct OperatorGiftView: View {
                         VStack(alignment: .leading, spacing: 10) {
                             HStack { Label(gift.name, systemImage: gift.symbol).font(.headline); Spacer(); Text("×\(inventory[gift.id, default: 0])").monospacedDigit() }
                             Text(gift.detail).font(.callout).foregroundStyle(Theme.muted)
-                            Button("건네기 · 친밀도 +2") {
+                            let gain = min(2, max(0, 1000 - (model.save.profile.journey?.affinity ?? 0)))
+                            Button(gain > 0 ? "건네기 · 친밀도 +\(gain)" : "건네기") {
                                 if let response = model.giveOperatorGift(gift) { onGiven(response) }
                             }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked)
                                 .accessibilityIdentifier("operator.give." + gift.id)
