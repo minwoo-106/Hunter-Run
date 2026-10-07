@@ -1,0 +1,47 @@
+{
+  "version": "1.7.1",
+  "build": "58",
+  "bundle": "com.hunterrun.demo",
+  "bytes": 307340886,
+  "sha256": "7026c9c95be3f3a91703c0baa0fbef44a2c70343f0547a38a73d62c760fe95c5",
+  "verifiedVoices": {
+    "operator-voice.json": 177,
+    "character-audio.json": 39,
+    "defense-voice.json": 151
+  },
+  "verifiedDefenseAssets": 9,
+  "verifiedLifeAssets": 16,
+  "simulatorFixturesExcluded": true,
+  "bundledGameDataMatchesSource": true,
+  "date": "2026-10-07",
+  "sourceCommit": "e3a4a80b84618ed46bc409d9265057474337f091",
+  "buildURL": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ac64c352e8bb15cf399653e",
+  "portableTestsPassed": 229,
+  "physicalDeviceExerciseVerified": false,
+  "uiTests": {
+    "large": {
+      "passed": 6,
+      "failures": 0,
+      "cases": [
+        "-[HunterRunUITests.HomeLayoutTests testHomeFitsScreen]",
+        "-[HunterRunUITests.ProgressGuidanceTests testCompletedExamEnablesPromotion]",
+        "-[HunterRunUITests.ProgressGuidanceTests testPromotionExplainsStoryAccessInsteadOfOnlyGreenNumbers]",
+        "-[HunterRunUITests.ProgressGuidanceTests testQualifiedHunterCanFindTheRequiredExam]",
+        "-[HunterRunUITests.ProgressGuidanceTests testSavedDefenseExplainsActivityLockAfterExamComplete]",
+        "-[HunterRunUITests.ProgressGuidanceTests testWalkingEnduranceShowsItsOwnDistanceAndHoldReason]"
+      ]
+    },
+    "compact": {
+      "passed": 6,
+      "failures": 0,
+      "cases": [
+        "-[HunterRunUITests.HomeLayoutTests testHomeFitsScreen]",
+        "-[HunterRunUITests.ProgressGuidanceTests testCompletedExamEnablesPromotion]",
+        "-[HunterRunUITests.ProgressGuidanceTests testPromotionExplainsStoryAccessInsteadOfOnlyGreenNumbers]",
+        "-[HunterRunUITests.ProgressGuidanceTests testQualifiedHunterCanFindTheRequiredExam]",
+        "-[HunterRunUITests.ProgressGuidanceTests testSavedDefenseExplainsActivityLockAfterExamComplete]",
+        "-[HunterRunUITests.ProgressGuidanceTests testWalkingEnduranceShowsItsOwnDistanceAndHoldReason]"
+      ]
+    }
+  }
+}
