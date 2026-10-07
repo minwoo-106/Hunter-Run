@@ -129,6 +129,10 @@ public enum ProgressionError: LocalizedError {
     case .promotion: return "아직 다음 등급의 평가 조건을 충족하지 못했습니다."
     } }
 }
+public enum PromotionReadiness: Equatable {
+    case maximumRank, requirements, story, exam, ready
+}
+
 public enum Progression {
     public static let ranks = ["E", "D", "C", "B", "A", "S"]
     public static func gateClears(_ profile: Profile) -> Int {
@@ -155,6 +159,12 @@ public enum Progression {
     public static func canPromote(_ profile: Profile) -> Bool {
         guard qualifiesForExam(profile), let next = nextRank(profile) else { return false }
         return profile.journey?.completedQuests.contains("exam-" + next) == true
+    }
+    public static func promotionReadiness(_ profile: Profile) -> PromotionReadiness {
+        guard let rank = nextRank(profile) else { return .maximumRank }
+        guard qualifiesForExam(profile) else { return .requirements }
+        if canPromote(profile) { return .ready }
+        return Quests.entry("exam-" + rank)?.available(profile) == true ? .exam : .story
     }
     public static func allows(_ mode: RunMode, profile: Profile, catalog: ProgressionCatalog) -> Bool {
         mode != .gate || (profile.growth.rank != "E" && catalog.unlocked("gate", profile: profile))

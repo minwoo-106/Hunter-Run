@@ -2,6 +2,31 @@ import XCTest
 @testable import HunterCore
 
 final class QuestTests: XCTestCase {
+    func testRank15And434MinutesStillNeedDExamAndItsStoryAccess() throws {
+        var save = SaveState()
+        XCTAssertEqual(Progression.promotionReadiness(save.profile), .requirements)
+        var run = RunSession(targetSeconds: 434 * 60, simulated: false, allowPursuit: false)
+        run.activeSeconds = 434 * 60; run.phase = .finished
+        Settlement.apply(run, to: &save.profile)
+        save.profile.xp = 4200
+        XCTAssertEqual(save.profile.level, 15)
+        XCTAssertEqual(Progression.activityMinutes(save.profile), 434)
+        XCTAssertTrue(Progression.qualifiesForExam(save.profile))
+        XCTAssertFalse(Progression.canPromote(save.profile))
+        XCTAssertFalse(Quests.entry("exam-D")!.available(save.profile))
+        XCTAssertEqual(Progression.promotionReadiness(save.profile), .story)
+        var journey = save.profile.journey ?? JourneyState()
+        journey.unlocked.insert("M05"); save.profile.journey = journey
+        XCTAssertTrue(Quests.entry("exam-D")!.available(save.profile))
+        XCTAssertFalse(Progression.canPromote(save.profile))
+        XCTAssertEqual(Progression.promotionReadiness(save.profile), .exam)
+        save.profile.journey?.completedQuests.insert("exam-D")
+        XCTAssertEqual(Progression.promotionReadiness(save.profile), .ready)
+        XCTAssertNoThrow(try Progression.promote(save: &save))
+        XCTAssertEqual(save.profile.growth.rank, "D")
+        var growth = save.profile.growth; growth.rank = "S"; save.profile.growth = growth
+        XCTAssertEqual(Progression.promotionReadiness(save.profile), .maximumRank)
+    }
     func testOpenWolfQuestKeepsPriorityWithoutBeingSelected() {
         var profile = Profile()
         var journey = JourneyState()

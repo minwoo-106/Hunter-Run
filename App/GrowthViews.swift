@@ -146,21 +146,48 @@ struct RankView: View {
                 Text("등급은 활동 기록과 게이트 성과를 함께 평가합니다.").foregroundStyle(Theme.muted)
                 if let next = Progression.nextRank(model.save.profile) {
                     let requirements = Progression.requirements(model.save.profile)
+                    let readiness = Progression.promotionReadiness(model.save.profile)
+                    let examDone = model.save.profile.journey?.completedQuests.contains("exam-" + next) == true
                     Text("다음 평가 · \(next)급").font(.title2.bold())
                     VStack(alignment: .leading, spacing: 14) {
                         requirement("헌터 레벨", model.save.profile.level, requirements.level)
                         requirement("누적 활동 시간(분)", Progression.activityMinutes(model.save.profile), requirements.runs * 20)
                         requirement("누적 게이트 실적", Progression.gateClears(model.save.profile), requirements.gates)
+                        HStack {
+                            Image(systemName: examDone ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(examDone ? Theme.teal : Theme.muted)
+                            Text("전용 승급 심사 토벌")
+                            Spacer()
+                            Text(examDone ? "완료" : "미완료")
+                        }.font(.callout).accessibilityIdentifier("rank.exam.requirement")
                     }.card()
-                    Button("승급 평가 받기") { model.promote() }.buttonStyle(GameButtonStyle(primary: true))
-                        .disabled(model.growthLocked || !Progression.canPromote(model.save.profile))
-                    if model.save.profile.journey?.completedQuests.contains("exam-" + next) != true {
-                        NavigationLink { QuestBoardView() } label: { Label("전용 승급 심사 확인", systemImage: "shield.checkered") }
-                        Text("자격 조건을 갖춘 뒤 전용 감시체를 완전히 토벌하면 승급할 수 있어요.").font(.caption).foregroundStyle(Theme.muted)
+                    Text(promotionMessage(readiness, rank: next)).font(.callout).foregroundStyle(Theme.teal)
+                        .accessibilityIdentifier("rank.readiness")
+                    if model.growthLocked {
+                        Text("진행 중이거나 저장해둔 활동이 있어요. 해당 활동을 마치거나 종료한 뒤 승급할 수 있어요.")
+                            .font(.caption).foregroundStyle(Theme.muted).accessibilityIdentifier("rank.activity-lock")
                     }
+                    Button(examDone ? "승급 평가 받기" : "심사 토벌 후 승급 가능") { model.promote() }.buttonStyle(GameButtonStyle(primary: true))
+                        .disabled(model.growthLocked || !Progression.canPromote(model.save.profile))
+                        .accessibilityIdentifier("rank.promote")
+                    if !examDone {
+                        NavigationLink { QuestBoardView() } label: { Label(readiness == .exam ? "\(next)급 승급 심사 확인" : "진행 중인 의뢰 확인", systemImage: "shield.checkered") }
+                            .buttonStyle(GameButtonStyle(primary: readiness == .exam)).accessibilityIdentifier("rank.exam.open")
+                        Text("심사 감시체의 남은 HP는 다음 활동으로 이어져요. 한 번에 끝내지 않아도 괜찮아요.").font(.caption).foregroundStyle(Theme.muted)
+                    }
+                    if let notice = model.notice { Text(notice).font(.caption).foregroundStyle(Theme.muted) }
                 } else { Text("최고 등급에 도달했습니다.").foregroundStyle(Theme.teal) }
             }.padding(20)
         }.labyrinthScreen().navigationTitle("협회 평가").navigationBarTitleDisplayMode(.inline)
+    }
+    private func promotionMessage(_ readiness: PromotionReadiness, rank: String) -> String {
+        switch readiness {
+        case .requirements: return "먼저 레벨·활동 시간·게이트 자격을 채워주세요. 심사 토벌도 별도로 필요해요."
+        case .story: return "기본 자격은 모두 충족했어요. 지부 이야기와 현재 의뢰를 진행하면 \(rank)급 승급 심사가 열려요."
+        case .exam: return "기본 자격은 모두 충족했어요. 이제 \(rank)급 승급 심사에 출동해 전용 감시체를 토벌해주세요."
+        case .ready: return "자격과 전용 심사 토벌을 모두 마쳤어요. 승급 평가를 받을 수 있어요."
+        case .maximumRank: return "최고 등급에 도달했어요."
+        }
     }
     private func requirement(_ label: String, _ value: Int, _ target: Int) -> some View {
         HStack { Image(systemName: value >= target ? "checkmark.circle.fill" : "circle").foregroundStyle(value >= target ? Theme.teal : Theme.muted); Text(label); Spacer(); Text("\(value) / \(target)").monospacedDigit() }.font(.callout)
