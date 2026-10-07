@@ -6,8 +6,8 @@ on:
       validation_scope:
         description: Native validation scope
         type: choice
-        options: [operator-life, operator-chat]
-        default: operator-life
+        options: [defense, operator-life, operator-chat]
+        default: defense
 
 permissions:
   contents: read
@@ -54,7 +54,7 @@ jobs:
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
           python3 scripts/package-character-preview.py build
 
-      - name: Verify operator interactions on two iPhone sizes
+      - name: Verify campaign and home on two iPhone sizes
         env:
           UI_SCOPE_NAME: ${{ inputs.validation_scope }}
         run: bash scripts/check-ios-layout.sh "$UI_SCOPE_NAME"
@@ -63,7 +63,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.3-build56-screen-review
+          name: HunterRun-1.7.0-build57-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -81,11 +81,10 @@ jobs:
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.6.3-build56-iPhone
+          name: HunterRun-1.7.0-build57-iPhone
           path: |
-            build/HunterRun-1.6.3-build56-unsigned.ipa
-            build/HunterRun-1.6.3-build56-manifest.json
-            build/HunterRun-1.4.0-build42-voice-preview.zip
+            build/HunterRun-1.7.0-build57-unsigned.ipa
+            build/HunterRun-1.7.0-build57-manifest.json
           if-no-files-found: error
           compression-level: 0
           retention-days: 7
