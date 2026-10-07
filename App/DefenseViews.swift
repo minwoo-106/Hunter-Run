@@ -4,6 +4,7 @@ import SwiftUI
 struct SetupView: View {
     @EnvironmentObject var model: AppModel
     @State private var indoor = false
+    @State private var defensePath: [Int] = []
     var body: some View {
         VStack(spacing: 0) {
             Picker("활동 선택", selection: $indoor) {
@@ -11,10 +12,14 @@ struct SetupView: View {
                 Text("지부 방어 작전").tag(true)
             }.pickerStyle(.segmented).padding(.horizontal, 20).padding(.top, 8)
                 .accessibilityIdentifier("activity.destination")
-            if indoor { NavigationStack { DefenseHubView(runtime: model.defenseRuntime) } }
+            if indoor { NavigationStack(path: $defensePath) { DefenseHubView(runtime: model.defenseRuntime) } }
             else { OutdoorSetupView() }
         }.background(Theme.ink)
             .onAppear { model.selectedEnvironment = .outdoor; if model.save.profile.defense?.active != nil || model.save.profile.defense?.pendingReport != nil { indoor = true } }
+            .onChange(of: model.showDefense) { _, presented in
+                // A started operation returns to the hub, never its now-stale briefing.
+                if presented { defensePath.removeAll() }
+            }
     }
 }
 
@@ -40,7 +45,7 @@ struct DefenseHubView: View {
                     Button("\(report)회차 귀환 보고 확인") { model.showDefense = true }
                         .buttonStyle(GameButtonStyle(primary: true)).accessibilityIdentifier("defense.report")
                 } else if let n = progress.nextEpisode, let episode = runtime.catalog?.episode(n) {
-                    NavigationLink { DefenseBriefingView(runtime: runtime, episode: episode) } label: {
+                    NavigationLink(value: n) {
                         VStack(alignment: .leading, spacing: 5) {
                             Text("다음 작전 · \(n) / 30").font(.caption)
                             Text(episode.title).font(.title3.bold())
@@ -65,6 +70,11 @@ struct DefenseHubView: View {
                 }
             }.padding(20)
         }.background(Theme.ink).navigationTitle("지부 방어 작전").navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: Int.self) { number in
+                if let episode = runtime.catalog?.episode(number) {
+                    DefenseBriefingView(runtime: runtime, episode: episode)
+                }
+            }
             .environment(\.labyrinthStyle, true)
     }
 }
