@@ -204,6 +204,8 @@ public struct Profile: Codable {
     public var discoveredEvents: Set<String>? = nil
     public var paceMemory: PaceMemory? = nil
     public var journey: JourneyState? = nil
+    /// Optional so pre-campaign profiles decode without changing their progression.
+    public var defense: DefenseProgress? = nil
     /// Nil identifies a profile that still needs its historical gate count frozen.
     public var gateProgress: GateProgress? = GateProgress()
     public var growth: GrowthState {
