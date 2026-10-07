@@ -1,80 +1,59 @@
-// Offline, user-owned review marks. Replacing an audio file invalidates its old verdict.
-const reviewStorageKey = 'hunter-defense-voice-review-v1';
-const reviewStates = {pending:'아직 확인 전', ok:'좋아요', voice:'목소리 다름', delivery:'억양 / 발음 수정'};
-let reviews = {}, storageAvailable = true;
-try {
-    const saved = JSON.parse(localStorage.getItem(reviewStorageKey) || '{}');
-    if (saved && typeof saved === 'object' && !Array.isArray(saved)) reviews = saved;
-} catch (_) { storageAvailable = false; }
-function verdict(key) {
-    const r = reviews[key];
-    return r && r.sha256 === DATA.hashes[key] && Object.hasOwn(reviewStates,r.status)
-        ? {status:r.status, note:typeof r.note === 'string' ? r.note : ''}
-        : {status:'pending', note:''};
-}
-const issue = r => r.status === 'voice' || r.status === 'delivery' || (r.note.trim() && r.status !== 'ok');
-const panel = document.createElement('div'); panel.className = 'card';
-panel.innerHTML = '<h3>듣고 바로 체크해주세요</h3><p>각 음성 아래에서 상태를 고르고, 달라지는 부분을 메모해주세요. 예: “마지막 문장부터 다른 목소리”, “03초 이후 발음 어색함”.</p><p id="reviewStats" aria-live="polite"></p><div class="filters"><label>확인 상태 <select id="reviewFilter"><option value="all">전체 상태</option><option value="pending">아직 확인 전</option><option value="issues">수정할 음성만</option><option value="ok">좋아요</option></select></label><button id="exportReview" type="button">체크 목록 다운로드</button><button id="showReview" type="button">복사할 목록 보기</button></div><p id="saveNotice" class="muted"></p><textarea id="reviewText" class="hidden" rows="7" readonly aria-label="복사할 수정 목록" style="width:100%;font:inherit;background:#09131a;color:#edf3f1;padding:12px"></textarea>';
-$('#voiceCount').before(panel);
-$('#reviewFilter').onchange = renderVoices;
-function reviewRows() {
-    return keys.flatMap((key,i) => {
-        const r = verdict(key);
-        return r.status !== 'pending' || r.note.trim() ? [{id:'V'+String(i+1).padStart(3,'0'),key,text:DATA.lines[key],sha256:DATA.hashes[key],...r}] : [];
-    });
-}
-function updateReviewStats() {
-    const rows = keys.map(verdict);
-    $('#reviewStats').textContent = '확인 '+rows.filter(r=>r.status!=='pending').length+'/151 · 좋아요 '+rows.filter(r=>r.status==='ok').length+' · 수정 요청 '+rows.filter(issue).length;
-    $('#saveNotice').textContent = storageAvailable
-        ? '체크는 현재 브라우저에 저장돼요. 다른 PC와 자동 공유되지는 않습니다. 다 확인하면 목록을 다운로드해 이 대화에 첨부하거나 복사해 보내주세요.'
-        : '이 브라우저에서는 저장할 수 없어 창을 닫으면 체크가 사라질 수 있어요. 체크 목록을 다운로드하거나 복사해 보관해주세요.';
-    if (!$('#reviewText').classList.contains('hidden')) fillReviewText();
-}
-function saveReview(key,status,note) {
-    reviews[key] = {status,note,sha256:DATA.hashes[key]};
-    try { localStorage.setItem(reviewStorageKey,JSON.stringify(reviews)); storageAvailable = true; }
-    catch (_) { storageAvailable = false; }
-    updateReviewStats();
-}
-function fillReviewText() {
-    const rows = reviewRows();
-    $('#reviewText').value = rows.length ? rows.map(r=>`${r.id} · ${reviewStates[r.status]}\n${r.text}${r.note ? '\n메모: '+r.note : ''}`).join('\n\n') : '아직 체크한 음성이 없습니다.';
-}
-$('#showReview').onclick = () => { $('#reviewText').classList.remove('hidden'); fillReviewText(); $('#reviewText').focus(); $('#reviewText').select(); };
-$('#exportReview').onclick = () => {
-    const blob = new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),total:keys.length,entries:reviewRows()},null,2)],{type:'application/json;charset=utf-8'});
-    const url = URL.createObjectURL(blob), link = document.createElement('a');
-    link.href = url; link.download = 'HunterRun-voice-review.json'; document.body.append(link); link.click(); link.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
-};
-function renderVoices() {
-    const q=$('#search').value.trim().toLowerCase(), f=$('#filter').value, state=$('#reviewFilter').value;
-    $('#voices').replaceChildren(); let count=0;
-    keys.forEach((key,i)=>{
-        const id='V'+String(i+1).padStart(3,'0'), text=DATA.lines[key], r=verdict(key);
-        const matches=f==='all'||f==='exercise'&&key.startsWith('defense_move_')||f==='shared'&&!/^defense_\d\d_|^defense_move_/.test(key)||/^\d+$/.test(f)&&key.startsWith('defense_'+f.padStart(2,'0')+'_');
-        if ((!q&&!matches)||(q&&!(id+' '+key+' '+text).toLowerCase().includes(q))) return;
-        if (state==='issues'&&!issue(r)||state==='pending'&&r.status!=='pending'||state==='ok'&&r.status!=='ok') return;
-        count++;
-        const a=document.createElement('article'); a.className='card voice'; a.dataset.voiceId=id;
-        const code=document.createElement('code');code.textContent=id+' · '+key;
-        const p=document.createElement('p');p.textContent=text;a.append(code,p);
-        if (DATA.ready.includes(key)) {
-            const audio=document.createElement('audio');audio.controls=true;audio.preload='none';audio.src='audio/'+key+'.wav';a.append(audio);
-            const compare=document.createElement('button');compare.type='button';compare.textContent='기존 목소리 다시 듣기';
-            compare.onclick=()=>{const ref=$('#voice > .card audio');ref.currentTime=0;ref.play().catch(()=>{$('#saveNotice').textContent='상단 비교 기준의 재생 버튼을 눌러주세요.';});};a.append(compare);
-        }
-        const controls=document.createElement('div');controls.className='filters';
-        const select=document.createElement('select');select.setAttribute('aria-label',id+' 확인 상태');
-        for(const [value,label] of Object.entries(reviewStates)){const o=document.createElement('option');o.value=value;o.textContent=label;select.append(o);}select.value=r.status;
-        const note=document.createElement('input');note.type='text';note.maxLength=1000;note.placeholder='어느 부분이 다른가요? (선택)';note.setAttribute('aria-label',id+' 수정 메모');note.value=r.note;
-        select.onchange=()=>{saveReview(key,select.value,note.value);a.style.borderColor=issue(verdict(key))?'#d5b778':'';};
-        note.oninput=()=>saveReview(key,select.value,note.value);
-        if(issue(r))a.style.borderColor='#d5b778';
-        controls.append(select,note);a.append(controls);$('#voices').append(a);
-    });
-    $('#voiceCount').textContent=count+'개 표시 · '+DATA.ready.length+'/151개 음성 파일 준비';
-    if (!count) {const empty=document.createElement('p');empty.textContent='이 범위에 해당하는 음성이 없어요. 음성 범위를 전체로 바꾸거나 확인 상태 필터를 바꿔주세요.';$('#voices').append(empty);}
-    updateReviewStats();
-}
+// Keep the original storage key: existing user checks must survive this UI update.
+const reviewStorageKey='hunter-defense-voice-review-v1';
+const reviewStates={pending:'미확인',ok:'좋아요',voice:'목소리 다름',delivery:'억양 / 발음'};
+let reviews={},storageAvailable=true;
+try{const s=JSON.parse(localStorage.getItem(reviewStorageKey)||'{}');if(s&&typeof s==='object'&&!Array.isArray(s))reviews=s;}catch(_){storageAvailable=false;}
+function verdict(k){const r=reviews[k],valid=r&&Object.hasOwn(reviewStates,r.status);return {status:valid&&r.sha256===DATA.hashes[k]?r.status:'pending',note:valid&&typeof r.note==='string'?r.note:'',revised:!!(valid&&r.sha256!==DATA.hashes[k])};}
+const issue=r=>r.status==='voice'||r.status==='delivery'||(r.note.trim()&&r.status!=='ok');
+const categories=['1','exercise','shared',...Array.from({length:29},(_,i)=>String(i+2))];
+const categoryName=c=>c==='exercise'?'운동 안내':c==='shared'?'공통 안내':c==='all'?'전체':c+'회차';
+function inCategory(k,c){return c==='all'||(c==='exercise'?k.startsWith('defense_move_'):c==='shared'?!/^defense_\d\d_|^defense_move_/.test(k):k.startsWith('defense_'+c.padStart(2,'0')+'_'));}
+function reviewRows(){return keys.flatMap((k,i)=>{const r=reviews[k];return r&&Object.hasOwn(reviewStates,r.status)&&(r.status!=='pending'||r.note)?[{id:'V'+String(i+1).padStart(3,'0'),key:k,text:DATA.lines[k],...r}]:[];});}
+function persist(){try{localStorage.setItem(reviewStorageKey,JSON.stringify(reviews));storageAvailable=true;}catch(_){storageAvailable=false;}}
+function saveReview(k,status,note){const old=reviews[k],history=Array.isArray(old?.history)?old.history.slice():[];if(old&&old.sha256!==DATA.hashes[k])history.push({status:old.status,note:old.note,sha256:old.sha256});reviews[k]={status,note,sha256:DATA.hashes[k],...(history.length?{history}:{})};persist();updateReviewStats();}
+let activeKey=null,queue=[],queueIndex=0;
+const css=document.createElement('style');
+css.textContent=`
+body.voice-focus{overflow:hidden}body.voice-focus>header,body.voice-focus>nav,body.voice-focus main>section:not(#voice){display:none}
+body.voice-focus main{padding:0;max-width:none}body.voice-focus #voice{position:fixed;inset:0;z-index:10;margin:0;background:#09131a;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+#voice .desk-top,#voice .desk-bottom{padding:14px 24px;background:#102029;border-bottom:1px solid #304550}
+#voice .desk-title,#voice .desk-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}#voice .desk-title{justify-content:space-between}#voice h2{font-size:21px;margin:0}#voice .desk-row{margin-top:10px}#voice #search{flex:1;min-width:100px;width:140px}
+#voice .desk-body{min-height:0;overflow:auto;display:grid;grid-template-columns:210px minmax(0,760px);justify-content:center;gap:24px;padding:20px}#voice .desk-list{min-height:0;overflow:auto;max-height:100%;display:flex;flex-direction:column;gap:6px}
+#voice .desk-list button{text-align:left;font-size:13px;padding:9px 12px}#voice button[aria-current=true]{border-color:#55d9d0;background:#234d52}#voice .desk-player{align-self:start;min-width:0}#voice #clipText{font-size:clamp(18px,2.2vw,25px);line-height:1.6;margin:18px 0;white-space:pre-wrap}
+#voice audio{margin:10px 0}#voice .desk-bottom{border-top:1px solid #304550;border-bottom:0;padding-bottom:max(12px,env(safe-area-inset-bottom))}#voice .desk-actions{display:flex;gap:8px;flex-wrap:wrap}#voice .desk-actions button{flex:1;min-width:80px}
+#voice button.selected{background:#245952;border-color:#55d9d0}#voice .primary{background:#55d9d0;color:#07171b;font-weight:700}#voice button:disabled{opacity:.35;cursor:default}
+#voice #reviewNote{width:100%;resize:vertical;min-height:65px;max-height:140px;font:inherit;background:#0b1920;color:#edf3f1;border:1px solid #42606c;border-radius:10px;padding:10px}#voice #saveNotice,#voice #voiceCount{font-size:12px;margin:5px 0;color:#9eafba}#voice #revisionNotice{color:#edc27b;font-size:13px}
+#voice .desk-transport{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#voice #clipID{color:#55d9d0}#voice #referenceAudio{height:32px;max-width:380px}#voice .reference-row{display:flex;align-items:center;gap:8px;margin:12px 0;font-size:12px;color:#9eafba}#voice #reviewStats{font-size:13px;color:#9eafba}
+#reviewTransfer{padding:24px;width:min(660px,94vw);border-radius:16px}#reviewTransfer textarea{width:100%;height:220px;background:#102029;color:#edf3f1;font:14px/1.6 system-ui;padding:12px}#reviewTransfer button{display:inline-block;margin:8px 4px}
+@media(max-width:740px){#voice .desk-body{grid-template-columns:1fr;padding:14px;gap:0}#voice .desk-list{display:none}#voice .desk-top,#voice .desk-bottom{padding:10px 12px}#voice h2{font-size:17px}#voice .desk-row{gap:6px}#voice button,#voice select,#voice input{font-size:13px;padding:8px}#voice #clipText{font-size:19px;margin:10px 0}#voice .reference-row{margin:6px 0}#voice #reviewStats{font-size:11px}.desk-help{display:none}}
+@media(max-height:700px){#voice .desk-top{padding-top:8px;padding-bottom:8px}#voice .desk-body{padding-top:10px;padding-bottom:10px}#voice #clipText{margin:8px 0}#voice .reference-row{margin:4px 0}}
+`;
+document.head.append(css);
+$('#voice').innerHTML=`
+<div class="desk-top"><div class="desk-title"><h2>음성 검토실</h2><span id="reviewStats" aria-live="polite"></span><div><button id="transferOpen">체크 내보내기 / 가져오기</button> <button id="focusToggle">그림도 보기</button></div></div>
+<div class="desk-row"><button id="prevCategory" aria-label="이전 카테고리">‹</button><select id="filter" aria-label="카테고리"></select><button id="nextCategory" aria-label="다음 카테고리">›</button><select id="reviewFilter" aria-label="확인 상태"><option value="all">전체 상태</option><option value="pending">미확인</option><option value="issues">수정 요청</option><option value="ok">좋아요</option><option value="revised">수정본 재확인</option></select><input id="search" placeholder="번호 / 대사 검색" aria-label="음성 검색"></div></div>
+<div class="desk-body"><aside id="clipList" class="desk-list" aria-label="현재 카테고리 음성 목록"></aside><div id="voices" class="desk-player"><div class="desk-title"><strong id="clipID"></strong><span id="voiceCount"></span></div><p id="revisionNotice"></p><p id="clipText"></p><audio id="clipAudio" controls preload="metadata"></audio><div class="desk-transport"><button id="playClip" class="primary">▶ 재생 / 멈춤</button><button id="backFive">5초 뒤로</button><button id="stamp">현재 시점부터 달라짐</button></div><div class="reference-row"><span>기존 승인 목소리</span><audio id="referenceAudio" controls preload="none" src="audio/operator-reference.wav"></audio></div><label for="reviewNote">수정 위치 / 메모 <small>입력 즉시 저장</small></label><textarea id="reviewNote" maxlength="1000" placeholder="예: ‘나중에 확인하면’부터 다른 목소리"></textarea><p id="saveNotice"></p></div></div>
+<div class="desk-bottom"><div class="desk-actions"><button data-verdict="ok">1 · 좋아요</button><button data-verdict="voice">2 · 목소리 다름</button><button data-verdict="delivery">3 · 억양 / 발음</button><button data-verdict="pending">미확인으로</button></div><div class="desk-title" style="margin-top:10px"><label style="font-size:12px"><input id="autoNext" type="checkbox" checked> 좋아요 → 자동 다음</label><span class="desk-help muted" style="font-size:12px">Space 재생 · ← → 이동 · 1/2/3 판정</span><div><button id="previousClip">← 이전</button> <button id="nextClip" class="primary">저장 후 다음 →</button></div></div></div>`;
+for(const c of [...categories,'all']){const o=document.createElement('option');o.value=c;o.textContent=categoryName(c);$('#filter').append(o);}
+const transfer=document.createElement('dialog');transfer.id='reviewTransfer';transfer.innerHTML='<h2>체크 목록 전달</h2><p>다운로드한 JSON을 대화에 첨부해주세요. 다른 PC에서는 가져오기로 이어서 체크할 수 있어요.</p><button id="exportReview">체크 목록 다운로드</button><button id="showReview">복사할 목록 보기</button><label>가져오기 <input id="importReview" type="file" accept=".json,application/json"></label><p id="transferNotice" role="status"></p><textarea id="reviewText" class="hidden" readonly aria-label="복사할 체크 목록"></textarea><button id="closeTransfer">닫기</button>';document.body.append(transfer);
+$('#transferOpen').onclick=()=>transfer.showModal();$('#closeTransfer').onclick=()=>transfer.close();
+function setFocus(f){document.body.classList.toggle('voice-focus',f);$('#focusToggle').textContent=f?'그림도 보기':'음성 집중 모드';}
+$('#focusToggle').onclick=()=>setFocus(!document.body.classList.contains('voice-focus'));window.addEventListener('hashchange',()=>setFocus(location.hash==='#voice'));setFocus(location.hash==='#voice');
+function updateReviewStats(){const rows=keys.map(verdict);$('#reviewStats').textContent=`확인 ${rows.filter(r=>r.status!=='pending').length}/${keys.length} · 좋아요 ${rows.filter(r=>r.status==='ok').length} · 수정 요청 ${rows.filter(issue).length}`;$('#saveNotice').textContent=storageAvailable?'현재 브라우저에 자동 저장됨 · 체크 목록을 내보내야 제가 수정할 내용을 받을 수 있어요.':'저장 공간을 사용할 수 없어요. 창을 닫기 전 체크 목록을 내보내주세요.';
+for(const o of $('#filter').options){const ks=keys.filter(k=>inCategory(k,o.value));o.textContent=`${categoryName(o.value)} · ${ks.filter(k=>verdict(k).status!=='pending').length}/${ks.length}`;}
+document.querySelectorAll('[data-verdict]').forEach(b=>{b.disabled=!activeKey;b.classList.toggle('selected',!!activeKey&&b.dataset.verdict===verdict(activeKey).status);b.setAttribute('aria-pressed',String(b.classList.contains('selected')));});for(const b of $('#clipList').children){const r=verdict(b.dataset.key);b.textContent=`${b.dataset.label} · ${r.revised?'재확인':reviewStates[r.status]}`;}}
+function matchesState(k,s){const r=verdict(k);return s==='all'||s==='issues'&&issue(r)||s==='revised'&&r.revised||s==='pending'&&r.status==='pending'||s==='ok'&&r.status==='ok';}
+function renderVoices(){const q=$('#search').value.trim().toLowerCase(),c=$('#filter').value,s=$('#reviewFilter').value;queue=keys.filter((k,i)=>inCategory(k,c)&&matchesState(k,s)&&(!q||('V'+String(i+1).padStart(3,'0')+' '+k+' '+DATA.lines[k]).toLowerCase().includes(q)));queueIndex=Math.max(0,queue.indexOf(activeKey));const pending=queue.findIndex(k=>verdict(k).status==='pending');if(!queue.includes(activeKey)&&pending>=0)queueIndex=pending;
+$('#clipList').replaceChildren();for(const k of queue){const b=document.createElement('button');b.dataset.key=k;b.dataset.label='V'+String(keys.indexOf(k)+1).padStart(3,'0');b.onclick=()=>{queueIndex=queue.indexOf(k);showClip();};$('#clipList').append(b);}showClip();}
+function showClip(){$('#clipAudio').pause();$('#referenceAudio').pause();activeKey=queue[queueIndex]||null;const c=$('#filter').value,ci=categories.indexOf(c);$('#prevCategory').disabled=ci<=0;$('#nextCategory').disabled=ci<0||ci===categories.length-1;$('#previousClip').disabled=!activeKey||queueIndex===0;$('#nextClip').disabled=!activeKey||(queueIndex===queue.length-1&&(ci<0||ci===categories.length-1));$('#nextClip').textContent=activeKey&&queueIndex===queue.length-1&&ci>=0&&ci<categories.length-1?'다음 카테고리 →':'저장 후 다음 →';$('#voiceCount').textContent=queue.length?`${queueIndex+1} / ${queue.length}`:'0개';$('#clipID').textContent=activeKey?'V'+String(keys.indexOf(activeKey)+1).padStart(3,'0')+' · '+categoryName(c):'해당 음성이 없어요';$('#clipText').textContent=activeKey?DATA.lines[activeKey]:'카테고리나 확인 상태를 바꾸면 다른 음성을 볼 수 있어요.';const r=activeKey?verdict(activeKey):{note:''};$('#reviewNote').value=r.note;$('#reviewNote').disabled=!activeKey;$('#revisionNotice').textContent=r.revised?'수정본 재확인 · 이전 메모를 보존했습니다. 다시 듣고 판정해주세요.':'';const ready=activeKey&&DATA.ready.includes(activeKey);$('#clipAudio').hidden=!ready;if(ready)$('#clipAudio').src='audio/'+activeKey+'.wav?v='+DATA.hashes[activeKey];else $('#clipAudio').removeAttribute('src');for(const id of ['playClip','backFive','stamp'])$('#'+id).disabled=!ready;for(const b of $('#clipList').children)b.setAttribute('aria-current',String(b.dataset.key===activeKey));updateReviewStats();}
+function changeCategory(step){const i=categories.indexOf($('#filter').value);if(i<0||i+step<0||i+step>=categories.length)return;$('#filter').value=categories[i+step];$('#search').value='';activeKey=null;renderVoices();}
+function advance(step){if(!activeKey)return;if(step>0&&queueIndex===queue.length-1){changeCategory(1);return;}queueIndex=Math.max(0,Math.min(queue.length-1,queueIndex+step));showClip();}
+$('#prevCategory').onclick=()=>changeCategory(-1);$('#nextCategory').onclick=()=>changeCategory(1);$('#previousClip').onclick=()=>advance(-1);$('#nextClip').onclick=()=>advance(1);$('#reviewFilter').onchange=()=>{activeKey=null;renderVoices();};
+$('#reviewNote').oninput=()=>{if(activeKey)saveReview(activeKey,verdict(activeKey).status,$('#reviewNote').value);};
+document.querySelectorAll('[data-verdict]').forEach(b=>b.onclick=()=>{if(!activeKey)return;saveReview(activeKey,b.dataset.verdict,$('#reviewNote').value);if(b.dataset.verdict==='ok'&&$('#autoNext').checked)advance(1);else if(b.dataset.verdict==='voice'||b.dataset.verdict==='delivery')$('#reviewNote').focus();});
+$('#playClip').onclick=()=>{const a=$('#clipAudio');if(a.paused)a.play().catch(()=>{$('#saveNotice').textContent='음성 재생 버튼을 다시 눌러주세요.';});else a.pause();};$('#backFive').onclick=()=>{$('#clipAudio').currentTime=Math.max(0,$('#clipAudio').currentTime-5);};$('#stamp').onclick=()=>{if(!activeKey)return;const t=Math.floor($('#clipAudio').currentTime||0),mark=`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}부터 달라짐`;$('#reviewNote').value=($('#reviewNote').value?$('#reviewNote').value+' / ':'')+mark;saveReview(activeKey,'voice',$('#reviewNote').value);$('#reviewNote').focus();};
+document.addEventListener('keydown',e=>{if(!document.body.classList.contains('voice-focus')||transfer.open||e.ctrlKey||e.metaKey||e.altKey||/INPUT|TEXTAREA|SELECT|BUTTON/.test(e.target.tagName))return;const actions={' ':()=>$('#playClip').click(),ArrowRight:()=>advance(1),ArrowLeft:()=>advance(-1),'1':()=>$('[data-verdict="ok"]').click(),'2':()=>$('[data-verdict="voice"]').click(),'3':()=>$('[data-verdict="delivery"]').click()};if(actions[e.key]){e.preventDefault();actions[e.key]();}});
+$('#showReview').onclick=()=>{const t=$('#reviewText');t.classList.remove('hidden');t.value=JSON.stringify({version:1,total:keys.length,entries:reviewRows()},null,2);t.focus();t.select();};
+$('#exportReview').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),total:keys.length,entries:reviewRows()},null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HunterRun-voice-review.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+function importRows(doc){if(!Array.isArray(doc.entries))throw Error('Invalid review format');let count=0,kept=0;for(const r of doc.entries){if(!keys.includes(r.key)||!Object.hasOwn(reviewStates,r.status)||typeof r.sha256!=='string'||typeof r.note!=='string')continue;const old=reviews[r.key];if(old&&(old.status!=='pending'||old.note)){kept++;continue;}reviews[r.key]={status:r.status,note:r.note,sha256:r.sha256};count++;}persist();return {count,kept};}
+$('#importReview').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const {count,kept}=importRows(JSON.parse(await file.text()));renderVoices();$('#transferNotice').textContent=`${count}개 가져옴 · 현재 체크 ${kept}개 유지 (덮어쓰지 않음)`;}catch(_){$('#transferNotice').textContent='검토실에서 내보낸 JSON 파일을 선택해주세요.';}finally{e.target.value='';}};
