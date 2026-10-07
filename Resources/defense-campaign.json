@@ -944,56 +944,56 @@
     {
       "id": "defense-01",
       "episode": 1,
-      "title": "따뜻한 봉투",
-      "caption": "빵집 문을 나서자 종이봉투에서 온기가 전해졌다. 오늘은 집까지 천천히 걸어도 괜찮다.",
+      "title": "빵집에 들른 날",
+      "caption": "빵이 아직 따뜻하다. 집에 가서 먹으려고 했는데, 한 입만 먹고 갈까.",
       "asset": "DefenseReward01",
       "behind": null
     },
     {
       "id": "defense-05",
       "episode": 5,
-      "title": "화면을 덮은 다음",
-      "caption": "업무 화면 대신 짧은 동영상이 켜졌다. 웃다가 휴대폰을 놓칠 뻔한 건 기록하지 않기로 했다.",
+      "title": "딱 하나만 더",
+      "caption": "영상 하나만 더 보고 자려고 했는데, 벌써 몇 개째인지 모르겠다.",
       "asset": "DefenseReward05",
       "behind": null
     },
     {
       "id": "defense-10",
       "episode": 10,
-      "title": "운동은 생각보다",
-      "caption": "조금만 따라 하겠다는 말은 분명 진심이었다. 물병을 집기 전에 잠깐만 더 쉬기로 했다.",
+      "title": "잠깐만 쉬고요",
+      "caption": "분명 가볍게 시작했는데… 물 한 모금 마시고, 조금만 더 쉬어야겠다.",
       "asset": "DefenseReward10",
       "behind": null
     },
     {
       "id": "defense-15",
       "episode": 15,
-      "title": "맵기 선택 실수",
-      "caption": "자신 있게 고른 매운맛. 다음 주문에는 작은 메모를 남겨야겠다. 한 단계만 낮추기.",
+      "title": "괜히 매운맛을 골랐지",
+      "caption": "이 정도는 먹을 수 있을 줄 알았다. 다음엔 꼭 순한 맛으로 시켜야지.",
       "asset": "DefenseReward15",
       "behind": null
     },
     {
       "id": "defense-20",
       "episode": 20,
-      "title": "아무도 모를 외출",
-      "caption": "후드에 안경까지 준비했는데 장바구니에는 늘 사던 간식이 가득했다.",
+      "title": "간식도 필요하니까",
+      "caption": "편하게 입고 필요한 것만 사러 나왔다. 그런데 장바구니엔 간식부터 담겼다.",
       "asset": "DefenseReward20",
       "behind": null
     },
     {
       "id": "defense-25",
       "episode": 25,
-      "title": "아침의 작은 위기",
-      "caption": "치약을 마지막까지 눌러보았다. 지부의 전력 문제보다 해결책은 간단했다. 장보기 목록에 추가.",
+      "title": "어제 사 올걸",
+      "caption": "몇 번을 눌러도 치약이 안 나온다. 어제 장 볼 때 하나 사 올걸.",
       "asset": "DefenseReward25",
       "behind": null
     },
     {
       "id": "defense-30",
       "episode": 30,
-      "title": "우리의 저녁",
-      "caption": "누군가 지켜낸 평범한 저녁. 오퍼레이터는 가로등 아래서 천천히 메뉴를 고른다.",
+      "title": "모처럼의 외출",
+      "caption": "오늘은 서두를 일이 없다. 맛있는 거 먹고, 조금 더 걷다가 들어가야지.",
       "asset": "DefenseReward30",
       "behind": "DefenseReward30Behind"
     }

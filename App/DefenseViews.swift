@@ -345,12 +345,12 @@ private struct DefenseArtView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Image(behind ? (illustration.behind ?? illustration.asset) : illustration.asset).resizable().scaledToFit()
-                    Text(behind ? "으아앙!! 나 오늘 휴가인데!! 눈물콧물 쏙 빼는, 오퍼레이터의 예상 밖 휴가." : illustration.caption).padding(.horizontal, 20).lineSpacing(5)
+                    Text(behind ? "“으아앙! 나 오늘 휴가인데!” 느긋한 외출이 한순간에 전력 질주로 바뀌었다." : illustration.caption).padding(.horizontal, 20).lineSpacing(5)
                     if illustration.behind != nil {
                         Button(behind ? "메인 일러스트" : "비하인드") { behind.toggle() }.buttonStyle(GameButtonStyle()).padding(.horizontal, 20).accessibilityIdentifier("defense.behind")
                     }
                 }.padding(.bottom, 24)
-            }.background(Theme.ink).navigationTitle(behind ? "조금 다른 마지막 작전" : illustration.title)
+            }.background(Theme.ink).navigationTitle(behind ? "나 오늘 휴가인데!" : illustration.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } } }
         }
