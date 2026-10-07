@@ -23,6 +23,39 @@ final class EncounterTests: XCTestCase {
         XCTAssertNil(engine.session.event)
         XCTAssertEqual(engine.session.records.first?.outcome, .perfect)
     }
+    func testReported560MeterMixedMovementAddsOnly33RunningMetersToEndurance() {
+        var engine = battle(.endurance)
+        engine.consume(frame(0))
+        for second in 1...369 {
+            let running = second <= 33
+            engine.consume(frame(Double(second), speed: 1.5,
+                distance: running ? 1 : 527.0 / 336,
+                movement: running ? .running : .walking))
+        }
+        XCTAssertEqual(engine.session.distance, 560, accuracy: 0.001)
+        XCTAssertEqual(engine.session.event?.traveledDistance ?? 0, 33, accuracy: 0.001)
+        XCTAssertTrue(engine.session.records.isEmpty)
+        XCTAssertEqual(EnduranceGuidance.state(for: engine.session, movement: .walking, signal: .good), .walking)
+    }
+    func testEnduranceGuidanceMatchesEngineDistanceGates() {
+        var engine = battle(.endurance)
+        engine.consume(frame(0))
+        let steps: [(Movement, Signal, EnduranceGuidance, Double)] = [
+            (.walking, .good, .walking, 0), (.running, .degraded, .signal, 0),
+            (.stationary, .good, .stopped, 0), (.running, .good, .counting, 3)
+        ]
+        for (i, step) in steps.enumerated() {
+            engine.consume(frame(Double(i + 1), movement: step.0, signal: step.1))
+            XCTAssertEqual(engine.session.event?.traveledDistance ?? 0, step.3)
+            XCTAssertEqual(EnduranceGuidance.state(for: engine.session, movement: step.0, signal: step.1), step.2)
+        }
+        engine.restorePaused()
+        XCTAssertEqual(EnduranceGuidance.state(for: engine.session, movement: .running, signal: .good), .paused)
+        engine.pause(false)
+        XCTAssertEqual(EnduranceGuidance.state(for: engine.session, movement: .running, signal: .good), .briefing)
+        engine.instructionFinished()
+        XCTAssertEqual(EnduranceGuidance.state(for: engine.session, movement: .running, signal: .good), .counting)
+    }
     func testStopPauseAndDeliveryGapDoNotAdvanceEndurance() {
         var engine = battle(.endurance)
         engine.consume(frame(0)); engine.consume(frame(1))
