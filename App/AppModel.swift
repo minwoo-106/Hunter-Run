@@ -364,6 +364,29 @@ private struct CharacterVoiceCatalog: Decodable {
             fixture.profile.defense?.active?.elapsed = 1438
             if (try? repository.write(fixture)) != nil { save = fixture }
         }
+        if Self.testHarness, !existingSave, let marker = arguments.firstIndex(of: "--ui-testing-progress-guidance"), marker + 1 < arguments.count {
+            let scenario = arguments[marker + 1]
+            if scenario == "endurance", let content {
+                let event = MissionTemplate(id: "contract-endurance", title: "철갑 파수병 압박", kind: .endurance,
+                    startFraction: 0.3, duration: 120, hp: 90, audio: "endurance", targetDistance: 400)
+                var run = RunSession(targetSeconds: 3600, simulated: true, allowPursuit: false)
+                run.goal = ActivityGoal(kind: .distance, value: 5000)
+                run.activeSeconds = 1588; run.distance = 2300; run.phase = .moving; run.baseline = 3
+                run.event = RunEvent(template: event, stage: .active, hp: 90, startingHP: 90, baseline: 3)
+                run.event?.traveledDistance = 93
+                engine = RunEngine(session: run, content: content)
+                movement = .walking; signal = .good; showRun = true
+            } else if ["story", "exam", "ready", "locked"].contains(scenario) {
+                var record = RunSession(targetSeconds: 434 * 60, simulated: false, allowPursuit: false)
+                record.activeSeconds = 434 * 60; record.phase = .finished
+                _ = Settlement.apply(record, to: &save.profile); save.profile.xp = 4200
+                var journey = JourneyState(); journey.registered = true
+                if scenario != "story" { journey.unlocked.insert("M05") }
+                if scenario == "ready" || scenario == "locked" { journey.completedQuests.insert("exam-D") }
+                save.profile.journey = journey
+                if scenario == "locked" { try? DefenseCampaign.begin(episode: 1, intensity: .light, in: &save) }
+            }
+        }
         #endif
         sensor.onUpdate = { [weak self] in
             guard let self else { return }

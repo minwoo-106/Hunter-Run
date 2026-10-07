@@ -69,6 +69,9 @@ fi
 if [ "${1:-}" = "defense" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/IndoorLayoutTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
 fi
+if [ "${1:-}" = "progress-guidance" ]; then
+  UI_SCOPE=(-only-testing:HunterRunUITests/ProgressGuidanceTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
+fi
 if [ "${1:-}" = "operator-life" ]; then
   UI_SCOPE=(
     -only-testing:HunterRunUITests/OperatorLifeUITests
@@ -101,7 +104,7 @@ xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
-if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ] && [ "${1:-}" != "operator-chat" ]; then
+if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ] && [ "${1:-}" != "operator-chat" ] && [ "${1:-}" != "progress-guidance" ]; then
 mkdir -p build/portrait-checks
 for expression in calm smile playful thoughtful worried relieved; do
   xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression "$expression" --time 0
@@ -170,7 +173,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   if [ "${1:-}" = "expedition" ]; then SMALL_SCOPE=(-only-testing:HunterRunUITests/ExpeditionLayoutTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen); fi
   if [ "${1:-}" = "expedition-final" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "facilities" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
-  if [ "${1:-}" = "defense" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
+  if [ "${1:-}" = "defense" ] || [ "${1:-}" = "progress-guidance" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "operator-life" ] || [ "${1:-}" = "operator-chat" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
     -destination "platform=iOS Simulator,id=$SMALL_DEVICE_ID" -derivedDataPath build/layout \

@@ -410,6 +410,7 @@ struct HunterView: View {
                     NavigationLink { PaceProfileView() } label: { DossierLink(title: "나의 활동 기준", subtitle: "현장 기록으로 맞추는 페이스", icon: "waveform.path") }.accessibilityIdentifier("hunter.pace")
                     NavigationLink { EquipmentView() } label: { DossierLink(title: "장비 보관함", subtitle: "출발 전, 장비를 정비해요", icon: "shield.lefthalf.filled") }
                     NavigationLink { RankView() } label: { DossierLink(title: "협회 평가 · 승급", subtitle: "다음 등급으로 가는 심사", icon: "checkmark.seal") }
+                        .accessibilityIdentifier("hunter.rank")
                     LoadoutStrip()
                     NavigationLink { HistoryView() } label: { Label("활동 기록 전체 보기", systemImage: "clock.arrow.circlepath").frame(maxWidth: .infinity, alignment: .leading).card() }
                     Text("최근 활동").font(.title2.bold())
