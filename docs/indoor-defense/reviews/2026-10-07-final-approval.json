@@ -162,7 +162,11 @@
     },
     "DefenseReward01": {
       "file": "Resources/Assets.xcassets/DefenseReward01.imageset/art.png",
-      "sha256": "67ca406de8f8526ea0c68bc9110db5d2f753f508b554ac3bc49c9b95d99ae379"
+      "sha256": "54c9371119eb688be8edbd39f54b8a42d7b5df9f5836aca7f8d0195e5cc5a9fa",
+      "updatedOn": "2026-10-08",
+      "previousRevisionSha256": "67ca406de8f8526ea0c68bc9110db5d2f753f508b554ac3bc49c9b95d99ae379",
+      "revision": "사용자 요청에 따른 일상 컷의 업무용 이어피스 제거. 귀걸이 유지.",
+      "revisionEvidence": "일상인데도 몇몇 사진들이 평소 업무중인 오퍼레이터가 끼고있던 이어플러그를 끼고있어요!!!일상 사진인데 빼는게 좋지 않을까요??"
     },
     "DefenseReward05": {
       "file": "Resources/Assets.xcassets/DefenseReward05.imageset/art.png",
@@ -170,11 +174,22 @@
     },
     "DefenseReward10": {
       "file": "Resources/Assets.xcassets/DefenseReward10.imageset/art.png",
-      "sha256": "87284d90dba5e9b9a50995615ebfb441affde928da2c683f7b38573ab19dde4d"
+      "sha256": "d79ac4bc2d66eee8b32cfd79dc14c5a82e0078769341c5343a4bb58309537daa",
+      "updatedOn": "2026-10-08",
+      "previousRevisionSha256": "87284d90dba5e9b9a50995615ebfb441affde928da2c683f7b38573ab19dde4d",
+      "revision": "사용자 요청에 따른 일상 컷의 업무용 이어피스 제거. 귀걸이 유지.",
+      "revisionEvidence": "일상인데도 몇몇 사진들이 평소 업무중인 오퍼레이터가 끼고있던 이어플러그를 끼고있어요!!!일상 사진인데 빼는게 좋지 않을까요??"
     },
     "DefenseReward15": {
       "file": "Resources/Assets.xcassets/DefenseReward15.imageset/art.png",
-      "sha256": "7e451d8c434229585d7a18aa044745ba1b873728bf1ab08850a53c3e6a8f69c1"
+      "sha256": "c27376e589b166a83dafab0c1fafa7df6669cf29ca4a66fcfe336f8be19e7d8d",
+      "approvedOn": "2026-10-08",
+      "evidence": "좋아요 이 이미지로 채택하죠 채택 후 실제 게임화면에 어떻게 나올지까지 보여주세요",
+      "previousSha256": "7e451d8c434229585d7a18aa044745ba1b873728bf1ab08850a53c3e6a8f69c1",
+      "revision": "사용자 요청에 따른 일상 컷의 업무용 이어피스 제거. 귀걸이 유지.",
+      "updatedOn": "2026-10-08",
+      "previousRevisionSha256": "0fe14b1529dce26b3f5cc2eb709a4d13363ca5217ea27b8b5ddfff9254b0197d",
+      "revisionEvidence": "일상인데도 몇몇 사진들이 평소 업무중인 오퍼레이터가 끼고있던 이어플러그를 끼고있어요!!!일상 사진인데 빼는게 좋지 않을까요??"
     },
     "DefenseReward20": {
       "file": "Resources/Assets.xcassets/DefenseReward20.imageset/art.png",
@@ -190,7 +205,11 @@
     },
     "DefenseReward30Behind": {
       "file": "Resources/Assets.xcassets/DefenseReward30Behind.imageset/art.png",
-      "sha256": "7015418c6ffbfc4bbe4935830eba73799e22042d92ba1b68e342b7a0cc251cda"
+      "sha256": "814ba2aa5b95b29156d3a94f324cf1f8cdef1ad46c1e1b169eeb2a113b54d70e",
+      "updatedOn": "2026-10-08",
+      "previousRevisionSha256": "7015418c6ffbfc4bbe4935830eba73799e22042d92ba1b68e342b7a0cc251cda",
+      "revision": "사용자 요청에 따른 일상 컷의 업무용 이어피스 제거. 귀걸이 유지.",
+      "revisionEvidence": "일상인데도 몇몇 사진들이 평소 업무중인 오퍼레이터가 끼고있던 이어플러그를 끼고있어요!!!일상 사진인데 빼는게 좋지 않을까요??"
     }
   }
 }
