@@ -74,4 +74,21 @@ final class DefenseCampaignTests: XCTestCase {
         save.profile.defense?.pendingReport = 30
         XCTAssertFalse(save.profile.defense?.isValid ?? true)
     }
+    func testLegacyIndoorHistorySurvivesCampaignCompletionAndReload() throws {
+        var save = SaveState()
+        var old = RunSession(targetSeconds: 1200, simulated: false, allowPursuit: false)
+        old.environment = .indoorTreadmill; old.activeSeconds = 1200; old.phase = .finished
+        XCTAssertNotNil(Settlement.apply(old, to: &save.profile))
+        let encoder = JSONEncoder(); encoder.outputFormatting = .sortedKeys
+        let prior = try encoder.encode(save.profile.runs)
+        let xp = save.profile.xp, crystals = save.profile.crystals
+        try DefenseCampaign.begin(episode: 1, intensity: .light, in: &save)
+        var session = try XCTUnwrap(save.profile.defense?.active); session.elapsed = 1440
+        try DefenseCampaign.complete(session, at: Date(), in: &save)
+        let restored = try JSONDecoder().decode(SaveState.self, from: encoder.encode(save))
+        XCTAssertEqual(try encoder.encode(restored.profile.runs), prior)
+        XCTAssertEqual(restored.profile.xp, xp + 10)
+        XCTAssertEqual(restored.profile.crystals, crystals + 2)
+        XCTAssertEqual(restored.profile.defense?.records.count, 1)
+    }
 }

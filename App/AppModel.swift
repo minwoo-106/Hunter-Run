@@ -23,6 +23,8 @@ private struct CharacterVoiceCatalog: Decodable {
     @Published var recoverable = false
     @Published var selectedTab = 0
     @Published var showRun = false
+    @Published var showDefense = false
+    lazy var defenseRuntime = DefenseRuntime(model: self)
     @Published var showAssociation = false
     @Published var showSettings = false
     var replayWelcomeAfterSettings = false
@@ -94,6 +96,7 @@ private struct CharacterVoiceCatalog: Decodable {
         return remaining > 0 ? "오늘 남은 실내 활동 · \(remaining / 60)분 \(remaining % 60)초" : "오늘의 실내 활동 60분을 모두 마쳤어요."
     }
     var canStartReal: Bool {
+        guard save.profile.defense?.active == nil, !showDefense else { return false }
         guard !selectedEnvironment.isIndoor || indoorRemaining > 0 else { return false }
         if let quest = activeExam { return isReady && !recoverable && quest.available(save.profile) }
         guard isReady, !recoverable, modeAllowed(selectedMode) else { return false }
@@ -108,7 +111,7 @@ private struct CharacterVoiceCatalog: Decodable {
     func refreshLobbyMusic() {
         var context = LobbyMusicContext()
         context.tab = selectedTab; context.associationPresented = showAssociation
-        context.runPresented = showRun; context.hasRun = engine != nil
+        context.runPresented = showRun || showDefense; context.hasRun = engine != nil
         context.foreground = sceneActive; context.enabled = homeMusicEnabled; context.testingVoice = testingAudio
         if context.shouldPlay {
             lobbyMusic.play(volume: Float(homeMusicVolume))
@@ -117,6 +120,7 @@ private struct CharacterVoiceCatalog: Decodable {
     func sceneChanged(active: Bool) {
         sceneActive = active
         if !active {
+            defenseRuntime.pause(reason: "다른 화면으로 이동해 작전을 멈췄어요. 준비되면 이어가세요.")
             if engine?.session.isIndoor == true && engine?.session.phase != .finished { pause() }
             if indoorCheckActive { sensor.stop() }
         } else if indoorCheckActive { sensor.start(environment: selectedEnvironment) }
@@ -127,7 +131,7 @@ private struct CharacterVoiceCatalog: Decodable {
     /// Only prevent automatic locking during a presented, unfinished activity.
     /// Backgrounding, results and normal browsing return control to iOS.
     func refreshActivityDisplay() {
-        UIApplication.shared.isIdleTimerDisabled = sceneActive && showRun && engine != nil && engine?.session.phase != .finished
+        UIApplication.shared.isIdleTimerDisabled = sceneActive && ((showRun && engine != nil && engine?.session.phase != .finished) || (showDefense && defenseRuntime.session?.paused == false))
     }
     func applyHomeMusic() {
         UserDefaults.standard.set(homeMusicEnabled, forKey: "homeMusicEnabled")
@@ -199,7 +203,7 @@ private struct CharacterVoiceCatalog: Decodable {
     let fieldEncounters: EncounterCatalog? = AppModel.resource("encounters")
     let world: WorldContent?
     var stats: CombatStats { progressionCatalog?.stats(for: save.profile) ?? CombatStats() }
-    var growthLocked: Bool { engine != nil || save.active != nil || recoverable || !isReady }
+    var growthLocked: Bool { engine != nil || save.active != nil || save.profile.defense?.active != nil || showDefense || recoverable || !isReady }
     var activeQuest: QuestDefinition? {
         guard let quest = Quests.entry(save.profile.journey?.selectedQuest), save.profile.journey?.completedQuests.contains(quest.id) != true else { return nil }
         return quest
@@ -345,6 +349,22 @@ private struct CharacterVoiceCatalog: Decodable {
         #if targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-welcome") { showWelcome = false }
         #endif
+        #if DEBUG && targetEnvironment(simulator)
+        if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-defense-final") {
+            var fixture = save
+            for episode in 1...29 {
+                try? DefenseCampaign.begin(episode: episode, intensity: .standard, in: &fixture)
+                if var session = fixture.profile.defense?.active {
+                    session.elapsed = 1440
+                    try? DefenseCampaign.complete(session, at: Date(), in: &fixture)
+                    fixture.profile.defense?.pendingReport = nil
+                }
+            }
+            try? DefenseCampaign.begin(episode: 30, intensity: .light, in: &fixture)
+            fixture.profile.defense?.active?.elapsed = 1438
+            if (try? repository.write(fixture)) != nil { save = fixture }
+        }
+        #endif
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -452,6 +472,8 @@ private struct CharacterVoiceCatalog: Decodable {
         if engine == nil { sensor.stop() }
     }
     func start(simulated: Bool, seconds: Double, pursuit: Bool, goal: ActivityGoal? = nil, encounterDemo: FieldEncounter? = nil, environment: ActivityEnvironment = .outdoor) {
+        guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
+        guard !environment.isIndoor else { notice = "실내 활동은 지부 방어 작전에서 시작해주세요. 이전 기록은 헌터 화면에서 볼 수 있어요."; return }
         guard !simulated || Self.testHarness else { return }
         guard isReady, let content, engine == nil, save.active == nil else { return }
         if !simulated && !environment.isIndoor && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
@@ -815,6 +837,7 @@ private struct CharacterVoiceCatalog: Decodable {
         } catch { notice = "백업 파일을 만들지 못했습니다."; return nil }
     }
     func importSave(_ url: URL) {
+        guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
         guard engine == nil, save.active == nil else { notice = "진행 중인 활동을 먼저 종료해주세요."; return }
         let granted = url.startAccessingSecurityScopedResource()
         defer { if granted { url.stopAccessingSecurityScopedResource() } }
@@ -837,6 +860,7 @@ private struct CharacterVoiceCatalog: Decodable {
         } catch { notice = "호환되는 Hunter Run 백업 파일이 아닙니다." }
     }
     func resetProgress() {
+        guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
         guard engine == nil, save.active == nil else { notice = "진행 중인 활동을 먼저 마쳐주세요."; return }
         do {
             save = try repository.reset(); narratives?.refresh(&save.profile)

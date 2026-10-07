@@ -35,6 +35,7 @@ final class AudioDirector: NSObject, AVAudioPlayerDelegate {
             guard request.valid(token) else { return }
             stopCurrent()
             guard let url = Bundle.main.url(forResource: key, withExtension: "wav", subdirectory: "Audio")
+                ?? Bundle.main.url(forResource: key, withExtension: "wav", subdirectory: "DefenseAudio")
                 ?? Bundle.main.url(forResource: key, withExtension: "wav", subdirectory: "CharacterAudio")
                 ?? Bundle.main.url(forResource: key, withExtension: "wav") else {
                 request.cancel(); onFailure?("안내 음성 파일을 찾을 수 없습니다: " + key); return

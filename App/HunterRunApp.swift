@@ -65,6 +65,7 @@ struct RootView: View {
         }
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
         .onChange(of: model.showRun) { _, _ in model.refreshLobbyMusic(); model.refreshActivityDisplay() }
+        .onChange(of: model.showDefense) { _, _ in model.refreshLobbyMusic(); model.refreshActivityDisplay() }
         .onChange(of: model.engine?.session.phase) { _, _ in model.refreshActivityDisplay() }
         .fullScreenCover(isPresented: $model.showWelcome, onDismiss: {
             if model.startStoryAfterWelcome { model.startStoryAfterWelcome = false; model.showStories = true }
@@ -78,6 +79,7 @@ struct RootView: View {
         .fullScreenCover(isPresented: $model.showOperator) { NavigationStack { OperatorConversationView().toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { model.showOperator = false }.buttonStyle(GameControlStyle()) } } } }
         .fullScreenCover(isPresented: $model.showReturnBriefing) { ReturnBriefingView() }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
+        .fullScreenCover(isPresented: $model.showDefense) { DefenseSessionView(runtime: model.defenseRuntime).environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             Button("확인") { model.notice = nil }
         } message: { Text(model.notice ?? "") }
@@ -113,7 +115,7 @@ struct HomeView: View {
     @StateObject private var life = OperatorLifeRuntime()
     private var lifeVisible: Bool {
         model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings
-        && !model.showAssociation && !model.showRun && !model.showWelcome && !model.showReturnBriefing
+        && !model.showAssociation && !model.showRun && !model.showDefense && !model.showWelcome && !model.showReturnBriefing
         && lifeScenePhase == .active && !transitionCovered && model.notice == nil
     }
     private func configureLife() { life.configure(available: lifeVisible, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }

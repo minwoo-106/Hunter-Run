@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SetupView: View {
+struct OutdoorSetupView: View {
     @EnvironmentObject var model: AppModel
     @AppStorage("activityMinutes") private var minutes = 20
     @AppStorage("activityGoalKind") private var goalKind: GoalKind = .time
@@ -103,17 +103,8 @@ struct SetupView: View {
     }
     private var location: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("활동 장소").font(.headline)
-            Picker("활동 장소", selection: $model.selectedEnvironment) {
-                ForEach(ActivityEnvironment.allCases, id: \.rawValue) { Text($0.title).tag($0) }
-            }.pickerStyle(.segmented).accessibilityIdentifier("activity.environment")
-            if indoor {
-                Text("실내 러닝 · 활동 보상 50% · 하루 합산 60분").font(.caption.bold()).foregroundStyle(Theme.teal).accessibilityIdentifier("indoor.policy")
-                Text(model.indoorBudgetText).font(.caption).accessibilityIdentifier("indoor.budget")
-                DisclosureGroup("실내 활동 규칙") {
-                    Text("제자리 달리기와 러닝머신을 합산해요. 한국 시간 자정에 초기화하고, 진행 중인 활동은 저장·종료해요. 반복 경험치·마정석·조사 데이터는 절반이며 일회성 의뢰 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted)
-                }.font(.caption)
-            } else { Text("평소 다니는 길에서 탐색과 전투를 이어가요.").font(.caption).foregroundStyle(Theme.muted) }
+            Label("야외 활동", systemImage: "location.fill").font(.headline)
+            Text("평소 다니는 길에서 탐색과 전투를 이어가요.").font(.caption).foregroundStyle(Theme.muted)
         }.card()
     }
     private var modes: some View {
