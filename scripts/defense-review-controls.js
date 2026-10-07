@@ -3,6 +3,8 @@ const reviewStorageKey='hunter-defense-voice-review-v1';
 const reviewStates={pending:'미확인',ok:'좋아요',voice:'목소리 다름',delivery:'억양 / 발음'};
 let reviews={},storageAvailable=true;
 try{const s=JSON.parse(localStorage.getItem(reviewStorageKey)||'{}');if(s&&typeof s==='object'&&!Array.isArray(s))reviews=s;}catch(_){storageAvailable=false;}
+// The user explicitly supplied this export. Seed missing records without replacing newer local checks.
+for(const r of DATA.reviewBaseline||[]){if(keys.includes(r.key)&&!reviews[r.key]&&Object.hasOwn(reviewStates,r.status))reviews[r.key]={status:r.status,note:r.note,sha256:r.sha256};}
 function verdict(k){const r=reviews[k],valid=r&&Object.hasOwn(reviewStates,r.status);return {status:valid&&r.sha256===DATA.hashes[k]?r.status:'pending',note:valid&&typeof r.note==='string'?r.note:'',revised:!!(valid&&r.sha256!==DATA.hashes[k])};}
 const issue=r=>r.status==='voice'||r.status==='delivery'||(r.note.trim()&&r.status!=='ok');
 const categories=['1','exercise','shared',...Array.from({length:29},(_,i)=>String(i+2))];
@@ -14,6 +16,7 @@ function saveReview(k,status,note){const old=reviews[k],history=Array.isArray(ol
 let activeKey=null,queue=[],queueIndex=0;
 const css=document.createElement('style');
 css.textContent=`
+#voice [hidden]{display:none!important}
 body.voice-focus{overflow:hidden}body.voice-focus>header,body.voice-focus>nav,body.voice-focus main>section:not(#voice){display:none}
 body.voice-focus main{padding:0;max-width:none}body.voice-focus #voice{position:fixed;inset:0;z-index:10;margin:0;background:#09131a;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
 #voice .desk-top,#voice .desk-bottom{padding:14px 24px;background:#102029;border-bottom:1px solid #304550}
@@ -57,3 +60,22 @@ $('#showReview').onclick=()=>{const t=$('#reviewText');t.classList.remove('hidde
 $('#exportReview').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),total:keys.length,entries:reviewRows()},null,2)],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='HunterRun-voice-review.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 function importRows(doc){if(!Array.isArray(doc.entries))throw Error('Invalid review format');let count=0,kept=0;for(const r of doc.entries){if(!keys.includes(r.key)||!Object.hasOwn(reviewStates,r.status)||typeof r.sha256!=='string'||typeof r.note!=='string')continue;const old=reviews[r.key];if(old&&(old.status!=='pending'||old.note)){kept++;continue;}reviews[r.key]={status:r.status,note:r.note,sha256:r.sha256};count++;}persist();return {count,kept};}
 $('#importReview').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const {count,kept}=importRows(JSON.parse(await file.text()));renderVoices();$('#transferNotice').textContent=`${count}개 가져옴 · 현재 체크 ${kept}개 유지 (덮어쓰지 않음)`;}catch(_){$('#transferNotice').textContent='검토실에서 내보낸 JSON 파일을 선택해주세요.';}finally{e.target.value='';}};
+
+// Revision desk: listen to only the changed clips, with the original one click away.
+const revisionKeys=Object.keys(DATA.revisions||{});
+if(revisionKeys.length){
+    const option=document.createElement('option');option.value='revisionBatch';option.textContent=`이번 수정본 ${revisionKeys.length}개`;$('#reviewFilter').append(option);
+    const matchOriginal=matchesState;
+    matchesState=(k,s)=>s==='revisionBatch'?revisionKeys.includes(k):matchOriginal(k,s);
+    const beforeRow=document.createElement('div');beforeRow.className='reference-row';beforeRow.id='beforeRow';
+    const label=document.createElement('span');label.textContent='수정 전 비교';
+    const beforeAudio=document.createElement('audio');beforeAudio.id='beforeAudio';beforeAudio.controls=true;beforeAudio.preload='none';beforeAudio.style.height='32px';
+    beforeRow.append(label,beforeAudio);$('#reviewNote').before(beforeRow);
+    const methods={'trailing-artifact-only':'끝 잡음만 제거','reuse-approved-exercise-sentences':'승인한 동작·시간 안내로 조합','preserve-prefix-and-revoice-tail':'앞부분 유지 · 뒷문장 수정','sentence-anchored-revoice':'문장별 목소리 재합성'};
+    const showOriginal=showClip;
+    showClip=()=>{beforeAudio.pause();showOriginal();const revision=DATA.revisions[activeKey];beforeRow.hidden=!revision;
+        if(revision){beforeAudio.src='audio-before/'+activeKey+'.wav';$('#revisionNotice').textContent='수정본 · '+methods[revision.method]+(revision.note?' / 이전 메모: '+revision.note:'');}
+        else beforeAudio.removeAttribute('src');
+    };
+    $('#filter').value='all';$('#reviewFilter').value='revisionBatch';
+}

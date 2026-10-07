@@ -1,10 +1,11 @@
 """Offline approval package. No server, release build, upload, or save-file access."""
 from pathlib import Path
-import argparse, html, json, shutil, zipfile
+import argparse, hashlib, html, json, shutil, zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
 p.add_argument('--output', type=Path, default=ROOT.parent / 'HunterRun-defense-review')
+p.add_argument('--repair-dir', type=Path, help='Review-only candidates, original feedback and before/after audio')
 args = p.parse_args()
 out = args.output.resolve(); out.mkdir(parents=True, exist_ok=True)
 for name in ['images', 'audio', 'documents']: (out/name).mkdir(exist_ok=True)
@@ -21,6 +22,26 @@ for key, text in lines.items():
         shutil.copy2(ROOT/f'Resources/DefenseAudio/{key}.wav', out/f'audio/{key}.wav')
 reference = ROOT.parent/'voice-consistency-reference/run_start.wav'
 shutil.copy2(reference, out/'audio/operator-reference.wav')
+
+baseline, revisions = [], {}
+if args.repair_dir:
+    repair = args.repair_dir.resolve()
+    baseline = json.loads((repair/'review-original.json').read_text(encoding='utf-8'))['entries']
+    repaired = json.loads((repair/'repairs.json').read_text(encoding='utf-8'))['clips']
+    expected = {e['key'] for e in baseline if e['status'] in ['voice', 'delivery']}
+    assert {r['key'] for r in repaired} == expected, 'Repair batch is incomplete'
+    assert len({r['key'] for r in repaired}) == len(repaired)
+    (out/'audio-before').mkdir(exist_ok=True)
+    for r in repaired:
+        key = r['key']
+        assert key in lines and r['text'] == lines[key]
+        for folder, expected_hash in [('before', r['previous_sha256']), ('after', r['sha256'])]:
+            assert hashlib.sha256((repair/folder/f'{key}.wav').read_bytes()).hexdigest() == expected_hash
+        shutil.copy2(repair/'after'/f'{key}.wav', out/'audio'/f'{key}.wav')
+        shutil.copy2(repair/'before'/f'{key}.wav', out/'audio-before'/f'{key}.wav')
+        clips[key] = {**clips[key], 'sha256':r['sha256']}
+        revisions[key] = {'method':r['method'], 'note':r['note'], 'previous_sha256':r['previous_sha256']}
+    shutil.copy2(repair/'repairs.json', out/'documents/voice-repairs.json')
 
 ops={'hold':'방어선 유지','repair':'시설 복구','rescue':'구조팀 지원','stabilize':'봉인 안정화'}
 moves={'march':'제자리 걷기','step':'좌우 스텝','knee':'무릎 번갈아 올리기','squat':'스쿼트','wallPush':'벽 푸시업','heel':'뒤꿈치 들기','boxing':'가벼운 섀도복싱'}
@@ -39,7 +60,7 @@ for name in ['master-design.md', 'campaign-content.md', 'verification.md']:
         # A plain readable document view also works on PCs without a Markdown app.
         (out/'documents'/name.replace('.md','.html')).write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hunter Run 설계 문서</title><style>body{background:#101b23;color:#e2e9e8;font:16px/1.8 system-ui;margin:32px auto;max-width:960px;padding:20px}pre{white-space:pre-wrap;font:inherit}</style><a href="../index.html" style="color:#55d9d0">검토실로</a><pre>'+html.escape(src.read_text(encoding='utf-8'))+'</pre></html>', encoding='utf-8')
 
-data={'catalog':catalog,'lines':lines,'hashes':{k:c['sha256'] for k,c in clips.items()},'ready':[k for k,t in lines.items() if k in clips and clips[k]['text']==t]}
+data={'catalog':catalog,'lines':lines,'hashes':{k:c['sha256'] for k,c in clips.items()},'ready':[k for k,t in lines.items() if k in clips and clips[k]['text']==t], 'reviewBaseline':baseline, 'revisions':revisions}
 page=r'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hunter Run · 지켜낸 일상 검토실</title>
 <style>
 :root{color-scheme:dark;--ink:#09131a;--panel:#12232b;--muted:#9eafba;--teal:#55d9d0;--gold:#d5b778}*{box-sizing:border-box}body{margin:0;background:var(--ink);color:#edf3f1;font:16px/1.65 system-ui,-apple-system,sans-serif}header{padding:52px 6vw 34px;border-bottom:1px solid #284049;background:radial-gradient(ellipse at top right,#204d54,transparent 65%)}h1{font-size:clamp(28px,5vw,52px);line-height:1.25;margin:12px 0}h2{font-size:26px;margin:0 0 12px}h3{margin:0 0 8px}p{margin:8px 0}small,.muted{color:var(--muted)}.eyebrow{color:var(--teal);letter-spacing:.18em;font-size:12px}.tag{display:inline-block;border:1px solid #41626b;padding:4px 12px;border-radius:20px;font-size:12px;margin:4px 6px 4px 0}nav{position:sticky;top:0;background:#09131af2;padding:12px 6vw;z-index:4;display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #284049}a{color:var(--teal);text-decoration:none}main{max-width:1180px;margin:auto;padding:30px 24px}section{scroll-margin-top:90px;margin-bottom:54px}.card{background:var(--panel);padding:22px;border:1px solid #2a414b;border-radius:16px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}.art{padding:0;overflow:hidden}.art img{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;cursor:zoom-in}.art .text{padding:18px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:750px}.compare img{width:100%;border-radius:14px}button,select,input{font:inherit;border-radius:9px;padding:10px 14px;border:1px solid #42606c;background:#1b323b;color:#edf3f1}button{cursor:pointer}button:hover{border-color:var(--teal)}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--teal)}audio{width:100%;margin:12px 0}.filters{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.filters input{flex:1;min-width:190px}.voice{margin:12px 0;padding:18px}.voice code{color:var(--teal);font-size:13px}.voice p{font-size:18px}.status{color:var(--gold)}details{margin-top:20px}summary{cursor:pointer;color:var(--gold);padding:12px 0}.actmap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.node{text-align:center;background:#18353d;border-radius:8px;padding:12px 4px;color:var(--teal)}.note{border-left:3px solid var(--gold);padding:12px 18px;background:#242923;margin-top:18px}dialog{padding:0;background:#081118;border:1px solid #405c68;max-width:95vw;max-height:95vh}dialog::backdrop{background:#000d}dialog img{display:block;max-height:85vh;max-width:90vw;object-fit:contain}dialog button{display:block;margin:8px auto}.hidden{display:none}@media(max-width:540px){main{padding:24px 16px}.compare{gap:8px}nav{font-size:14px;gap:12px}.card{padding:16px}.art{padding:0}h2{font-size:23px}}@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}

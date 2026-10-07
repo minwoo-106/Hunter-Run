@@ -26,6 +26,8 @@
 - `scripts/validate.py`: 기존 콘텐츠와 신규 캠페인 전체 자산 검증.
 - `scripts/validate-defense.py`: 30개 회차, 대사와 음성 151개 대응, WAV PCM 규격/길이/피크/해시, 이미지 9개 연결. 가장 짧은 동작 준비 20초 안에 안내가 끝나도록 운동 지시는 18초 미만을 요구한다.
 - `scripts/build-defense-review.py`: 원본 얼굴 비교, 일러스트 확대, 대사 번호별 음성 재생, 전체 설계 문서를 포함한 오프라인 ZIP. IPA를 만들지 않는다.
+- `scripts/build-defense-review.py --repair-dir <수정본 폴더>`: 사용자 체크를 기본값으로 포함하고, 수정본만 모아 수정 전/후 음성을 비교한다. 앱의 음성 파일을 교체하지 않고 검토 패키지에만 수정본을 넣는다. 해당 폴더의 수정 대상이 모두 준비되지 않거나 해시가 다르면 패키지 생성을 거부한다.
+- `node scripts/test-defense-review-state.cjs`: 가상 체크를 이용한 보존·이동·내보내기와 수정본 기본 필터, 이전 음성 연결, 새 판정 우선 적용 검사. 실제 브라우저 화면/청감 검증은 아니다.
 - `scripts/check-ios-layout.sh defense`: 승인 후 Mac에서 실행할 작은/큰 iPhone UI 검사 경로. 실내 진입 교체, 3강도, 일시정지/배경 복귀, 이어하기, 최종 회차 보고와 별도 비하인드 버튼 검사를 준비했다.
 
 ## 아직 확인하지 않은 것
