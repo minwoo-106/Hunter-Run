@@ -35,6 +35,23 @@ final class IndoorLayoutTests: XCTestCase {
         let running = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "일시정지"), object: app.buttons["defense.pause"])
         XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 8), .completed)
     }
+    @MainActor func testRunningSessionPausesOnBackgroundAndSurvivesRelaunch() {
+        let app = launch(); prepare(app); waitRunning(app)
+        let ticking = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != %@", "00:00 / 24:00"), object: app.staticTexts["defense.elapsed"])
+        XCTAssertEqual(XCTWaiter.wait(for: [ticking], timeout: 5), .completed)
+        XCUIDevice.shared.press(.home); app.activate()
+        let paused = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "준비됐어요 · 계속"), object: app.buttons["defense.pause"])
+        XCTAssertEqual(XCTWaiter.wait(for: [paused], timeout: 5), .completed)
+        let elapsed = app.staticTexts["defense.elapsed"].label
+        let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Defense-paused-session"; shot.lifetime = .keepAlways; add(shot)
+        app.terminate(); app.launch() // Same isolated save identifier, not a new fixture.
+        XCTAssertTrue(app.buttons["nav.2"].waitForExistence(timeout: 10)); app.buttons["nav.2"].tap()
+        XCTAssertTrue(app.buttons["defense.restore"].waitForExistence(timeout: 10))
+        reach(app.buttons["defense.restore"], in: app); app.buttons["defense.restore"].tap()
+        XCTAssertTrue(app.staticTexts["defense.elapsed"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["defense.elapsed"].label, elapsed)
+        XCTAssertEqual(app.buttons["defense.pause"].label, "준비됐어요 · 계속")
+    }
     @MainActor func testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration() {
         let app = launch()
         XCTAssertFalse(app.segmentedControls["activity.environment"].exists)
