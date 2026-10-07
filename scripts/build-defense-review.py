@@ -28,18 +28,28 @@ if args.repair_dir:
     repair = args.repair_dir.resolve()
     baseline = json.loads((repair/'review-original.json').read_text(encoding='utf-8'))['entries']
     repaired = json.loads((repair/'repairs.json').read_text(encoding='utf-8'))['clips']
+    if (repair/'baseline').is_dir():
+        assert len(baseline) == len(lines) and {e['key'] for e in baseline} == set(lines)
+        for e in baseline:
+            key = e['key']
+            path = repair/'baseline'/f'{key}.wav'
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == e['sha256']
+            shutil.copy2(path, out/'audio'/f'{key}.wav')
+            lines[key] = e['text']
+            clips[key] = {**clips[key], 'text':e['text'], 'sha256':e['sha256']}
     expected = {e['key'] for e in baseline if e['status'] in ['voice', 'delivery']}
     assert {r['key'] for r in repaired} == expected, 'Repair batch is incomplete'
     assert len({r['key'] for r in repaired}) == len(repaired)
     (out/'audio-before').mkdir(exist_ok=True)
     for r in repaired:
         key = r['key']
-        assert key in lines and r['text'] == lines[key]
+        assert key in lines and r.get('previous_text', r['text']) == lines[key]
         for folder, expected_hash in [('before', r['previous_sha256']), ('after', r['sha256'])]:
             assert hashlib.sha256((repair/folder/f'{key}.wav').read_bytes()).hexdigest() == expected_hash
         shutil.copy2(repair/'after'/f'{key}.wav', out/'audio'/f'{key}.wav')
         shutil.copy2(repair/'before'/f'{key}.wav', out/'audio-before'/f'{key}.wav')
-        clips[key] = {**clips[key], 'sha256':r['sha256']}
+        lines[key] = r['text']
+        clips[key] = {**clips[key], 'sha256':r['sha256'], 'text':r['text']}
         revisions[key] = {'method':r['method'], 'note':r['note'], 'previous_sha256':r['previous_sha256']}
     shutil.copy2(repair/'repairs.json', out/'documents/voice-repairs.json')
 
@@ -95,5 +105,7 @@ page=page.replace('__VOICE_CONTROLS__',(ROOT/'scripts/defense-review-controls.js
 archive=out.with_suffix('.zip')
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
     for file in out.rglob('*'):
+        if file.parent == out/'audio-before' and file.stem not in revisions:
+            continue  # Older comparison audio stays on disk but is not part of this batch.
         if file.is_file():z.write(file,file.relative_to(out.parent))
 print(f'{out / "index.html"}\n{archive}\n{len(data["ready"])} / {len(lines)} voice clips included')

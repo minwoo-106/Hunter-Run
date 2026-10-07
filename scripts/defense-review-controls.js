@@ -71,7 +71,7 @@ if(revisionKeys.length){
     const label=document.createElement('span');label.textContent='수정 전 비교';
     const beforeAudio=document.createElement('audio');beforeAudio.id='beforeAudio';beforeAudio.controls=true;beforeAudio.preload='none';beforeAudio.style.height='32px';
     beforeRow.append(label,beforeAudio);$('#reviewNote').before(beforeRow);
-    const methods={'trailing-artifact-only':'끝 잡음만 제거','reuse-approved-exercise-sentences':'승인한 동작·시간 안내로 조합','preserve-prefix-and-revoice-tail':'앞부분 유지 · 뒷문장 수정','sentence-anchored-revoice':'문장별 목소리 재합성'};
+    const methods={'trailing-artifact-only':'끝 잡음만 제거','reuse-approved-exercise-sentences':'승인한 동작·시간 안내로 조합','preserve-prefix-and-revoice-tail':'앞부분 유지 · 뒷문장 수정','sentence-anchored-revoice':'문장별 목소리 재합성','remove-isolated-artifact':'문장 사이 / 끝 잡음만 제거','replace-flagged-sentence':'지적한 문장만 목소리 수정','expressive-delivery':'감정·억양 수정','clarify-wording':'헷갈리는 대사 표현 수정'};
     const showOriginal=showClip;
     showClip=()=>{beforeAudio.pause();showOriginal();const revision=DATA.revisions[activeKey];beforeRow.hidden=!revision;
         if(revision){beforeAudio.src='audio-before/'+activeKey+'.wav';$('#revisionNotice').textContent='수정본 · '+methods[revision.method]+(revision.note?' / 이전 메모: '+revision.note:'');}
