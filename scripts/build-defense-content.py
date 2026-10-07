@@ -76,7 +76,8 @@ for e in episodes:
 names={'march':'제자리 걷기','step':'좌우 스텝','knee':'무릎 번갈아 올리기','squat':'스쿼트','wallPush':'벽 푸시업','heel':'뒤꿈치 들기','boxing':'가벼운 섀도복싱'}
 for key,title in names.items():
     for mode,sec in [('light',20),('standard',30),('challenge',40)]:
-        lines[f'defense_move_{key}_{mode}']=f'방어선을 유지해요. 이번에는 {title}예요. {sec}초 진행할게요. 편한 동작으로 바꿔도 괜찮아요.'
+        ending = '이에요' if (ord(title[-1])-0xAC00)%28 else '예요'
+        lines[f'defense_move_{key}_{mode}']=f'잠깐 쉬어요. 통로를 지킬 다음 동작은 {title}{ending}. 시작 안내 후 {sec}초 진행해요.'
 lines.update({
     'defense_go':'지금부터 시작해요.',
     'defense_rest':'잘하셨어요. 잠깐 쉬면서 다음 동작을 준비해요.',
@@ -87,7 +88,7 @@ lines.update({
     'defense_cool':'이제 천천히 걸으며 호흡을 정리해요. 수고한 몸에 힘을 조금씩 풀어주세요.',
     'defense_cool_last':'호흡이 편해질 때까지 천천히 움직여요. 더 쉬고 싶으면 충분히 쉬어도 좋아요.',
     'defense_done':'오늘 작전을 마쳤어요. 수고하셨어요. 준비되면 귀환 보고를 확인해주세요.',
-    'defense_resume':'이어서 진행할게요. 화면에 표시된 동작을 편하게 준비해주세요.',
+    'defense_resume':'다음 안내 전까지 편하게 제자리에서 걸어요. 남은 구간부터 이어갈게요.',
 })
 (ROOT/'Resources/defense-lines.json').write_text(json.dumps(lines,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(f'{len(episodes)} episodes / {len(illustrations)} rewards plus behind / {len(lines)} voice lines')

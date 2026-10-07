@@ -216,3 +216,5 @@ for department in ['observation','research','equipment','contracts']:
 print('Validated 16 facility assets and distinct interiors at all three levels.')
 assert next(s for s in scenes if s['id'] == 'M21')['artwork'] == 'PurificationRoom'
 assert all(len([n for n in s['nodes'] if n.get('choices')]) == 1 for s in scenes if s['id'] in ('M10', 'M13'))
+import runpy
+runpy.run_path(str(root / 'scripts/validate-defense.py'))
