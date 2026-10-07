@@ -1,0 +1,212 @@
+{
+  "version": 2,
+  "status": "awaiting-user-review",
+  "clips": [
+    {
+      "key": "defense_05_rest1",
+      "id": "V018",
+      "previous_text": "경보 사이 간격을 찾았어요. 멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+      "text": "경보 사이 간격을 찾았어요. 멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+      "note": "00:03부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "3c6fc227adac8166d09eebd78930d735b082e9f7cd54016c15eb3c9641f5addf",
+      "sha256": "06e6fca006e30e0f117a1d3e5a1e10f13a3aece8056bef8d4c60c827d518f07f",
+      "duration": 4.685,
+      "method": "replace-flagged-sentence",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "text": "멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+          "anchor": "approved opening sentence + existing operator reference"
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_08_outro",
+      "id": "V032",
+      "previous_text": "아무것도 없는 공간이 도움이 되네요. 제 책상에도 그런 공간을 좀 만들어야겠어요.",
+      "text": "아무것도 없는 공간이 도움이 되네요. 제 책상에도 그런 공간을 좀 만들어야겠어요.",
+      "note": "아무것도 없는 공간이 도움이 되네요. 다음 잡음이 하나 있고  그 이후론 괜찮아요",
+      "previous_status": "delivery",
+      "previous_sha256": "bb2f3c9715a6d70da806b5492a8164c893c54e47d3a93033f80beda3ddd7e7f9",
+      "sha256": "c014bc68b91c831513f2aac29f92711637cad2ddcea46b24117da22b48fe6bfe",
+      "duration": 5.1,
+      "method": "remove-isolated-artifact",
+      "segments": [
+        {
+          "sentence_index": 0,
+          "cut_after_seconds": 2.16,
+          "speech_preserved": true
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_09_outro",
+      "id": "V036",
+      "previous_text": "안내등은 꺼졌어요. 하지만 전력이 되돌아온 경로는 아직 남아 있어요.",
+      "text": "안내등은 꺼졌어요. 하지만 전력이 되돌아온 경로는 아직 남아 있어요.",
+      "note": "아직 남아있어요. 하고 대사 끝나고 잡음이 하나 있어요",
+      "previous_status": "delivery",
+      "previous_sha256": "6b58ec037ee83c3709dd116f2d6a4a39adcec3f13cc28dae94f461e03d4e14f4",
+      "sha256": "b3ad5d091497b17b2c946804ef0b762a0800bac20600b8273ed8cb813d006dcf",
+      "duration": 4.4,
+      "method": "remove-isolated-artifact",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "cut_after_seconds": 2.87,
+          "speech_preserved": true
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_15_rest2",
+      "id": "V059",
+      "previous_text": "첫 방향 전환 성공이에요. 길을 막는 대신 잘못된 초대를 거두고 있어요.",
+      "text": "첫 방향 전환 성공이에요. 길을 막는 대신 잘못된 초대를 거두고 있어요.",
+      "note": "첫 방향 전환 성공이에요. 이후 다음 대사 전에 잡음이 있어요 전체적인 음성은 좋아요",
+      "previous_status": "delivery",
+      "previous_sha256": "a59fc2e13b583e64fbae237389df35bcdadc7677326798839a5af08b90e91e24",
+      "sha256": "2a9dbab72dbb4c2123cf4dcb5edddbd4c2c67a26b9278b2b81fde0fbdc6363e4",
+      "duration": 4.67,
+      "method": "remove-isolated-artifact",
+      "segments": [
+        {
+          "sentence_index": 0,
+          "cut_after_seconds": 1.76,
+          "speech_preserved": true
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_15_outro",
+      "id": "V060",
+      "previous_text": "오늘은 정말 한 걸음 나아갔어요. 기념으로 매운 음식을 시켰는데, 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.",
+      "text": "오늘은 정말 한 걸음 나아갔어요. 기념으로 매운 음식을 시켰는데, 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.",
+      "note": "혹시 감정을 담아서 다시 가능할까요 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.....😵",
+      "previous_status": "delivery",
+      "previous_sha256": "656a0aa1fe956c607b05c3692d72c01639ae76dfc2860b3fe321241a036414cf",
+      "sha256": "19bd129a14886476095967fed7fa57e6c81848ca963b49a7de87ff3a38a82ea3",
+      "duration": 7.525,
+      "method": "expressive-delivery",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "spoken_text": "기념으로 매운 음식을 시켰는데... 매운맛 단계는, 한 걸음 덜 나아갈걸 그랬어요...",
+          "direction": "매운맛을 뒤늦게 후회하는 머쓱함, 쉼표와 말끝 여운"
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_20_outro",
+      "id": "V080",
+      "previous_text": "모두 돌아왔어요. 냉장고가 비어서 저는 장을 보러 가요. 편한 옷에 안경까지 썼으니, 오늘은 지나쳐도 못 알아보실걸요.",
+      "text": "모두 돌아왔어요. 냉장고가 비어서 저는 장을 보러 가요. 편한 옷에 안경까지 썼으니, 오늘은 지나쳐도 못 알아보실걸요?",
+      "note": "오늘은 지나쳐도 못 알아보실걸요? ㅎㅎ 하는 장난치는 말투로 수정 가능할까요",
+      "previous_status": "delivery",
+      "previous_sha256": "29ce58984b0ed00b3220a9cb36ff4b8ca55f8d506d79f438051e5c2035595845",
+      "sha256": "715148c969f19df7148f6ce6c6c838143d5af58aa2854b75ddab3b95880eb577",
+      "duration": 7.945,
+      "method": "expressive-delivery",
+      "segments": [
+        {
+          "sentence_index": 2,
+          "spoken_text": "편한 옷에 안경까지 썼으니... 오늘은 지나쳐도 못 알아보실걸요?",
+          "direction": "가볍게 장난치는 의문형 말끝"
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_25_outro",
+      "id": "V100",
+      "previous_text": "내일 할 일을 적었어요. 거창한 건 없고, 치약 사기요. 아침에 다 쓴 걸 세 번이나 눌러봤거든요.",
+      "text": "내일 할 일을 적었어요. 거창한 건 없고, 치약 하나 사 오려고요. 아침에 다 쓴 걸 세 번이나 눌러봤거든요.",
+      "note": "좋은데 뭔가 치약 사기요 라는 대사가 치약으로 사기치는거같아요 대사 수정이 필요할거 같아요",
+      "previous_status": "delivery",
+      "previous_sha256": "21da84254c01cb11e2381fd6f2f49265d48a4ee8cd13e70eb36770e2bfeb2f88",
+      "sha256": "1d52663aec89ef9f7e405b26c9a6a6e72da5af134e2cd7b7572471537404a4d3",
+      "duration": 7.03,
+      "method": "clarify-wording",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "text": "거창한 건 없고, 치약 하나 사 오려고요."
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_27_rest1",
+      "id": "V106",
+      "previous_text": "첫 연결은 맞았어요. 쉬는 동안 기록을 비교할게요.",
+      "text": "첫 연결은 맞았어요. 쉬는 동안 기록을 비교할게요.",
+      "note": "00:02부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "b4ebf39cd27a913db7e3c12d58d9aa144033ea481fdcd3f3f5447d82bcb02e2e",
+      "sha256": "8d69d62a7cac54d778ae674333ad28e4ca8e408bdd8eb9ee43e738852d20b779",
+      "duration": 3.45,
+      "method": "replace-flagged-sentence",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "text": "쉬는 동안 기록을 비교할게요.",
+          "anchor": "approved opening sentence + existing operator reference"
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_29_outro",
+      "id": "V116",
+      "previous_text": "다음 작전이 마지막이에요. 특별히 더 무리할 건 없어요. 오늘까지 해온 걸 함께 마무리하면 돼요.",
+      "text": "다음 작전이 마지막이에요. 특별히 더 무리할 건 없어요. 오늘까지 해온 걸 함께 마무리하면 돼요.",
+      "note": "\"특별히 더 무리할 건 없어요\" 이 부분만 달라요",
+      "previous_status": "delivery",
+      "previous_sha256": "6b9af69b006c01973b4ac8c8a31df31495e48f413518ea12558911d6c04af6f3",
+      "sha256": "82b84288cd13a557529003973f5b26341c991a8e7a0a23706de4567d8a5b130b",
+      "duration": 6.125,
+      "method": "replace-flagged-sentence",
+      "segments": [
+        {
+          "sentence_index": 1,
+          "text": "특별히 더 무리할 건 없어요.",
+          "anchor": "approved opening sentence + existing operator reference"
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_30_outro",
+      "id": "V120",
+      "previous_text": "작전 종료예요. 서른 번, 함께 지켜냈네요. 지부 불은 이제 당직팀에 맡겨둘게요. 오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요. 정말 수고하셨어요.",
+      "text": "작전 종료예요. 서른 번, 함께 지켜냈네요. 지부 불은 이제 당직팀에 맡겨둘게요. 오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요. 정말 수고하셨어요.",
+      "note": "흠 이거도 좀 감정을 넣어줄 수 있나요 작전도 종료고 저녁도 먹으러 간다는데 너무 로봇이 말하는 기분이에요",
+      "previous_status": "delivery",
+      "previous_sha256": "b83712a5fd103439a190de63bb3033892911861c1f3fafabf8c333222be7c38a",
+      "sha256": "a7227f142ef26d9de5aa38807564d986c479bf0d257aa751b0c7ac5d42788b40",
+      "duration": 10.955,
+      "method": "expressive-delivery",
+      "segments": [
+        {
+          "spoken_text": "작전 종료예요! 서른 번, 함께 지켜냈네요!",
+          "direction": "작전 완료의 안도와 밝은 퇴근 인사"
+        },
+        {
+          "spoken_text": "지부 불은 이제 당직팀에 맡겨둘게요. 오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요!",
+          "direction": "작전 완료의 안도와 밝은 퇴근 인사"
+        },
+        {
+          "spoken_text": "정말, 수고하셨어요!",
+          "direction": "작전 완료의 안도와 밝은 퇴근 인사"
+        }
+      ],
+      "status": "awaiting-user-review"
+    }
+  ]
+}
