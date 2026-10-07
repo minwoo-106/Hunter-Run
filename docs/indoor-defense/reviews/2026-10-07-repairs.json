@@ -1,0 +1,1218 @@
+{
+  "version": 1,
+  "status": "awaiting-user-review",
+  "clips": [
+    {
+      "key": "defense_01_rest1",
+      "id": "V002",
+      "text": "첫 격리벽은 잘 버티고 있어요. 잠깐 숨을 고르세요. 다음 통로는 제가 확인할게요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "a04f4c99034f581c6adc03f0fb2a9e15ca4c8e30f09213415047c4bb2f93b25f",
+      "sha256": "7644656dfcf81c3ad128c4c027f2763708aa53111d18cffc7d5c70af13416ebd",
+      "duration": 5.58,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "첫 격리벽은 잘 버티고 있어요.",
+          "file": "defense_01_rest1-0-0.wav",
+          "speaker_similarity": 0.9858,
+          "candidate_count": 1
+        },
+        {
+          "text": "잠깐 숨을 고르세요.",
+          "file": "defense_01_rest1-1-0.wav",
+          "speaker_similarity": 0.9867,
+          "candidate_count": 1
+        },
+        {
+          "text": "다음 통로는 제가 확인할게요.",
+          "file": "defense_01_rest1-2-0.wav",
+          "speaker_similarity": 0.988,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_01_rest2",
+      "id": "V003",
+      "text": "이상하네요. 문이 닫혔는데도 개체들이 안내등 쪽으로 모여요. 지금은 길만 지켜주세요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "1c98088fee54ca066a4c40cc207b029fc7689b5754839e8a9017d90c1acc0110",
+      "sha256": "7399bdf8386ae6f48be0c2e6e6af7f27520bbdea44459549f9e0dd137e1642e3",
+      "duration": 5.64,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "이상하네요.",
+          "file": "defense_01_rest2-0-0.wav",
+          "speaker_similarity": 0.9735,
+          "candidate_count": 1
+        },
+        {
+          "text": "문이 닫혔는데도 개체들이 안내등 쪽으로 모여요.",
+          "file": "defense_01_rest2-1-0.wav",
+          "speaker_similarity": 0.9854,
+          "candidate_count": 1
+        },
+        {
+          "text": "지금은 길만 지켜주세요.",
+          "file": "defense_01_rest2-2-0.wav",
+          "speaker_similarity": 0.9823,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_02_rest2",
+      "id": "V007",
+      "text": "개체들이 사람이 아니라 켜진 등을 따라가고 있어요. 이건 따로 적어둘게요.",
+      "note": "이건 따로 적어둘게요.",
+      "previous_status": "delivery",
+      "previous_sha256": "92392e14afe83566afdc33afded9046359b08d2a693a0f6c5f825c7bec049997",
+      "sha256": "3792f7b6224564fd51d4d90c0c2ee9dee816bdaf8ba9332f92cd3540dbf59703",
+      "duration": 4.47,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 2.95,
+          "sentences": 1
+        },
+        {
+          "text": "이건 따로 적어둘게요.",
+          "file": "defense_02_rest2-1-0.wav",
+          "speaker_similarity": 0.9794,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_03_brief",
+      "id": "V009",
+      "text": "왼쪽 격리벽 출력이 조금씩 떨어져요. 부품을 바꾸는 동안 통로를 유지해주세요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "c652321d0774199af32b64b1586bca705f6e6b00004ec4f819ebc13153a51c3b",
+      "sha256": "0e4e01a123b1c18ecc7e8a9a63bb4af515acfeb48d1f3fec8446de71d7aaeefc",
+      "duration": 5.18,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "왼쪽 격리벽 출력이 조금씩 떨어져요.",
+          "file": "defense_03_brief-0-0.wav",
+          "speaker_similarity": 0.9797,
+          "candidate_count": 1
+        },
+        {
+          "text": "부품을 바꾸는 동안 통로를 유지해주세요.",
+          "file": "defense_03_brief-1-0.wav",
+          "speaker_similarity": 0.983,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_03_rest1",
+      "id": "V010",
+      "text": "교체 부품 도착했어요. 잠깐 쉬는 동안 앞쪽 장비를 끌게요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "1b71ad65867033312cc0639d748952db99e3016d0244ef21e5485198450fac58",
+      "sha256": "eee83ebf8ba6689a692b6bfbbf5590cba213295221b14fbabb71477d8cba9b63",
+      "duration": 4.04,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "교체 부품 도착했어요.",
+          "file": "defense_03_rest1-0-0.wav",
+          "speaker_similarity": 0.9802,
+          "candidate_count": 1
+        },
+        {
+          "text": "잠깐 쉬는 동안 앞쪽 장비를 끌게요.",
+          "file": "defense_03_rest1-1-0.wav",
+          "speaker_similarity": 0.9842,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_03_rest2",
+      "id": "V011",
+      "text": "전력을 낮추자 개체들도 멈췄어요. 우연인지 한 번 더 확인해야겠어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "627a5b63e7e9ba84ddbe91057bc93b9bf6b09060d95ee183d2c480bb38b0a166",
+      "sha256": "0a9fcbe633ae299aa62e1d0cc21b19729555197ea8bca5b9b8cb21f6feeb2fbe",
+      "duration": 4.64,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "전력을 낮추자 개체들도 멈췄어요.",
+          "file": "defense_03_rest2-0-0.wav",
+          "speaker_similarity": 0.9822,
+          "candidate_count": 1
+        },
+        {
+          "text": "우연인지 한 번 더 확인해야겠어요.",
+          "file": "defense_03_rest2-1-0.wav",
+          "speaker_similarity": 0.9872,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_03_outro",
+      "id": "V012",
+      "text": "격리벽은 정상이에요. 고장 난 부품은 작은 것 하나였는데, 찾는 데는 여럿이 필요했네요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "4353579e987bd0927e2d5986a7aa572bd5a085ec10ddbcc55e55c86796e18a1c",
+      "sha256": "cedeb1da98b1eaab4edb9fbc2c7e157249f72a7e1ee93d46e61543d1559400ef",
+      "duration": 5.71,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "격리벽은 정상이에요.",
+          "file": "defense_03_outro-0-0.wav",
+          "speaker_similarity": 0.9822,
+          "candidate_count": 1
+        },
+        {
+          "text": "고장 난 부품은 작은 것 하나였는데, 찾는 데는 여럿이 필요했네요.",
+          "file": "defense_03_outro-1-0.wav",
+          "speaker_similarity": 0.9849,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_04_rest2",
+      "id": "V015",
+      "text": "점검표에 빈칸이 줄었어요. 아무 일 없는 구간도 확인한 성과니까요.",
+      "note": "아무 일 없는 구간도 확인한 성과니까요.",
+      "previous_status": "delivery",
+      "previous_sha256": "995a41ee3361f8f5da8e456e0080f60893aba6dee85d26c6971815a8ab990265",
+      "sha256": "ca31b6fdf13bc2d42bb3467ddde0ecd1d9500e9c3c156c30c29fda539608fadb",
+      "duration": 4.36,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 2.0,
+          "sentences": 1
+        },
+        {
+          "text": "아무 일 없는 구간도 확인한 성과니까요.",
+          "file": "defense_04_rest2-1-0.wav",
+          "speaker_similarity": 0.9832,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_05_brief",
+      "id": "V017",
+      "text": "앞서 막은 통로에서 같은 경보가 다시 울렸어요. 벽이 무너진 건 아니에요. 반복되는 신호부터 찾을게요.",
+      "note": "00:04부터 달라짐",
+      "previous_status": "delivery",
+      "previous_sha256": "3f187b7466d6b66c038536de38e2544fa00243eea4bd6c1062c9ae2ef5969bb4",
+      "sha256": "b1d6215b810ef872f54ef5b9efd0d6a9e5a37087956c9b90b1b15551895de538",
+      "duration": 6.76,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 3.2,
+          "sentences": 1
+        },
+        {
+          "text": "벽이 무너진 건 아니에요.",
+          "file": "defense_05_brief-1-0.wav",
+          "speaker_similarity": 0.9829,
+          "candidate_count": 1
+        },
+        {
+          "text": "반복되는 신호부터 찾을게요.",
+          "file": "defense_05_brief-2-0.wav",
+          "speaker_similarity": 0.9855,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_05_rest1",
+      "id": "V018",
+      "text": "경보 사이 간격을 찾았어요. 멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "9677a15a46087722eda98dc1b40a591e16e9289dbb5fb622c8b689260d2cd8ff",
+      "sha256": "3c6fc227adac8166d09eebd78930d735b082e9f7cd54016c15eb3c9641f5addf",
+      "duration": 4.93,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "경보 사이 간격을 찾았어요.",
+          "file": "defense_05_rest1-0-0.wav",
+          "speaker_similarity": 0.9841,
+          "candidate_count": 1
+        },
+        {
+          "text": "멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+          "file": "defense_05_rest1-1-0.wav",
+          "speaker_similarity": 0.9769,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_06_rest1",
+      "id": "V022",
+      "text": "첫 구역은 별도 전원으로 바꿨어요. 여기서 재정비할게요.",
+      "note": "00:03부터 달라짐",
+      "previous_status": "delivery",
+      "previous_sha256": "84c1fc17be6f165ea3f28426d809318ff77c5f71d372ceb98ff45e004ab84e8f",
+      "sha256": "db3f81f30f04996c8d666012eefb524e1ea9baba281f8af4bac4307287b00da4",
+      "duration": 4.04,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 2.52,
+          "sentences": 1
+        },
+        {
+          "text": "여기서 재정비할게요.",
+          "file": "defense_06_rest1-1-0.wav",
+          "speaker_similarity": 0.9804,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_08_brief",
+      "id": "V029",
+      "text": "오늘은 비워둔 통로가 완충 구역 역할을 해요. 힘을 더 쓰기보다 흐름이 고른지 확인해요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "469fdc72bfd63891c7ec46272f873f116a90919ac75b1ef2b10cab740a08c27a",
+      "sha256": "e9a6ca5f3012bc0461bd6a0cf06f78679235f642ea5a670cb7926ffd23092867",
+      "duration": 5.36,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "오늘은 비워둔 통로가 완충 구역 역할을 해요.",
+          "file": "defense_08_brief-0-0.wav",
+          "speaker_similarity": 0.9822,
+          "candidate_count": 1
+        },
+        {
+          "text": "힘을 더 쓰기보다 흐름이 고른지 확인해요.",
+          "file": "defense_08_brief-1-0.wav",
+          "speaker_similarity": 0.9879,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_08_outro",
+      "id": "V032",
+      "text": "아무것도 없는 공간이 도움이 되네요. 제 책상에도 그런 공간을 좀 만들어야겠어요.",
+      "note": "목소리는 오퍼레이터 목소리인데 억양이 너무 일정해요 음정이 일정해요 너무",
+      "previous_status": "delivery",
+      "previous_sha256": "26e02d834c1fb86b85aad71e20bdf5259602445165ee4691e7551d669d2c652a",
+      "sha256": "bb2f3c9715a6d70da806b5492a8164c893c54e47d3a93033f80beda3ddd7e7f9",
+      "duration": 5.56,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "아무것도 없는 공간이 도움이 되네요.",
+          "file": "defense_08_outro-0-0.wav",
+          "speaker_similarity": 0.9809,
+          "candidate_count": 1
+        },
+        {
+          "text": "제 책상에도 그런 공간을 좀 만들어야겠어요.",
+          "file": "defense_08_outro-1-0.wav",
+          "speaker_similarity": 0.9848,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_09_rest1",
+      "id": "V034",
+      "text": "연결 하나를 찾았어요. 남은 부분은 정비팀이 확인 중이에요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "0a8e50ea56418cdf7af8fc5fe5962b2be0ffe43b16c12cef285fab622d52bed3",
+      "sha256": "6b8922437bf391a24e959540871982d7195d61e38d92f3decf4710c8201a5c6d",
+      "duration": 4.06,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "연결 하나를 찾았어요.",
+          "file": "defense_09_rest1-0-0.wav",
+          "speaker_similarity": 0.9833,
+          "candidate_count": 1
+        },
+        {
+          "text": "남은 부분은 정비팀이 확인 중이에요.",
+          "file": "defense_09_rest1-1-0.wav",
+          "speaker_similarity": 0.9849,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_09_rest2",
+      "id": "V035",
+      "text": "외부에서 온 전력이 아니라 안쪽에서 되돌아온 전력이에요. 방향이 이상해요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "4943938b548bbde15ebcb72c86f4af9f4573bdcc7ad2dd21b2d6360b73e7cdfd",
+      "sha256": "b9c33479a558a9dd508f291249ecfecacea4907b7b6a899eecc0ba39936fab36",
+      "duration": 4.55,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "외부에서 온 전력이 아니라 안쪽에서 되돌아온 전력이에요.",
+          "file": "defense_09_rest2-0-0.wav",
+          "speaker_similarity": 0.9778,
+          "candidate_count": 1
+        },
+        {
+          "text": "방향이 이상해요.",
+          "file": "defense_09_rest2-1-0.wav",
+          "speaker_similarity": 0.975,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_09_outro",
+      "id": "V036",
+      "text": "안내등은 꺼졌어요. 하지만 전력이 되돌아온 경로는 아직 남아 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "bbf0171bd24c9b67aec8030a6c2b44623bae08291a1f1d782a0fbd83d0f6b711",
+      "sha256": "6b58ec037ee83c3709dd116f2d6a4a39adcec3f13cc28dae94f461e03d4e14f4",
+      "duration": 4.74,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "안내등은 꺼졌어요.",
+          "file": "defense_09_outro-0-0.wav",
+          "speaker_similarity": 0.9806,
+          "candidate_count": 1
+        },
+        {
+          "text": "하지만 전력이 되돌아온 경로는 아직 남아 있어요.",
+          "file": "defense_09_outro-1-0.wav",
+          "speaker_similarity": 0.9862,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_11_rest2",
+      "id": "V043",
+      "text": "개체들이 따라온 건 이 되돌아온 신호였어요. 누군가의 호출인 줄 알았나 봐요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "8b1b7e1cdb6055420f10410f4028d6a76d7f717e3bf2f2e563fc6f95f10897d1",
+      "sha256": "f59e5e5bd9611fb6d397b8b99e7c94ad598b6c3945543f0b233c0b5fad276221",
+      "duration": 4.76,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "개체들이 따라온 건 이 되돌아온 신호였어요.",
+          "file": "defense_11_rest2-0-0.wav",
+          "speaker_similarity": 0.9854,
+          "candidate_count": 1
+        },
+        {
+          "text": "누군가의 호출인 줄 알았나 봐요.",
+          "file": "defense_11_rest2-1-0.wav",
+          "speaker_similarity": 0.9851,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_13_rest2",
+      "id": "V051",
+      "text": "두 번째도 같은 결과예요. 작은 수정이 길 전체를 바꾸고 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "fc3defcf67b09f528d5a67c441f7e32d401836b808c588dd02551849eeaf7064",
+      "sha256": "a8788679a6cf0de8d75b78809cf68550b4ba2e61109944f880d73e7c53afb6a4",
+      "duration": 4.33,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "두 번째도 같은 결과예요.",
+          "file": "defense_13_rest2-0-0.wav",
+          "speaker_similarity": 0.9826,
+          "candidate_count": 1
+        },
+        {
+          "text": "작은 수정이 길 전체를 바꾸고 있어요.",
+          "file": "defense_13_rest2-1-0.wav",
+          "speaker_similarity": 0.9812,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_14_rest1",
+      "id": "V054",
+      "text": "신호 하나만 보니 흐름이 선명해요. 저도 화면을 덜 들여다보게 되네요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "808e23e5e645a35a3bd18e9c6370bc8f71a4697992f4f3ca306a38f311c58e4d",
+      "sha256": "b64ed83a3726a624ad4201a5345938afce850301536944df5eb2d2d14c865c2b",
+      "duration": 4.16,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "신호 하나만 보니 흐름이 선명해요.",
+          "file": "defense_14_rest1-0-0.wav",
+          "speaker_similarity": 0.987,
+          "candidate_count": 1
+        },
+        {
+          "text": "저도 화면을 덜 들여다보게 되네요.",
+          "file": "defense_14_rest1-1-0.wav",
+          "speaker_similarity": 0.9851,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_15_rest2",
+      "id": "V059",
+      "text": "첫 방향 전환 성공이에요. 길을 막는 대신 잘못된 초대를 거두고 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "2805150465a087ecc078ab87c5f358e2d32b3f099845eb5cf02c3cf4399b8e15",
+      "sha256": "a59fc2e13b583e64fbae237389df35bcdadc7677326798839a5af08b90e91e24",
+      "duration": 5.09,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "첫 방향 전환 성공이에요.",
+          "file": "defense_15_rest2-0-0.wav",
+          "speaker_similarity": 0.9892,
+          "candidate_count": 1
+        },
+        {
+          "text": "길을 막는 대신 잘못된 초대를 거두고 있어요.",
+          "file": "defense_15_rest2-1-0.wav",
+          "speaker_similarity": 0.984,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_15_outro",
+      "id": "V060",
+      "text": "오늘은 정말 한 걸음 나아갔어요. 기념으로 매운 음식을 시켰는데, 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.",
+      "note": "목소리는 좋은데 말하는게 너무 어색해요",
+      "previous_status": "delivery",
+      "previous_sha256": "b3a8f5be6ccd39a99dab888a46d5c9bf011a8a9fa2e462cb389143b73323c8a2",
+      "sha256": "656a0aa1fe956c607b05c3692d72c01639ae76dfc2860b3fe321241a036414cf",
+      "duration": 7.28,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "오늘은 정말 한 걸음 나아갔어요.",
+          "file": "defense_15_outro-0-0.wav",
+          "speaker_similarity": 0.9812,
+          "candidate_count": 1
+        },
+        {
+          "text": "기념으로 매운 음식을 시켰는데, 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.",
+          "file": "defense_15_outro-1-0.wav",
+          "speaker_similarity": 0.9858,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_16_outro",
+      "id": "V064",
+      "text": "정비팀이 새 방향표를 달았어요. 지부 안에서 길을 묻는 일이 조금 줄겠네요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "fa54c884f77a722c9ca2526b94b5c137345605d1e7c398a67cced6436ae4a3bf",
+      "sha256": "aaad813909e572711987842a429ec9c5df360ac63c5ae3cc3a0caa56eb32a7e1",
+      "duration": 4.7,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "정비팀이 새 방향표를 달았어요.",
+          "file": "defense_16_outro-0-0.wav",
+          "speaker_similarity": 0.9863,
+          "candidate_count": 1
+        },
+        {
+          "text": "지부 안에서 길을 묻는 일이 조금 줄겠네요.",
+          "file": "defense_16_outro-1-0.wav",
+          "speaker_similarity": 0.9779,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_18_rest1",
+      "id": "V070",
+      "text": "출력 변화가 작아졌어요. 쉬는 동안도 안정화 장치는 계속 일해요.",
+      "note": "소리 맨 마지막에  계속 일해요. 까지 잘 나오고 마지막에 0.1초정도 이상한 소리가 들어가있어요",
+      "previous_status": "delivery",
+      "previous_sha256": "4357b63c91157fb62c9c7f2e81f75c4774bdc75c68b6f9895c0509091a71fab0",
+      "sha256": "e41c73d8bfa72d950b751f8907521e7ae33a8b3a813460bef68391e0fde4609c",
+      "duration": 4.43,
+      "method": "trailing-artifact-only",
+      "segments": [],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_19_rest1",
+      "id": "V074",
+      "text": "첫 구역은 잠잠해졌어요. 순서대로 확인하고 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "596ded860f38feb716b446fad34170bb2c74b66bee863419da272d6c8478f4be",
+      "sha256": "f191dc79d8a894596ab34077c22b5d970b7d25af1f28840e2073df71a8cbbce3",
+      "duration": 3.65,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "첫 구역은 잠잠해졌어요.",
+          "file": "defense_19_rest1-0-0.wav",
+          "speaker_similarity": 0.987,
+          "candidate_count": 1
+        },
+        {
+          "text": "순서대로 확인하고 있어요.",
+          "file": "defense_19_rest1-1-0.wav",
+          "speaker_similarity": 0.9872,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_19_outro",
+      "id": "V076",
+      "text": "외곽 통로 위치를 확정했어요. 이제 끝이 어디인지 보이기 시작하네요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "6e9817bd19aeeb87a901f366128471eec5104e05935102dfba516734aaeeffab",
+      "sha256": "6c5b8d9a495c08ee9db019c9438e8b6ca75b7647b7d00e8277efc4da3b1eba50",
+      "duration": 4.29,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "외곽 통로 위치를 확정했어요.",
+          "file": "defense_19_outro-0-0.wav",
+          "speaker_similarity": 0.9843,
+          "candidate_count": 1
+        },
+        {
+          "text": "이제 끝이 어디인지 보이기 시작하네요.",
+          "file": "defense_19_outro-1-0.wav",
+          "speaker_similarity": 0.9842,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_20_outro",
+      "id": "V080",
+      "text": "모두 돌아왔어요. 냉장고가 비어서 저는 장을 보러 가요. 편한 옷에 안경까지 썼으니, 오늘은 지나쳐도 못 알아보실걸요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "9771e241d540e391a7b0b4ef07d0f91931beb1962efd5be21cce3972c11c3470",
+      "sha256": "29ce58984b0ed00b3220a9cb36ff4b8ca55f8d506d79f438051e5c2035595845",
+      "duration": 8.09,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "모두 돌아왔어요.",
+          "file": "defense_20_outro-0-0.wav",
+          "speaker_similarity": 0.9762,
+          "candidate_count": 1
+        },
+        {
+          "text": "냉장고가 비어서 저는 장을 보러 가요.",
+          "file": "defense_20_outro-1-0.wav",
+          "speaker_similarity": 0.9817,
+          "candidate_count": 1
+        },
+        {
+          "text": "편한 옷에 안경까지 썼으니, 오늘은 지나쳐도 못 알아보실걸요.",
+          "file": "defense_20_outro-2-0.wav",
+          "speaker_similarity": 0.9874,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_21_outro",
+      "id": "V084",
+      "text": "늦게 도착한 반응까지 기록했어요. 정리할 목록이 이제 한 장 안에 들어오네요.",
+      "note": "00:03부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "7e8bb95fee7c4c817358119daa6785d546d9f8a5cdad8d4b1d969a0cd791ef9f",
+      "sha256": "d68fa1ce7f32ccb1dca95d21e79309d34a5dbd9de09d9f8255fc9b1899d152d2",
+      "duration": 4.83,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 2.32,
+          "sentences": 1
+        },
+        {
+          "text": "정리할 목록이 이제 한 장 안에 들어오네요.",
+          "file": "defense_21_outro-1-0.wav",
+          "speaker_similarity": 0.9821,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_22_rest2",
+      "id": "V087",
+      "text": "통로 전력도 돌아왔어요. 필요한 곳부터 차례로 밝아지고 있어요.",
+      "note": "이 음성도 밝아지고 있어요. 다음 0.1초정도 잡읍이 섞였어요",
+      "previous_status": "delivery",
+      "previous_sha256": "a28aece46faaa1441555405cd8db4c55e11ece7757d63f406b2cf3b15561b775",
+      "sha256": "d4190d62e01c504a289fbdf57eb8919350b3717359ec6156c3fb6d01aa27bde4",
+      "duration": 4.43,
+      "method": "trailing-artifact-only",
+      "segments": [],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_22_outro",
+      "id": "V088",
+      "text": "휴게실 전기포트가 다시 켜졌어요. 의외로 이 소리가 제일 반갑네요.",
+      "note": "00:02부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "8fbcfc5f8e0b14ef828296f2d75c1d55040336d80b50ff1b6f2ffdd80af95983",
+      "sha256": "ca0c25e67f3fdd9fe78b2c112f8488f43f33c6cb99ad6ab16c68ff1d141d4e96",
+      "duration": 4.45,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "휴게실 전기포트가 다시 켜졌어요.",
+          "file": "defense_22_outro-0-0.wav",
+          "speaker_similarity": 0.9864,
+          "candidate_count": 1
+        },
+        {
+          "text": "의외로 이 소리가 제일 반갑네요.",
+          "file": "defense_22_outro-1-0.wav",
+          "speaker_similarity": 0.9813,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_23_brief",
+      "id": "V089",
+      "text": "오늘은 이미 확보한 구역을 점검해요. 반응이 약한 날에는 몸도 가볍게 움직여요.",
+      "note": "00:02부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "aa332e561a5069c03e622de925519d52dd0dd7df59012f9c8d568e07cd872b84",
+      "sha256": "0506edbc204ab322b75a9579f5184beea55f07c0bb5c6e84814fe9981402d99b",
+      "duration": 4.96,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "오늘은 이미 확보한 구역을 점검해요.",
+          "file": "defense_23_brief-0-0.wav",
+          "speaker_similarity": 0.9822,
+          "candidate_count": 1
+        },
+        {
+          "text": "반응이 약한 날에는 몸도 가볍게 움직여요.",
+          "file": "defense_23_brief-1-0.wav",
+          "speaker_similarity": 0.9843,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_24_rest1",
+      "id": "V094",
+      "text": "시험 신호가 계획한 방향으로 나가요. 안쪽으로 되돌아오지 않아요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "b662e502d764fa02b42114a54a828d3bb5b9f2003802791816edfeeb00aa2437",
+      "sha256": "5e6b4ce3a2edf2b614be62f2f5c852bf7cac6065e4dbf5d03642374ba9b5c137",
+      "duration": 4.09,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "시험 신호가 계획한 방향으로 나가요.",
+          "file": "defense_24_rest1-0-0.wav",
+          "speaker_similarity": 0.9854,
+          "candidate_count": 1
+        },
+        {
+          "text": "안쪽으로 되돌아오지 않아요.",
+          "file": "defense_24_rest1-1-0.wav",
+          "speaker_similarity": 0.9808,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_25_brief",
+      "id": "V097",
+      "text": "마지막 차단 전에 예비 전원과 격리벽을 점검해요. 다음 작전에서 쓸 여유를 오늘 만들어두는 거예요.",
+      "note": "00:04부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "a56386706a608b5065a65dba165de495ef0bf6b866436da271077f5d36a71248",
+      "sha256": "65ff0e591bf215bfd04d6f5afbe31df3882078cc648391466a25454a8bb11619",
+      "duration": 6.14,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 3.25,
+          "sentences": 1
+        },
+        {
+          "text": "다음 작전에서 쓸 여유를 오늘 만들어두는 거예요.",
+          "file": "defense_25_brief-1-0.wav",
+          "speaker_similarity": 0.9851,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_25_rest1",
+      "id": "V098",
+      "text": "예비 전원 확인했어요. 하나가 쉬어도 다른 쪽이 버틸 수 있어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "a225efda5c255123a0b4490dd4ebb9c4e2bdc414c35e80f8b416936025bc82b2",
+      "sha256": "f55c9d21163ef0bfe489855cbf597c20024a63a170b8cbb509cd337d4590b416",
+      "duration": 3.99,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "예비 전원 확인했어요.",
+          "file": "defense_25_rest1-0-0.wav",
+          "speaker_similarity": 0.9834,
+          "candidate_count": 1
+        },
+        {
+          "text": "하나가 쉬어도 다른 쪽이 버틸 수 있어요.",
+          "file": "defense_25_rest1-1-0.wav",
+          "speaker_similarity": 0.9873,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_25_outro",
+      "id": "V100",
+      "text": "내일 할 일을 적었어요. 거창한 건 없고, 치약 사기요. 아침에 다 쓴 걸 세 번이나 눌러봤거든요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "3b4af033c93a2b5a9026b7eabdc7a8ae45a8d415cb58d7e9bd27fbfc2011641e",
+      "sha256": "21da84254c01cb11e2381fd6f2f49265d48a4ee8cd13e70eb36770e2bfeb2f88",
+      "duration": 6.56,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "내일 할 일을 적었어요.",
+          "file": "defense_25_outro-0-0.wav",
+          "speaker_similarity": 0.9822,
+          "candidate_count": 1
+        },
+        {
+          "text": "거창한 건 없고, 치약 사기요.",
+          "file": "defense_25_outro-1-0.wav",
+          "speaker_similarity": 0.9875,
+          "candidate_count": 1
+        },
+        {
+          "text": "아침에 다 쓴 걸 세 번이나 눌러봤거든요.",
+          "file": "defense_25_outro-2-0.wav",
+          "speaker_similarity": 0.9854,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_26_outro",
+      "id": "V104",
+      "text": "남은 구역을 지도에 작게 표시했어요. 처음의 빨간 표시들보다 훨씬 작아졌네요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "a29ac04db6cc7d79b094c3387ea5ddac5e494f8f05775582f67c927d72c1e1c7",
+      "sha256": "c1da449281fa3606ad26e1aba59e45258b3e04970ec631d35d4644a58a3f709b",
+      "duration": 5.36,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "남은 구역을 지도에 작게 표시했어요.",
+          "file": "defense_26_outro-0-0.wav",
+          "speaker_similarity": 0.9861,
+          "candidate_count": 1
+        },
+        {
+          "text": "처음의 빨간 표시들보다 훨씬 작아졌네요.",
+          "file": "defense_26_outro-1-0.wav",
+          "speaker_similarity": 0.9897,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_27_rest1",
+      "id": "V106",
+      "text": "첫 연결은 맞았어요. 쉬는 동안 기록을 비교할게요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "b5a518179e837767ff8a0d77052a96ac149a4a24ecba686aa89213197dac52a4",
+      "sha256": "b4ebf39cd27a913db7e3c12d58d9aa144033ea481fdcd3f3f5447d82bcb02e2e",
+      "duration": 3.55,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "첫 연결은 맞았어요.",
+          "file": "defense_27_rest1-0-0.wav",
+          "speaker_similarity": 0.9853,
+          "candidate_count": 1
+        },
+        {
+          "text": "쉬는 동안 기록을 비교할게요.",
+          "file": "defense_27_rest1-1-0.wav",
+          "speaker_similarity": 0.9803,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_28_rest1",
+      "id": "V110",
+      "text": "출력은 고르게 유지돼요. 편안하게 숨을 고르세요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "7dffe8aa18ca265ff3dcec920d01b706eeff7bb91e3530261d226c37bbab0c2d",
+      "sha256": "cba81ef98b85ad2d4ab47b7c40b0fb070ab2b4137a7f99ae83809995e5166544",
+      "duration": 3.32,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "출력은 고르게 유지돼요.",
+          "file": "defense_28_rest1-0-0.wav",
+          "speaker_similarity": 0.9832,
+          "candidate_count": 1
+        },
+        {
+          "text": "편안하게 숨을 고르세요.",
+          "file": "defense_28_rest1-1-0.wav",
+          "speaker_similarity": 0.9873,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_28_rest2",
+      "id": "V111",
+      "text": "예비 장치도 정상이에요. 다음 작전에서 쓸 준비가 모두 됐어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "751e5f750277b2474173c73896bcfe2b4fc7e8525040e06496a8da62fbeaad90",
+      "sha256": "d0b0929844cf038d8052b9d170a9613a42d384a79413af3d33779e033805bcc2",
+      "duration": 4.16,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "예비 장치도 정상이에요.",
+          "file": "defense_28_rest2-0-0.wav",
+          "speaker_similarity": 0.9809,
+          "candidate_count": 1
+        },
+        {
+          "text": "다음 작전에서 쓸 준비가 모두 됐어요.",
+          "file": "defense_28_rest2-1-0.wav",
+          "speaker_similarity": 0.9873,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_29_outro",
+      "id": "V116",
+      "text": "다음 작전이 마지막이에요. 특별히 더 무리할 건 없어요. 오늘까지 해온 걸 함께 마무리하면 돼요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "cb9322ff64d2b43ee8c5865ca9c4ae4a1d53c8e921c39b491de994bc1501b1d1",
+      "sha256": "6b9af69b006c01973b4ac8c8a31df31495e48f413518ea12558911d6c04af6f3",
+      "duration": 6.48,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "다음 작전이 마지막이에요.",
+          "file": "defense_29_outro-0-0.wav",
+          "speaker_similarity": 0.9849,
+          "candidate_count": 1
+        },
+        {
+          "text": "특별히 더 무리할 건 없어요.",
+          "file": "defense_29_outro-1-0.wav",
+          "speaker_similarity": 0.9654,
+          "candidate_count": 1
+        },
+        {
+          "text": "오늘까지 해온 걸 함께 마무리하면 돼요.",
+          "file": "defense_29_outro-2-0.wav",
+          "speaker_similarity": 0.9841,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_30_rest1",
+      "id": "V118",
+      "text": "첫 연결 차단 완료예요. 지부 안쪽으로 돌아오는 반응은 없어요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "65ce0ed07f6d7ee8e79626afad1187daf346cf43f93890eb640e72fac796b2c3",
+      "sha256": "938d43fe6dd85c804a2b88bbca7a3f734be06970c4ec4f8d8b2b5e68cede3684",
+      "duration": 4.01,
+      "method": "sentence-anchored-revoice",
+      "segments": [
+        {
+          "text": "첫 연결 차단 완료예요.",
+          "file": "defense_30_rest1-0-0.wav",
+          "speaker_similarity": 0.9861,
+          "candidate_count": 1
+        },
+        {
+          "text": "지부 안쪽으로 돌아오는 반응은 없어요.",
+          "file": "defense_30_rest1-1-0.wav",
+          "speaker_similarity": 0.9829,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_30_outro",
+      "id": "V120",
+      "text": "작전 종료예요. 서른 번, 함께 지켜냈네요. 지부 불은 이제 당직팀에 맡겨둘게요. 오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요. 정말 수고하셨어요.",
+      "note": "00:08부터 달라짐",
+      "previous_status": "voice",
+      "previous_sha256": "2ea39ee17729178c7fd2657940f57051a05923798a3a1e87bd7d00b381c6914a",
+      "sha256": "b83712a5fd103439a190de63bb3033892911861c1f3fafabf8c333222be7c38a",
+      "duration": 10.46,
+      "method": "preserve-prefix-and-revoice-tail",
+      "segments": [
+        {
+          "preserved_prefix_seconds": 6.25,
+          "sentences": 3
+        },
+        {
+          "text": "오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요.",
+          "file": "defense_30_outro-3-0.wav",
+          "speaker_similarity": 0.9829,
+          "candidate_count": 1
+        },
+        {
+          "text": "정말 수고하셨어요.",
+          "file": "defense_30_outro-4-0.wav",
+          "speaker_similarity": 0.9811,
+          "candidate_count": 1
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_step_standard",
+      "id": "V125",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 30초 진행해요.",
+      "note": "시작 안내 후 30초 진행해요.",
+      "previous_status": "delivery",
+      "previous_sha256": "c924317daef8927ea8bdcde67efe46bebb5b09d95584045b10ed81d6596855fa",
+      "sha256": "41d6a61363579d1e72c1d1ea8c3ce5acf2f234f95cb547b50f153f72069735a0",
+      "duration": 5.97,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_step_standard",
+          "start": 0,
+          "end": 3.95
+        },
+        {
+          "source": "defense_move_march_standard",
+          "start": 4.2,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_step_challenge",
+      "id": "V126",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 40초 진행해요.",
+      "note": "통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 40초 진행해요.",
+      "previous_status": "delivery",
+      "previous_sha256": "261ce9c411b8b715c0ced2160aa1bbf91980b3463c98d00165b3ee58e808aa2c",
+      "sha256": "9bd1014885975735c4c7382ebda796d303348910518515130f1e8ea4f5be0944",
+      "duration": 5.95,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_step_light",
+          "start": 0,
+          "end": 4.02
+        },
+        {
+          "source": "defense_move_march_challenge",
+          "start": 4.13,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_squat_standard",
+      "id": "V131",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 30초 진행해요.",
+      "note": "통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 30초 진행해요",
+      "previous_status": "voice",
+      "previous_sha256": "1212fa083b56ff7727c0a567daf13dfdb787172d433f09d467d5ffaf9d7ae54c",
+      "sha256": "9209ff9cee426e7660ec63565291188e5a19a150d7f6da37fbf19d84ac0ea64e",
+      "duration": 5.67,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_squat_light",
+          "start": 0,
+          "end": 3.62
+        },
+        {
+          "source": "defense_move_march_standard",
+          "start": 4.2,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_wallPush_light",
+      "id": "V133",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 벽 푸시업이에요. 시작 안내 후 20초 진행해요.",
+      "note": "시작 안내 후 20초 진행해요.",
+      "previous_status": "delivery",
+      "previous_sha256": "44dca895782307ed8e9b4a00b4f111d72dcf96c820dde1b3e58c32fa87c11240",
+      "sha256": "292b89767806947360a6190f5f07aaa0a4ccc73248d448e0039e2c1d1e84adc3",
+      "duration": 6.15,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_wallPush_light",
+          "start": 0,
+          "end": 4.22
+        },
+        {
+          "source": "defense_move_march_light",
+          "start": 3.97,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_heel_light",
+      "id": "V136",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 뒤꿈치 들기예요. 시작 안내 후 20초 진행해요.",
+      "note": "",
+      "previous_status": "voice",
+      "previous_sha256": "21bc128dbecd51965930f1824ef46665e733b7443561ce3be58a1b1f9385d0b9",
+      "sha256": "296c54473b9166c10dde070e9f23e89738923c6b0ed843c51fe1a8b53a31e0c1",
+      "duration": 5.97,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_heel_standard",
+          "start": 0,
+          "end": 4.0
+        },
+        {
+          "source": "defense_move_march_light",
+          "start": 3.97,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    },
+    {
+      "key": "defense_move_boxing_challenge",
+      "id": "V141",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 가벼운 섀도복싱이에요. 시작 안내 후 40초 진행해요.",
+      "note": "시작 안내 후 40초 진행해요.",
+      "previous_status": "delivery",
+      "previous_sha256": "2a68e2df81e090860d7d2a38462773d2a37325f0fd69b32672a7251b29a6eaf7",
+      "sha256": "285b93c45fa639127b0ca50d46235177dbbacd37261625092a51b7c535b59da5",
+      "duration": 6.94,
+      "method": "reuse-approved-exercise-sentences",
+      "segments": [
+        {
+          "source": "defense_move_boxing_challenge",
+          "start": 0,
+          "end": 5.05
+        },
+        {
+          "source": "defense_move_march_challenge",
+          "start": 4.13,
+          "end": null
+        }
+      ],
+      "status": "awaiting-user-review"
+    }
+  ]
+}

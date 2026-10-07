@@ -1,0 +1,1215 @@
+{
+  "version": 1,
+  "exportedAt": "2026-10-07T06:36:49.788Z",
+  "total": 151,
+  "entries": [
+    {
+      "id": "V001",
+      "key": "defense_01_brief",
+      "text": "지부 아래 격리 통로에서 작은 침입이 있었어요. 바깥문은 닫혔고, 사람들은 모두 안전해요. 오늘은 안쪽 방어선부터 함께 확인해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "57b565c5f64d656216892a9f437a9c6162e8109f411aff72c96bee475dc6ca3f"
+    },
+    {
+      "id": "V002",
+      "key": "defense_01_rest1",
+      "text": "첫 격리벽은 잘 버티고 있어요. 잠깐 숨을 고르세요. 다음 통로는 제가 확인할게요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "a04f4c99034f581c6adc03f0fb2a9e15ca4c8e30f09213415047c4bb2f93b25f"
+    },
+    {
+      "id": "V003",
+      "key": "defense_01_rest2",
+      "text": "이상하네요. 문이 닫혔는데도 개체들이 안내등 쪽으로 모여요. 지금은 길만 지켜주세요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "1c98088fee54ca066a4c40cc207b029fc7689b5754839e8a9017d90c1acc0110"
+    },
+    {
+      "id": "V004",
+      "key": "defense_01_outro",
+      "text": "첫 통로 확보 완료예요. 오늘은 퇴근길에 빵집에 들를 수 있겠네요. 종이봉투가 따뜻할 때 집에 가는 게 얼마 만인지 몰라요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a4c835ee1446038769d46163cc4e65d583994164739f0d2f959c8226ef272acb"
+    },
+    {
+      "id": "V005",
+      "key": "defense_02_brief",
+      "text": "정비팀이 격리 통로에 들어가요. 움직이는 개체보다 사람이 지나갈 길부터 확보할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "21e16d4b7b778040e22dff8a71307b7913b6dc1187e6e336c26676047b2d8696"
+    },
+    {
+      "id": "V006",
+      "key": "defense_02_rest1",
+      "text": "지원팀 한 조가 통과했어요. 서두르지 않아도 다음 문은 기다려줘요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "f4b83a4d53dd4ac7b6dfb3bc663107f3a08946f299494d901a7dd71b9d8ab0bd"
+    },
+    {
+      "id": "V007",
+      "key": "defense_02_rest2",
+      "text": "개체들이 사람이 아니라 켜진 등을 따라가고 있어요. 이건 따로 적어둘게요.",
+      "status": "delivery",
+      "note": "이건 따로 적어둘게요.",
+      "sha256": "92392e14afe83566afdc33afded9046359b08d2a693a0f6c5f825c7bec049997"
+    },
+    {
+      "id": "V008",
+      "key": "defense_02_outro",
+      "text": "정비팀이 돌아왔어요. 오늘 표시한 길은 다음 작전에도 그대로 쓸 수 있겠네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "4a1d6a8dd4168e1890abe9793dadef9d5bf00d9cd03c7c42e2f2fdfdfeca2a68"
+    },
+    {
+      "id": "V009",
+      "key": "defense_03_brief",
+      "text": "왼쪽 격리벽 출력이 조금씩 떨어져요. 부품을 바꾸는 동안 통로를 유지해주세요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "c652321d0774199af32b64b1586bca705f6e6b00004ec4f819ebc13153a51c3b"
+    },
+    {
+      "id": "V010",
+      "key": "defense_03_rest1",
+      "text": "교체 부품 도착했어요. 잠깐 쉬는 동안 앞쪽 장비를 끌게요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "1b71ad65867033312cc0639d748952db99e3016d0244ef21e5485198450fac58"
+    },
+    {
+      "id": "V011",
+      "key": "defense_03_rest2",
+      "text": "전력을 낮추자 개체들도 멈췄어요. 우연인지 한 번 더 확인해야겠어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "627a5b63e7e9ba84ddbe91057bc93b9bf6b09060d95ee183d2c480bb38b0a166"
+    },
+    {
+      "id": "V012",
+      "key": "defense_03_outro",
+      "text": "격리벽은 정상이에요. 고장 난 부품은 작은 것 하나였는데, 찾는 데는 여럿이 필요했네요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "4353579e987bd0927e2d5986a7aa572bd5a085ec10ddbcc55e55c86796e18a1c"
+    },
+    {
+      "id": "V013",
+      "key": "defense_04_brief",
+      "text": "오늘 반응은 약해요. 큰 움직임 없이 안내등과 통로 상태를 차근차근 살펴봐요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7ed9506a450de7cb18afe8793986c81d375adbc39ae86387180043eb71449cb0"
+    },
+    {
+      "id": "V014",
+      "key": "defense_04_rest1",
+      "text": "통로 하나 이상 없어요. 오늘은 작은 움직임으로도 충분해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "897038fa7a843607058fbaf0f8ce4d2a6bed30df09e4ce23e8b317b5bf6b9770"
+    },
+    {
+      "id": "V015",
+      "key": "defense_04_rest2",
+      "text": "점검표에 빈칸이 줄었어요. 아무 일 없는 구간도 확인한 성과니까요.",
+      "status": "delivery",
+      "note": "아무 일 없는 구간도 확인한 성과니까요.",
+      "sha256": "995a41ee3361f8f5da8e456e0080f60893aba6dee85d26c6971815a8ab990265"
+    },
+    {
+      "id": "V016",
+      "key": "defense_04_outro",
+      "text": "오늘은 평온하게 마쳤네요. 이런 기록이 쌓여야 평소와 다른 날을 알아볼 수 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "6c9481bf0cf6186a63f747db844ac2fa27cbd2bd8444c0e965458156c42db216"
+    },
+    {
+      "id": "V017",
+      "key": "defense_05_brief",
+      "text": "앞서 막은 통로에서 같은 경보가 다시 울렸어요. 벽이 무너진 건 아니에요. 반복되는 신호부터 찾을게요.",
+      "status": "delivery",
+      "note": "00:04부터 달라짐",
+      "sha256": "3f187b7466d6b66c038536de38e2544fa00243eea4bd6c1062c9ae2ef5969bb4"
+    },
+    {
+      "id": "V018",
+      "key": "defense_05_rest1",
+      "text": "경보 사이 간격을 찾았어요. 멈출 수는 없어도 다음 반응은 예상할 수 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "9677a15a46087722eda98dc1b40a591e16e9289dbb5fb622c8b689260d2cd8ff"
+    },
+    {
+      "id": "V019",
+      "key": "defense_05_rest2",
+      "text": "안내등이 밝아질 때 반응도 커져요. 오늘은 등을 하나씩 나눠서 켜볼게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "4a184b6385dc0353997c095f5e8a1c3e2e9595bd62a7932a8476d106b7ec1efb"
+    },
+    {
+      "id": "V020",
+      "key": "defense_05_outro",
+      "text": "반복 경보를 따로 격리했어요. 계속 보고 있던 화면은 이제 덮어도 되겠네요. 오늘 밤엔 침대에서 아무 생각 없이 웃긴 영상이나 볼래요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7a93948e910dbad72bc1954f215b14a849c592c5c1f908015843f7285f18d6c2"
+    },
+    {
+      "id": "V021",
+      "key": "defense_06_brief",
+      "text": "한꺼번에 켜지던 안내등을 구역별로 나누고 있어요. 바뀐 순서에 맞춰 격리벽을 지켜주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "47d84971778901ba029e6d4a95a22392cbe497abc0221a66926de4c49f95feac"
+    },
+    {
+      "id": "V022",
+      "key": "defense_06_rest1",
+      "text": "첫 구역은 별도 전원으로 바꿨어요. 여기서 재정비할게요.",
+      "status": "delivery",
+      "note": "00:03부터 달라짐",
+      "sha256": "84c1fc17be6f165ea3f28426d809318ff77c5f71d372ceb98ff45e004ab84e8f"
+    },
+    {
+      "id": "V023",
+      "key": "defense_06_rest2",
+      "text": "불빛이 나뉘니 개체도 흩어져요. 덕분에 한쪽 문만 버티지 않아도 돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c60f0387418598e3b8da0f679ad1c9164f7f8186f19221681da4067814ca7185"
+    },
+    {
+      "id": "V024",
+      "key": "defense_06_outro",
+      "text": "교대 점등이 자리 잡았어요. 지부 불빛이 조금 느려졌는데, 오히려 더 안심돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "f8ee3f570c25ff732c9c5084b7ca41aab2e0f4d3ae867cd78455289ed40cb775"
+    },
+    {
+      "id": "V025",
+      "key": "defense_07_brief",
+      "text": "정비 자재가 도착했어요. 지원팀 두 조가 번갈아 지나갈 동안 연결 통로를 확보해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "0b656dfdeb046a69171fde1d5fe9a76cb96347be1ff88dfc5559aae9163a4b04"
+    },
+    {
+      "id": "V026",
+      "key": "defense_07_rest1",
+      "text": "첫 수레가 통과했어요. 물 한 모금 드셔도 좋아요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ac7c8cb3b5b3fa4ab614f5573c9d207cd024f8ed0b4c94e2fd50293618c70b9f"
+    },
+    {
+      "id": "V027",
+      "key": "defense_07_rest2",
+      "text": "마지막 수레는 천천히 이동 중이에요. 우리도 일정한 리듬이면 돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "57c61d7f2e5c3c8f1a40adaa3be1978594dc939979dc9d7bf719ecfb108389cd"
+    },
+    {
+      "id": "V028",
+      "key": "defense_07_outro",
+      "text": "자재가 모두 들어왔어요. 지원팀이 간식도 놓고 갔는데, 제 몫까지 세어놓으셨더라고요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "287856fa59eea55eef31b58599210b12920b3d64a4d957e74ac9053815ab529b"
+    },
+    {
+      "id": "V029",
+      "key": "defense_08_brief",
+      "text": "오늘은 비워둔 통로가 완충 구역 역할을 해요. 힘을 더 쓰기보다 흐름이 고른지 확인해요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "469fdc72bfd63891c7ec46272f873f116a90919ac75b1ef2b10cab740a08c27a"
+    },
+    {
+      "id": "V030",
+      "key": "defense_08_rest1",
+      "text": "출력이 안정적이에요. 쉬는 구간까지 계획대로예요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "90f9cea3c734e5a0a1bc438e5b777041a637e0a24352cf7b56594bff52c72f0f"
+    },
+    {
+      "id": "V031",
+      "key": "defense_08_rest2",
+      "text": "빈 통로가 있으니 예상 밖의 움직임에도 대응할 자리가 생겨요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "627656c31f879fece27e465be3ad9358bef5f16a6bb396fcec295ad90930017a"
+    },
+    {
+      "id": "V032",
+      "key": "defense_08_outro",
+      "text": "아무것도 없는 공간이 도움이 되네요. 제 책상에도 그런 공간을 좀 만들어야겠어요.",
+      "status": "delivery",
+      "note": "목소리는 오퍼레이터 목소리인데 억양이 너무 일정해요 음정이 일정해요 너무",
+      "sha256": "26e02d834c1fb86b85aad71e20bdf5259602445165ee4691e7551d669d2c652a"
+    },
+    {
+      "id": "V033",
+      "key": "defense_09_brief",
+      "text": "전원을 내려도 한 안내등이 계속 켜져요. 보조 축전 장치가 어디 연결됐는지 찾아볼게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7aa04779608e399c9b0090ef549117930aea401034aad23b84f4ec2d2460c708"
+    },
+    {
+      "id": "V034",
+      "key": "defense_09_rest1",
+      "text": "연결 하나를 찾았어요. 남은 부분은 정비팀이 확인 중이에요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "0a8e50ea56418cdf7af8fc5fe5962b2be0ffe43b16c12cef285fab622d52bed3"
+    },
+    {
+      "id": "V035",
+      "key": "defense_09_rest2",
+      "text": "외부에서 온 전력이 아니라 안쪽에서 되돌아온 전력이에요. 방향이 이상해요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "4943938b548bbde15ebcb72c86f4af9f4573bdcc7ad2dd21b2d6360b73e7cdfd"
+    },
+    {
+      "id": "V036",
+      "key": "defense_09_outro",
+      "text": "안내등은 꺼졌어요. 하지만 전력이 되돌아온 경로는 아직 남아 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "bbf0171bd24c9b67aec8030a6c2b44623bae08291a1f1d782a0fbd83d0f6b711"
+    },
+    {
+      "id": "V037",
+      "key": "defense_10_brief",
+      "text": "중앙 통로에서 여러 반응이 겹쳐요. 새 격리 순서를 시험할 차례예요. 익숙한 동작으로 함께 버텨봐요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "d9b95934410681634f3bad11ec767016f646f715e3aedb434cb40815fb524d45"
+    },
+    {
+      "id": "V038",
+      "key": "defense_10_rest1",
+      "text": "첫 번째 문이 닫혔어요. 모두 한꺼번에 막지 않아도 되네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "f549b14f46eaeb6394308308aa77eb3867f1ce86357234a2afdbe80b2e36f73d"
+    },
+    {
+      "id": "V039",
+      "key": "defense_10_rest2",
+      "text": "마지막 구역까지 순서가 이어졌어요. 서두르지 않고 여기까지 왔어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "9dd3a9a87ca40e5ffc88a550e48a2f942ed7fc16dcc128041c8d20b491416430"
+    },
+    {
+      "id": "V040",
+      "key": "defense_10_outro",
+      "text": "중앙 통로 확보예요. 저도 옆에서 동작을 조금 따라 했는데요. 생각보다 쉽지 않네요. 오늘은 바닥에 잠깐 앉아 있어야겠어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c86f76e3de479dce2c5acb32aedc4f9413f1860f5200efa2b4f72c2212f12ee5"
+    },
+    {
+      "id": "V041",
+      "key": "defense_11_brief",
+      "text": "남아 있는 전력 경로를 확인해요. 밖으로 나가야 할 안내 신호가 안쪽으로 돌아오고 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "37d1576df8475435344ef51a25fba5cbc342293c211b7f53e09fbd4e7ca07d54"
+    },
+    {
+      "id": "V042",
+      "key": "defense_11_rest1",
+      "text": "되돌아온 신호와 원래 신호를 나눴어요. 잠깐 쉬면서 비교할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a76770007c387f68d3ba6c47a6bfd8dfcde616cba3d54e44e99ddc9b5494d03b"
+    },
+    {
+      "id": "V043",
+      "key": "defense_11_rest2",
+      "text": "개체들이 따라온 건 이 되돌아온 신호였어요. 누군가의 호출인 줄 알았나 봐요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "8b1b7e1cdb6055420f10410f4028d6a76d7f717e3bf2f2e563fc6f95f10897d1"
+    },
+    {
+      "id": "V044",
+      "key": "defense_11_outro",
+      "text": "막기만 해서는 끝나지 않는 이유를 찾았어요. 이제 신호가 돌아오는 길을 줄여볼게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "16390310f0c0a636fae8c40ed65c0599eefe00ab6189ecc6506241b20f4d06f1"
+    },
+    {
+      "id": "V045",
+      "key": "defense_12_brief",
+      "text": "낡은 표지 아래에서 사용하지 않던 우회 통로를 찾았어요. 지원팀이 들어갈 길부터 확보해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "99a07a978469501290b2c90d8038ceb6e46d0f3db452d845da3c71517734e39b"
+    },
+    {
+      "id": "V046",
+      "key": "defense_12_rest1",
+      "text": "앞쪽 길은 비어 있어요. 표지부터 새로 붙일게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "6e89bf82bfc9c55f6ecf7b560a1a50f2d5ce817ded7d99dc7217a8dd79e62d63"
+    },
+    {
+      "id": "V047",
+      "key": "defense_12_rest2",
+      "text": "지도에 없는 분기점이에요. 무리해서 들어가지 않고 이쪽에서 확인할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ec110aa7a9212ba585e93d26b864261202525c404de1d454327faaec84aeb54b"
+    },
+    {
+      "id": "V048",
+      "key": "defense_12_outro",
+      "text": "새 지도를 받았어요. 오래된 곳일수록 아는 척하지 말고 직접 확인해야 하네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a6771832e40146da0c836ccaea6564a65f778867ab49fa0e41e0e54735971f45"
+    },
+    {
+      "id": "V049",
+      "key": "defense_13_brief",
+      "text": "우회 통로의 반사판이 신호를 여러 갈래로 보내요. 하나씩 각도를 바꾸며 반응을 볼게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c75581e85a91bb3cdc889cc4df2b4311d48214a447f9062ba23428603469e48c"
+    },
+    {
+      "id": "V050",
+      "key": "defense_13_rest1",
+      "text": "첫 반사판을 바꿨어요. 반응이 약해지는 방향이 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "cc5a16f16723eeab519642d02ee3d010fb946da20708d7ad75ad71a9bcaf21cc"
+    },
+    {
+      "id": "V051",
+      "key": "defense_13_rest2",
+      "text": "두 번째도 같은 결과예요. 작은 수정이 길 전체를 바꾸고 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "fc3defcf67b09f528d5a67c441f7e32d401836b808c588dd02551849eeaf7064"
+    },
+    {
+      "id": "V052",
+      "key": "defense_13_outro",
+      "text": "반사판 위치를 표시해뒀어요. 다음번엔 처음부터 헤맬 필요가 없겠네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "b802bf5991b729a9502cf0f5837e884db03147e09867196a980af4e8b54ba41e"
+    },
+    {
+      "id": "V053",
+      "key": "defense_14_brief",
+      "text": "오늘은 안내등 하나만 남겨 흐름을 살펴봐요. 조용한 작전이니 편하게 움직여요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "b103984cac31563ea8b6b051578dae5ec7b0d4fc96247a6f4e15d5b9d23d8082"
+    },
+    {
+      "id": "V054",
+      "key": "defense_14_rest1",
+      "text": "신호 하나만 보니 흐름이 선명해요. 저도 화면을 덜 들여다보게 되네요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "808e23e5e645a35a3bd18e9c6370bc8f71a4697992f4f3ca306a38f311c58e4d"
+    },
+    {
+      "id": "V055",
+      "key": "defense_14_rest2",
+      "text": "반응은 약하지만 계속 이어져요. 마지막 연결점을 찾을 단서예요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a07f1ed118a72bf4e82d316fb7d8476009cac67af550f66f99dcbaf7341a2513"
+    },
+    {
+      "id": "V056",
+      "key": "defense_14_outro",
+      "text": "작게 남긴 불이 오히려 길을 보여줬네요. 오늘 기록은 짧지만 중요한 부분이 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "4859a5fff175a0f806226592cd9f764eb69a7ad556688a4f21a3f849fd9c6439"
+    },
+    {
+      "id": "V057",
+      "key": "defense_15_brief",
+      "text": "원인을 찾았어요. 오래된 귀환 안내 장치가 반사판을 거쳐 침입 통로까지 신호를 보내고 있었어요. 이제 방향을 바꿀게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "493fc221af9c5d5d95a39296eec5c5da21fd684e27f93738f4adbbd71c2b45bb"
+    },
+    {
+      "id": "V058",
+      "key": "defense_15_rest1",
+      "text": "안내 장치는 원래 사람을 안전한 쪽으로 부르는 설비였어요. 고장 난 연결 때문에 뜻이 뒤집힌 거예요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7a291e2c1234bacf54503461728e1e4f5fca951022a200a0cc1d91d106c35dd3"
+    },
+    {
+      "id": "V059",
+      "key": "defense_15_rest2",
+      "text": "첫 방향 전환 성공이에요. 길을 막는 대신 잘못된 초대를 거두고 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "2805150465a087ecc078ab87c5f358e2d32b3f099845eb5cf02c3cf4399b8e15"
+    },
+    {
+      "id": "V060",
+      "key": "defense_15_outro",
+      "text": "오늘은 정말 한 걸음 나아갔어요. 기념으로 매운 음식을 시켰는데, 매운맛 단계는 한 걸음 덜 나아갈걸 그랬어요.",
+      "status": "delivery",
+      "note": "목소리는 좋은데 말하는게 너무 어색해요",
+      "sha256": "b3a8f5be6ccd39a99dab888a46d5c9bf011a8a9fa2e462cb389143b73323c8a2"
+    },
+    {
+      "id": "V061",
+      "key": "defense_16_brief",
+      "text": "바뀐 안내 신호에 개체들이 적응하는 동안 방어선을 유지해요. 익숙한 통로부터 시작할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a4e533eac588130aa4bbaa15f8ecb5c4649d0be6ec90232494dd8dfa56c83cd1"
+    },
+    {
+      "id": "V062",
+      "key": "defense_16_rest1",
+      "text": "이전 방향으로 몰리던 반응이 줄었어요. 다음 구역을 준비할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "8a220a58e429e42b82f175517ac5753cd247cb6edd6e2532df09d795d93708e5"
+    },
+    {
+      "id": "V063",
+      "key": "defense_16_rest2",
+      "text": "새 신호가 자리 잡고 있어요. 지금처럼 차분하게 이어가면 돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "e418cee407ec1cfddc425048159e4841ffd70a1a22ddb430fa93bddcbb236074"
+    },
+    {
+      "id": "V064",
+      "key": "defense_16_outro",
+      "text": "정비팀이 새 방향표를 달았어요. 지부 안에서 길을 묻는 일이 조금 줄겠네요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "fa54c884f77a722c9ca2526b94b5c137345605d1e7c398a67cced6436ae4a3bf"
+    },
+    {
+      "id": "V065",
+      "key": "defense_17_brief",
+      "text": "격리된 개체들을 비어 있는 외곽 통로로 유도해요. 지원팀이 안전한 쪽에서 장치를 옮길 거예요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "8c4771d0fb9d0edfb61794bab5b4442f5e56f196e88cb4b4e86c0cc21fe9aac3"
+    },
+    {
+      "id": "V066",
+      "key": "defense_17_rest1",
+      "text": "지원팀 위치 확인했어요. 개체들과 동선이 겹치지 않아요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "cae19e892a792dac3b0f061b8a66f1bb7d3feeda590324ac6901a97a2e90d712"
+    },
+    {
+      "id": "V067",
+      "key": "defense_17_rest2",
+      "text": "빈 통로로 반응이 옮겨가요. 방어선도 한 칸 뒤로 물릴 수 있겠어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "bcde4065b1b53c2a5737fbc3eb921a85142b1cccb11e2d28d0296f66ae1116c5"
+    },
+    {
+      "id": "V068",
+      "key": "defense_17_outro",
+      "text": "무작정 밀어내지 않아도 길을 정리할 수 있네요. 오늘은 문을 덜 세게 닫았어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "916e3306561f462696aed52dba55f59e608d82896f8ce404df8da82380300e27"
+    },
+    {
+      "id": "V069",
+      "key": "defense_18_brief",
+      "text": "새 장치의 출력이 조금 흔들려요. 오늘은 느린 동작과 회복으로 고르게 맞춰봐요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "627266fdd2b9e3b17061e0157c4daac0232ec0502564f14fc1680f4eb28a033d"
+    },
+    {
+      "id": "V070",
+      "key": "defense_18_rest1",
+      "text": "출력 변화가 작아졌어요. 쉬는 동안도 안정화 장치는 계속 일해요.",
+      "status": "delivery",
+      "note": "소리 맨 마지막에  계속 일해요. 까지 잘 나오고 마지막에 0.1초정도 이상한 소리가 들어가있어요",
+      "sha256": "4357b63c91157fb62c9c7f2e81f75c4774bdc75c68b6f9895c0509091a71fab0"
+    },
+    {
+      "id": "V071",
+      "key": "defense_18_rest2",
+      "text": "마지막 조정만 남았어요. 더 빠르게 할 필요는 없어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "2877167e5ae357c60d44ecd804c9a2d2e82b70cef5440a28bc022f65a19504a6"
+    },
+    {
+      "id": "V072",
+      "key": "defense_18_outro",
+      "text": "이제 안내등이 깜빡이지 않아요. 조용히 켜져 있으니 눈도 편하네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "654d8fb7c83db7404f728784bf9f95ea88afe07f1f583faed006b8da0726f01a"
+    },
+    {
+      "id": "V073",
+      "key": "defense_19_brief",
+      "text": "비워둔 외곽 통로에 반응이 모였어요. 안쪽으로 돌아오지 않게 구역 사이를 지켜주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "2608fb67e63eee0c82fa32ac6a900172712158c79f7edfdd81f3a182fdae3d9c"
+    },
+    {
+      "id": "V074",
+      "key": "defense_19_rest1",
+      "text": "첫 구역은 잠잠해졌어요. 순서대로 확인하고 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "596ded860f38feb716b446fad34170bb2c74b66bee863419da272d6c8478f4be"
+    },
+    {
+      "id": "V075",
+      "key": "defense_19_rest2",
+      "text": "반응들이 같은 연결점을 지나가요. 마지막 정비 위치를 좁혔어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "75bfbc0df29770542cf5ab2911085f3e73d520081160bf96f3100210b75811b8"
+    },
+    {
+      "id": "V076",
+      "key": "defense_19_outro",
+      "text": "외곽 통로 위치를 확정했어요. 이제 끝이 어디인지 보이기 시작하네요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "6e9817bd19aeeb87a901f366128471eec5104e05935102dfba516734aaeeffab"
+    },
+    {
+      "id": "V077",
+      "key": "defense_20_brief",
+      "text": "장치를 옮긴 정비팀이 복귀해요. 오늘 마지막 목표는 통로보다 돌아오는 사람들을 확인하는 거예요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "5ca9cf0a04ba9ec37fc64da11a2b0344bd32fec3d72ee9ed9f3e2cbd0f2293da"
+    },
+    {
+      "id": "V078",
+      "key": "defense_20_rest1",
+      "text": "첫 팀 귀환 확인했어요. 다음 팀도 가까이 와 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "e5b4d5c135535e60c80b0465832ee98991233caa7852c781c2038c40554cae04"
+    },
+    {
+      "id": "V079",
+      "key": "defense_20_rest2",
+      "text": "전원 확인됐어요. 남은 건 문을 닫고 천천히 정리하는 일이에요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "77226204a195e244a0d997489e7a423c64aeed441f48437a9f96e63b232659b6"
+    },
+    {
+      "id": "V080",
+      "key": "defense_20_outro",
+      "text": "모두 돌아왔어요. 냉장고가 비어서 저는 장을 보러 가요. 편한 옷에 안경까지 썼으니, 오늘은 지나쳐도 못 알아보실걸요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "9771e241d540e391a7b0b4ef07d0f91931beb1962efd5be21cce3972c11c3470"
+    },
+    {
+      "id": "V081",
+      "key": "defense_21_brief",
+      "text": "안내 신호를 바꾸기 전에 들어온 반응이 아직 남아 있어요. 새 침입은 아니니 남은 구역을 순서대로 처리해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "289eeb17c2740027ec9340051c9a9dfe696af41b36469ae7712d026224dfbc7a"
+    },
+    {
+      "id": "V082",
+      "key": "defense_21_rest1",
+      "text": "남은 반응 수가 줄고 있어요. 첫 구역은 다시 열지 않아도 돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "a62212c89468e45a8262c624134727a15b1fa6e5e768d48271cb296f88ba9ea9"
+    },
+    {
+      "id": "V083",
+      "key": "defense_21_rest2",
+      "text": "다음 구역으로 연결됐어요. 끝을 서두르기보다 확인을 이어갈게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "b19b36c8258085fe6640961d869ce5a6899992cbe75910797f94a59b19fc1b1b"
+    },
+    {
+      "id": "V084",
+      "key": "defense_21_outro",
+      "text": "늦게 도착한 반응까지 기록했어요. 정리할 목록이 이제 한 장 안에 들어오네요.",
+      "status": "voice",
+      "note": "00:03부터 달라짐",
+      "sha256": "7e8bb95fee7c4c817358119daa6785d546d9f8a5cdad8d4b1d969a0cd791ef9f"
+    },
+    {
+      "id": "V085",
+      "key": "defense_22_brief",
+      "text": "사용을 끝낸 장치의 전력을 지부로 돌려요. 전원이 바뀌는 동안 격리벽을 유지해주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "4cec94b9b486bf8f57b08b6309a10e94b41a5b4f1c6f33fcb470d3ed1eb075ec"
+    },
+    {
+      "id": "V086",
+      "key": "defense_22_rest1",
+      "text": "휴게실 조명이 돌아왔어요. 아직은 절반만 켜둘게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "acc8c99be316d2eb049bd21bdec359cb9e8331d8c642ae98db1178d34411675f"
+    },
+    {
+      "id": "V087",
+      "key": "defense_22_rest2",
+      "text": "통로 전력도 돌아왔어요. 필요한 곳부터 차례로 밝아지고 있어요.",
+      "status": "delivery",
+      "note": "이 음성도 밝아지고 있어요. 다음 0.1초정도 잡읍이 섞였어요",
+      "sha256": "a28aece46faaa1441555405cd8db4c55e11ece7757d63f406b2cf3b15561b775"
+    },
+    {
+      "id": "V088",
+      "key": "defense_22_outro",
+      "text": "휴게실 전기포트가 다시 켜졌어요. 의외로 이 소리가 제일 반갑네요.",
+      "status": "voice",
+      "note": "00:02부터 달라짐",
+      "sha256": "8fbcfc5f8e0b14ef828296f2d75c1d55040336d80b50ff1b6f2ffdd80af95983"
+    },
+    {
+      "id": "V089",
+      "key": "defense_23_brief",
+      "text": "오늘은 이미 확보한 구역을 점검해요. 반응이 약한 날에는 몸도 가볍게 움직여요.",
+      "status": "voice",
+      "note": "00:02부터 달라짐",
+      "sha256": "aa332e561a5069c03e622de925519d52dd0dd7df59012f9c8d568e07cd872b84"
+    },
+    {
+      "id": "V090",
+      "key": "defense_23_rest1",
+      "text": "첫 점검 끝났어요. 물 마시고 호흡을 편하게 해주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "2ce13c6bfeb6069097b244ab74b3c730bb90219e2507c2fee62f088bae6a9b3e"
+    },
+    {
+      "id": "V091",
+      "key": "defense_23_rest2",
+      "text": "안정 상태가 유지돼요. 오늘은 이걸 확인하는 것만으로 충분해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "06f2e4e0db1c5423493da555e4430ad39b1b71a5778aaa74111a2e6dbafcc036"
+    },
+    {
+      "id": "V092",
+      "key": "defense_23_outro",
+      "text": "점검표에 모두 정상이라고 썼어요. 처음엔 당연하던 말이 이제 좀 다르게 보이네요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "1ad88d022d2346429e6fe036edc66de148b3f28ac7c63bd3e75449e914e23f82"
+    },
+    {
+      "id": "V093",
+      "key": "defense_24_brief",
+      "text": "마지막 정비팀이 연결점에 도착했어요. 돌아올 길을 확보하며 새 안내 장치를 시험해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "abbf49c45a5dc4103091a7b7a9608bbba7197da2cd6bfba2a3cb0c51bc219610"
+    },
+    {
+      "id": "V094",
+      "key": "defense_24_rest1",
+      "text": "시험 신호가 계획한 방향으로 나가요. 안쪽으로 되돌아오지 않아요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "b662e502d764fa02b42114a54a828d3bb5b9f2003802791816edfeeb00aa2437"
+    },
+    {
+      "id": "V095",
+      "key": "defense_24_rest2",
+      "text": "정비팀이 장치를 고정했어요. 복귀 신호까지 확인할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "6b8f7fe2f8256376a0eab9311e223612bed1e559c41ed7f3ed40f91add2b63cb"
+    },
+    {
+      "id": "V096",
+      "key": "defense_24_outro",
+      "text": "장치 설치 완료예요. 이제 낡은 연결을 차단할 준비가 됐어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "9575aa5c994d0a1cc8c0c13c7539d8150b8b19b184b008b8b252aa4b5474b80d"
+    },
+    {
+      "id": "V097",
+      "key": "defense_25_brief",
+      "text": "마지막 차단 전에 예비 전원과 격리벽을 점검해요. 다음 작전에서 쓸 여유를 오늘 만들어두는 거예요.",
+      "status": "voice",
+      "note": "00:04부터 달라짐",
+      "sha256": "a56386706a608b5065a65dba165de495ef0bf6b866436da271077f5d36a71248"
+    },
+    {
+      "id": "V098",
+      "key": "defense_25_rest1",
+      "text": "예비 전원 확인했어요. 하나가 쉬어도 다른 쪽이 버틸 수 있어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "a225efda5c255123a0b4490dd4ebb9c4e2bdc414c35e80f8b416936025bc82b2"
+    },
+    {
+      "id": "V099",
+      "key": "defense_25_rest2",
+      "text": "차단 순서까지 확인했어요. 남은 작전도 익숙한 리듬으로 진행할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ebd3013d1dd000c5403a556d66dfda3cf57d558a9a9082d61873ed28cf6e5ff7"
+    },
+    {
+      "id": "V100",
+      "key": "defense_25_outro",
+      "text": "내일 할 일을 적었어요. 거창한 건 없고, 치약 사기요. 아침에 다 쓴 걸 세 번이나 눌러봤거든요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "3b4af033c93a2b5a9026b7eabdc7a8ae45a8d415cb58d7e9bd27fbfc2011641e"
+    },
+    {
+      "id": "V101",
+      "key": "defense_26_brief",
+      "text": "남은 연결 통로 하나를 지켜요. 확보한 다른 구역은 안정적이니 여기만 차근차근 보면 돼요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "9a4349c653db7c7778de976aa7ca16b798e17d3700b526ef554fa243fa32d69d"
+    },
+    {
+      "id": "V102",
+      "key": "defense_26_rest1",
+      "text": "한쪽 문은 차단했어요. 반응이 갈 곳을 잃지 않게 순서를 지킬게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "10b94eeaafc2451f42c15058c17e28c52c12d13d407a4a28482f05b21f2a5a0f"
+    },
+    {
+      "id": "V103",
+      "key": "defense_26_rest2",
+      "text": "외곽 유도등이 켜졌어요. 마지막 반응도 그쪽으로 움직이고 있어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "194bc14414e51cc7deea62122062dbcc3eae697b90875cacc1b5e7676021642e"
+    },
+    {
+      "id": "V104",
+      "key": "defense_26_outro",
+      "text": "남은 구역을 지도에 작게 표시했어요. 처음의 빨간 표시들보다 훨씬 작아졌네요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "a29ac04db6cc7d79b094c3387ea5ddac5e494f8f05775582f67c927d72c1e1c7"
+    },
+    {
+      "id": "V105",
+      "key": "defense_27_brief",
+      "text": "새 장치와 기존 격리벽을 연결해요. 서로 같은 순간에 전환되는지 확인할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "0891da1c08bc2d6d0a8b9b48029c9837bb83700ca86055f54bbe03d667186fc0"
+    },
+    {
+      "id": "V106",
+      "key": "defense_27_rest1",
+      "text": "첫 연결은 맞았어요. 쉬는 동안 기록을 비교할게요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "b5a518179e837767ff8a0d77052a96ac149a4a24ecba686aa89213197dac52a4"
+    },
+    {
+      "id": "V107",
+      "key": "defense_27_rest2",
+      "text": "마지막 연결도 맞물렸어요. 지금까지 고친 곳들이 함께 움직여요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "d8e2a574244fbb086d7e9096d03478413f845b25d49d814ba689d7120bef5490"
+    },
+    {
+      "id": "V108",
+      "key": "defense_27_outro",
+      "text": "혼자 잘 도는 장치보다 같이 맞는 장치가 필요했네요. 오늘 그걸 확인했어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "0aa73e63d22c8459b9d9a711b8dfe8fe9f3196ea4ed040efc04ae0b080d22c7a"
+    },
+    {
+      "id": "V109",
+      "key": "defense_28_brief",
+      "text": "최종 차단 전 안정 상태를 확인해요. 오늘은 힘을 아끼며 작은 움직임으로 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "15c5e152d08e2087d29853aec6a31f7daf88a3fbc9c15d46a70152eb1e9fa019"
+    },
+    {
+      "id": "V110",
+      "key": "defense_28_rest1",
+      "text": "출력은 고르게 유지돼요. 편안하게 숨을 고르세요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "7dffe8aa18ca265ff3dcec920d01b706eeff7bb91e3530261d226c37bbab0c2d"
+    },
+    {
+      "id": "V111",
+      "key": "defense_28_rest2",
+      "text": "예비 장치도 정상이에요. 다음 작전에서 쓸 준비가 모두 됐어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "751e5f750277b2474173c73896bcfe2b4fc7e8525040e06496a8da62fbeaad90"
+    },
+    {
+      "id": "V112",
+      "key": "defense_28_outro",
+      "text": "조용하다고 불안해하지 않기로 했어요. 우리가 만들어온 조용함이니까요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "054038ba017141c257c8fd5a1a3be112e394a1dd2e766ce8d0884477faa1f0b3"
+    },
+    {
+      "id": "V113",
+      "key": "defense_29_brief",
+      "text": "마지막 현장 확인을 마친 지원팀이 돌아와요. 비울 곳은 비우고 필요한 불만 남길게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "2d70bae56be819e21f9aecc2d2e1453420f5be6a547be5703e47c38279083012"
+    },
+    {
+      "id": "V114",
+      "key": "defense_29_rest1",
+      "text": "지원팀 한 조가 돌아왔어요. 남은 조도 통로 끝에 보여요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "00eb8de1298bb970afa15ee8dade03d755020a2ed346de8421b82d5a2c600622"
+    },
+    {
+      "id": "V115",
+      "key": "defense_29_rest2",
+      "text": "현장 인원 전원 복귀했어요. 이제 원격 차단만 남았어요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "f00dcd15e5e211cd7f2600707c1976fa25a0682e0fe109300b70d7b0e0c5bdd5"
+    },
+    {
+      "id": "V116",
+      "key": "defense_29_outro",
+      "text": "다음 작전이 마지막이에요. 특별히 더 무리할 건 없어요. 오늘까지 해온 걸 함께 마무리하면 돼요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "cb9322ff64d2b43ee8c5865ca9c4ae4a1d53c8e921c39b491de994bc1501b1d1"
+    },
+    {
+      "id": "V117",
+      "key": "defense_30_brief",
+      "text": "마지막 차단을 시작해요. 새 안내등은 제자리를 찾았고, 사람들은 모두 돌아왔어요. 익숙한 움직임으로 끝까지 함께해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c9350ebb65e2591a0cb34389dc7b0f6dbc87f0efcb577b0fa16c9519e13a52a9"
+    },
+    {
+      "id": "V118",
+      "key": "defense_30_rest1",
+      "text": "첫 연결 차단 완료예요. 지부 안쪽으로 돌아오는 반응은 없어요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "65ce0ed07f6d7ee8e79626afad1187daf346cf43f93890eb640e72fac796b2c3"
+    },
+    {
+      "id": "V119",
+      "key": "defense_30_rest2",
+      "text": "마지막 격리벽 확인했어요. 남은 건 천천히 출력을 내리고 문을 닫는 일이에요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "3dbd33de649b0408fb5ab22c68aa429dc9bceea87ed99f400119415a32daf5bf"
+    },
+    {
+      "id": "V120",
+      "key": "defense_30_outro",
+      "text": "작전 종료예요. 서른 번, 함께 지켜냈네요. 지부 불은 이제 당직팀에 맡겨둘게요. 오늘은 저도 천천히 걸어서 저녁 먹으러 갈래요. 정말 수고하셨어요.",
+      "status": "voice",
+      "note": "00:08부터 달라짐",
+      "sha256": "2ea39ee17729178c7fd2657940f57051a05923798a3a1e87bd7d00b381c6914a"
+    },
+    {
+      "id": "V121",
+      "key": "defense_move_march_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 제자리 걷기예요. 시작 안내 후 20초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "fb2229863440d30c959ebf03cd53154cc38b66d89cbb56e16fab896b217fb7f3"
+    },
+    {
+      "id": "V122",
+      "key": "defense_move_march_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 제자리 걷기예요. 시작 안내 후 30초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "6b752f59067f1f5c849358e9d60ab5f637ff1f1ed949af4e4a137c01d775a077"
+    },
+    {
+      "id": "V123",
+      "key": "defense_move_march_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 제자리 걷기예요. 시작 안내 후 40초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7fbe994d1b8f2b1b6c20a2d6f6cd17a2a008362af0576a5938c852028958c5b9"
+    },
+    {
+      "id": "V124",
+      "key": "defense_move_step_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 20초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ce2e70eb03a0c9af4e7ff0ff977a7c542f9ba56a513260c40692cc53e7ab4f6a"
+    },
+    {
+      "id": "V125",
+      "key": "defense_move_step_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 30초 진행해요.",
+      "status": "delivery",
+      "note": "시작 안내 후 30초 진행해요.",
+      "sha256": "c924317daef8927ea8bdcde67efe46bebb5b09d95584045b10ed81d6596855fa"
+    },
+    {
+      "id": "V126",
+      "key": "defense_move_step_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 40초 진행해요.",
+      "status": "delivery",
+      "note": "통로를 지킬 다음 동작은 좌우 스텝이에요. 시작 안내 후 40초 진행해요.",
+      "sha256": "261ce9c411b8b715c0ced2160aa1bbf91980b3463c98d00165b3ee58e808aa2c"
+    },
+    {
+      "id": "V127",
+      "key": "defense_move_knee_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 무릎 번갈아 올리기예요. 시작 안내 후 20초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "0043e795283449886c1322f115f8fa26885c8a29a531a22fbdf8686d55cc530c"
+    },
+    {
+      "id": "V128",
+      "key": "defense_move_knee_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 무릎 번갈아 올리기예요. 시작 안내 후 30초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "7e5c8c604514edaddc48faff29e5dc1d66fcf5b41c5b28313c71e16083e29fd7"
+    },
+    {
+      "id": "V129",
+      "key": "defense_move_knee_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 무릎 번갈아 올리기예요. 시작 안내 후 40초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "1bbc357e2be0ac09b69c0559af09d4ac37247c544bef4a08a4a9ce8690432387"
+    },
+    {
+      "id": "V130",
+      "key": "defense_move_squat_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 20초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "97f989a2ed7d427ce036bb0a4e33d6d999f7d77f18788f05bd8adeb2a4bcfba3"
+    },
+    {
+      "id": "V131",
+      "key": "defense_move_squat_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 30초 진행해요.",
+      "status": "voice",
+      "note": "통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 30초 진행해요",
+      "sha256": "1212fa083b56ff7727c0a567daf13dfdb787172d433f09d467d5ffaf9d7ae54c"
+    },
+    {
+      "id": "V132",
+      "key": "defense_move_squat_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 스쿼트예요. 시작 안내 후 40초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c6f08d53cee79ff090f58650f34e3391480aab691493e08e190a38f5627a9bc9"
+    },
+    {
+      "id": "V133",
+      "key": "defense_move_wallPush_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 벽 푸시업이에요. 시작 안내 후 20초 진행해요.",
+      "status": "delivery",
+      "note": "시작 안내 후 20초 진행해요.",
+      "sha256": "44dca895782307ed8e9b4a00b4f111d72dcf96c820dde1b3e58c32fa87c11240"
+    },
+    {
+      "id": "V134",
+      "key": "defense_move_wallPush_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 벽 푸시업이에요. 시작 안내 후 30초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "bc57da4ddd47b0e396db4045f6160a8932f061ff94603215b19e60812eacc388"
+    },
+    {
+      "id": "V135",
+      "key": "defense_move_wallPush_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 벽 푸시업이에요. 시작 안내 후 40초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "dc83e7aea04425fe4e41d6a846ade8c6ee7925dce037563388b30935139b0184"
+    },
+    {
+      "id": "V136",
+      "key": "defense_move_heel_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 뒤꿈치 들기예요. 시작 안내 후 20초 진행해요.",
+      "status": "voice",
+      "note": "",
+      "sha256": "21bc128dbecd51965930f1824ef46665e733b7443561ce3be58a1b1f9385d0b9"
+    },
+    {
+      "id": "V137",
+      "key": "defense_move_heel_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 뒤꿈치 들기예요. 시작 안내 후 30초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ffc07f72fd177b1bc706aba2fe6364da4614a0d08f49923b3f99e11efc60e668"
+    },
+    {
+      "id": "V138",
+      "key": "defense_move_heel_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 뒤꿈치 들기예요. 시작 안내 후 40초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "fc7ffb2fd999c1746481dfc1163b024a4dc701a928308877d045d12a48b487c0"
+    },
+    {
+      "id": "V139",
+      "key": "defense_move_boxing_light",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 가벼운 섀도복싱이에요. 시작 안내 후 20초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ba25b528807564f45daebe1b00acb1dee3c3e362926a8e642ff8c77c8cafa2f3"
+    },
+    {
+      "id": "V140",
+      "key": "defense_move_boxing_standard",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 가벼운 섀도복싱이에요. 시작 안내 후 30초 진행해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "cc1aefadf908011309fde64aaaf15956cf6f05d41afe8369c6b7ed5064bc419f"
+    },
+    {
+      "id": "V141",
+      "key": "defense_move_boxing_challenge",
+      "text": "잠깐 쉬어요. 통로를 지킬 다음 동작은 가벼운 섀도복싱이에요. 시작 안내 후 40초 진행해요.",
+      "status": "delivery",
+      "note": "시작 안내 후 40초 진행해요.",
+      "sha256": "2a68e2df81e090860d7d2a38462773d2a37325f0fd69b32672a7251b29a6eaf7"
+    },
+    {
+      "id": "V142",
+      "key": "defense_go",
+      "text": "지금부터 시작해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "39a932d8b65efe20871ce08e48de02f3c2bd1ca33894fd56cc7530c224037f9c"
+    },
+    {
+      "id": "V143",
+      "key": "defense_rest",
+      "text": "잘하셨어요. 잠깐 쉬면서 다음 동작을 준비해요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "1e0a60b2dd078cc8c83d2bb2caa32186495b258838ae27f3c1f4b2601fc89a9e"
+    },
+    {
+      "id": "V144",
+      "key": "defense_warm",
+      "text": "편하게 제자리에서 걸으며 몸을 풀어요. 어깨에 힘을 빼고 천천히 시작할게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "aa01bc1e9fd274f172290c1a634983700822b1a995b2bb009ae691a5f001ca0a"
+    },
+    {
+      "id": "V145",
+      "key": "defense_warm_step",
+      "text": "이번에는 작게 좌우로 걸어요. 아직 준비 운동이니 가볍게 움직여주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "2e275d2e7ef1b2e4dc937a5c0d7967482da5179971e19cf3f690b88646768f0e"
+    },
+    {
+      "id": "V146",
+      "key": "defense_warm_heel",
+      "text": "벽을 짚고 뒤꿈치를 천천히 들었다 내려요. 무리하지 말고 작게 움직여요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "5394cb767dbfb2c36cffcee549760ef236ef3edee5553b75ecf0b269f75f28c6"
+    },
+    {
+      "id": "V147",
+      "key": "defense_warm_last",
+      "text": "다시 편하게 걸어요. 곧 첫 통로를 확인할게요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "fbcc7ee2ce3975ffc6150b1b21774bbf77e0d8720e5b2e7b7a9221f3edd67db0"
+    },
+    {
+      "id": "V148",
+      "key": "defense_cool",
+      "text": "이제 천천히 걸으며 호흡을 정리해요. 수고한 몸에 힘을 조금씩 풀어주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "88138d789f97f1af82516d057134680bc829283bfc69676b48c86be7aa7f13d4"
+    },
+    {
+      "id": "V149",
+      "key": "defense_cool_last",
+      "text": "호흡이 편해질 때까지 천천히 움직여요. 더 쉬고 싶으면 충분히 쉬어도 좋아요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "e7a1537417292a1f910fbfd2472f22a5fa23461b47b4da22f3056c0e398e135e"
+    },
+    {
+      "id": "V150",
+      "key": "defense_done",
+      "text": "오늘 작전을 마쳤어요. 수고하셨어요. 준비되면 귀환 보고를 확인해주세요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "ec12fb2adaa8561cddaefb263760e49fba22c67cbe7a7db4f48f11dc98f94cf8"
+    },
+    {
+      "id": "V151",
+      "key": "defense_resume",
+      "text": "다음 안내 전까지 편하게 제자리에서 걸어요. 남은 구간부터 이어갈게요.",
+      "status": "ok",
+      "note": "",
+      "sha256": "c17495a56561f75d949f5023b2b37e96787e8c15545ec00c770d06b0cc1b0d60"
+    }
+  ]
+}
