@@ -47,4 +47,9 @@ for name in assets:
     w,h = struct.unpack('>II', content[16:24])
     assert w >= 768 and h >= 1024, (name,w,h)
     total_images += len(content)
-print(f'Validated 30 episodes, 151 voice mappings/PCM/hashes/timing and 9 image references. Audio {total_audio/1024**2:.1f} MiB, art {total_images/1024**2:.1f} MiB. Subjective media approval is still required.')
+approval = read('docs/indoor-defense/reviews/2026-10-07-final-approval.json')
+assert approval['voices'] == {c['key']: c['sha256'] for c in manifest['clips']}
+assert set(approval['images']) == set(assets)
+for image in approval['images'].values():
+    assert hashlib.sha256((root/image['file']).read_bytes()).hexdigest() == image['sha256']
+print(f'Validated 30 episodes, 151 voice mappings/PCM/hashes/timing and 9 images matching explicit user approval. Audio {total_audio/1024**2:.1f} MiB, art {total_images/1024**2:.1f} MiB.')
