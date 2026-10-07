@@ -1,0 +1,45 @@
+{
+  "version": "1.7.0",
+  "build": "57",
+  "bundle": "com.hunterrun.demo",
+  "bytes": 307333744,
+  "sha256": "87d104f7140ec9e54d7f285593dda60f7c79a38bbbffe2342fc8d7d3fa0e6b33",
+  "verifiedVoices": {
+    "operator-voice.json": 177,
+    "character-audio.json": 39,
+    "defense-voice.json": 151
+  },
+  "verifiedDefenseAssets": 9,
+  "verifiedLifeAssets": 16,
+  "simulatorFixturesExcluded": true,
+  "bundledGameDataMatchesSource": true,
+  "date": "2026-10-07",
+  "sourceCommit": "49bd8fba2da1c268ba72cec838f3f4e24e716bdd",
+  "buildURL": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ac6039222339b6d56c7fa9f",
+  "portableTestsPassed": 226,
+  "uiTests": {
+    "large": {
+      "passed": 5,
+      "failures": 0,
+      "cases": [
+        "-[HunterRunUITests.HomeLayoutTests testHomeFitsScreen]",
+        "-[HunterRunUITests.IndoorLayoutTests testFinalReportAndSeparateBehindIllustration]",
+        "-[HunterRunUITests.IndoorLayoutTests testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration]",
+        "-[HunterRunUITests.IndoorLayoutTests testPauseAndBackgroundKeepClockStopped]",
+        "-[HunterRunUITests.IndoorLayoutTests testRunningSessionPausesOnBackgroundAndSurvivesRelaunch]"
+      ]
+    },
+    "compact": {
+      "passed": 5,
+      "failures": 0,
+      "cases": [
+        "-[HunterRunUITests.HomeLayoutTests testHomeFitsScreen]",
+        "-[HunterRunUITests.IndoorLayoutTests testFinalReportAndSeparateBehindIllustration]",
+        "-[HunterRunUITests.IndoorLayoutTests testIndoorPreparationDoesNotOfferGPSDistanceOrAcceleration]",
+        "-[HunterRunUITests.IndoorLayoutTests testPauseAndBackgroundKeepClockStopped]",
+        "-[HunterRunUITests.IndoorLayoutTests testRunningSessionPausesOnBackgroundAndSurvivesRelaunch]"
+      ]
+    }
+  },
+  "physicalDeviceExerciseVerified": false
+}
