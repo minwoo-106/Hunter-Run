@@ -345,7 +345,7 @@ private struct DefenseArtView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     Image(behind ? (illustration.behind ?? illustration.asset) : illustration.asset).resizable().scaledToFit()
-                    Text(behind ? "“으아앙! 나 오늘 휴가인데!” 느긋한 외출이 한순간에 전력 질주로 바뀌었다." : illustration.caption).padding(.horizontal, 20).lineSpacing(5)
+                    Text(behind ? "“으아앙! 왜 나만 따라와! 나 오늘 휴가인데!”\n예쁘게 입고 나와서 눈물 콧물 다 빼는 중. 조금 더 걷겠다고 했지, 뛰겠다고는 안 했는데…!" : illustration.caption).padding(.horizontal, 20).lineSpacing(5)
                     if illustration.behind != nil {
                         Button(behind ? "메인 일러스트" : "비하인드") { behind.toggle() }.buttonStyle(GameButtonStyle()).padding(.horizontal, 20).accessibilityIdentifier("defense.behind")
                     }

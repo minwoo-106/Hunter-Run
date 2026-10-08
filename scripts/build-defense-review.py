@@ -88,7 +88,7 @@ page=r'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="
 const $=s=>document.querySelector(s);
 function card(id,title,caption,asset){const wrap=document.createElement('article');wrap.className='card art';const img=document.createElement('img');img.src='images/'+asset+'.png';img.alt=id+' '+title;img.loading='lazy';const text=document.createElement('div');text.className='text';const h=document.createElement('h3');h.textContent=id+' · '+title;const p=document.createElement('p');p.className='muted';p.textContent=caption;text.append(h,p);wrap.append(img,text);return wrap;}
 for(const a of DATA.catalog.illustrations){$('#'+(a.episode<=10?'firstArt':'laterArt')).append(card('I'+String(a.episode).padStart(2,'0'),a.title,a.caption,a.asset));}
-$('#laterArt').append(card('I30-B','나 오늘 휴가인데! · 채택','“으아앙! 나 오늘 휴가인데!” 느긋한 외출이 한순간에 전력 질주로 바뀌었다.','DefenseReward30Behind'));
+$('#laterArt').append(card('I30-B','나 오늘 휴가인데! · 채택','“으아앙! 왜 나만 따라와! 나 오늘 휴가인데!”\n예쁘게 입고 나와서 눈물 콧물 다 빼는 중. 조금 더 걷겠다고 했지, 뛰겠다고는 안 했는데…!','DefenseReward30Behind'));
 $('#background').append(card('B01','습격받은 지부 앞 도심','몬스터 습격으로 파손된 건물과 도로, 잔해 사이에 세운 임시 방어선. 새 배경 검토본.','DefenseAnnex'));
 for(let n=2;n<=30;n++){const o=document.createElement('option');o.value=String(n);o.textContent=n+'회차'+([5,10,15,20,25,30].includes(n)?' · 주요 이야기':'');$('#filter').append(o)}
 const all=document.createElement('option');all.value='all';all.textContent='전체 151개';$('#filter').append(all);
