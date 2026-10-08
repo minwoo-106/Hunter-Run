@@ -70,13 +70,16 @@ workflows:
         script: bash scripts/check-ios-layout.sh combat
       - name: Package unsigned IPA for personal signing
         script: |
+          set -euo pipefail
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
+          python3 scripts/verify-installer.py build/HunterRun-1.7.3-build60-unsigned.ipa --version 1.7.3 --build 60 --output build/HunterRun-1.7.3-build60-verification.json
       - name: Package season-one character voice previews
         script: python3 scripts/package-character-preview.py build
     artifacts:
       - build/HunterRun-*-install.zip
       - build/HunterRun-*-unsigned.ipa
       - build/HunterRun-*-manifest.json
+      - build/HunterRun-*-verification.json
       - build/HunterRun-*-voice-preview.zip
       - build/ui-review/*.png
       - build/ui-review/*.json
