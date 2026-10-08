@@ -1,0 +1,56 @@
+{
+  "version": "1.7.3",
+  "build": "60",
+  "bundle": "com.hunterrun.demo",
+  "bytes": 307302701,
+  "sha256": "f72fdf47aaa85a2a87ccb3fd267297469a9f67192313fdf8fb52afff49f1a6d1",
+  "verifiedVoices": {
+    "operator-voice.json": 177,
+    "character-audio.json": 39,
+    "defense-voice.json": 151
+  },
+  "verifiedDefenseAssets": 9,
+  "verifiedLifeAssets": 16,
+  "simulatorFixturesExcluded": true,
+  "bundledGameDataMatchesSource": true,
+  "file": "HunterRun-1.7.3-build60-unsigned.ipa",
+  "sourceCommit": "3ff18180b003c18898072611f7893c27439a593a",
+  "buildTag": "ios-build-1.7.3-build60",
+  "buildURL": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ac758032e8bb15cf39d8fe9",
+  "buildStatus": "finished",
+  "combatRulesVersion": 3,
+  "combatRulesSHA256": "ec60af31c09a38a28338b7e0b4b647cc6cc9e735206d3187006d9585f5447c5c",
+  "verifiedGameDataCount": 18,
+  "coreTests": 273,
+  "coreFailures": 0,
+  "debugReplayScenarios": 12,
+  "debugReplayFailures": 0,
+  "nativeUITests": 20,
+  "nativeUIFailures": 0,
+  "nativeUISimulators": [
+    {
+      "name": "iPhone 17 Pro",
+      "screenshotPixels": [
+        1206,
+        2622
+      ],
+      "tests": 10
+    },
+    {
+      "name": "HunterRunCompactQA",
+      "screenshotPixels": [
+        750,
+        1334
+      ],
+      "tests": 10
+    }
+  ],
+  "visualReview": "홈 화면, 승급 조건, 전투 HP·공격 누적, 걷기 보류, 일시정지 화면 확인",
+  "physicalDeviceTested": false,
+  "physicalChecksRemaining": [
+    "75m 공격 간격과 교전 길이 체감",
+    "음성 간격과 잠금 화면 안내",
+    "GPS 흔들림 및 실제 움직임 분류",
+    "실제 기기의 백그라운드·오디오·센서 흐름"
+  ]
+}
