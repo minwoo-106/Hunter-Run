@@ -31,7 +31,7 @@ workflows:
       - build/portrait-checks/*.png
       - build/life-metrics*.txt
   ios-demo:
-    name: Hunter Run 1.7.3 - combat and growth
+    name: Hunter Run 1.8.0 - cinematic transitions
     instance_type: mac_mini_m2
     max_build_duration: 45
     triggering:
@@ -67,12 +67,12 @@ workflows:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 || { cat build-log.txt; exit 1; }
       - name: Check home layout in iPhone simulator
-        script: bash scripts/check-ios-layout.sh combat
+        script: bash scripts/check-ios-layout.sh transitions
       - name: Package unsigned IPA for personal signing
         script: |
           set -euo pipefail
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
-          python3 scripts/verify-installer.py build/HunterRun-1.7.3-build60-unsigned.ipa --version 1.7.3 --build 60 --output build/HunterRun-1.7.3-build60-verification.json
+          python3 scripts/verify-installer.py build/HunterRun-1.8.0-build61-unsigned.ipa --version 1.8.0 --build 61 --output build/HunterRun-1.8.0-build61-verification.json
       - name: Package season-one character voice previews
         script: python3 scripts/package-character-preview.py build
     artifacts:

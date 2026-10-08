@@ -80,6 +80,14 @@ if [ "${1:-}" = "combat" ]; then
     -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
   )
 fi
+if [ "${1:-}" = "transitions" ]; then
+  UI_SCOPE=(
+    -only-testing:HunterRunUITests/TransitionReleaseTests
+    -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
+    -only-testing:HunterRunUITests/CombatReleaseUITests
+  )
+fi
 if [ "${1:-}" = "album" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/DefenseAlbumTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
 fi
@@ -115,7 +123,7 @@ xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
-if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ] && [ "${1:-}" != "operator-chat" ] && [ "${1:-}" != "progress-guidance" ] && [ "${1:-}" != "combat" ] && [ "${1:-}" != "album" ]; then
+if [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ] && [ "${1:-}" != "operator-chat" ] && [ "${1:-}" != "progress-guidance" ] && [ "${1:-}" != "combat" ] && [ "${1:-}" != "album" ] && [ "${1:-}" != "transitions" ]; then
 mkdir -p build/portrait-checks
 for expression in calm smile playful thoughtful worried relieved; do
   xcrun simctl launch --terminate-running-process "$DEVICE_ID" com.hunterrun.demo --ui-testing-portrait --expression "$expression" --time 0
@@ -185,6 +193,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   if [ "${1:-}" = "expedition-final" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "facilities" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "defense" ] || [ "${1:-}" = "progress-guidance" ] || [ "${1:-}" = "combat" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
+  if [ "${1:-}" = "transitions" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "album" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "operator-life" ] || [ "${1:-}" = "operator-chat" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   xcodebuild -project HunterRun.xcodeproj -scheme HunterRun -configuration Debug \
