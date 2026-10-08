@@ -15,7 +15,9 @@ import UniformTypeIdentifiers
     }
     @ViewBuilder private var content: some View {
 #if DEBUG && targetEnvironment(simulator)
-        if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing-transition-frame") {
+            TransitionFrameCheckView()
+        } else if ProcessInfo.processInfo.arguments.contains("--ui-testing-portrait") {
             OperatorVisualCheckView()
         } else { LaunchGateView().environment(\.operatorLifeReduceMotionOverride, ProcessInfo.processInfo.arguments.contains("--life-reduce-motion")) }
 #else
@@ -29,6 +31,7 @@ enum Theme {
     static let muted = Color(red: 0.64, green: 0.71, blue: 0.76)
 }
 struct RootView: View {
+    var launchCovered = false
     @EnvironmentObject var model: AppModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -37,7 +40,7 @@ struct RootView: View {
         ZStack {
             VStack(spacing: 0) {
                 TabView(selection: $model.selectedTab) {
-                    HomeView(transitionCovered: tabTransition != nil).toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
+                    HomeView(transitionCovered: launchCovered || tabTransition != nil).toolbar(.hidden, for: .tabBar).tag(0).tabItem { Label("홈", systemImage: "house") }
                     HunterView().toolbar(.hidden, for: .tabBar).tag(1).tabItem { Label("헌터", systemImage: "person.crop.circle") }
                     SetupView().toolbar(.hidden, for: .tabBar).tag(2).tabItem { Label("헌터 활동", systemImage: "figure.run") }
                     NavigationStack { AssociationView() }.toolbar(.hidden, for: .tabBar).tag(3).tabItem { Label("협회 관리", systemImage: "building.2") }
@@ -88,7 +91,11 @@ struct RootView: View {
     private func selectTab(_ destination: Int) {
         guard destination != model.selectedTab, tabTransition == nil else { return }
         model.interfaceFeedback()
-        if reduceMotion || ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-title") {
+        var skipAnimationForTesting = false
+#if DEBUG && targetEnvironment(simulator)
+        skipAnimationForTesting = ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-title") && !ProcessInfo.processInfo.arguments.contains("--ui-testing-transitions")
+#endif
+        if reduceMotion || skipAnimationForTesting {
             model.selectedTab = destination
             return
         }

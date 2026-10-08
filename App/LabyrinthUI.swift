@@ -160,6 +160,7 @@ struct DossierLink: View {
 struct LaunchGateView: View {
     @EnvironmentObject var model: AppModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
     @State private var entered = false
     @State private var entering = false
     @State private var showingPortal = true
@@ -173,7 +174,8 @@ struct LaunchGateView: View {
     }
     var body: some View {
         ZStack {
-            if entered || skip { RootView() }
+            if entered || skip { RootView(launchCovered: showingPortal && !skip)
+                .allowsHitTesting(!showingPortal || skip).accessibilityHidden(showingPortal && !skip) }
             if showingPortal && !skip {
                 GeometryReader { geo in
                     ZStack {
@@ -215,12 +217,14 @@ struct LaunchGateView: View {
                     .onTapGesture(perform: beginEntrance)
                 }
                 .ignoresSafeArea()
-                .opacity(entered ? 0 : 1)
                 .allowsHitTesting(!entering)
             }
         }
         .background(Theme.ink.ignoresSafeArea())
         .onAppear { model.refreshLobbyMusic() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active && entering { entered = true; showingPortal = false }
+        }
     }
 
     private func beginEntrance() {
@@ -229,10 +233,10 @@ struct LaunchGateView: View {
         guard !reduceMotion else { entered = true; showingPortal = false; return }
         entranceStartedAt = Date()
         entering = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
-            withAnimation(.easeOut(duration: 0.22)) { entered = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + LaunchPortalScene.duration * 0.60) {
+            entered = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.55) { showingPortal = false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + LaunchPortalScene.duration) { showingPortal = false }
     }
 }
 

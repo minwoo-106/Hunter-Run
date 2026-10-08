@@ -90,7 +90,7 @@ struct OutdoorSetupView: View {
                         Button("20분 의뢰 모의 활동 · 장기전 포함") { model.selectedBoss = nil; model.selectedMode = .contract; model.start(simulated: true, seconds: 1200, pursuit: true) }.accessibilityIdentifier("activity.mock.long")
                     }
                 }.padding(22)
-            }.labyrinthScreen().navigationTitle("헌터 활동").navigationBarTitleDisplayMode(.inline)
+            }.labyrinthScreen(artwork: "LaunchPortal").navigationTitle("헌터 활동").navigationBarTitleDisplayMode(.inline)
         }
         .onReceive(refresh) { _ in model.objectWillChange.send() }
         .onChange(of: model.selectedEnvironment) { _, value in if value.isIndoor && goalKind == .distance { goalKind = .time } }
