@@ -151,6 +151,10 @@ public struct RunEngine {
         }
         session.phase = session.activeSeconds < session.calibrationSeconds ? .calibrating : .moving
         if session.reachedGoal {
+            if session.event?.battle != nil, session.event?.stage != .briefing, stable,
+               session.combatBarrierTimestamp.map({ frame.timestamp - representedDistanceTime >= $0 - 1e-6 }) ?? true {
+                cues += advanceBattle(distance: distance, seconds: dt)
+            }
             end(); return cues + [.voice("run_end"), .checkpoint, .goalReached]
         }
         if session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
@@ -164,7 +168,10 @@ public struct RunEngine {
         }
 
         if var event = session.event {
-            if event.stage == .briefing { return cues }
+            if event.stage == .briefing {
+                if event.battle != nil { session.combatBarrierTimestamp = frame.timestamp }
+                return cues
+            }
             let requiresRunning = event.template.kind != .discovery
             if frame.signal != .good && requiresRunning && !safeMotion {
                 if event.battle != nil { session.combatBarrierTimestamp = frame.timestamp; return cues }
@@ -186,24 +193,13 @@ public struct RunEngine {
             if requiresRunning && !session.isIndoor && frame.movement != .running && !safeMotion {
                 session.combatBarrierTimestamp = frame.timestamp; return cues
             }
-            if var battle = event.battle {
+            if event.battle != nil {
                 guard stable, !session.isIndoor else {
                     session.combatBarrierTimestamp = frame.timestamp; return cues
                 }
                 if let barrier = session.combatBarrierTimestamp,
                    frame.timestamp - representedDistanceTime < barrier - 1e-6 { return cues }
-                let damage = battle.advance(distance: distance, attack: attack)
-                event.battle = battle; event.hp = battle.remainingHP
-                event.elapsed += dt; event.traveledDistance = (event.traveledDistance ?? 0) + distance
-                session.event = event
-                if battle.monster.persistent, var boss = session.boss {
-                    boss.damage += min(damage, boss.remainingHP); session.boss = boss
-                }
-                if battle.remainingHP == 0 {
-                    closeEvent(.success)
-                    cues += [.voice("success"), .checkpoint]
-                } else if damage > 0 { cues.append(.checkpoint) }
-                return cues
+                return cues + advanceBattle(distance: distance, seconds: dt)
             }
             if event.stage == .armed {
                 event.elapsed += dt
@@ -316,10 +312,26 @@ public struct RunEngine {
             }
             session.event = RunEvent(template: next, hp: next.hp, startingHP: next.hp, baseline: PaceLearning.effectiveBaseline(current: session.baseline, learned: session.learnedReference, fallback: frame.speed))
             if let event = session.event { session.event = Self.preparedEvent(event, session: session) }
+            if session.event?.battle != nil { session.combatBarrierTimestamp = frame.timestamp }
             if isNormalGate && next.kind == .boss { session.gatePresented = true }
             cues += [.voice(next.audio), .checkpoint]
         }
         return cues
+    }
+    private mutating func advanceBattle(distance: Double, seconds: Double) -> [GameCue] {
+        guard var event = session.event, var battle = event.battle else { return [] }
+        let damage = battle.advance(distance: distance, attack: attack)
+        event.battle = battle; event.hp = battle.remainingHP
+        event.elapsed += seconds; event.traveledDistance = (event.traveledDistance ?? 0) + distance
+        session.event = event
+        if battle.monster.persistent, var boss = session.boss {
+            boss.damage += min(damage, boss.remainingHP); session.boss = boss
+        }
+        if battle.remainingHP == 0 {
+            closeEvent(.success)
+            return [.voice("success"), .checkpoint]
+        }
+        return damage > 0 ? [.checkpoint] : []
     }
     private mutating func closeEvent(_ outcome: Outcome) {
         guard let event = session.event else { return }

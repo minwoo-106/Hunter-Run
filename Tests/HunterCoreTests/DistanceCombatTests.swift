@@ -65,4 +65,25 @@ final class DistanceCombatTests: XCTestCase {
         XCTAssertEqual(run.session.event?.battle?.attacks, 1)
     }
 
+    func testLastAttackAtTheExactActivityGoalIsNotLost() throws {
+        let fixture = try V3Fixtures.engine()
+        var session = fixture.session; session.targetSeconds = 182
+        var run = RunEngine(session:session,content:fixture.content)
+        run.consume(V3Fixtures.frame(1,75)); run.consume(V3Fixtures.frame(2,75))
+        XCTAssertEqual(run.session.phase,.finished)
+        XCTAssertEqual(run.session.records.first?.defeated,true)
+        XCTAssertEqual(run.session.records.first?.damage,180)
+    }
+    func testGPSBatchFromInstructionTimeCannotBecomeFreeAttack() throws {
+        let fixture = try V3Fixtures.engine()
+        var session = fixture.session; session.event?.stage = .briefing
+        var run = RunEngine(session:session,content:fixture.content)
+        run.consume(V3Fixtures.frame(1,74)); run.instructionFinished()
+        run.consume(V3Fixtures.frame(2,75))
+        XCTAssertEqual(run.session.event?.hp,180)
+        for i in 3...32 { run.consume(V3Fixtures.frame(Double(i))) }
+        run.consume(V3Fixtures.frame(33,75))
+        XCTAssertEqual(run.session.event?.hp,21)
+    }
+
 }
