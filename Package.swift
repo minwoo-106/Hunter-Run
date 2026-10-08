@@ -5,5 +5,5 @@ let package = Package(
     products: [.library(name: "HunterCore", targets: ["HunterCore"]),
                .library(name: "OperatorLifeCore", targets: ["OperatorLifeCore"])],
     targets: [.target(name: "HunterCore"), .target(name: "OperatorLifeCore"),
-              .testTarget(name: "HunterCoreTests", dependencies: ["HunterCore"]),
+              .testTarget(name: "HunterCoreTests", dependencies: ["HunterCore"], exclude: ["Fixtures"]),
               .testTarget(name: "OperatorLifeCoreTests", dependencies: ["OperatorLifeCore"])])

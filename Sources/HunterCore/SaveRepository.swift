@@ -48,6 +48,7 @@ public final class SaveRepository {
     public func validate(_ save: SaveState) throws {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
+        guard save.profile.growthEconomy?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.expeditions?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.gateProgress?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.journey?.isValid ?? true else { throw Failure.invalid }
@@ -69,6 +70,7 @@ public final class SaveRepository {
             (record.foundGifts.map { $0.count <= 396 } ?? true)
         }) else { throw Failure.invalid }
         if let run = save.active {
+            guard run.combatRules?.isValid ?? true, run.event?.battle?.isValid ?? true else { throw Failure.invalid }
             guard run.indoorAllowance.map({ $0.isFinite && (0...IndoorDailyLimit.seconds).contains($0) }) ?? true else { throw Failure.invalid }
             guard (run.steps ?? 0) >= 0, (run.steps ?? 0) <= 100_000_000,
                   !run.isIndoor || (run.distance == 0 && run.activityGoal.kind != .distance) else { throw Failure.invalid }

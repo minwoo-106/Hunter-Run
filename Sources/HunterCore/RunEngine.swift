@@ -6,18 +6,25 @@ public struct RunEngine {
     public var attack: Double
     public init(session: RunSession, content: GameContent, attack: Double = 1) {
         self.session = session; self.content = content; self.attack = min(12, max(0.5, session.loadout?.attack ?? attack))
+        if let event = self.session.event { self.session.event = Self.preparedEvent(event, session: session) }
     }
     public mutating func restorePaused() {
+        guard session.phase != .finished else { return }
+        session.needsDistanceBaseline = true
         session.lastTimestamp = nil; session.manualPause = true; session.interruption = false
         session.phase = .paused; session.movingStreak = 0
         // An unheard or interrupted instruction must be delivered before scoring resumes.
         if session.event != nil { session.event?.stage = .briefing }
     }
     public mutating func pause(_ paused: Bool) {
+        guard session.phase != .finished else { return }
+        session.needsDistanceBaseline = true
         session.manualPause = paused; session.lastTimestamp = nil; session.movingStreak = 0
         session.phase = paused ? .paused : .moving
     }
     public mutating func interrupt(_ value: Bool) {
+        guard session.phase != .finished else { return }
+        session.needsDistanceBaseline = true
         session.interruption = value; session.lastTimestamp = nil; session.movingStreak = 0
         session.phase = value ? .interrupted : .paused
         if !value { session.manualPause = true; if session.event != nil { session.event?.stage = .briefing } }
@@ -32,7 +39,8 @@ public struct RunEngine {
             session.elapsedSeconds = max(session.activeSeconds, session.workoutSeconds ?? date.timeIntervalSince(session.startedAt))
         }
         guard session.phase != .finished else { return }
-        closeEvent(.neutral)
+        let partialBattle = session.event?.battle != nil && (session.event?.battle?.attacks ?? 0) > 0
+        closeEvent(partialBattle ? .partial : .neutral)
         session.phase = .finished; session.lastTimestamp = nil
     }
     @discardableResult public mutating func consume(_ frame: SensorFrame) -> [GameCue] {
@@ -44,11 +52,17 @@ public struct RunEngine {
         let previous = session.lastTimestamp
         if let previous, frame.timestamp <= previous { return [] }
         session.lastTimestamp = frame.timestamp
-        guard let previous else { return [] }
+        guard let previous else {
+            if session.needsDistanceBaseline == true {
+                session.distanceBarrierTimestamp = frame.timestamp
+                session.needsDistanceBaseline = false
+            }
+            return []
+        }
         let rawDT = frame.timestamp - previous
         // Never invent activity through delivery gaps, reboot, or suspension.
         guard rawDT > 0, rawDT <= 5, frame.speed.isFinite, frame.distance.isFinite else {
-            session.movingStreak = 0; return []
+            session.movingStreak = 0; session.combatBarrierTimestamp = frame.timestamp; return []
         }
         guard !session.manualPause, !session.interruption else { return [] }
         if session.reachedGoal && session.activityGoal.kind == .time {
@@ -76,6 +90,7 @@ public struct RunEngine {
         // Also end an older restored session already at the new environment limit.
         let moving = (frame.movement == .walking || frame.movement == .running) && (!session.isIndoor || frame.signal == .good)
         guard moving else {
+            session.combatBarrierTimestamp = frame.timestamp
             session.movingStreak = 0
             session.stationarySeconds += rawDT
             if session.reachedGoal && session.activityGoal.kind == .time {
@@ -90,6 +105,7 @@ public struct RunEngine {
         session.stationarySeconds = 0
         session.movingStreak += rawDT
         if session.phase == .paused {
+            session.combatBarrierTimestamp = frame.timestamp
             guard session.movingStreak >= 5 else { return [] }
             session.phase = .moving
             return [.voice("resume"), .checkpoint]
@@ -99,6 +115,8 @@ public struct RunEngine {
             $0.isFinite && $0 > 0 ? $0 : nil
         } ?? dt
         var distance = session.isIndoor || (finalRescue && frame.signal != .good) ? 0 : max(0, min(frame.distance, 8 * max(dt, representedDistanceTime)))
+        if let barrier = session.distanceBarrierTimestamp,
+           frame.timestamp - representedDistanceTime < barrier - 1e-6 { distance = 0 }
         if session.isIndoor { session.steps = (session.steps ?? 0) + min(30, max(0, frame.steps)) }
         if session.activityGoal.kind == .distance {
             let remaining = max(0, session.activityGoal.value - session.distance)
@@ -149,6 +167,7 @@ public struct RunEngine {
             if event.stage == .briefing { return cues }
             let requiresRunning = event.template.kind != .discovery
             if frame.signal != .good && requiresRunning && !safeMotion {
+                if event.battle != nil { session.combatBarrierTimestamp = frame.timestamp; return cues }
                 // A single poor fix must not erase a field encounter. An active
                 // acceleration is cancelled immediately because its effort cannot
                 // be judged safely without a reliable signal.
@@ -164,7 +183,28 @@ public struct RunEngine {
                 closeEvent(.neutral); return [.voice("signal"), .checkpoint]
             }
             if event.signalDegradedSince != nil { event.signalDegradedSince = nil; session.event = event }
-            if requiresRunning && !session.isIndoor && frame.movement != .running && !safeMotion { return cues }
+            if requiresRunning && !session.isIndoor && frame.movement != .running && !safeMotion {
+                session.combatBarrierTimestamp = frame.timestamp; return cues
+            }
+            if var battle = event.battle {
+                guard stable, !session.isIndoor else {
+                    session.combatBarrierTimestamp = frame.timestamp; return cues
+                }
+                if let barrier = session.combatBarrierTimestamp,
+                   frame.timestamp - representedDistanceTime < barrier - 1e-6 { return cues }
+                let damage = battle.advance(distance: distance, attack: attack)
+                event.battle = battle; event.hp = battle.remainingHP
+                event.elapsed += dt; event.traveledDistance = (event.traveledDistance ?? 0) + distance
+                session.event = event
+                if battle.monster.persistent, var boss = session.boss {
+                    boss.damage += min(damage, boss.remainingHP); session.boss = boss
+                }
+                if battle.remainingHP == 0 {
+                    closeEvent(.success)
+                    cues += [.voice("success"), .checkpoint]
+                } else if damage > 0 { cues.append(.checkpoint) }
+                return cues
+            }
             if event.stage == .armed {
                 event.elapsed += dt
                 if frame.speed >= event.baseline * 1.08 { event.pushing += dt } else { event.pushing = 0 }
@@ -275,6 +315,7 @@ public struct RunEngine {
                 next.hp = boss.remainingHP
             }
             session.event = RunEvent(template: next, hp: next.hp, startingHP: next.hp, baseline: PaceLearning.effectiveBaseline(current: session.baseline, learned: session.learnedReference, fallback: frame.speed))
+            if let event = session.event { session.event = Self.preparedEvent(event, session: session) }
             if isNormalGate && next.kind == .boss { session.gatePresented = true }
             cues += [.voice(next.audio), .checkpoint]
         }
@@ -284,7 +325,7 @@ public struct RunEngine {
         guard let event = session.event else { return }
         if event.template.kind != .discovery { session.paceCooldownUntil = session.activeSeconds + 60 }
         if event.burstStarted == true { session.lastIntensityAt = session.activeSeconds }
-        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted, encounterKind: event.template.encounterKind))
+        session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted, encounterKind: event.template.encounterKind, monsterID: event.battle?.monster.id, attacks: event.battle?.attacks))
         session.event = nil
     }
 }
@@ -293,6 +334,11 @@ public enum Settlement {
         guard session.phase == .finished, !session.simulated,
               ActivityRecordPolicy.qualifies(session.activeSeconds),
               !profile.settled.contains(session.id) else { return nil }
+        var session = session
+        if session.combatRules != nil {
+            var seen: Set<String> = []
+            session.records = session.records.filter { seen.insert($0.id).inserted }
+        }
         GateTracking.migrate(&profile)
         FieldDiscovery.record(session, profile: &profile)
         let completed = session.records.filter { $0.outcome != .neutral }.count
@@ -307,7 +353,8 @@ public enum Settlement {
         // Round once per currency after totaling the activity. One-time quest claims are separate.
         let oldRules = session.rulesVersion == nil
         let bonus = CompletionRewards.bonus(completion, oldRules: oldRules, bossCleared: bossReport?.cleared == true)
-        let xp = (Int(session.activeSeconds / 10) + completed * 20 + bonus.xp) * percent / 100
+        let eventExperience = session.combatRules == nil ? completed * 20 : CombatExperience.reward(session, bossReport: bossReport)
+        let xp = (Int(session.activeSeconds / 10) + eventExperience + bonus.xp) * percent / 100
         let crystals = (Int(session.activeSeconds / 120) + completed * (session.mode == .gate ? 3 : 2) + bonus.crystals) * percent / 100
         let discoveries = session.records.filter { $0.kind == .discovery && $0.outcome != .neutral }.count
         let research = (completed + (session.mode == .exploration ? discoveries : 0) + discoveries * (session.loadout?.researchBonus ?? 0)) * percent / 100

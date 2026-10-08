@@ -106,11 +106,16 @@ public struct ProgressionCatalog: Codable {
     }
     public func stats(for profile: Profile) -> CombatStats {
         var result = CombatStats(hp: 100 + Double(min(100, profile.level - 1)) * 4, attack: profile.attack, defense: min(0.2, Double(profile.level - 1) * 0.01))
+        var equipmentAttack = 0.0
         for slot in EquipmentSlot.allCases {
             guard let id = profile.growth.equipped[slot.rawValue], profile.growth.owned.contains(id),
                   let item = equipment.first(where: { $0.id == id && $0.slot == slot }) else { continue }
             result.hp += item.hp; result.attack += item.attack; result.defense += item.defense
+            equipmentAttack += item.attack
             result.eventBonus += item.eventBonus; result.researchBonus += item.researchBonus
+        }
+        if let economy = profile.growthEconomy {
+            result.attack = GrowthEconomy.attack(level: profile.level, gear: equipmentAttack, legacyBase: economy.legacyBaseAttack)
         }
         result.attack = min(12, result.attack); result.defense = min(0.8, result.defense)
         result.eventBonus = min(0.45, result.eventBonus)

@@ -6,7 +6,7 @@ public enum RunPhase: String, Codable { case calibrating, moving, paused, interr
 public enum EventKind: String, Codable { case discovery, maintain, pursuit, endurance, ambush, boss }
 public enum EventStage: String, Codable { case briefing, armed, active }
 public enum Outcome: String, Codable { case perfect, success, partial, fail, neutral }
-public struct SensorFrame {
+public struct SensorFrame: Codable {
     public var timestamp: TimeInterval
     public var speed: Double
     public var distance: Double
@@ -77,10 +77,12 @@ public struct RunEvent: Codable {
     public var burstStarted: Bool? = nil
     /// Active workout time when a non-accelerating encounter first lost GPS.
     public var signalDegradedSince: Double? = nil
+    public var battle: DistanceBattle? = nil
     public var instructionAudio: String {
         burstStarted == true && elapsed > 0 ? "burst_resume" : template.audio
     }
     public var progress: Double {
+        if battle != nil { return min(1, max(0, (startingHP - hp) / max(1, startingHP))) }
         if template.burstSeconds != nil && stage == .armed { return 0 }
         if template.kind == .endurance { return min(1, (traveledDistance ?? 0) / max(1, template.targetDistance ?? 400)) }
         return min(1, elapsed / max(1, template.burstSeconds ?? template.duration))
@@ -95,6 +97,8 @@ public struct EventRecord: Codable, Identifiable {
     public var kind: EventKind? = nil
     public var accelerated: Bool? = nil
     public var encounterKind: EncounterKind? = nil
+    public var monsterID: String? = nil
+    public var attacks: Int? = nil
 }
 public struct RunSession: Codable, Identifiable {
     public var id = UUID()
@@ -154,6 +158,11 @@ public struct RunSession: Codable, Identifiable {
     public var lastVerifiedStepAt: Double? = nil
     /// Remaining KST daily active-time budget at the start; nil supports older saves.
     public var indoorAllowance: Double? = nil
+    /// 검증 실행기에서만 명시적으로 켠다. 기존 진행 중인 활동은 nil을 유지한다.
+    public var combatRules: CombatRules? = nil
+    public var needsDistanceBaseline: Bool? = nil
+    public var distanceBarrierTimestamp: Double? = nil
+    public var combatBarrierTimestamp: Double? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -206,14 +215,15 @@ public struct Profile: Codable {
     public var journey: JourneyState? = nil
     /// Optional so pre-campaign profiles decode without changing their progression.
     public var defense: DefenseProgress? = nil
+    public var growthEconomy: GrowthEconomyState? = nil
     /// Nil identifies a profile that still needs its historical gate count frozen.
     public var gateProgress: GateProgress? = GateProgress()
     public var growth: GrowthState {
         get { progression ?? { var initial = GrowthState(); initial.departments[Department.observation.rawValue] = min(2, max(1, observationLevel)); return initial }() }
         set { progression = newValue }
     }
-    public var level: Int { 1 + xp / 300 }
-    public var attack: Double { 1 + Double(level - 1) * 0.08 }
+    public var level: Int { growthEconomy.map { GrowthEconomy.resolved($0, totalXP: xp).level } ?? (1 + xp / 300) }
+    public var attack: Double { growthEconomy == nil ? 1 + Double(level - 1) * 0.08 : GrowthEconomy.baseAttack(level) }
     public init() {}
 }
 public struct SaveState: Codable {

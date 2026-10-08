@@ -1,0 +1,242 @@
+{
+  "version": 3,
+  "attackInterval": 75,
+  "monsters": [
+    {
+      "id": "echo-wolf",
+      "name": "잔향 늑대",
+      "maximumHP": 180,
+      "defense": 10,
+      "experience": 25,
+      "persistent": false
+    },
+    {
+      "id": "rift-runner",
+      "name": "균열 살쾡이",
+      "maximumHP": 160,
+      "defense": 5,
+      "experience": 20,
+      "persistent": false
+    },
+    {
+      "id": "iron-guard",
+      "name": "철각 파수병",
+      "maximumHP": 320,
+      "defense": 25,
+      "experience": 35,
+      "persistent": false
+    },
+    {
+      "id": "rift-watcher",
+      "name": "균열 감시자",
+      "maximumHP": 600,
+      "defense": 25,
+      "experience": 60,
+      "persistent": false
+    },
+    {
+      "id": "signal-heart",
+      "name": "신호의 심장",
+      "maximumHP": 240,
+      "defense": 15,
+      "experience": 30,
+      "persistent": false
+    },
+    {
+      "id": "boundary-lord",
+      "name": "경계의 군주",
+      "maximumHP": 2200,
+      "defense": 30,
+      "experience": 120,
+      "persistent": true
+    },
+    {
+      "id": "void-librarian",
+      "name": "공허의 사서",
+      "maximumHP": 4800,
+      "defense": 40,
+      "experience": 120,
+      "persistent": true
+    },
+    {
+      "id": "dark-elf-scout",
+      "name": "다크엘프 정찰자",
+      "maximumHP": 360,
+      "defense": 15,
+      "experience": 35,
+      "persistent": false
+    },
+    {
+      "id": "succubus-weaver",
+      "name": "서큐버스 환영술사",
+      "maximumHP": 400,
+      "defense": 20,
+      "experience": 40,
+      "persistent": false
+    },
+    {
+      "id": "dark-elf-captain",
+      "name": "다크엘프 월영대장",
+      "maximumHP": 650,
+      "defense": 30,
+      "experience": 95,
+      "persistent": false
+    },
+    {
+      "id": "succubus-warden",
+      "name": "서큐버스 몽환경비관",
+      "maximumHP": 850,
+      "defense": 35,
+      "experience": 95,
+      "persistent": false
+    },
+    {
+      "id": "mirror-moth",
+      "name": "거울 날개 나방",
+      "maximumHP": 240,
+      "defense": 10,
+      "experience": 30,
+      "persistent": false
+    },
+    {
+      "id": "ash-boar",
+      "name": "재갑 멧돼지",
+      "maximumHP": 360,
+      "defense": 25,
+      "experience": 40,
+      "persistent": false
+    },
+    {
+      "id": "lost-sentinel",
+      "name": "유실 감시체",
+      "maximumHP": 280,
+      "defense": 20,
+      "experience": 35,
+      "persistent": false
+    },
+    {
+      "id": "hollow-knight",
+      "name": "공백 기사",
+      "maximumHP": 1600,
+      "defense": 45,
+      "experience": 110,
+      "persistent": false
+    },
+    {
+      "id": "fallen-fairy",
+      "name": "타락한 요정",
+      "maximumHP": 260,
+      "defense": 10,
+      "experience": 30,
+      "persistent": false
+    },
+    {
+      "id": "veil-witch",
+      "name": "장막의 마녀",
+      "maximumHP": 1000,
+      "defense": 35,
+      "experience": 105,
+      "persistent": false
+    },
+    {
+      "id": "mirror-shard-automata",
+      "name": "거울 파편 인형",
+      "maximumHP": 650,
+      "defense": 30,
+      "experience": 40,
+      "persistent": false
+    },
+    {
+      "id": "ironhide-charger",
+      "name": "철피 돌진수",
+      "maximumHP": 1000,
+      "defense": 40,
+      "experience": 55,
+      "persistent": false
+    },
+    {
+      "id": "corrupted-vanguard-warrior",
+      "name": "오염된 선발대 전사",
+      "maximumHP": 1200,
+      "defense": 50,
+      "experience": 80,
+      "persistent": false
+    },
+    {
+      "id": "corrupted-vanguard-mage",
+      "name": "오염된 선발대 마법사",
+      "maximumHP": 1100,
+      "defense": 35,
+      "experience": 75,
+      "persistent": false
+    },
+    {
+      "id": "corrupted-vanguard-archer",
+      "name": "오염된 선발대 궁수",
+      "maximumHP": 1100,
+      "defense": 30,
+      "experience": 70,
+      "persistent": false
+    },
+    {
+      "id": "corrupted-vanguard-cleric",
+      "name": "오염된 선발대 성직자",
+      "maximumHP": 1200,
+      "defense": 40,
+      "experience": 80,
+      "persistent": false
+    },
+    {
+      "id": "mirror-witch",
+      "name": "거울마녀",
+      "maximumHP": 1200,
+      "defense": 40,
+      "experience": 115,
+      "persistent": false
+    },
+    {
+      "id": "ironclad-rhino",
+      "name": "철갑 코뿔소",
+      "maximumHP": 1200,
+      "defense": 45,
+      "experience": 105,
+      "persistent": false
+    },
+    {
+      "id": "corrupted-hunter",
+      "name": "타락 헌터",
+      "maximumHP": 15000,
+      "defense": 65,
+      "experience": 360,
+      "persistent": true
+    }
+  ],
+  "eventMonsters": {
+    "beast": "echo-wolf",
+    "trail": "rift-runner",
+    "gate-trail": "rift-runner",
+    "gate-ambush": "rift-runner",
+    "gate-guard": "iron-guard",
+    "contract-endurance": "iron-guard",
+    "gate-core": "rift-watcher",
+    "gate": "signal-heart",
+    "dark-elf-scout": "dark-elf-scout",
+    "succubus-weaver": "succubus-weaver",
+    "dark-elf-captain": "dark-elf-captain",
+    "succubus-warden": "succubus-warden",
+    "mirror-moth": "mirror-moth",
+    "ash-boar": "ash-boar",
+    "lost-sentinel": "lost-sentinel",
+    "hollow-knight": "hollow-knight",
+    "fallen-fairy": "fallen-fairy",
+    "veil-witch": "veil-witch",
+    "mirror-shard-automata": "mirror-shard-automata",
+    "ironhide-charger": "ironhide-charger",
+    "corrupted-vanguard-warrior": "corrupted-vanguard-warrior",
+    "corrupted-vanguard-mage": "corrupted-vanguard-mage",
+    "corrupted-vanguard-archer": "corrupted-vanguard-archer",
+    "corrupted-vanguard-cleric": "corrupted-vanguard-cleric",
+    "mirror-witch": "mirror-witch",
+    "ironclad-rhino": "ironclad-rhino"
+  }
+}
