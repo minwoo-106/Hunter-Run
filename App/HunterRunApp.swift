@@ -279,12 +279,27 @@ struct ActiveRunView: View {
                                 Text(model.operatorCaption ?? eventMessage(run)).foregroundStyle(Theme.muted).accessibilityIdentifier("activity.caption")
                                 if run.isIndoor { Text(eventMessage(run)).font(.headline).foregroundStyle(Theme.teal) }
                                 if let event = run.event {
-                                    if event.template.burstSeconds != nil {
+                                    if event.battle == nil && event.template.burstSeconds != nil {
                                         Text(event.stage == .armed ? "가속 선택 대기 · 평소 페이스면 유지/조사로 전환" : event.stage == .briefing ? "안내 후 시작해요" : "가속 남은 시간 · \(max(0, Int(ceil((event.template.burstSeconds ?? 10) - event.elapsed))))초")
                                             .font(.headline).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.burst")
                                     }
                                     ProgressView(value: event.progress).tint(Theme.teal)
-                                    if event.template.kind == .endurance {
+                                    if let battle = event.battle {
+                                        Text("몬스터 HP \(Int(event.hp)) / \(Int(event.startingHP)) · 공격 \(battle.attacks)회")
+                                            .font(.headline).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.combat.hp")
+                                        Text("다음 공격 · \(Int(battle.remainder)) / 75 m")
+                                            .font(.caption.monospacedDigit()).accessibilityIdentifier("activity.combat.distance")
+                                        if run.boss?.definition.id == "corrupted-hunter", run.lastVerifiedStepAt != nil,
+                                           model.movement == .walking || model.signal != .good {
+                                            Text("안전 관측 · 확인된 걸음으로 연결을 안정화해요. 시간 기반 진행이며 이동거리에는 더하지 않아요.")
+                                                .font(.caption).foregroundStyle(Theme.teal)
+                                        } else {
+                                            Text(EnduranceGuidance.state(for:run,movement:model.movement,signal:model.signal).message)
+                                                .font(.callout).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.combat.status")
+                                            Text("전체 이동거리와 별도 · 조우 안내 뒤 인정된 달리기 거리마다 공격해요.")
+                                                .font(.caption).foregroundStyle(Theme.muted)
+                                        }
+                                    } else if event.template.kind == .endurance {
                                         Text("장기전 · 달리기 인정 거리 \(Int(event.traveledDistance ?? 0)) / \(Int(event.template.targetDistance ?? 400)) m")
                                             .font(.caption).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.endurance.distance")
                                         Text("전체 이동거리와 별도 · 조우 후 GPS가 양호한 달리기 구간만 누적해요.")
@@ -386,6 +401,7 @@ struct ActiveRunView: View {
         }
         guard let event = run.event else { return "편안한 페이스로 함께 이동해요. 잠시 멈춰도 괜찮아요!" }
         if event.stage == .briefing { return "지금 필요한 행동을 안내하고 있어요." }
+        if event.battle != nil { return "편안한 달리기를 이어가요. 인정된 거리 75m마다 공격하며, 장비에 따라 필요한 공격 횟수가 달라져요." }
         if event.stage == .armed { return event.template.kind == .boss ? "안전하면 가속 공격을 선택해요. 아니면 유지 공격으로 이어가요." : "안전하면 가속해도 좋아요. 아니면 흔적을 함께 조사해요." }
         if event.template.kind == .endurance { return "달리기로 인정된 거리 \(Int(event.template.targetDistance ?? 400))m를 모아요. 걷거나 쉬는 동안에는 진행도가 유지돼요." }
         if event.template.kind == .ambush { return "더 빨라질 필요 없이 달리기를 이어가요. 멈춰야 할 때는 기다릴게요." }

@@ -72,6 +72,14 @@ fi
 if [ "${1:-}" = "progress-guidance" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/ProgressGuidanceTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
 fi
+if [ "${1:-}" = "combat" ]; then
+  UI_SCOPE=(
+    -only-testing:HunterRunUITests/CombatReleaseUITests
+    -only-testing:HunterRunUITests/ProgressGuidanceTests
+    -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen
+    -only-testing:HunterRunUITests/HomeLayoutTests/testProductionEntryHasNoSimulationButtons
+  )
+fi
 if [ "${1:-}" = "album" ]; then
   UI_SCOPE=(-only-testing:HunterRunUITests/DefenseAlbumTests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
 fi
