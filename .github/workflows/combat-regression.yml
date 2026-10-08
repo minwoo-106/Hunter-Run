@@ -1,0 +1,47 @@
+name: 전투·성장 자동 검증
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Sources/**'
+      - 'Tests/**'
+      - 'Resources/*.json'
+      - 'Package.swift'
+      - 'scripts/*combat*'
+      - '.github/workflows/combat-regression.yml'
+  pull_request:
+    paths:
+      - 'Sources/**'
+      - 'Tests/**'
+      - 'Resources/*.json'
+      - 'Package.swift'
+      - 'scripts/*combat*'
+      - '.github/workflows/combat-regression.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  combat:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: 기존 기능과 전투 회귀 테스트
+        run: |
+          set -euo pipefail
+          mkdir -p .build/combat-replay
+          swift test --jobs 4 2>&1 | tee .build/combat-replay/test-log.txt
+      - name: 실제 계산부로 대표 시나리오 재생
+        run: swift run --skip-build HunterDebugRunner --output .build/combat-replay
+      - name: 외부 연결 없는 결과 화면 생성
+        run: python3 scripts/build-combat-replay-review.py .build/combat-replay
+      - name: 검증 결과와 재현 입력 보관
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HunterRun-combat-regression
+          path: .build/combat-replay/
+          if-no-files-found: error
+          retention-days: 14
