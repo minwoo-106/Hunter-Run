@@ -3,7 +3,9 @@ import PackageDescription
 let package = Package(
     name: "HunterRun", platforms: [.iOS(.v17), .macOS(.v13)],
     products: [.library(name: "HunterCore", targets: ["HunterCore"]),
+               .executable(name: "HunterDebugRunner", targets: ["HunterDebugRunner"]),
                .library(name: "OperatorLifeCore", targets: ["OperatorLifeCore"])],
     targets: [.target(name: "HunterCore"), .target(name: "OperatorLifeCore"),
+              .executableTarget(name: "HunterDebugRunner", dependencies: ["HunterCore"]),
               .testTarget(name: "HunterCoreTests", dependencies: ["HunterCore"], exclude: ["Fixtures"]),
               .testTarget(name: "OperatorLifeCoreTests", dependencies: ["OperatorLifeCore"])])

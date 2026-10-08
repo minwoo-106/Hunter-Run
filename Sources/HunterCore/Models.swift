@@ -35,6 +35,13 @@ public struct MissionTemplate: Codable, Identifiable {
     public var burstSeconds: Double? = nil
     public var steadyAudio: String? = nil
     public var encounterKind: EncounterKind? = nil
+    public init(id: String, title: String, kind: EventKind, startFraction: Double, duration: Double, hp: Double, audio: String,
+                targetDistance: Double? = nil, shortAudio: String? = nil, burstSeconds: Double? = nil,
+                steadyAudio: String? = nil, encounterKind: EncounterKind? = nil) {
+        self.id = id; self.title = title; self.kind = kind; self.startFraction = startFraction
+        self.duration = duration; self.hp = hp; self.audio = audio; self.targetDistance = targetDistance
+        self.shortAudio = shortAudio; self.burstSeconds = burstSeconds; self.steadyAudio = steadyAudio; self.encounterKind = encounterKind
+    }
     public var requestsAcceleration: Bool { kind == .pursuit || burstSeconds != nil }
     public mutating func useSteadyAlternative() {
         burstSeconds = nil
@@ -50,6 +57,9 @@ public struct GameContent: Codable {
     public var missionTitle: String
     public var events: [MissionTemplate]
     public var encounterPools: [EncounterPool]? = nil
+    public init(schema: Int, missionTitle: String, events: [MissionTemplate], encounterPools: [EncounterPool]? = nil) {
+        self.schema = schema; self.missionTitle = missionTitle; self.events = events; self.encounterPools = encounterPools
+    }
     public func validate() throws {
         guard schema == 1, !events.isEmpty, Set(events.map(\.id)).count == events.count,
               events.allSatisfy({ !$0.id.isEmpty && $0.duration.isFinite && $0.duration > 0 && $0.hp.isFinite && $0.hp >= 0 && $0.startFraction > 0 && $0.startFraction < 0.9 && ($0.burstSeconds == nil || ($0.burstSeconds == 10 && ($0.kind == .boss || $0.kind == .pursuit) && $0.steadyAudio?.isEmpty == false)) && ($0.kind != .endurance || ($0.targetDistance.map { $0.isFinite && (400...800).contains($0) } ?? false)) }) else { throw ContentError.invalid }
@@ -78,6 +88,14 @@ public struct RunEvent: Codable {
     /// Active workout time when a non-accelerating encounter first lost GPS.
     public var signalDegradedSince: Double? = nil
     public var battle: DistanceBattle? = nil
+    public init(template: MissionTemplate, stage: EventStage = .briefing, elapsed: Double = 0, qualified: Double = 0,
+                pushing: Double = 0, hp: Double, startingHP: Double, baseline: Double, evaluatedSeconds: Double = 0,
+                traveledDistance: Double? = nil, burstStarted: Bool? = nil, signalDegradedSince: Double? = nil,
+                battle: DistanceBattle? = nil) {
+        self.template = template; self.stage = stage; self.elapsed = elapsed; self.qualified = qualified; self.pushing = pushing
+        self.hp = hp; self.startingHP = startingHP; self.baseline = baseline; self.evaluatedSeconds = evaluatedSeconds
+        self.traveledDistance = traveledDistance; self.burstStarted = burstStarted; self.signalDegradedSince = signalDegradedSince; self.battle = battle
+    }
     public var instructionAudio: String {
         burstStarted == true && elapsed > 0 ? "burst_resume" : template.audio
     }

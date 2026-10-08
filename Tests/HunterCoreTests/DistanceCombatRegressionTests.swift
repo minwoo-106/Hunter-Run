@@ -162,4 +162,21 @@ final class DistanceCombatRegressionTests: XCTestCase {
         XCTAssertEqual(battle.remainingHP,21)
     }
 
+    func testEveryOrdinaryMonsterPaysFixedExperienceExactlyOnce() throws {
+        let rules = try V3Fixtures.rules()
+        for monster in rules.monsters where !monster.persistent {
+            let id = try XCTUnwrap(rules.eventMonsters.first { $0.value == monster.id }?.key,monster.id)
+            var run = try V3Fixtures.engine(eventID:id)
+            run.consume(V3Fixtures.frame(1,7500)); run.end()
+            XCTAssertEqual(run.session.records.first?.defeated,true,monster.id)
+            XCTAssertEqual(run.session.records.first?.damage,monster.maximumHP,monster.id)
+            var duplicated = run.session; duplicated.records += run.session.records
+            var profile = Profile()
+            XCTAssertEqual(Settlement.apply(duplicated,to:&profile)?.xp,18+monster.experience,monster.id)
+            XCTAssertNil(Settlement.apply(duplicated,to:&profile),monster.id)
+            XCTAssertEqual(profile.xp,18+monster.experience,monster.id)
+        }
+    }
+
+
 }
