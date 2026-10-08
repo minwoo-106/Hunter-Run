@@ -25,7 +25,7 @@ with zipfile.ZipFile(ipa) as archive:
     assert info['CFBundleShortVersionString'] == version and info['CFBundleVersion'] == build
     executable = resource(info['CFBundleExecutable'])
     assert executable[:4] in (b'\xcf\xfa\xed\xfe', b'\xca\xfe\xba\xbe')
-    for flag in ['--ui-testing-progress-guidance', '--ui-testing-defense-final', '--ui-testing-save', '--ui-testing-operator-gifts',
+    for flag in ['--ui-testing-defense-album', '--ui-testing-progress-guidance', '--ui-testing-defense-final', '--ui-testing-save', '--ui-testing-operator-gifts',
                  '--ui-testing-operator-relationship', '--life-inspect-phase', '--life-start-phase']:
         assert flag.encode() not in executable, flag
     for name in ['operator-chat.json', 'operator-life-cues.json', 'narrative.json', 'progression.json',

@@ -329,6 +329,7 @@ private struct DefenseAlbumView: View {
                             Text("\(art.episode)회차 기념").font(.caption).foregroundStyle(Theme.muted)
                         }
                     }.buttonStyle(.plain).disabled(completed < art.episode)
+                        .accessibilityIdentifier("defense.album.\(art.episode)")
                 }
             }.padding(20)
         }.background(Theme.ink).navigationTitle("지켜낸 일상")
@@ -338,22 +339,47 @@ private struct DefenseAlbumView: View {
 
 private struct DefenseArtView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let illustration: DefenseIllustration
     @State private var behind = false
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Image(behind ? (illustration.behind ?? illustration.asset) : illustration.asset).resizable().scaledToFit()
-                    Text(behind ? "“으아앙! 왜 나만 따라와! 나 오늘 휴가인데!”\n예쁘게 입고 나와서 눈물 콧물 다 빼는 중. 조금 더 걷겠다고 했지, 뛰겠다고는 안 했는데…!" : illustration.caption).padding(.horizontal, 20).lineSpacing(5)
-                    if illustration.behind != nil {
-                        Button(behind ? "메인 일러스트" : "비하인드") { behind.toggle() }.buttonStyle(GameButtonStyle()).padding(.horizontal, 20).accessibilityIdentifier("defense.behind")
+            GeometryReader { geometry in
+                if dynamicTypeSize.isAccessibilitySize {
+                    // Large accessibility text stays readable rather than being compressed.
+                    ScrollView {
+                        VStack(spacing: 12) { artwork; caption }.padding(.bottom, 16)
                     }
-                }.padding(.bottom, 24)
+                    .accessibilityIdentifier("defense.art.accessibleScroll")
+                } else {
+                    VStack(spacing: 12) {
+                        artwork.frame(maxWidth: .infinity, maxHeight: .infinity).layoutPriority(-1)
+                        caption.fixedSize(horizontal: false, vertical: true)
+                    }.padding(.bottom, 12)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                }
             }.background(Theme.ink).navigationTitle(behind ? "나 오늘 휴가인데!" : illustration.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .confirmationAction) { Button("닫기") { dismiss() } } }
         }
+    }
+    private var artwork: some View {
+        Image(behind ? (illustration.behind ?? illustration.asset) : illustration.asset)
+            .resizable().scaledToFit()
+            .accessibilityLabel(behind ? "나 오늘 휴가인데!" : illustration.title)
+            .accessibilityIdentifier("defense.art.image")
+    }
+    private var caption: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("\(illustration.episode)회차 · 지켜낸 일상").font(.caption).foregroundStyle(Theme.teal)
+            Text(behind ? "“으아앙! 왜 나만 따라와! 나 오늘 휴가인데!”\n예쁘게 입고 나와서 눈물 콧물 다 빼는 중. 조금 더 걷겠다고 했지, 뛰겠다고는 안 했는데…!" : illustration.caption)
+                .font(.body).lineSpacing(4).fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("defense.art.caption")
+            if illustration.behind != nil {
+                Button(behind ? "메인 일러스트" : "비하인드") { behind.toggle() }
+                    .buttonStyle(GameButtonStyle()).accessibilityIdentifier("defense.behind")
+            }
+        }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 20)
     }
 }
 

@@ -350,6 +350,18 @@ private struct CharacterVoiceCatalog: Decodable {
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-welcome") { showWelcome = false }
         #endif
         #if DEBUG && targetEnvironment(simulator)
+        if Self.testHarness, !existingSave, arguments.contains("--ui-testing-defense-album") {
+            var fixture = save
+            for episode in 1...30 {
+                try? DefenseCampaign.begin(episode: episode, intensity: .light, in: &fixture)
+                if var session = fixture.profile.defense?.active {
+                    session.elapsed = 1440
+                    try? DefenseCampaign.complete(session, at: Date(), in: &fixture)
+                    fixture.profile.defense?.pendingReport = nil
+                }
+            }
+            if (try? repository.write(fixture)) != nil { save = fixture }
+        }
         if Self.testHarness && ProcessInfo.processInfo.arguments.contains("--ui-testing-defense-final") {
             var fixture = save
             for episode in 1...29 {
