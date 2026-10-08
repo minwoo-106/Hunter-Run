@@ -31,7 +31,7 @@ workflows:
       - build/portrait-checks/*.png
       - build/life-metrics*.txt
   ios-demo:
-    name: Hunter Run 1.7.2 - life album
+    name: Hunter Run 1.7.3 - combat and growth
     instance_type: mac_mini_m2
     max_build_duration: 45
     triggering:
@@ -48,7 +48,11 @@ workflows:
           python3 scripts/validate.py
           python3 scripts/validate-operator-life.py
       - name: Test portable game engine
-        script: swift test
+        script: |
+          set -euo pipefail
+          swift test
+          swift run --skip-build HunterDebugRunner --output build/combat-replay
+          python3 scripts/build-combat-replay-review.py build/combat-replay
       - name: Generate Xcode project
         script: |
           if ! command -v xcodegen >/dev/null; then
@@ -63,7 +67,7 @@ workflows:
             -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > build-log.txt 2>&1 || { cat build-log.txt; exit 1; }
       - name: Check home layout in iPhone simulator
-        script: bash scripts/check-ios-layout.sh album
+        script: bash scripts/check-ios-layout.sh combat
       - name: Package unsigned IPA for personal signing
         script: |
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
@@ -78,6 +82,7 @@ workflows:
       - build/ui-review/*.json
       - build/ui-review-small/*.png
       - build/ui-review-small/*.json
+      - build/combat-replay/**
       - build-log.txt
       - build/Home-layout.png
       - build/layout-log.txt
