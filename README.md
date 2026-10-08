@@ -2,14 +2,14 @@
   <img src="Resources/Assets.xcassets/AppIcon.appiconset/app-icon.png" width="128" alt="Hunter Run 앱 아이콘">
   <h1>HUNTER RUN</h1>
   <p><strong>현실의 걸음과 달리기가 미궁 조사와 헌터의 성장으로 이어지는 iPhone 러닝 RPG</strong></p>
-  <p>iOS 17+ · SwiftUI · 오프라인 플레이 · 1.7.0 방어 캠페인 업데이트</p>
+  <p>iOS 17+ · SwiftUI · 오프라인 플레이 · 1.7.2 생활 앨범 업데이트</p>
 </div>
 
 <p align="center">
   <img src="Resources/Assets.xcassets/LabyrinthEntrance.imageset/art.png" width="360" alt="Hunter Run 미궁 입구">
 </p>
 
-홈에서는 오퍼레이터가 기지개를 펴고, 기록을 확인하고, 커피와 점심을 즐깁니다. 졸거나 먹는 중에는 터치에 반응하고, 평소에는 일상 이야기를 나눕니다. 야외 탐험에서 발견한 작은 선물을 건네고, 관계 화면에서 단계별 체크포인트와 MAX 여부를 확인할 수 있습니다. 집에서는 오디오 안내를 따라 지부를 지키는 30회 홈트 캠페인을 진행합니다. [최신 변경·설치 안내](docs/1.7.0-release.md)를 확인할 수 있습니다.
+홈에서는 오퍼레이터가 기지개를 펴고, 기록을 확인하고, 커피와 점심을 즐깁니다. 졸거나 먹는 중에는 터치에 반응하고, 평소에는 일상 이야기를 나눕니다. 야외 탐험에서 발견한 작은 선물을 건네고, 관계 화면에서 단계별 체크포인트와 MAX 여부를 확인할 수 있습니다. 집에서는 오디오 안내를 따라 지부를 지키는 30회 홈트 캠페인을 진행합니다. [최신 변경·설치 안내](docs/1.7.2-release.md)를 확인할 수 있습니다.
 
 ## 게임 소개
 
@@ -57,7 +57,7 @@
 - Apple Watch는 필수가 아니며, 비교 측정과 별도 운동 기록에 사용할 수 있습니다.
 - 음성 안내를 위해 AirPods 또는 안전한 오픈형 이어폰 사용을 권장합니다.
 
-[1.7.0 변경·설치 안내](docs/1.7.0-release.md) · [전체 변경 기록](CHANGELOG.md) · [실기기 테스트 안내](docs/TESTING.md)
+[1.7.0 변경·설치 안내](docs/1.7.2-release.md) · [전체 변경 기록](CHANGELOG.md) · [실기기 테스트 안내](docs/TESTING.md)
 
 ## 개인정보와 저장
 
