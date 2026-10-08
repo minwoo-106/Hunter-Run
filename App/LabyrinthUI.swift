@@ -133,8 +133,8 @@ struct HunterDossier: View {
                     Text("Lv.\(model.save.profile.level) · 협회 소속 헌터").font(.callout).foregroundStyle(Theme.teal)
                 }
             }
-            ProgressView(value: Double(model.save.profile.xp % 300), total: 300).tint(Labyrinth.gold)
-            Text("다음 레벨까지 \(300 - model.save.profile.xp % 300) EXP").font(.caption.monospacedDigit()).foregroundStyle(Theme.muted)
+            ProgressView(value: Double(model.save.profile.levelProgress), total: Double(model.save.profile.nextLevelExperience)).tint(Labyrinth.gold)
+            Text("다음 레벨까지 \(model.save.profile.nextLevelExperience - model.save.profile.levelProgress) EXP").font(.caption.monospacedDigit()).foregroundStyle(Theme.muted)
         }.card()
     }
 }

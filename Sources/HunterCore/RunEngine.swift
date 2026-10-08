@@ -151,9 +151,9 @@ public struct RunEngine {
         }
         session.phase = session.activeSeconds < session.calibrationSeconds ? .calibrating : .moving
         if session.reachedGoal {
-            if session.event?.battle != nil, session.event?.stage != .briefing, stable,
+            if session.event?.battle != nil, session.event?.stage != .briefing, (stable || safeMotion),
                session.combatBarrierTimestamp.map({ frame.timestamp - representedDistanceTime >= $0 - 1e-6 }) ?? true {
-                cues += advanceBattle(distance: distance, seconds: dt)
+                cues += advanceBattle(distance: stable ? distance : dt * 2.5, seconds: dt)
             }
             end(); return cues + [.voice("run_end"), .checkpoint, .goalReached]
         }
@@ -194,12 +194,12 @@ public struct RunEngine {
                 session.combatBarrierTimestamp = frame.timestamp; return cues
             }
             if event.battle != nil {
-                guard stable, !session.isIndoor else {
+                guard (stable || safeMotion), !session.isIndoor else {
                     session.combatBarrierTimestamp = frame.timestamp; return cues
                 }
                 if let barrier = session.combatBarrierTimestamp,
                    frame.timestamp - representedDistanceTime < barrier - 1e-6 { return cues }
-                return cues + advanceBattle(distance: distance, seconds: dt)
+                return cues + advanceBattle(distance: stable ? distance : dt * 2.5, seconds: dt)
             }
             if event.stage == .armed {
                 event.elapsed += dt
@@ -314,7 +314,7 @@ public struct RunEngine {
             if let event = session.event { session.event = Self.preparedEvent(event, session: session) }
             if session.event?.battle != nil { session.combatBarrierTimestamp = frame.timestamp }
             if isNormalGate && next.kind == .boss { session.gatePresented = true }
-            cues += [.voice(next.audio), .checkpoint]
+            cues += [.voice(session.event?.instructionAudio ?? next.audio), .checkpoint]
         }
         return cues
     }
@@ -331,7 +331,7 @@ public struct RunEngine {
             closeEvent(.success)
             return [.voice("success"), .checkpoint]
         }
-        return damage > 0 ? [.checkpoint] : []
+        return damage > 0 ? [.voice("combat_hit"), .checkpoint] : []
     }
     private mutating func closeEvent(_ outcome: Outcome) {
         guard let event = session.event else { return }

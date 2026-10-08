@@ -1,6 +1,6 @@
 import Foundation
 
-/// 확정된 3차 수치의 세션 스냅샷. 기본 앱은 아직 이 규칙을 활성화하지 않는다.
+/// 확정된 3차 수치의 세션 스냅샷. 이전 활동의 규칙은 복구 때 변경하지 않는다.
 public struct CombatRules: Codable {
     public var version: Int
     public var attackInterval: Double
@@ -71,6 +71,13 @@ extension RunEngine {
               let rules = session.combatRules,
               let monster = rules.monster(for: event.template.id, bossID: session.boss?.definition.id) else { return event }
         var prepared = event
+        if prepared.template.kind == .pursuit || prepared.template.burstSeconds != nil {
+            prepared.template.audio = prepared.template.steadyAudio ?? (prepared.template.kind == .boss ? "boss" : "maintain")
+            prepared.template.burstSeconds = nil; prepared.burstStarted = nil
+            if prepared.template.kind == .pursuit { prepared.template.kind = .maintain }
+            if prepared.stage == .armed { prepared.stage = .active }
+        }
+        prepared.template.audio = prepared.template.kind == .boss ? "boss" : "maintain"
         let hp = monster.persistent ? session.boss?.remainingHP ?? monster.maximumHP : monster.maximumHP
         prepared.hp = hp; prepared.startingHP = hp
         prepared.battle = DistanceBattle(monster: monster, remainingHP: hp)

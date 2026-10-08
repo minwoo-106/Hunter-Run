@@ -194,6 +194,7 @@ private struct CharacterVoiceCatalog: Decodable {
     }
     let repository: SaveRepository
     let content: GameContent?
+    let combatRules: CombatRules?
     let progressionCatalog: ProgressionCatalog?
     let missions: MissionCatalog?
     let gateBalance: GateBalance = {
@@ -259,6 +260,8 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         #endif
         repository = SaveRepository(directory: directory)
+        let loadedRules: CombatRules? = Self.resource("combat-v3")
+        combatRules = loadedRules?.isValid == true ? loadedRules : nil
         if let url = Bundle.main.url(forResource: "mission", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(GameContent.self, from: data),
            (try? decoded.validate()) != nil { content = decoded }
@@ -271,7 +274,11 @@ private struct CharacterVoiceCatalog: Decodable {
            (try? decoded.validate()) != nil { missions = decoded } else { missions = nil }
         if let url = Bundle.main.url(forResource: "world", withExtension: "json"),
            let data = try? Data(contentsOf: url), let decoded = try? JSONDecoder().decode(WorldContent.self, from: data),
-           (try? decoded.validate()) != nil { world = decoded } else { world = nil }
+           (try? decoded.validate()) != nil {
+            var current = decoded
+            if let loadedRules, loadedRules.isValid { current.bosses = current.bosses.map { CombatRelease.boss($0,rules:loadedRules) } }
+            world = current
+        } else { world = nil }
         let encountersReady = fieldEncounters.map { (try? $0.validate()) != nil } ?? false
         let existingSave = repository.hasStoredSave
         do {
@@ -330,8 +337,8 @@ private struct CharacterVoiceCatalog: Decodable {
             save.profile.journey = journey
         }
         #endif
-        if content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady || characterCatalog?.clips.count != 39 { notice = "게임 콘텐츠를 읽지 못했습니다." }
-        isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && characterCatalog?.clips.count == 39 && !saveBlocked
+        if combatRules == nil || content == nil || progressionCatalog == nil || missions == nil || world == nil || !narrationReady || !encountersReady || characterCatalog?.clips.count != 39 { notice = "게임 콘텐츠를 읽지 못했습니다." }
+        isReady = combatRules != nil && content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady && encountersReady && characterCatalog?.clips.count == 39 && !saveBlocked
         if !existingSave { save.profile.introductionSeen = false }
         if let narratives, (try? narratives.validate()) != nil {
             if let cursor = save.profile.journey?.cursor,
@@ -399,7 +406,35 @@ private struct CharacterVoiceCatalog: Decodable {
                 if scenario == "locked" { try? DefenseCampaign.begin(episode: 1, intensity: .light, in: &save) }
             }
         }
+        if Self.testHarness, !existingSave, let marker = arguments.firstIndex(of: "--ui-testing-combat"), marker + 1 < arguments.count,
+           let combatRules, let catalog = progressionCatalog {
+            save.profile.xp = 4250
+            var equipment = save.profile.growth
+            for id in ["resonance-blade", "barrier-coat", "trace-shoes", "archive-lens"] {
+                if let item = catalog.equipment.first(where: { $0.id == id }) {
+                    equipment.owned.insert(id); equipment.equipped[item.slot.rawValue] = id
+                }
+            }
+            save.profile.growth = equipment; try? CombatRelease.migrate(&save)
+            let template = MissionTemplate(id:"beast",title:"잔향 늑대",kind:.ambush,startFraction:0.3,duration:25,hp:180,audio:"wolf_intro")
+            let mission = GameContent(schema:1,missionTitle:"전투 화면 검증",events:[template])
+            var session = RunSession(targetSeconds:1800,simulated:true,allowPursuit:false,mode:.contract,loadout:stats)
+            session.activeSeconds = 180; session.phase = .moving; session.lastTimestamp = 0
+            session.rulesVersion = 2; session.consumed.insert(template.id)
+            session.event = RunEvent(template:template,stage:.active,hp:180,startingHP:180,baseline:2.5)
+            try? CombatRelease.prepare(&session,rules:combatRules)
+            var fixture = RunEngine(session:session,content:mission)
+            fixture.consume(SensorFrame(timestamp:1,speed:2.5,distance:75,movement:.running,signal:.good,distanceDuration:30))
+            let scenario = arguments[marker + 1]
+            if scenario == "paused" { fixture.pause(true) }
+            engine = fixture; showRun = true
+            movement = scenario == "walking" ? .walking : .running; signal = .good
+        }
         #endif
+        if !saveBlocked {
+            do { if try CombatRelease.migrate(&save) { try repository.write(save) } }
+            catch { saveBlocked = true; isReady = false; notice = "성장 기록을 보호하기 위해 새 활동을 멈췄어요. 저장 공간을 확인해주세요." }
+        }
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -510,7 +545,7 @@ private struct CharacterVoiceCatalog: Decodable {
         guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
         guard !environment.isIndoor else { notice = "실내 활동은 지부 방어 작전에서 시작해주세요. 이전 기록은 헌터 화면에서 볼 수 있어요."; return }
         guard !simulated || Self.testHarness else { return }
-        guard isReady, let content, engine == nil, save.active == nil else { return }
+        guard isReady, let content, let combatRules, engine == nil, save.active == nil else { return }
         if !simulated && !environment.isIndoor && sensor.permission != .authorizedAlways && sensor.permission != .authorizedWhenInUse {
             notice = "야외 활동에는 위치 권한이 필요해요. iPhone 설정에서 '앱을 사용하는 동안'과 '정확한 위치'를 허용해주세요."
             authorize(); return
@@ -579,6 +614,8 @@ private struct CharacterVoiceCatalog: Decodable {
         session.goal = requested
         session.directorVersion = 2
         session.missionSnapshot = mission
+        do { try CombatRelease.prepare(&session,rules:combatRules) }
+        catch { notice = "전투 규칙을 연결하지 못했어요. 앱 파일을 확인해주세요."; return }
         stopIndoorCheck()
         engine = RunEngine(session: session, content: mission, attack: save.profile.attack)
         mockTime = Date().timeIntervalSince1970
@@ -691,6 +728,7 @@ private struct CharacterVoiceCatalog: Decodable {
         if !run.simulated { narratives?.refresh(&candidate.profile) }
         candidate.active = nil
         do {
+            if !run.simulated { try CombatRelease.migrate(&candidate) }
             try repository.write(candidate)
             save = candidate; lastSummary = summary
             if run.simulated { lastDemo = run }
@@ -880,6 +918,7 @@ private struct CharacterVoiceCatalog: Decodable {
             var imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
             if imported.active?.simulated == true && !Self.testHarness { imported.active = nil }
+            try CombatRelease.migrate(&imported)
             narratives?.refresh(&imported.profile)
             if let cursor = imported.profile.journey?.cursor,
                narratives?.scene(cursor.sceneID)?.node(cursor.nodeID) == nil {
@@ -887,7 +926,7 @@ private struct CharacterVoiceCatalog: Decodable {
             }
             try repository.write(imported); save = imported
             saveBlocked = false
-            isReady = content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady
+            isReady = combatRules != nil && content != nil && progressionCatalog != nil && missions != nil && world != nil && narrationReady
                 && fieldEncounters.map { (try? $0.validate()) != nil } == true
                 && narratives.map { (try? $0.validate()) != nil } == true
             recoverable = save.active != nil; selectedBoss = nil; selectedFieldDemo = nil; lastSummary = nil
@@ -898,7 +937,7 @@ private struct CharacterVoiceCatalog: Decodable {
         guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
         guard engine == nil, save.active == nil else { notice = "진행 중인 활동을 먼저 마쳐주세요."; return }
         do {
-            save = try repository.reset(); narratives?.refresh(&save.profile)
+            save = try repository.reset(); try CombatRelease.migrate(&save); try repository.write(save); narratives?.refresh(&save.profile)
             saveBlocked = false; recoverable = false; selectedBoss = nil; selectedFieldDemo = nil
             selectedMode = .contract; lastSummary = nil; lastDemo = nil; selectedTab = 0
             showSettings = false; showWelcome = true
