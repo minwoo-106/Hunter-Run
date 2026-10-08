@@ -49,6 +49,7 @@ struct RootView: View {
                 .toolbar(.hidden, for: .tabBar)
                 HunterTabBar(onSelect: selectTab, isTransitioning: tabTransition != nil)
             }
+            .allowsHitTesting(tabTransition == nil)
             if let tabTransition {
                 TabTransitionView(transition: tabTransition).ignoresSafeArea()
             }
