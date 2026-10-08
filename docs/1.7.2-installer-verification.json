@@ -1,0 +1,23 @@
+{
+  "version": "1.7.2",
+  "build": "59",
+  "bundle": "com.hunterrun.demo",
+  "bytes": 307204805,
+  "sha256": "a9974ca337c4c79685bf8d0f597a29145b2d885f74948c989351ba22eca92377",
+  "verifiedVoices": {
+    "operator-voice.json": 177,
+    "character-audio.json": 39,
+    "defense-voice.json": 151
+  },
+  "verifiedDefenseAssets": 9,
+  "verifiedLifeAssets": 16,
+  "simulatorFixturesExcluded": true,
+  "bundledGameDataMatchesSource": true,
+  "codemagicBuild": "https://codemagic.io/app/6aa34d1b5a8fa8a63bc40bb9/build/6ac6f2272e8bb15cf39c3130",
+  "sourceCommit": "b2c45a000af1ee85176b25f11763db7a19a2b9c0",
+  "portableTests": 229,
+  "uiTests": 6,
+  "visualReview": "8 album screens on compact simulator; workout and accessibility screenshots also inspected",
+  "artVerification": "Approved source image hashes validated before compilation; packaged asset names and simulator screenshots checked",
+  "physicalIPhoneTest": false
+}
