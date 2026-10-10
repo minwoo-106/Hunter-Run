@@ -47,6 +47,19 @@ final class TransitionReleaseTests: XCTestCase {
         ready(app.segmentedControls["association.section"])
         ready(app.buttons["nav.0"]); app.buttons["nav.0"].tap(); ready(app.buttons["home.settings"])
     }
+    @MainActor func testLongBackgroundDoesNotSkipRemainingTransition() {
+        let app = app(); app.launchArguments.append("--ui-testing-transition-clock"); app.launch()
+        ready(app.buttons["nav.3"]); app.buttons["nav.3"].tap()
+        XCUIDevice.shared.press(.home)
+        // 앱 바깥에서 연출 전체 길이보다 오래 기다려도 활성 시간은 흐르지 않는다.
+        Thread.sleep(forTimeInterval: 13)
+        app.activate()
+        XCTAssertTrue(app.staticTexts["transition.elapsed"].waitForExistence(timeout: 3))
+        let elapsed = Double(app.staticTexts["transition.elapsed"].label) ?? -1
+        XCTAssertGreaterThanOrEqual(elapsed, 0)
+        XCTAssertLessThan(elapsed, 10, "복귀 즉시 연출이 완료되면 안 됩니다")
+        ready(app.segmentedControls["association.section"])
+    }
     @MainActor func testApprovedArtworkKeyFrames() {
         for (scene, progress) in [("launch","0.4"),("launch","0.63"),("hunter","0.2"),("activity","0.6"),("association","0.25"),("association","0.63")] {
             let app = app(); app.launchArguments += ["--ui-testing-transition-frame",scene,progress]; app.launch()

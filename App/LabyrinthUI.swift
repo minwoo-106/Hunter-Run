@@ -164,7 +164,7 @@ struct LaunchGateView: View {
     @State private var entered = false
     @State private var entering = false
     @State private var showingPortal = true
-    @State private var entranceStartedAt: Date?
+    @State private var entranceClock: PresentationClock?
     private var skip: Bool {
 #if DEBUG && targetEnvironment(simulator)
         return ProcessInfo.processInfo.arguments.contains("--ui-testing-skip-title")
@@ -179,7 +179,7 @@ struct LaunchGateView: View {
             if showingPortal && !skip {
                 GeometryReader { geo in
                     ZStack {
-                        LaunchPortalScene(entering: entering, entranceStartedAt: entranceStartedAt,
+                        LaunchPortalScene(entering: entering, entranceProgress: entranceClock?.progress ?? 0,
                                           reduceMotion: reduceMotion).ignoresSafeArea()
                         VStack(spacing: 15) {
                             Spacer().frame(height: geo.size.height * 0.60)
@@ -223,7 +223,18 @@ struct LaunchGateView: View {
         .background(Theme.ink.ignoresSafeArea())
         .onAppear { model.refreshLobbyMusic() }
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active && entering { entered = true; showingPortal = false }
+            entranceClock?.setActive(phase == .active, at: ProcessInfo.processInfo.systemUptime)
+        }
+        .task(id: entering) {
+            while !Task.isCancelled, entering, showingPortal {
+                do { try await Task.sleep(for: .milliseconds(33)) } catch { return }
+                guard !Task.isCancelled else { return }
+                if scenePhase == .active {
+                    entranceClock?.advance(to: ProcessInfo.processInfo.systemUptime)
+                    if entranceClock?.handedOff == true { entered = true }
+                    if entranceClock?.complete == true { showingPortal = false; entranceClock = nil }
+                }
+            }
         }
     }
 
@@ -231,12 +242,9 @@ struct LaunchGateView: View {
         guard !entering && !entered else { return }
         model.interfaceFeedback()
         guard !reduceMotion else { entered = true; showingPortal = false; return }
-        entranceStartedAt = Date()
+        entranceClock = PresentationClock(duration: LaunchPortalScene.duration, handoff: 0.60,
+                                          at: ProcessInfo.processInfo.systemUptime)
         entering = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + LaunchPortalScene.duration * 0.60) {
-            entered = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + LaunchPortalScene.duration) { showingPortal = false }
     }
 }
 

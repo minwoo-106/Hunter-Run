@@ -53,6 +53,12 @@ struct RootView: View {
             if let tabTransition {
                 TabTransitionView(transition: tabTransition).ignoresSafeArea()
             }
+#if DEBUG && targetEnvironment(simulator)
+            if ProcessInfo.processInfo.arguments.contains("--ui-testing-transition-clock") {
+                Text(String(format: "%.3f", tabTransition?.clock.elapsed ?? -1))
+                    .accessibilityIdentifier("transition.elapsed").opacity(0.01).allowsHitTesting(false)
+            }
+#endif
         }
         .background(Theme.ink.ignoresSafeArea())
         .tint(Theme.teal)
@@ -62,9 +68,18 @@ struct RootView: View {
             if let tabTransition, selected != tabTransition.destination { self.tabTransition = nil }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active, let tabTransition {
-                model.selectedTab = tabTransition.destination
-                self.tabTransition = nil
+            tabTransition?.clock.setActive(phase == .active, at: ProcessInfo.processInfo.systemUptime)
+        }
+        .task(id: tabTransition?.id) {
+            while !Task.isCancelled, tabTransition != nil {
+                do { try await Task.sleep(for: .milliseconds(33)) } catch { return }
+                guard !Task.isCancelled else { return }
+                if scenePhase == .active {
+                    tabTransition?.clock.advance(to: ProcessInfo.processInfo.systemUptime)
+                    guard let transition = tabTransition else { return }
+                    if transition.clock.handedOff { model.selectedTab = transition.destination }
+                    if transition.clock.complete { tabTransition = nil }
+                }
             }
         }
         .onChange(of: model.showAssociation) { _, _ in model.refreshLobbyMusic() }
@@ -102,14 +117,6 @@ struct RootView: View {
         }
         let transition = TabTransition(destination: destination, spec: .forTab(destination))
         tabTransition = transition
-        DispatchQueue.main.asyncAfter(deadline: .now() + transition.spec.duration * transition.spec.handoff) {
-            guard tabTransition?.id == transition.id else { return }
-            model.selectedTab = destination
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + transition.spec.duration) {
-            guard tabTransition?.id == transition.id else { return }
-            tabTransition = nil
-        }
     }
 }
 struct HomeView: View {

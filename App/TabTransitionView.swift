@@ -3,8 +3,18 @@ import SwiftUI
 struct TabTransition: Identifiable {
     let id = UUID()
     let destination: Int
-    let startedAt = Date()
+    var clock: PresentationClock
     let spec: TabTransitionSpec
+    init(destination: Int, spec: TabTransitionSpec) {
+        self.destination = destination
+        var multiplier = 1.0
+#if DEBUG && targetEnvironment(simulator)
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing-transition-clock") { multiplier = 5 }
+#endif
+        self.spec = TabTransitionSpec(duration: spec.duration * multiplier, handoff: spec.handoff, fadeStart: spec.fadeStart)
+        clock = PresentationClock(duration: self.spec.duration, handoff: spec.handoff,
+                                  at: ProcessInfo.processInfo.systemUptime)
+    }
 }
 
 struct TabTransitionSpec {
@@ -27,25 +37,22 @@ struct TabTransitionSpec {
 /// while this layer fades away over the already-loaded destination screen.
 struct TabTransitionView: View {
     let transition: TabTransition
-    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: scenePhase != .active)) { context in
-            let progress = TransitionMath.clamp(context.date.timeIntervalSince(transition.startedAt) / transition.spec.duration)
-            GeometryReader { geometry in
+        let progress = transition.clock.progress
+        GeometryReader { geometry in
                 Group {
                     switch transition.destination {
                     case 0: HomeReturnTransition(progress: progress)
-                    case 1: TransitionArtwork(scene: .hunter, progress: progress, elapsed: context.date.timeIntervalSince(transition.startedAt))
-                    case 2: TransitionArtwork(scene: .activity, progress: progress, elapsed: context.date.timeIntervalSince(transition.startedAt))
-                    case 3: TransitionArtwork(scene: .association, progress: progress, elapsed: context.date.timeIntervalSince(transition.startedAt))
+                    case 1: TransitionArtwork(scene: .hunter, progress: progress, elapsed: transition.clock.elapsed)
+                    case 2: TransitionArtwork(scene: .activity, progress: progress, elapsed: transition.clock.elapsed)
+                    case 3: TransitionArtwork(scene: .association, progress: progress, elapsed: transition.clock.elapsed)
                     default: CodexScrollTransition(progress: progress)
                     }
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .clipped()
                 .opacity(TransitionMath.ramp(progress, 0, 0.07) * (1 - TransitionMath.ramp(progress, transition.spec.fadeStart, 1)))
-            }
         }
         .accessibilityHidden(true)
         .allowsHitTesting(false)
