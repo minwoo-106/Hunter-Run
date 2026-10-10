@@ -65,6 +65,21 @@ final class IndoorLayoutTests: XCTestCase {
         reach(app.buttons["defense.start"], in: app); XCTAssertFalse(app.buttons["defense.start"].isEnabled)
         let shot = XCTAttachment(screenshot: app.screenshot()); shot.name = "Defense-briefing"; shot.lifetime = .keepAlways; add(shot)
     }
+    @MainActor func testWorkoutGuideAndStandingAlternativeCanBeSelectedBeforeExercise() {
+        let app = launch()
+        reach(app.buttons["defense.next"], in: app); app.buttons["defense.next"].tap()
+        reach(app.switches["defense.standingOnly"], in: app)
+        XCTAssertEqual(app.switches["defense.standingOnly"].value as? String,"0")
+        reach(app.buttons["오늘의 동작과 쉬운 대안 보기"], in: app)
+        app.buttons["오늘의 동작과 쉬운 대안 보기"].tap()
+        reach(app.staticTexts["버드독"], in: app)
+        XCTAssertTrue(app.staticTexts["버드독"].exists)
+        app.buttons["확인"].tap()
+        reach(app.switches["defense.standingOnly"], in: app); app.switches["defense.standingOnly"].tap()
+        reach(app.buttons["오늘의 동작과 쉬운 대안 보기"], in: app); app.buttons["오늘의 동작과 쉬운 대안 보기"].tap()
+        XCTAssertFalse(app.staticTexts["버드독"].exists)
+        reach(app.staticTexts["힙 힌지"], in: app); XCTAssertTrue(app.staticTexts["힙 힌지"].exists)
+    }
     @MainActor func testPauseAndBackgroundKeepClockStopped() {
         let app = launch(); prepare(app); waitRunning(app); app.buttons["defense.pause"].tap()
         let elapsed = app.staticTexts["defense.elapsed"].label

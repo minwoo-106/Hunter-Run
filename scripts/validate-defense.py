@@ -19,7 +19,8 @@ for e in catalog['episodes']:
 assert len(lines) == len(manifest['clips']) == 151
 assert len({c['key'] for c in manifest['clips']}) == 151
 assert {c['key'] for c in manifest['clips']} == set(lines)
-assert {p.stem for p in (root/'Resources/DefenseAudio').glob('*.wav')} == set(lines)
+workout_lines = read('Resources/defense-workout-lines.json') if (root/'Resources/defense-workout-lines.json').exists() else {}
+assert {p.stem for p in (root/'Resources/DefenseAudio').glob('*.wav')} == set(lines) | set(workout_lines)
 total_audio = 0
 for c in manifest['clips']:
     assert c['text'] == lines[c['key']], c['key']

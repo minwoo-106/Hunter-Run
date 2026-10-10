@@ -218,3 +218,4 @@ assert next(s for s in scenes if s['id'] == 'M21')['artwork'] == 'PurificationRo
 assert all(len([n for n in s['nodes'] if n.get('choices')]) == 1 for s in scenes if s['id'] in ('M10', 'M13'))
 import runpy
 runpy.run_path(str(root / 'scripts/validate-defense.py'))
+runpy.run_path(str(root / 'scripts/validate-defense-workouts.py'))

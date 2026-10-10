@@ -127,6 +127,7 @@ private struct DefenseBriefingView: View {
     @ObservedObject var runtime: DefenseRuntime
     let episode: DefenseEpisode
     @State private var intensity: DefenseIntensity = .standard
+    @State private var standingOnly = false
     @State private var ready = false
     @State private var guide = false
     var body: some View {
@@ -142,7 +143,7 @@ private struct DefenseBriefingView: View {
                             Image(systemName: intensity == level ? "checkmark.circle.fill" : "circle")
                             VStack(alignment: .leading, spacing: 5) {
                                 Text(level.title).font(.headline)
-                                Text("동작 \(level.workSeconds)초 · 회복과 준비 \(60-level.workSeconds)초").font(.caption)
+                                Text("동작 \(level.workoutSeconds)초 · 회복과 준비 \(60-level.workoutSeconds)초").font(.caption)
                             }; Spacer()
                         }.padding(14).background(intensity == level ? Theme.teal.opacity(0.13) : Labyrinth.stone, in: RelicShape())
                     }.buttonStyle(.plain).foregroundStyle(intensity == level ? Theme.teal : Labyrinth.parchment)
@@ -150,9 +151,13 @@ private struct DefenseBriefingView: View {
                 }
                 Text("모두 24분 · 이야기와 일러스트 보상은 같아요. 도전에서도 점프나 전력 질주는 필요하지 않아요.").font(.caption).foregroundStyle(Theme.muted)
                 VStack(alignment: .leading, spacing: 7) {
-                    Text("준비 4분 → 교전 5분 → 재정비 1분").font(.callout)
-                    Text("교전 5분 → 재정비 1분 → 교전 5분 → 정리 3분").font(.callout)
+                    Text("준비 4분 → 서서 교전 6분 → 회복 1분").font(.callout)
+                    Text("서서 교전 6분 → 자세 전환 1분 → 바닥 교전 4분 → 정리 2분").font(.callout)
+                    Text(runtime.workouts?.workout(episode.number)?.focus ?? "전신 운동").font(.caption).foregroundStyle(Theme.teal)
                 }.card()
+                Toggle("오늘은 서서 하는 동작으로만", isOn: $standingOnly).tint(Theme.teal)
+                    .accessibilityIdentifier("defense.standingOnly")
+                Text(standingOnly ? "바닥 교전을 벽 푸시업·힙 힌지·서서 하는 코어 동작으로 바꿔요. 시간과 보상은 같아요." : "매트를 준비해요. 서서 하는 운동 뒤에 바닥 운동을 모아서 진행해요.").font(.caption).foregroundStyle(Theme.muted)
                 Button("오늘의 동작과 쉬운 대안 보기") { guide = true }.buttonStyle(GameButtonStyle())
                 Text("미끄럽지 않은 공간과 튼튼한 벽을 준비해요. 동작이 불편하면 편한 걷기로 바꾸고, 통증이나 어지러움이 있으면 멈춰요. 준비 시간이 더 필요하면 시작 전에 충분히 몸을 풀어주세요.").font(.caption).foregroundStyle(Theme.muted)
                 Text("휴대폰은 손에 들지 않고 세워두어도 돼요. 운동 중 자동 화면 잠금을 막아요. 화면 잠금·다른 앱 이동·전화는 작전을 일시정지해요.").font(.caption).foregroundStyle(Theme.muted)
@@ -160,12 +165,15 @@ private struct DefenseBriefingView: View {
                 if model.voiceVolume == 0 { Text("설정에서 안내 음량이 꺼져 있어요. 소리를 켜거나 화면의 안내를 확인하며 진행해주세요.").font(.caption).foregroundStyle(.orange) }
                 if !runtime.audioReady { Text("작전 안내 음성이 준비되지 않았어요. 앱 파일을 확인해주세요.").foregroundStyle(.orange) }
                 if let error = runtime.error { Text(error).foregroundStyle(.orange) }
-                Button("작전 준비 완료") { runtime.start(episode: episode.number, intensity: intensity) }
+                Button("작전 준비 완료") { runtime.start(episode: episode.number, intensity: intensity, standingOnly: standingOnly) }
                     .buttonStyle(GameButtonStyle(primary: true)).disabled(!ready || !runtime.audioReady || model.growthLocked)
                     .accessibilityIdentifier("defense.start")
             }.padding(22)
         }.labyrinthScreen(artwork: "DefenseAnnex").navigationTitle("출동 준비").navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $guide) { DefenseExerciseGuide(exercises: Array(Set(episode.exercises)).sorted { $0.rawValue < $1.rawValue }) }
+            .sheet(isPresented: $guide) {
+                let moves = runtime.workouts?.workout(episode.number)?.moves(standingOnly: standingOnly) ?? episode.exercises
+                DefenseExerciseGuide(exercises: moves.reduce(into: [DefenseExercise]()) { if !$0.contains($1) { $0.append($1) } })
+            }
     }
 }
 
@@ -200,15 +208,19 @@ struct DefenseSessionView: View {
                         VStack(alignment: .leading, spacing: 22) {
                             HStack { Text("작전 \(session.episode) / 30").font(.headline); Spacer(); Text(session.intensity.title).foregroundStyle(Theme.teal) }
                             Text(runtime.episode?.title ?? "지부 방어 작전").font(.title2.bold())
-                            DefenseBattleDisplay(moment: moment, elapsed: session.elapsed, paused: session.paused, reducedMotion: reducedMotion)
+                            DefenseBattleDisplay(moment: moment, elapsed: session.elapsed, paused: session.paused, reducedMotion: reducedMotion, contentVersion: session.contentVersion)
                             HStack(alignment: .firstTextBaseline) {
                                 Text(moment.title).font(.title3.bold()); Spacer()
                                 Text(defenseTime(moment.phaseRemaining)).font(.title2.monospacedDigit())
                             }
-                            Text(moment.phase == .battle ? (moment.preparing ? "잠깐 회복 · 다음 동작 준비" : moment.exercise.title) : "천천히 걷고 편하게 호흡해요")
+                            Text(moment.phase == .battle ? (moment.preparing ? "잠깐 회복 · 다음 동작 준비" : moment.exercise.title) :
+                                moment.phase == .warmup ? moment.exercise.title :
+                                session.contentVersion == 2 && moment.phase == .cooldown && moment.slot == 0 && session.standingOnly != true ? "누워서 편하게 호흡해요" :
+                                session.contentVersion == 2 && moment.phase == .recovery && moment.phaseIndex == 2 && session.standingOnly != true ? "매트에서 다음 자세 준비" : "편하게 호흡하며 천천히 정리해요")
                                 .font(.title.bold()).accessibilityIdentifier("defense.exercise")
                             if moment.phase == .battle {
-                                Text(moment.preparing ? "다음 · " + moment.exercise.title : "편한 걷기로 바꿔도 괜찮아요").foregroundStyle(Theme.muted)
+                                Text(moment.preparing ? "다음 · " + moment.exercise.title : moment.exercise.alternative).foregroundStyle(Theme.muted)
+                                Text(moment.exercise.instruction).font(.caption).foregroundStyle(Theme.muted)
                                 Text("\(Int(ceil(moment.intervalRemaining)))초").font(.system(size: 48, weight: .semibold, design: .rounded)).monospacedDigit()
                             }
                             Text(runtime.caption).font(.body).lineSpacing(4).frame(maxWidth: .infinity, alignment: .leading).card()
@@ -243,14 +255,16 @@ private struct DefenseBattleDisplay: View {
     let elapsed: Double
     let paused: Bool
     let reducedMotion: Bool
+    let contentVersion: Int
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20).fill(Theme.ink.opacity(0.9))
             VStack(spacing: 16) {
                 HStack(spacing: 14) {
                     ForEach(0..<3) { index in
-                        Image(systemName: elapsed >= Double([540,900,1260][index]) ? "checkmark.shield.fill" : "shield.lefthalf.filled")
-                            .font(.system(size: 34)).foregroundStyle(elapsed >= Double([540,900,1260][index]) ? Theme.teal : Labyrinth.gold.opacity(0.6))
+                        let ends = contentVersion == 2 ? [600,1020,1320] : [540,900,1260]
+                        Image(systemName: elapsed >= Double(ends[index]) ? "checkmark.shield.fill" : "shield.lefthalf.filled")
+                            .font(.system(size: 34)).foregroundStyle(elapsed >= Double(ends[index]) ? Theme.teal : Labyrinth.gold.opacity(0.6))
                     }
                 }
                 ProgressView(value: elapsed, total: 1440).tint(Theme.teal)

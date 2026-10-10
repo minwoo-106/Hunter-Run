@@ -1,5 +1,7 @@
 """Package the compiled iPhone app with versioned filenames and verify bundled voice assets."""
 import hashlib, io, json, pathlib, plistlib, sys, zipfile
+import subprocess
+subprocess.run([sys.executable, str(pathlib.Path(__file__).with_name('validate-defense-workouts.py')), '--require-approval'], check=True)
 app=pathlib.Path(sys.argv[1]); out=pathlib.Path(sys.argv[2]); out.mkdir(parents=True,exist_ok=True)
 info=plistlib.loads((app/'Info.plist').read_bytes())
 version=info['CFBundleShortVersionString']; build=info['CFBundleVersion']
@@ -21,7 +23,7 @@ for clip in voice['clips']:
     files=list(app.rglob(clip['file'])); assert len(files)==1,clip['file']
     assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']
 # Release must contain the exact campaign and voice revisions the user reviewed.
-for name in ['defense-campaign', 'defense-lines', 'defense-voice']:
+for name in ['defense-campaign', 'defense-lines', 'defense-voice', 'defense-workouts', 'defense-workout-lines', 'defense-workout-voice']:
     paths=list(app.rglob(name+'.json')); assert len(paths)==1,name
     assert json.loads(paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources'/(name+'.json')).read_text(encoding='utf-8')),name
 defense=json.loads((root/'Resources/defense-voice.json').read_text(encoding='utf-8'))
@@ -29,6 +31,10 @@ approval=json.loads((root/'docs/indoor-defense/reviews/2026-10-07-final-approval
 assert len(defense['clips'])==151
 assert approval['voices']=={c['key']:c['sha256'] for c in defense['clips']}
 for clip in defense['clips']:
+    files=list(app.rglob(clip['file'])); assert len(files)==1,clip['file']
+    assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']
+workout_voice=json.loads((root/'Resources/defense-workout-voice.json').read_text(encoding='utf-8'))
+for clip in workout_voice['clips']:
     files=list(app.rglob(clip['file'])); assert len(files)==1,clip['file']
     assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']
 combat_paths=list(app.rglob('combat-v3.json')); assert len(combat_paths)==1

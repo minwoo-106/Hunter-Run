@@ -4,14 +4,17 @@ public enum DefenseIntensity: String, Codable, CaseIterable {
     case light, standard, challenge
     public var title: String { switch self { case .light: return "가볍게"; case .standard: return "기본"; case .challenge: return "조금 더 도전" } }
     public var workSeconds: Int { switch self { case .light: return 20; case .standard: return 30; case .challenge: return 40 } }
+    public var workoutSeconds: Int { switch self { case .light: return 30; case .standard: return 45; case .challenge: return 50 } }
 }
 
 public enum DefenseExercise: String, Codable, CaseIterable {
     case march, step, knee, squat, wallPush, heel, boxing
+    case fastMarch, crossKnee, skater, squatReach, backLunge, sideCrunch, hipHinge
+    case kneePush, birdDog, plank, bridge, deadBug, heelTouch
     public var title: String {
-        switch self { case .march: return "제자리 걷기"; case .step: return "좌우 스텝"; case .knee: return "무릎 번갈아 올리기"; case .squat: return "스쿼트"; case .wallPush: return "벽 푸시업"; case .heel: return "뒤꿈치 들기"; case .boxing: return "가벼운 섀도복싱" }
+        switch self { case .march: return "제자리 걷기"; case .step: return "좌우 스텝"; case .knee: return "무릎 번갈아 올리기"; case .squat: return "스쿼트"; case .wallPush: return "벽 푸시업"; case .heel: return "뒤꿈치 들기"; case .boxing: return "가벼운 섀도복싱"; default: return workoutInfo.0 }
     }
-    public var symbol: String { switch self { case .march: return "figure.walk"; case .step: return "arrow.left.arrow.right"; case .knee: return "figure.march"; case .squat: return "figure.strengthtraining.functional"; case .wallPush: return "hand.raised"; case .heel: return "shoeprints.fill"; case .boxing: return "figure.boxing" } }
+    public var symbol: String { switch self { case .march, .fastMarch: return "figure.walk"; case .step, .skater: return "arrow.left.arrow.right"; case .knee, .crossKnee: return "figure.march"; case .wallPush, .kneePush: return "hand.raised"; case .heel: return "shoeprints.fill"; case .boxing: return "figure.boxing"; default: return "figure.strengthtraining.functional" } }
     public var instruction: String {
         switch self {
         case .march: return "제자리에서 편하게 걸어요. 발을 가볍게 딛고 어깨에 힘을 빼주세요."
@@ -21,10 +24,11 @@ public enum DefenseExercise: String, Codable, CaseIterable {
         case .wallPush: return "벽에 손을 대고 팔꿈치를 천천히 굽혔다 펴요. 벽 가까이 서면 더 가벼워져요."
         case .heel: return "벽을 가볍게 짚고 뒤꿈치를 천천히 들었다 내려요. 반동 없이 작게 움직여요."
         case .boxing: return "주먹을 가볍게 쥐고 번갈아 앞으로 뻗어요. 팔꿈치를 끝까지 세게 펴지는 마세요."
+        default: return workoutInfo.1
         }
     }
     public var alternative: String {
-        switch self { case .squat: return "튼튼한 의자에서 천천히 일어나기 또는 제자리 걷기"; case .wallPush: return "벽 가까이 서기 또는 편한 팔 움직임"; case .boxing: return "앉아서 천천히 팔 뻗기"; case .knee: return "낮은 무릎 올리기 또는 앉아서 번갈아 들기"; case .heel: return "벽을 짚고 작게 들기"; default: return "작고 느린 제자리 걷기 또는 앉아서 발 움직이기" }
+        switch self { case .squat: return "튼튼한 의자에서 천천히 일어나기 또는 제자리 걷기"; case .wallPush: return "벽 가까이 서기 또는 편한 팔 움직임"; case .boxing: return "앉아서 천천히 팔 뻗기"; case .knee: return "낮은 무릎 올리기 또는 앉아서 번갈아 들기"; case .heel: return "벽을 짚고 작게 들기"; default: return workoutInfo.2 }
     }
 }
 
@@ -120,13 +124,14 @@ public struct DefenseSession: Codable, Identifiable {
     public let episode: Int
     public let intensity: DefenseIntensity
     public let contentVersion: Int
+    public var standingOnly: Bool?
     public var elapsed: Double
     public var paused: Bool
-    public init(episode: Int, intensity: DefenseIntensity) {
+    public init(episode: Int, intensity: DefenseIntensity, contentVersion: Int = 2, standingOnly: Bool = false) {
         id = UUID(); self.episode = episode; self.intensity = intensity
-        contentVersion = 1; elapsed = 0; paused = true
+        self.contentVersion = contentVersion; self.standingOnly = standingOnly; elapsed = 0; paused = true
     }
-    public var isValid: Bool { (1...30).contains(episode) && contentVersion == 1 && elapsed.isFinite && (0...DefenseTimeline.duration).contains(elapsed) }
+    public var isValid: Bool { (1...30).contains(episode) && (1...2).contains(contentVersion) && elapsed.isFinite && (0...DefenseTimeline.duration).contains(elapsed) }
 }
 
 /// Uptime is deliberately transient: relaunch never credits time spent with the app closed.
@@ -176,17 +181,19 @@ public struct DefenseProgress: Codable {
 }
 
 public enum DefenseCampaign {
-    public static func begin(episode: Int, intensity: DefenseIntensity, in save: inout SaveState) throws {
+    public static func begin(episode: Int, intensity: DefenseIntensity, standingOnly: Bool = false, in save: inout SaveState) throws {
         var progress = save.profile.defense ?? DefenseProgress()
         guard save.active == nil, progress.active == nil, progress.pendingReport == nil,
               progress.nextEpisode == episode else { throw DefenseError.unavailable }
-        progress.active = DefenseSession(episode: episode, intensity: intensity)
+        progress.active = DefenseSession(episode: episode, intensity: intensity, standingOnly: standingOnly)
         save.profile.defense = progress
     }
     public static func checkpoint(_ session: DefenseSession, in save: inout SaveState) throws {
         guard session.isValid, save.active == nil, var progress = save.profile.defense,
               progress.active?.id == session.id, progress.active?.episode == session.episode,
               progress.active?.intensity == session.intensity,
+              progress.active?.contentVersion == session.contentVersion,
+              progress.active?.standingOnly == session.standingOnly,
               session.elapsed >= (progress.active?.elapsed ?? 0) else { throw DefenseError.invalid }
         progress.active = session; save.profile.defense = progress
     }
@@ -196,6 +203,8 @@ public enum DefenseCampaign {
         guard session.isValid, session.elapsed == DefenseTimeline.duration else { throw DefenseError.unfinished }
         guard save.active == nil, progress.active?.id == session.id, progress.active?.episode == session.episode,
               progress.active?.intensity == session.intensity, progress.nextEpisode == session.episode,
+              progress.active?.contentVersion == session.contentVersion,
+              progress.active?.standingOnly == session.standingOnly,
               date.timeIntervalSince1970.isFinite else { throw DefenseError.unavailable }
         progress.records.append(DefenseRecord(id: session.id, episode: session.episode, intensity: session.intensity, seconds: session.elapsed, date: date))
         progress.active = nil; progress.pendingReport = session.episode

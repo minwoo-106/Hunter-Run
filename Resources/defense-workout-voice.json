@@ -1,0 +1,239 @@
+{
+  "version": 2,
+  "status": "awaiting-user-review",
+  "reference_sha256": "cdc1620796ad22a8330b08321281a904ba631d9b2807cb4f07df70fca1c96582",
+  "clips": [
+    {
+      "key": "defense_v2_move_march",
+      "text": "제자리 걷기. 편하게 걸어요.",
+      "file": "defense_v2_move_march.wav",
+      "duration": 2.27,
+      "sha256": "4479510e4c7c4a84f63ce97dcd8a2a28325bdddae6e233bd5185ff02bdcf4b55",
+      "seed": 3867642558
+    },
+    {
+      "key": "defense_v2_move_step",
+      "text": "좌우 스텝. 좌우로 한 걸음씩 옮겨요.",
+      "file": "defense_v2_move_step.wav",
+      "duration": 2.55,
+      "sha256": "32c385192dc2369e6b255019e2c730edb6932a781506d63c8fcf1489839695fc",
+      "seed": 2896704591
+    },
+    {
+      "key": "defense_v2_move_knee",
+      "text": "무릎 올리기. 무릎을 번갈아 올려요.",
+      "file": "defense_v2_move_knee.wav",
+      "duration": 3.09,
+      "sha256": "15d6c5bd9590e5e0d9470afdd2d3eb480db035ba6086e494451fd018390c7eac",
+      "seed": 2703835545
+    },
+    {
+      "key": "defense_v2_move_squat",
+      "text": "스쿼트. 엉덩이를 뒤로 보내며 앉았다 일어나요.",
+      "file": "defense_v2_move_squat.wav",
+      "duration": 3.28,
+      "sha256": "b2236d734ff1f49df720d7c04327348bee6d2e50453dd61513f3df4ca7a8ed73",
+      "seed": 1873505095
+    },
+    {
+      "key": "defense_v2_move_wallPush",
+      "text": "벽 푸시업. 벽에 손을 대고 팔을 굽혔다 펴요.",
+      "file": "defense_v2_move_wallPush.wav",
+      "duration": 3.35,
+      "sha256": "a7a1be3eec7dfc3f39b5d9799fc7e686e9a9fd586212a8f6762b6e2038364b68",
+      "seed": 1774349184
+    },
+    {
+      "key": "defense_v2_move_heel",
+      "text": "뒤꿈치 들기. 뒤꿈치를 천천히 들었다 내려요.",
+      "file": "defense_v2_move_heel.wav",
+      "duration": 3.26,
+      "sha256": "96eb1d46db0acfa71a3e360dcb196182b524d8fa37594581494444f861049d80",
+      "seed": 60615824
+    },
+    {
+      "key": "defense_v2_move_boxing",
+      "text": "섀도복싱. 주먹을 번갈아 앞으로 뻗어요.",
+      "file": "defense_v2_move_boxing.wav",
+      "duration": 2.9,
+      "sha256": "892f6cb725892ce4651e750bc10bd9d02818d1a559cb5cfccf5346b33bc2ccd4",
+      "seed": 2123866765
+    },
+    {
+      "key": "defense_v2_move_fastMarch",
+      "text": "빠른 제자리 걷기. 팔을 흔들며 조용히 걸어요.",
+      "file": "defense_v2_move_fastMarch.wav",
+      "duration": 3.65,
+      "sha256": "4ec7e8af9fa933b855907804ead75de733b1bcadd8e300c3553482723bd64ac5",
+      "seed": 2342461668
+    },
+    {
+      "key": "defense_v2_move_crossKnee",
+      "text": "교차 무릎 올리기. 무릎과 반대 손을 가까이 가져와요.",
+      "file": "defense_v2_move_crossKnee.wav",
+      "duration": 3.79,
+      "sha256": "346a5eb6b380187d3aaff2c5e2fc31602fb572c549eaee53d3f5ecc7bb1b60cd",
+      "seed": 3435852627
+    },
+    {
+      "key": "defense_v2_move_skater",
+      "text": "점프 없는 스케이터 스텝. 뛰지 않고 좌우로 한 걸음씩 옮겨요.",
+      "file": "defense_v2_move_skater.wav",
+      "duration": 3.97,
+      "sha256": "264af61607e10fd899df28e512710e2373f06f572c4ab0a3e3eb0e3dcb8bb061",
+      "seed": 1936417881
+    },
+    {
+      "key": "defense_v2_move_squatReach",
+      "text": "스쿼트와 팔 뻗기. 일어나며 팔을 뻗어요.",
+      "file": "defense_v2_move_squatReach.wav",
+      "duration": 2.98,
+      "sha256": "532f191eb4c11d1e9d488165eabab51342441165dcdabe0d8c44fab161833f08",
+      "seed": 619521273
+    },
+    {
+      "key": "defense_v2_move_backLunge",
+      "text": "번갈아 백 런지. 한 발씩 뒤로 짚고 얕게 앉아요.",
+      "file": "defense_v2_move_backLunge.wav",
+      "duration": 3.55,
+      "sha256": "1a4817e3f69fc9ba3f700489e25a7ed7551bce4270c942da17d394e0a80e7570",
+      "seed": 1713135355
+    },
+    {
+      "key": "defense_v2_move_sideCrunch",
+      "text": "서서 옆구리 접기. 좌우로 무릎과 팔꿈치를 가까이 가져와요.",
+      "file": "defense_v2_move_sideCrunch.wav",
+      "duration": 4.18,
+      "sha256": "7f37ca81aacfeef892d8ccb00da729d5b97358776d87a18c9812822d26e1589f",
+      "seed": 1946695974
+    },
+    {
+      "key": "defense_v2_move_hipHinge",
+      "text": "힙 힌지. 엉덩이를 뒤로 보내며 상체를 기울여요.",
+      "file": "defense_v2_move_hipHinge.wav",
+      "duration": 4.74,
+      "sha256": "c3e30115589135caf3f40dc40499e5b0fe36bb3aefbacddd8e1ba5acf2d3fc50",
+      "seed": 3084710783
+    },
+    {
+      "key": "defense_v2_move_kneePush",
+      "text": "무릎 푸시업. 무릎을 짚고 팔을 굽혔다 펴요.",
+      "file": "defense_v2_move_kneePush.wav",
+      "duration": 3.31,
+      "sha256": "858b3a32c6667c5d8b367a2bbc06dfa80758d03074a5ab4ede508a08608ee457",
+      "seed": 245259682
+    },
+    {
+      "key": "defense_v2_move_birdDog",
+      "text": "버드독. 반대 팔과 다리를 번갈아 뻗어요.",
+      "file": "defense_v2_move_birdDog.wav",
+      "duration": 2.67,
+      "sha256": "c03a4f43495640af6ab6cecb05a2010518da442d88c5521787ca9ae812ecbd7b",
+      "seed": 3002776791
+    },
+    {
+      "key": "defense_v2_move_plank",
+      "text": "무릎 플랭크. 팔꿈치와 무릎을 짚고 유지해요.",
+      "file": "defense_v2_move_plank.wav",
+      "duration": 3.29,
+      "sha256": "be69a81b005f03ffe3bcdc79969d75f81eaae5536868b401e7c74930007e9239",
+      "seed": 3208721510
+    },
+    {
+      "key": "defense_v2_move_bridge",
+      "text": "힙 브리지. 누워서 엉덩이를 들었다 내려요.",
+      "file": "defense_v2_move_bridge.wav",
+      "duration": 3.02,
+      "sha256": "5fb0a929717cd6904a6fc773c9ef9d4fdf3deacad7b22f4ed23eb068e390133a",
+      "seed": 3712379843
+    },
+    {
+      "key": "defense_v2_move_deadBug",
+      "text": "데드버그. 누워서 반대 팔과 다리를 내려요.",
+      "file": "defense_v2_move_deadBug.wav",
+      "duration": 3.08,
+      "sha256": "4806f130fd3396d6caf452444d5a723fe58682cce9bdbf662a3c1491c5ca71df",
+      "seed": 694245802
+    },
+    {
+      "key": "defense_v2_move_heelTouch",
+      "text": "누워 뒤꿈치 터치. 누워서 손을 좌우 뒤꿈치 쪽으로 뻗어요.",
+      "file": "defense_v2_move_heelTouch.wav",
+      "duration": 4.23,
+      "sha256": "63b35ebb8238972af4aa1a6adbaa99afb96cd378c8ec0ecc3d2784ee14915437",
+      "seed": 2505162575
+    },
+    {
+      "key": "defense_v2_seconds_light",
+      "text": "시작하면 30초 움직여요.",
+      "file": "defense_v2_seconds_light.wav",
+      "duration": 1.82,
+      "sha256": "ff7c7d6793ab40d4b02cb0c2d5ad52b0d60002f030164d37ed3a72cf273993cc",
+      "seed": 1560110373
+    },
+    {
+      "key": "defense_v2_seconds_standard",
+      "text": "시작하면 45초 움직여요.",
+      "file": "defense_v2_seconds_standard.wav",
+      "duration": 1.98,
+      "sha256": "b56a04b2abed7936d7169d98573511bc03929a2daa33c1997ae1a7d70b946492",
+      "seed": 533071670
+    },
+    {
+      "key": "defense_v2_seconds_challenge",
+      "text": "시작하면 50초 움직여요.",
+      "file": "defense_v2_seconds_challenge.wav",
+      "duration": 1.78,
+      "sha256": "7ca9afc613a57706ef062655321132f3629523524c48d5f84c0aab4d4c1b9672",
+      "seed": 3389607465
+    },
+    {
+      "key": "defense_v2_warm_last",
+      "text": "얕은 스쿼트로 마무리해요. 천천히 앉았다 일어나요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.",
+      "file": "defense_v2_warm_last.wav",
+      "duration": 6.73,
+      "sha256": "eca5ca010f0b1550645a83d107f033eade67abc7347caa2adf995fdece4c3790",
+      "seed": 327636863
+    },
+    {
+      "key": "defense_v2_floor",
+      "text": "이제 바닥 동작이에요. 매트에 손과 무릎을 짚고 준비해요. 아직 시작하지 않아요. 서두르지 않아도 돼요.",
+      "file": "defense_v2_floor.wav",
+      "duration": 7.1,
+      "sha256": "9c94f05472387bfef914cc47e431b74352488b4350e61d3a41930cf8f466c48e",
+      "seed": 1897775377
+    },
+    {
+      "key": "defense_v2_standing",
+      "text": "계속 서서 진행할게요. 잠깐 숨을 고르고 다음 동작을 준비해요.",
+      "file": "defense_v2_standing.wav",
+      "duration": 4.36,
+      "sha256": "5a684ef491620aa622a7428baa98c44aaeec88f865b11671c8abe9b9722c6f34",
+      "seed": 3289752754
+    },
+    {
+      "key": "defense_v2_cool_floor",
+      "text": "바닥에서 편하게 쉬어요. 무릎을 세우고 누워서 천천히 호흡해요. 교전은 끝났어요.",
+      "file": "defense_v2_cool_floor.wav",
+      "duration": 5.62,
+      "sha256": "88a5e935194d0f6e11ace5305489e95c74624118a0dc5fa1a3fb9c7845e343b5",
+      "seed": 443873398
+    },
+    {
+      "key": "defense_v2_cool_stand",
+      "text": "옆으로 돌아앉아 천천히 일어나요. 어지럽다면 앉아서 더 쉬어요. 준비되면 가볍게 걸어요.",
+      "file": "defense_v2_cool_stand.wav",
+      "duration": 6.13,
+      "sha256": "f0f483e14cf88b669b6c8f92e7c92f08e3b30dcab19ef0a90bbb15b31bb7faa7",
+      "seed": 3613452083
+    },
+    {
+      "key": "defense_v2_resume",
+      "text": "지금 자세에서 편하게 쉬어요. 다음 안내부터 남은 구간을 이어갈게요.",
+      "file": "defense_v2_resume.wav",
+      "duration": 4.5,
+      "sha256": "34a3fc4631eb707ca019b665be178b8415a9f8c48215e721b90756537c0eec4a",
+      "seed": 3014981511
+    }
+  ]
+}
