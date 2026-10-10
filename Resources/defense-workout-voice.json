@@ -189,10 +189,10 @@
     },
     {
       "key": "defense_v2_warm_last",
-      "text": "얕은 스쿼트로 마무리해요. 천천히 앉았다 일어나요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.",
+      "text": "스쿼트로 준비 운동을 마무리해요. 조금만 앉았다가 천천히 일어나요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.",
       "file": "defense_v2_warm_last.wav",
-      "duration": 6.73,
-      "sha256": "eca5ca010f0b1550645a83d107f033eade67abc7347caa2adf995fdece4c3790",
+      "duration": 7.34,
+      "sha256": "1627b9f1d3e7acaa3a124778f183da8179d8b25cd72568e7450f916d672384a0",
       "seed": 327636863
     },
     {

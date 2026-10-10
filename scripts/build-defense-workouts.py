@@ -62,7 +62,7 @@ lines = {'defense_v2_move_'+key: f'{name}. {tips[key]}.' for key, name in names.
 for intensity, seconds in [('light',30),('standard',45),('challenge',50)]:
     lines['defense_v2_seconds_'+intensity] = f'시작하면 {seconds}초 움직여요.'
 lines.update({
-    'defense_v2_warm_last':'얕은 스쿼트로 마무리해요. 천천히 앉았다 일어나요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.',
+    'defense_v2_warm_last':'스쿼트로 준비 운동을 마무리해요. 조금만 앉았다가 천천히 일어나요. 준비가 더 필요하면 잠깐 멈춰도 좋아요.',
     'defense_v2_floor':'이제 바닥 동작이에요. 매트에 손과 무릎을 짚고 준비해요. 아직 시작하지 않아요. 서두르지 않아도 돼요.',
     'defense_v2_standing':'계속 서서 진행할게요. 잠깐 숨을 고르고 다음 동작을 준비해요.',
     'defense_v2_cool_floor':'바닥에서 편하게 쉬어요. 무릎을 세우고 누워서 천천히 호흡해요. 교전은 끝났어요.',

@@ -1,12 +1,22 @@
 """신규 음성만 쉽게 넘겨 듣고, 30회 동작 배치를 함께 확인하는 검토 페이지."""
 import argparse, json, shutil
 from pathlib import Path
-p=argparse.ArgumentParser(); p.add_argument('--output',type=Path,required=True); a=p.parse_args()
+p=argparse.ArgumentParser(); p.add_argument('--output',type=Path,required=True)
+p.add_argument('--feedback',type=Path); p.add_argument('--pending-only',action='store_true'); a=p.parse_args()
 root=Path(__file__).resolve().parents[1]; out=a.output.resolve(); out.mkdir(parents=True,exist_ok=True)
 voice=json.loads((root/'Resources/defense-workout-voice.json').read_text(encoding='utf-8'))
 workouts=json.loads((root/'Resources/defense-workouts.json').read_text(encoding='utf-8'))
 campaign=json.loads((root/'Resources/defense-campaign.json').read_text(encoding='utf-8'))
-data=dict(clips=voice['clips'],workouts=workouts['episodes'],episodes=campaign['episodes'])
+feedback={}
+if a.feedback:
+    reviewed=json.loads(a.feedback.read_text(encoding='utf-8'))
+    for entry in reviewed['entries']:
+        clip=next((c for c in voice['clips'] if c['key']==entry['key']),None)
+        if clip and entry['sha256']==clip['sha256']:
+            feedback[entry['key']]={k:entry[k] for k in ['sha256','status','note']}
+pending=[c for c in voice['clips'] if feedback.get(c['key'],{}).get('status')!='ok']
+assert not a.pending_only or pending, '다시 확인할 음성이 없습니다.'
+data=dict(clips=voice['clips'],workouts=workouts['episodes'],episodes=campaign['episodes'],feedback=feedback,pendingOnly=a.pending_only)
 shutil.copy2(root/'Resources/DefenseAudio/defense_move_squat_standard.wav',out/'reference.wav')
 html='''<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hunter Run · 운동 개편 검토</title><style>
@@ -15,17 +25,20 @@ html='''<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewpor
 <main><div id="voices" class="layout"><nav id="list" class="list" aria-label="음성 목록"></nav><article class="card"><div class="muted" id="number"></div><h2 id="title"></h2><p id="script"></p><audio id="audio" controls preload="metadata"></audio><div class="controls"><button id="prev">← 이전</button><button id="reference">기존 승인 음성</button><button id="next">다음 →</button></div><hr><div class="controls"><button id="ok">좋아요 · 다음</button><button id="different">목소리 달라요</button><button id="other">발음·안내 수정</button></div><textarea id="note" rows="2" placeholder="필요하면 메모를 남겨주세요"></textarea><label><input type="checkbox" id="auto" checked> 다음으로 넘기면 자동 재생</label><p class="muted">키보드: ← → 이동 · 스페이스 재생 · 1 좋아요 · 2 목소리 다름 · 3 기타 수정. 화면 위아래로 이동할 필요 없이 한 자리에서 검토합니다.</p><div id="save"></div></article></div>
 <article id="plan" class="card"><h2>준비 4분 + 운동·회복·마무리 20분</h2><p class="muted">서서 교전 6분 → 회복 1분 → 서서 교전 6분 → 자세 전환 1분 → 바닥 교전 4분 → 정리 2분</p><p>가볍게 30/30초 · 기본 45/15초 · 도전 50/10초. 점프 없이 진행하며 회차가 올라가도 선택한 강도를 자동으로 높이지 않습니다.</p><select id="episode" aria-label="회차 선택"></select><label><input type="checkbox" id="standing"> 서서 하는 대안으로 보기</label><h3 id="focus"></h3><div class="routine" id="routine"></div><p class="muted">바닥 정리 1분 뒤 천천히 일어나 걷기 1분. 불편한 동작은 더 작은 움직임으로 바꾸거나 쉬어도 됩니다. 완료 회차·이야기·일러스트 보상은 동일합니다.</p></article></main>
 <script>const DATA=__DATA__;
-const el=id=>document.getElementById(id), clips=DATA.clips;
+const el=id=>document.getElementById(id), allClips=DATA.clips;
+const clips=DATA.pendingOnly?allClips.filter(c=>DATA.feedback[c.key]?.status!=='ok'):allClips;
+if(DATA.pendingOnly)el('voiceTab').textContent='다시 확인할 음성 '+clips.length+'개';
 const titles={march:'제자리 걷기',step:'좌우 스텝',knee:'무릎 올리기',squat:'스쿼트',wallPush:'벽 푸시업',heel:'뒤꿈치 들기',boxing:'섀도복싱',fastMarch:'빠른 제자리 걷기',crossKnee:'교차 무릎 올리기',skater:'점프 없는 스케이터',squatReach:'스쿼트와 팔 뻗기',backLunge:'번갈아 백 런지',sideCrunch:'서서 옆구리 접기',hipHinge:'힙 힌지',kneePush:'무릎 푸시업',birdDog:'버드독',plank:'무릎 플랭크',bridge:'힙 브리지',deadBug:'데드버그',heelTouch:'누워 뒤꿈치 터치'};
 const extra={light:'가볍게 · 30초',standard:'기본 · 45초',challenge:'도전 · 50초',warm_last:'준비 운동 마지막',floor:'바닥 자세로 전환',standing:'서서 하는 대안',cool_floor:'누워서 호흡 정리',cool_stand:'천천히 일어나 마무리',resume:'중단 후 다시 시작'};
 const name=c=>{let k=c.key.replace('defense_v2_','');return k.startsWith('move_')?titles[k.slice(5)]:extra[k.replace('seconds_','')]||k};
-let idx=0,ratings={};try{ratings=JSON.parse(localStorage.getItem('hunter-workout-review')||'{}')}catch{}
-for(const c of clips) if(ratings[c.key]?.sha256!==c.sha256) delete ratings[c.key];
-function result(){return {version:2,entries:clips.map(c=>({key:c.key,sha256:c.sha256,text:c.text,status:ratings[c.key]?.status||'unreviewed',note:ratings[c.key]?.note||''}))}}
-async function persist(){localStorage.setItem('hunter-workout-review',JSON.stringify(ratings));el('summary').textContent=clips.filter(c=>ratings[c.key]?.status).length+' / '+clips.length+' 체크';try{const r=await fetch('/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(result())});el('save').textContent=r.ok?'체크 내용 자동 저장됨':'브라우저에 저장됨 · 체크 파일 저장도 가능합니다'}catch{el('save').textContent='브라우저에 저장됨 · 체크 파일 저장도 가능합니다'}}
-function show(play=false){const c=clips[idx];el('number').textContent=(idx+1)+' / '+clips.length+' · '+c.duration+'초';el('title').textContent=name(c);el('script').textContent=c.text;el('audio').src='audio/'+c.file;el('note').value=ratings[c.key]?.note||'';document.querySelectorAll('#list button').forEach((b,i)=>{b.classList.toggle('on',i===idx);b.textContent=(ratings[clips[i].key]?.status==='ok'?'✓ ':ratings[clips[i].key]?.status?'! ':'')+(i+1)+'. '+name(clips[i])});const active=el('list').children[idx];active.scrollIntoView({block:'nearest'});if(play&&el('auto').checked)el('audio').play().catch(()=>{})}
+let idx=0,ratings={...DATA.feedback};try{ratings={...ratings,...JSON.parse(localStorage.getItem('hunter-workout-review')||'{}')}}catch{}
+for(const c of allClips) if(ratings[c.key]?.sha256!==c.sha256) delete ratings[c.key];
+const count=()=>clips.filter(c=>ratings[c.key]?.status&&ratings[c.key].status!=='unreviewed').length+' / '+clips.length+' 체크';
+function result(){return {version:2,entries:allClips.map(c=>({key:c.key,sha256:c.sha256,text:c.text,status:ratings[c.key]?.status||'unreviewed',note:ratings[c.key]?.note||''}))}}
+async function persist(){localStorage.setItem('hunter-workout-review',JSON.stringify(ratings));el('summary').textContent=count();try{const r=await fetch('/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(result())});el('save').textContent=r.ok?'체크 내용 자동 저장됨':'브라우저에 저장됨 · 체크 파일 저장도 가능합니다'}catch{el('save').textContent='브라우저에 저장됨 · 체크 파일 저장도 가능합니다'}}
+function show(play=false){const c=clips[idx];el('number').textContent=(idx+1)+' / '+clips.length+' · '+c.duration+'초';el('title').textContent=name(c);el('script').textContent=c.text;el('audio').src='audio/'+c.file+'?v='+c.sha256;el('note').value=ratings[c.key]?.note||'';document.querySelectorAll('#list button').forEach((b,i)=>{b.classList.toggle('on',i===idx);const status=ratings[clips[i].key]?.status;b.textContent=(status==='ok'?'✓ ':status&&status!=='unreviewed'?'! ':'')+(i+1)+'. '+name(clips[i])});const active=el('list').children[idx];active.scrollIntoView({block:'nearest'});if(play&&el('auto').checked)el('audio').play().catch(()=>{})}
 function move(d){idx=Math.max(0,Math.min(clips.length-1,idx+d));show(true)}
-function mark(status){const c=clips[idx];ratings[c.key]={sha256:c.sha256,status,note:el('note').value};persist();show();if(status==='ok')move(1)}
+function mark(status){const c=clips[idx];ratings[c.key]={sha256:c.sha256,status,note:el('note').value};persist();show();if(status==='ok'&&idx<clips.length-1)move(1)}
 clips.forEach((c,i)=>{const b=document.createElement('button');b.onclick=()=>{idx=i;show(true)};el('list').append(b)});
 el('prev').onclick=()=>move(-1);el('next').onclick=()=>move(1);el('ok').onclick=()=>mark('ok');el('different').onclick=()=>mark('different');el('other').onclick=()=>mark('other');el('note').onchange=()=>{const c=clips[idx];ratings[c.key]={sha256:c.sha256,status:ratings[c.key]?.status||'unreviewed',note:el('note').value};persist()};
 el('reference').onclick=()=>{el('audio').src='reference.wav';el('audio').play().catch(()=>{})};
@@ -35,7 +48,7 @@ document.onkeydown=e=>{if(['TEXTAREA','INPUT','SELECT'].includes(e.target.tagNam
 const alternatives={kneePush:'wallPush',birdDog:'hipHinge',plank:'wallPush',bridge:'squat',deadBug:'crossKnee',heelTouch:'sideCrunch'};
 DATA.workouts.forEach(w=>{const o=document.createElement('option');o.value=w.episode;o.textContent=w.episode+'회차 · '+DATA.episodes[w.episode-1].title+' / '+w.focus;el('episode').append(o)});
 function plan(){const w=DATA.workouts[Number(el('episode').value)-1];el('focus').textContent=w.focus;el('routine').replaceChildren();for(const [label,start,end] of [['04:00–10:00 · 교전 1',0,6],['11:00–17:00 · 교전 2',6,12],['18:00–22:00 · 교전 3',12,16]]){const section=document.createElement('section'),h=document.createElement('h3');h.className='time';h.textContent=label;section.append(h);w.exercises.slice(start,end).forEach((x,i)=>{const p=document.createElement('p');p.textContent=(start+i+1)+'. '+titles[el('standing').checked?(alternatives[x]||x):x];section.append(p)});el('routine').append(section)}}
-el('episode').onchange=plan;el('standing').onchange=plan;show();plan();el('summary').textContent=clips.filter(c=>ratings[c.key]?.status&&ratings[c.key].status!=='unreviewed').length+' / '+clips.length+' 체크';
+el('episode').onchange=plan;el('standing').onchange=plan;show();plan();el('summary').textContent=count();
 </script></html>'''
 (out/'index.html').write_text(html.replace('__DATA__',json.dumps(data,ensure_ascii=False)),encoding='utf-8')
 print(str(out/'index.html'))
