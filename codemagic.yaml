@@ -1,4 +1,41 @@
 workflows:
+  ios-workout-validation:
+    name: Hunter Run - 운동 개편과 전환 복귀 검증 (설치 파일 없음)
+    instance_type: mac_mini_m2
+    max_build_duration: 35
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: 'ios-verify-workout-*'
+          include: true
+    environment:
+      xcode: latest
+    scripts:
+      - name: Test portable game engine and content
+        script: |
+          set -euo pipefail
+          python3 scripts/validate.py
+          swift test > core-test-log.txt 2>&1 || { cat core-test-log.txt; exit 1; }
+      - name: Generate simulator project
+        script: |
+          if ! command -v xcodegen >/dev/null; then
+            brew install xcodegen
+          fi
+          xcodegen generate
+          xcodebuild -downloadComponent MetalToolchain
+      - name: Verify transitions and indoor exercise in simulator
+        script: bash scripts/check-ios-layout.sh workout-v2
+    artifacts:
+      - core-test-log.txt
+      - build/layout-log.txt
+      - build/small-layout-log.txt
+      - build/Layout.xcresult
+      - build/Small-layout.xcresult
+      - build/ui-review/*.png
+      - build/ui-review/*.json
+      - build/ui-review-small/*.png
+      - build/ui-review-small/*.json
   ios-layout-check:
     name: Hunter Run - iPhone layout check
     instance_type: mac_mini_m2
