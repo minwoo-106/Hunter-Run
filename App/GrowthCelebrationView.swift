@@ -65,13 +65,16 @@ struct GrowthCelebrationView: View {
             }
         }.environment(\.labyrinthStyle, true).interactiveDismissDisabled()
             .onChange(of: scenePhase) { _, phase in clock?.setActive(phase == .active, at: ProcessInfo.processInfo.systemUptime) }
-            .task {
-                guard !reduceMotion else { return }
-                clock = PresentationClock(duration: celebration.rank.map(RankVisual.duration) ?? 1.1, handoff: 1, at: ProcessInfo.processInfo.systemUptime)
-                if scenePhase != .active { clock?.setActive(false, at: ProcessInfo.processInfo.systemUptime) }
+            .task(id: scenePhase) {
+                guard !reduceMotion, scenePhase == .active else { return }
+                if clock == nil {
+                    clock = PresentationClock(duration: celebration.rank.map(RankVisual.duration) ?? 1.1, handoff: 1, at: ProcessInfo.processInfo.systemUptime)
+                }
+                clock?.setActive(true, at: ProcessInfo.processInfo.systemUptime)
                 while !Task.isCancelled, clock?.complete == false {
                     do { try await Task.sleep(for: .milliseconds(33)) } catch { return }
-                    if scenePhase == .active { clock?.advance(to: ProcessInfo.processInfo.systemUptime) }
+                    guard !Task.isCancelled else { return }
+                    clock?.advance(to: ProcessInfo.processInfo.systemUptime)
                 }
             }
     }

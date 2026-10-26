@@ -60,6 +60,15 @@ final class GrowthExperienceUITests: XCTestCase {
             app.terminate()
         }
     }
+    @MainActor func testRankPresentationCompletesAfterBackgroundResume() {
+        let app = launch("rank-S")
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        reach(app.buttons["growth.celebration.close"], app: app)
+        XCTAssertTrue(app.staticTexts["S급 헌터"].exists)
+        app.buttons["growth.celebration.close"].tap()
+        XCTAssertFalse(app.buttons["growth.celebration.close"].exists)
+    }
     @MainActor func testAcquisitionAndActivityGrowth() {
         let app = launch("acquired")
         reach(app.buttons["growth.celebration.close"], app: app)
