@@ -7,6 +7,7 @@ extension AppModel {
         guard Self.testHarness, let marker = arguments.firstIndex(of: "--ui-testing-growth"), marker + 1 < arguments.count,
               let catalog = progressionCatalog else { return }
         save.profile.name = "민우"; save.profile.xp = 4250
+        save.profile.growthEconomy = nil
         save.profile.growth.rank = "E"; save.profile.growth.departments["equipment"] = 2
         for id in ["resonance-blade", "barrier-coat", "trace-shoes", "archive-lens"] {
             if let item = catalog.equipment.first(where: { $0.id == id }) {

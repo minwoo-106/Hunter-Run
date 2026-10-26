@@ -98,6 +98,7 @@ struct ActivityReportView: View {
                             .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
                             .accessibilityValue(String(format: "%.2f km", day.distance / 1000))
                     }.chartYScale(domain: 0...max(1, (report.days.map(\.distance).max() ?? 0) / 1000 * 1.15))
+                        .chartXAxis { AxisMarks(values: .stride(by: .day)) { _ in AxisValueLabel(format: .dateTime.day()) } }
                         .chartYAxisLabel("km").frame(height: 170).accessibilityIdentifier("report.distance.chart")
                         .onAppear { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.65)) { chartRevealed = true } }
                     HStack {
