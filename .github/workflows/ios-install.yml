@@ -67,6 +67,7 @@ jobs:
           path: |
             build/ui-review/
             build/ui-review-small/
+            build/growth-motion/
             build/layout-log.txt
             build/small-layout-log.txt
             build-log.txt

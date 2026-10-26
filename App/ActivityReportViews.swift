@@ -77,7 +77,9 @@ struct RunInsightCard: View {
 
 struct ActivityReportView: View {
     @EnvironmentObject var model: AppModel
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedDay: Date?
+    @State private var chartRevealed = false
     private var report: ActivityInsights { ActivityInsights(profile: model.save.profile) }
     var body: some View {
         let report = self.report
@@ -91,9 +93,13 @@ struct ActivityReportView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("하루씩 쌓인 거리").font(.headline)
                     Chart(report.days) { day in
-                        BarMark(x: .value("날짜", day.date, unit: .day), y: .value("거리(km)", day.distance / 1000))
+                        BarMark(x: .value("날짜", day.date, unit: .day), y: .value("거리(km)", chartRevealed ? day.distance / 1000 : 0))
                             .foregroundStyle(Theme.teal.gradient).cornerRadius(4)
-                    }.chartYAxisLabel("km").frame(height: 170).accessibilityIdentifier("report.distance.chart")
+                            .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
+                            .accessibilityValue(String(format: "%.2f km", day.distance / 1000))
+                    }.chartYScale(domain: 0...max(1, (report.days.map(\.distance).max() ?? 0) / 1000 * 1.15))
+                        .chartYAxisLabel("km").frame(height: 170).accessibilityIdentifier("report.distance.chart")
+                        .onAppear { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.65)) { chartRevealed = true } }
                     HStack {
                         ForEach(report.days) { day in
                             Button { selectedDay = day.date } label: {

@@ -133,6 +133,19 @@ xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui
 sleep 3
 xcrun simctl io "$DEVICE_ID" screenshot build/Home-layout.png || true
 if [ "$status" -eq 0 ]; then
+if [ "${1:-}" = "growth-experience" ]; then
+  mkdir -p build/growth-motion
+  for rank in D C B A S; do
+    xcrun simctl terminate "$DEVICE_ID" com.hunterrun.demo || true
+    xcrun simctl io "$DEVICE_ID" recordVideo --codec=h264 "build/growth-motion/rank-$rank.mp4" > "build/growth-motion/rank-$rank.log" 2>&1 &
+    recording_pid=$!
+    sleep 1
+    xcrun simctl launch "$DEVICE_ID" com.hunterrun.demo --ui-testing-skip-title --ui-testing-skip-welcome --ui-testing-silent-audio --ui-testing-simulations --ui-testing-save "growth-recording-$rank" --ui-testing-growth "rank-$rank" -operatorMotionEnabled NO || true
+    sleep 9
+    kill -INT "$recording_pid" || true
+    wait "$recording_pid" || true
+  done
+fi
 if [ "${1:-}" != "workout-v2" ] && [ "${1:-}" != "stationary" ] && [ "${1:-}" != "expedition-final" ] && [ "${1:-}" != "facilities" ] && [ "${1:-}" != "operator-life" ] && [ "${1:-}" != "operator-chat" ] && [ "${1:-}" != "progress-guidance" ] && [ "${1:-}" != "combat" ] && [ "${1:-}" != "album" ] && [ "${1:-}" != "transitions" ]; then
 mkdir -p build/portrait-checks
 for expression in calm smile playful thoughtful worried relieved; do
@@ -204,6 +217,7 @@ if [ -n "$SMALL_DEVICE_ID" ] && [ "$SMALL_DEVICE_ID" != "$DEVICE_ID" ]; then
   if [ "${1:-}" = "facilities" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "defense" ] || [ "${1:-}" = "progress-guidance" ] || [ "${1:-}" = "combat" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "transitions" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
+  if [ "${1:-}" = "growth-experience" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "workout-v2" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "album" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi
   if [ "${1:-}" = "operator-life" ] || [ "${1:-}" = "operator-chat" ]; then SMALL_SCOPE=("${UI_SCOPE[@]}"); fi

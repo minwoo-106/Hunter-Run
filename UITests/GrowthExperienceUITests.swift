@@ -69,6 +69,8 @@ final class GrowthExperienceUITests: XCTestCase {
         reach(history, app: app); history.tap()
         let first = app.scrollViews.buttons.matching(NSPredicate(format: "label CONTAINS %@", "목표 완료")).firstMatch
         reach(first, app: app); first.tap()
+        reach(app.staticTexts["활동 보상 확보"], app: app)
+        capture("활동상세_보상정산", app: app)
         reach(app.staticTexts["오늘의 성장"], app: app)
         capture("활동상세_오늘의성장", app: app)
     }

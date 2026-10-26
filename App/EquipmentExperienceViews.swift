@@ -14,6 +14,7 @@ struct EquipmentGoalCard: View {
                     Label(requirement.title, systemImage: requirement.met ? "checkmark.circle.fill" : "circle")
                         .font(.caption).foregroundStyle(requirement.met ? Theme.teal : Theme.muted)
                 }
+                if let hint = item.discoveryHint { Text(hint).font(.caption).foregroundStyle(Theme.teal) }
                 NavigationLink { QuestBoardView() } label: { Text("현재 진행 가능한 의뢰 보기").font(.callout.bold()) }
                 Text("마정석은 활동, 조사 데이터는 탐험, 코어는 게이트 토벌로 모아요.").font(.caption).foregroundStyle(Theme.muted)
             }.card().accessibilityIdentifier("gear.target.card")
@@ -93,9 +94,9 @@ struct EquipmentLabView: View {
                 Text("장비 시험실").font(.largeTitle.bold())
                 Text(candidate.name + " 교체 비교").foregroundStyle(Theme.teal)
                 if let monster, let catalog = model.progressionCatalog {
-                    Picker("만난 몬스터", selection: $selected) {
+                    Picker("만난 몬스터", selection: Binding(get: { self.monster?.id ?? "" }, set: { selected = $0 })) {
                         ForEach(monsters, id: \.id) { Text($0.name).tag($0.id) }
-                    }.onAppear { if selected.isEmpty { selected = monster.id } }
+                    }
                     Image("Monster-" + monster.id).resizable().scaledToFit().frame(maxWidth: .infinity).frame(height: 180)
                     let current = CombatEstimate(stats: model.stats, monster: monster)
                     let next = CombatEstimate(stats: EquipmentExperience.preview(candidate, profile: model.save.profile, catalog: catalog), monster: monster)

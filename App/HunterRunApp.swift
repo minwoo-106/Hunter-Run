@@ -384,8 +384,7 @@ struct ActiveRunView: View {
                         }.card().accessibilityIdentifier("activity.found-gifts")
                     }
                     if let completion = summary.completion { Label(completion.title, systemImage: "checkmark.seal.fill").foregroundStyle(Theme.teal) }
-                    Text("EXP +\(summary.xp)  ·  마정석 +\(summary.crystals)").font(.title3.bold()).foregroundStyle(Theme.teal)
-                    Text("조사 데이터 +\(summary.research ?? 0) · 코어 +\(summary.cores ?? 0)").foregroundStyle(Theme.teal)
+                    RewardReceiptView(run: summary)
                     if summary.rewardPercent == 50 { Text("실내 활동 보상 50%가 적용됐어요. 의뢰 완료 보상과 핵심 재료는 그대로예요.").font(.caption).foregroundStyle(Theme.muted) }
                     if let boss = summary.majorBoss { BossReportView(report: boss) }
                     Text("장비 보관함과 지부 관리에서 획득한 자원을 사용할 수 있습니다.").font(.caption).foregroundStyle(Theme.muted)

@@ -159,8 +159,7 @@ struct RunDetailView: View {
                 }
                 HStack { metric("목표", run.goal?.label ?? "시간 목표"); Spacer(); metric("결과", run.completedGoal ? "완료" : "성과 저장") }
                 if !run.activityEnvironment.isIndoor, let seconds = run.runningSeconds { Text("달리기 \(clock(seconds)) · 걷기 \(clock(max(0, run.seconds - seconds)))").foregroundStyle(Theme.muted) }
-                Text("EXP +\(run.xp) · 마정석 +\(run.crystals)").font(.headline).foregroundStyle(Theme.teal)
-                if let research = run.research { Text("조사 데이터 +\(research) · 코어 +\(run.cores ?? 0)").foregroundStyle(Theme.teal) }
+                RewardReceiptView(run: run)
                 if run.rewardPercent == 50 { Text("실내 활동 보상 50% 적용").font(.caption).foregroundStyle(Theme.muted) }
                 if let boss = run.majorBoss { BossReportView(report: boss) }
                 if let report = run.paceReport { PaceFeedbackView(report: report) }

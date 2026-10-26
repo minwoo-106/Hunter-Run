@@ -122,4 +122,23 @@ final class EquipmentExperienceTests: XCTestCase {
         XCTAssertEqual(decoded.profile.level, 15); XCTAssertEqual(decoded.profile.xp, 4250)
         journal.presets.append(journal.presets[0]); XCTAssertFalse(journal.isValid)
     }
+    func testLegacyKillIsNotAnnouncedAsFirstKillAgain() throws {
+        var profile = Profile()
+        let old = EventRecord(id: "beast", title: "잔향 늑대", outcome: .perfect, damage: 30, defeated: true, kind: .ambush)
+        profile.runs = [RunSummary(id: UUID(), date: Date(), seconds: 600, distance: 1000, xp: 60, crystals: 2, records: [old], completedGoal: true)]
+        var engine = try V3Fixtures.engine(); engine.consume(V3Fixtures.frame(1, 150)); engine.end()
+        let result = Settlement.apply(engine.session, to: &profile)
+        XCTAssertTrue(result?.growthReport?.firstDefeats.isEmpty == true)
+    }
+    func testIndoorAndDefenseNeverInflateOutdoorDistanceOrPace() {
+        var profile = Profile(); let now = Date(timeIntervalSince1970: 1_800_000_000)
+        var inside = RunSummary(id: UUID(), date: now, seconds: 600, distance: 0, xp: 30, crystals: 1, records: [], completedGoal: true)
+        inside.environment = .indoor
+        profile.runs = [inside]; profile.defense = DefenseProgress()
+        profile.defense?.records = [DefenseRecord(id: UUID(), episode: 1, intensity: .light, seconds: 1440, date: now)]
+        let report = ActivityInsights(profile: profile, now: now)
+        XCTAssertEqual(report.outdoorDistance, 0); XCTAssertNil(report.averagePaceSeconds)
+        XCTAssertEqual(report.indoorSeconds, 2040); XCTAssertEqual(report.activityCount, 2)
+        XCTAssertEqual(report.activeDays, 1); XCTAssertEqual(report.days.reduce(0) { $0 + $1.seconds }, 0)
+    }
 }
