@@ -11,7 +11,14 @@ final class GrowthExperienceUITests: XCTestCase {
     }
     @MainActor private func reach(_ element: XCUIElement, app: XCUIApplication) {
         XCTAssertTrue(element.waitForExistence(timeout: 15))
-        for _ in 0..<12 { if element.isHittable { return }; app.scrollViews.firstMatch.swipeUp() }
+        for _ in 0..<12 {
+            if element.isHittable { return }
+            let scroll = app.scrollViews.firstMatch
+            let above = element.frame.midY < scroll.frame.midY
+            let from = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: above ? 0.35 : 0.7))
+            let to = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: above ? 0.65 : 0.4))
+            from.press(forDuration: 0.05, thenDragTo: to)
+        }
         XCTAssertTrue(element.isHittable)
     }
     @MainActor private func capture(_ name: String, app: XCUIApplication) {
