@@ -347,6 +347,7 @@ public enum Settlement {
               ActivityRecordPolicy.qualifies(session.activeSeconds),
               !profile.settled.contains(session.id) else { return nil }
         var session = session
+        let before = profile
         if session.combatRules != nil {
             var seen: Set<String> = []
             session.records = session.records.filter { seen.insert($0.id).inserted }
@@ -382,6 +383,8 @@ public enum Settlement {
         let previousQuests = profile.journey?.completedQuests ?? []
         Quests.settle(session, profile: &profile)
         Expeditions.returned(session, profile: &profile, previousQuests: previousQuests)
+        summary.growthReport = EquipmentExperience.record(session, summary: summary, before: before, profile: &profile)
+        if let index = profile.runs.firstIndex(where: { $0.id == summary.id }) { profile.runs[index] = summary }
         return summary
     }
 }

@@ -34,6 +34,10 @@ public struct CombatMonster: Codable, Equatable {
 }
 
 public struct DistanceBattle: Codable {
+    public static func damagePerAttack(attack: Double, defense: Double) -> Double {
+        guard attack.isFinite, defense.isFinite, (0.5...12).contains(attack), defense >= 0 else { return 0 }
+        return max(1, floor(60 * attack * 100 / (100 + defense) + 1e-9))
+    }
     public var monster: CombatMonster
     public var remainder: Double = 0
     public var attacks: Int = 0
@@ -51,7 +55,7 @@ public struct DistanceBattle: Codable {
     @discardableResult public mutating func advance(distance: Double, attack: Double) -> Double {
         guard remainingHP > 0, distance.isFinite, distance > 0,
               attack.isFinite, (0.5...12).contains(attack) else { return 0 }
-        let damage = max(1, floor(60 * attack * 100 / (100 + monster.defense) + 1e-9))
+        let damage = Self.damagePerAttack(attack: attack, defense: monster.defense)
         let total = remainder + distance
         guard total.isFinite else { return 0 }
         let needed = ceil(remainingHP / damage)

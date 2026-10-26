@@ -49,6 +49,8 @@ public final class SaveRepository {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
         guard save.profile.growthEconomy?.isValid ?? true else { throw Failure.invalid }
+        guard save.profile.equipmentJournal?.isValid ?? true,
+              save.profile.runs.allSatisfy({ $0.growthReport?.isValid ?? true }) else { throw Failure.invalid }
         guard save.profile.expeditions?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.gateProgress?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.journey?.isValid ?? true else { throw Failure.invalid }

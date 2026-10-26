@@ -181,6 +181,8 @@ public struct RunSession: Codable, Identifiable {
     public var needsDistanceBaseline: Bool? = nil
     public var distanceBarrierTimestamp: Double? = nil
     public var combatBarrierTimestamp: Double? = nil
+    /// 활동 시작 시 고정. 이전 기록에는 착용 장비를 소급해서 넣지 않는다.
+    public var equipmentIDs: [String]? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -214,6 +216,7 @@ public struct RunSummary: Codable, Identifiable {
     public var rewardPercent: Int? = nil
     public var completion: CompletionKind? = nil
     public var foundGifts: [OperatorGift]? = nil
+    public var growthReport: ActivityGrowthReport? = nil
 }
 public struct Profile: Codable {
     public var name = "헌터"
@@ -234,6 +237,7 @@ public struct Profile: Codable {
     /// Optional so pre-campaign profiles decode without changing their progression.
     public var defense: DefenseProgress? = nil
     public var growthEconomy: GrowthEconomyState? = nil
+    public var equipmentJournal: EquipmentJournal? = nil
     /// Nil identifies a profile that still needs its historical gate count frozen.
     public var gateProgress: GateProgress? = GateProgress()
     public var growth: GrowthState {
