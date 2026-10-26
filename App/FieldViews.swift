@@ -79,13 +79,12 @@ struct EquipmentDetailView: View {
                 Text(item.name).font(.largeTitle.bold())
                 Text(item.slot.title + " · " + item.stageName).foregroundStyle(Theme.teal)
                 Text(item.detail).font(.headline)
-                if let current = equipped, current.id != item.id {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("현재 \(current.name) 대비").font(.subheadline.bold())
-                        Text(String(format: "HP %+.0f · 공격 %+.2f · 피해 경감 %+.0f%%", item.hp - current.hp, item.attack - current.attack, (item.defense - current.defense) * 100))
-                        Text(String(format: "유지 공격 %+.0f%% · 조사 데이터 %+d", (item.eventBonus - current.eventBonus) * 100, item.researchBonus - current.researchBonus))
-                    }.font(.caption).foregroundStyle(Theme.teal).card()
-                }
+                EquipmentComparisonCard(item: item)
+                Button(model.save.profile.equipmentJournal?.targetID == item.id ? "목표 지정 해제" : "다음 목표 장비로 지정") {
+                    model.setEquipmentTarget(model.save.profile.equipmentJournal?.targetID == item.id ? nil : item.id)
+                }.buttonStyle(GameButtonStyle()).disabled(model.growthLocked || model.save.profile.growth.owned.contains(item.id))
+                    .accessibilityIdentifier("gear.target.toggle")
+                EquipmentMemoryView(item: item)
                 Text("장착한 장비의 효과는 다음 활동에 적용됩니다. 활동 중에는 장비를 바꿀 수 없습니다.").foregroundStyle(Theme.muted)
                 Text("필요 자원 · 마정석 \(item.crystals) / 조사 \(item.research) / 코어 \(item.cores)").font(.callout)
                 Text("장비지원부 Lv.\(item.supportLevel)").font(.caption).foregroundStyle(Theme.muted)
@@ -115,6 +114,7 @@ struct HistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 eyebrow("ACTIVITY JOURNAL")
+                NavigationLink { ActivityReportView() } label: { Label("운동·성장 리포트", systemImage: "chart.bar.xaxis").font(.headline).frame(maxWidth: .infinity, alignment: .leading).card() }
                 HStack {
                     metric("야외 거리", String(format: "%.1f km", runs.filter { !$0.activityEnvironment.isIndoor }.reduce(0) { $0 + $1.distance } / 1000)); Spacer()
                     metric("활동 횟수", "\(runs.count)회")
@@ -166,6 +166,8 @@ struct RunDetailView: View {
                 if let report = run.paceReport { PaceFeedbackView(report: report) }
                 else { Text(run.activityEnvironment.isIndoor ? "실내 기록은 야외 페이스 학습에 반영하지 않아요." : "이전 버전의 기록에는 페이스 관측 보고가 없습니다.").font(.caption).foregroundStyle(Theme.muted) }
                 Text("현장 사건").font(.title2.bold())
+                RunInsightCard(run: run)
+                ActivityGrowthCard(run: run)
                 if run.records.isEmpty { Text("기록된 사건이 없습니다. 이동 기록과 확보한 보상은 저장됐습니다.").foregroundStyle(Theme.muted) }
                 ForEach(run.records) { record in
                     VStack(alignment: .leading, spacing: 8) {

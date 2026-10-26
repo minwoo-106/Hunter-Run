@@ -99,6 +99,7 @@ struct RootView: View {
         .fullScreenCover(isPresented: $model.showReturnBriefing) { ReturnBriefingView() }
         .fullScreenCover(isPresented: $model.showRun) { ActiveRunView().environmentObject(model) }
         .fullScreenCover(isPresented: $model.showDefense) { DefenseSessionView(runtime: model.defenseRuntime).environmentObject(model) }
+        .fullScreenCover(item: $model.growthCelebration) { GrowthCelebrationView(celebration: $0).environmentObject(model) }
         .alert("안내", isPresented: Binding(get: { model.notice != nil }, set: { if !$0 { model.notice = nil } })) {
             Button("확인") { model.notice = nil }
         } message: { Text(model.notice ?? "") }
@@ -131,7 +132,7 @@ struct HomeView: View {
     private var lifeVisible: Bool {
         model.selectedTab == 0 && !model.showStories && !model.showOperator && !model.showSettings
         && !model.showAssociation && !model.showRun && !model.showDefense && !model.showWelcome && !model.showReturnBriefing
-        && lifeScenePhase == .active && !transitionCovered && model.notice == nil
+        && lifeScenePhase == .active && !transitionCovered && model.notice == nil && model.growthCelebration == nil
     }
     private func configureLife() { life.configure(available: lifeVisible, motionEnabled: lifeMotionEnabled, reducedMotion: lifeReduceMotion) }
     private var homeGreeting: String {
@@ -298,7 +299,9 @@ struct ActiveRunView: View {
                                         Text(event.stage == .armed ? "가속 선택 대기 · 평소 페이스면 유지/조사로 전환" : event.stage == .briefing ? "안내 후 시작해요" : "가속 남은 시간 · \(max(0, Int(ceil((event.template.burstSeconds ?? 10) - event.elapsed))))초")
                                             .font(.headline).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.burst")
                                     }
-                                    ProgressView(value: event.progress).tint(Theme.teal)
+                                    if let battle = event.battle {
+                                        CombatFocusView(run: run, battle: battle, movement: model.movement, signal: model.signal)
+                                    } else { ProgressView(value: event.progress).tint(Theme.teal) }
                                     if let battle = event.battle {
                                         Text("몬스터 HP \(Int(event.hp)) / \(Int(event.startingHP)) · 공격 \(battle.attacks)회")
                                             .font(.headline).foregroundStyle(Theme.teal).accessibilityIdentifier("activity.combat.hp")
@@ -371,6 +374,8 @@ struct ActiveRunView: View {
                 if run.simulated {
                     Text("모의 활동입니다. 실제 경험치와 자원은 변경되지 않았습니다.").foregroundStyle(Theme.muted)
                 } else if let summary = model.lastSummary {
+                    RunInsightCard(run: summary)
+                    ActivityGrowthCard(run: summary)
                     if let gifts = summary.foundGifts, !gifts.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Label("탐험에서 발견한 작은 선물", systemImage: "gift").font(.headline)
@@ -439,7 +444,8 @@ struct HunterView: View {
                     HStack { metric("마정석", "\(model.save.profile.crystals)"); Spacer(); metric("조사 데이터", "\(model.save.profile.research)") }.card()
                     ResourceStrip()
                     NavigationLink { PaceProfileView() } label: { DossierLink(title: "나의 활동 기준", subtitle: "현장 기록으로 맞추는 페이스", icon: "waveform.path") }.accessibilityIdentifier("hunter.pace")
-                    NavigationLink { EquipmentView() } label: { DossierLink(title: "장비 보관함", subtitle: "출발 전, 장비를 정비해요", icon: "shield.lefthalf.filled") }
+                    NavigationLink { EquipmentView() } label: { DossierLink(title: "장비 보관함", subtitle: "출발 전, 장비를 정비해요", icon: "shield.lefthalf.filled") }.accessibilityIdentifier("hunter.equipment")
+                    NavigationLink { ActivityReportView() } label: { DossierLink(title: "운동·성장 리포트", subtitle: "달린 기록과 성장의 발자취", icon: "chart.bar.xaxis") }.accessibilityIdentifier("hunter.report")
                     NavigationLink { RankView() } label: { DossierLink(title: "협회 평가 · 승급", subtitle: "다음 등급으로 가는 심사", icon: "checkmark.seal") }
                         .accessibilityIdentifier("hunter.rank")
                     LoadoutStrip()

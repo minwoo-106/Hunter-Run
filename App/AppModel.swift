@@ -79,6 +79,7 @@ private struct CharacterVoiceCatalog: Decodable {
     @Published var permissionText = "미확인"
     @Published var isReady = false
     @Published var lastSummary: RunSummary?
+    @Published var growthCelebration: GrowthCelebration?
     @Published var lastDemo: RunSession?
     @Published var voiceVolume = UserDefaults.standard.object(forKey: "voiceVolume") as? Double ?? 0.85
     @Published var ducking = UserDefaults.standard.object(forKey: "voiceDucking") as? Bool ?? true
@@ -435,6 +436,9 @@ private struct CharacterVoiceCatalog: Decodable {
             do { if try CombatRelease.migrate(&save) { try repository.write(save) } }
             catch { saveBlocked = true; isReady = false; notice = "성장 기록을 보호하기 위해 새 활동을 멈췄어요. 저장 공간을 확인해주세요." }
         }
+        #if DEBUG && targetEnvironment(simulator)
+        prepareGrowthPreview(arguments: arguments)
+        #endif
         sensor.onUpdate = { [weak self] in
             guard let self else { return }
             self.updatePermissions()
@@ -570,6 +574,7 @@ private struct CharacterVoiceCatalog: Decodable {
         guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
         var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
+        session.equipmentIDs = Array(save.profile.growth.equipped.values).sorted()
         session.rulesVersion = 2
         session.purpose = quest?.promotion != nil ? .rankExam : .normalActivity
         session.environment = environment; session.steps = environment.isIndoor ? 0 : nil
@@ -724,8 +729,14 @@ private struct CharacterVoiceCatalog: Decodable {
         engine?.end(); sensor.stop(); timer?.invalidate(); timer = nil
         guard let run = engine?.session else { return }
         var candidate = save
-        let summary = run.simulated ? nil : Settlement.apply(run, to: &candidate.profile)
+        var summary = run.simulated ? nil : Settlement.apply(run, to: &candidate.profile)
         if !run.simulated { narratives?.refresh(&candidate.profile) }
+        if summary != nil, let catalog = progressionCatalog {
+            summary?.growthReport?.unlocks = ContentUnlocks.difference(
+                before: ContentUnlocks.available(profile: save.profile, catalog: catalog, encounters: fieldEncounters, world: world),
+                after: ContentUnlocks.available(profile: candidate.profile, catalog: catalog, encounters: fieldEncounters, world: world))
+            if let result = summary, let index = candidate.profile.runs.firstIndex(where: { $0.id == result.id }) { candidate.profile.runs[index] = result }
+        }
         candidate.active = nil
         do {
             if !run.simulated { try CombatRelease.migrate(&candidate) }
@@ -779,15 +790,16 @@ private struct CharacterVoiceCatalog: Decodable {
         catch { notice = "저장하지 못했습니다. 저장 공간을 확인해주세요." }
     }
     func nameChanged(_ name: String) { save.profile.name = String(name.prefix(16)); persist() }
-    func changeGrowth(_ operation: (inout SaveState, ProgressionCatalog) throws -> String?) {
-        guard !growthLocked, let progressionCatalog else { notice = "진행 중인 활동을 마친 뒤 변경해주세요."; return }
+    @discardableResult func changeGrowth(_ operation: (inout SaveState, ProgressionCatalog) throws -> String?) -> Bool {
+        guard !growthLocked, let progressionCatalog else { notice = "진행 중인 활동을 마친 뒤 변경해주세요."; return false }
         var candidate = save
         do {
             let message = try operation(&candidate, progressionCatalog)
             narratives?.refresh(&candidate.profile)
             try repository.write(candidate)
             save = candidate; notice = message; interfaceFeedback("ui-reward")
-        } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다." }
+            return true
+        } catch { notice = (error as? ProgressionError)?.localizedDescription ?? "저장하지 못해 변경을 적용하지 않았습니다."; return false }
     }
     func prepareFieldDemo(_ encounter: FieldEncounter) {
         guard !growthLocked else { return }
@@ -805,10 +817,46 @@ private struct CharacterVoiceCatalog: Decodable {
     func restartBoss(_ boss: BossDefinition) {
         changeGrowth { save, catalog in try BossCampaign.restart(boss, save: &save, catalog: catalog); return "새 재현 회차를 열었습니다." }
     }
-    func buy(_ id: String) { changeGrowth { save, catalog in try Progression.buy(id, save: &save, catalog: catalog); return "장비를 확보했습니다. 장착하면 다음 활동부터 적용됩니다." } }
+    func buy(_ id: String) {
+        let saved = changeGrowth { save, catalog in
+            try Progression.buy(id, save: &save, catalog: catalog)
+            var journal = save.profile.equipmentJournal ?? EquipmentJournal()
+            journal.memories[id] = EquipmentMemory(acquiredAt: Date(), trackingSince: Date())
+            if journal.targetID == id { journal.targetID = nil }
+            save.profile.equipmentJournal = journal
+            return nil
+        }
+        if saved { growthCelebration = GrowthCelebration(equipmentID: id) }
+    }
     func equip(_ id: String) { changeGrowth { save, catalog in try Progression.equip(id, save: &save, catalog: catalog); return nil } }
     func upgrade(_ department: Department) { changeGrowth { save, catalog in try Progression.upgrade(department, save: &save, catalog: catalog) } }
-    func promote() { changeGrowth { save, _ in try Progression.promote(save: &save); return "협회 평가를 통과했습니다. \(save.profile.growth.rank)급 헌터로 등록되었습니다." } }
+    func promote() {
+        guard let catalog = progressionCatalog else { return }
+        let before = ContentUnlocks.available(profile: save.profile, catalog: catalog, encounters: fieldEncounters, world: world)
+        if changeGrowth({ save, _ in try Progression.promote(save: &save); return nil }) {
+            let after = ContentUnlocks.available(profile: save.profile, catalog: catalog, encounters: fieldEncounters, world: world)
+            growthCelebration = GrowthCelebration(rank: save.profile.growth.rank, unlocks: ContentUnlocks.difference(before: before, after: after))
+        }
+    }
+    func setEquipmentTarget(_ id: String?) {
+        changeGrowth { save, catalog in
+            guard id == nil || catalog.equipment.contains(where: { $0.id == id }) else { throw ProgressionError.unavailable }
+            var journal = save.profile.equipmentJournal ?? EquipmentJournal(); journal.targetID = id
+            save.profile.equipmentJournal = journal; return nil
+        }
+    }
+    func storePreset(_ index: Int) {
+        guard (0..<3).contains(index) else { return }
+        changeGrowth { save, _ in
+            var journal = save.profile.equipmentJournal ?? EquipmentJournal()
+            journal.presets.removeAll { $0.id == index }
+            journal.presets.append(EquipmentPreset(id: index, name: ["탐색용", "사냥용", "보스용"][index], slots: save.profile.growth.equipped))
+            save.profile.equipmentJournal = journal; return nil
+        }
+    }
+    func applyPreset(_ index: Int) {
+        changeGrowth { save, catalog in try EquipmentExperience.applyPreset(index, save: &save, catalog: catalog); return nil }
+    }
     private func playOperator(_ key: String, completion: (() -> Void)? = nil) {
         if let kilometer = playingDistanceMilestone {
             pendingDistanceMilestones.insert(kilometer, at: 0)

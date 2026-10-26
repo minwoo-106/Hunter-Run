@@ -23,6 +23,9 @@ python3 scripts/run-bounded.py --timeout 90 -- xcrun simctl boot "$DEVICE_ID" ||
 python3 scripts/run-bounded.py --timeout 180 -- xcrun simctl bootstatus "$DEVICE_ID" -b
 status=0
 UI_SCOPE=()
+if [ "${1:-}" = "growth-experience" ]; then
+  UI_SCOPE=(-only-testing:HunterRunUITests/GrowthExperienceUITests -only-testing:HunterRunUITests/CombatReleaseUITests -only-testing:HunterRunUITests/HomeLayoutTests/testHomeFitsScreen)
+fi
 if [ "${1:-}" = "workout-v2" ]; then
   UI_SCOPE=(
     -only-testing:HunterRunUITests/TransitionReleaseTests

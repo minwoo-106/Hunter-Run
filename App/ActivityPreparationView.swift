@@ -51,6 +51,7 @@ struct OutdoorSetupView: View {
                             if indoor { Text("실내 활동에서는 게이트 추적 횟수가 소모되지 않아요.").foregroundStyle(Theme.muted) }
                         }.font(.caption).card()
                     }
+                    EquipmentPresetsView()
                     goal
                     VStack(alignment: .leading, spacing: 10) {
                         Label("함께 진행하는 의뢰", systemImage: "list.clipboard").font(.headline)

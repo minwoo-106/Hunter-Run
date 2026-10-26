@@ -49,6 +49,8 @@ struct EquipmentView: View {
             VStack(alignment: .leading, spacing: 18) {
                 ResourceStrip()
                 statsCard
+                EquipmentGoalCard()
+                EquipmentPresetsView()
                 slotPicker
                 Toggle("보유 장비만 보기", isOn: $ownedOnly).font(.callout)
                 equipmentList
@@ -143,6 +145,9 @@ struct RankView: View {
             VStack(alignment: .leading, spacing: 22) {
                 eyebrow("HUNTER LICENSE")
                 Text("\(model.save.profile.growth.rank)급 헌터").font(.largeTitle.bold())
+                if model.save.profile.growth.rank != "E" {
+                    Image("Rank-" + model.save.profile.growth.rank).resizable().scaledToFit().frame(height: 180).frame(maxWidth: .infinity)
+                }
                 Text("등급은 활동 기록과 게이트 성과를 함께 평가합니다.").foregroundStyle(Theme.muted)
                 if let next = Progression.nextRank(model.save.profile) {
                     let requirements = Progression.requirements(model.save.profile)
