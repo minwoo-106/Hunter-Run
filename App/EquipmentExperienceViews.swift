@@ -33,7 +33,7 @@ struct EquipmentRevisionCard: View {
                 Text("보유 방어구의 카탈로그 가격 기준이에요. 실제 과거 구매 금액을 추정한 값은 아니에요.").font(.caption).foregroundStyle(Theme.muted)
                 Button("확인했어요") { model.acknowledgeEquipmentRevision() }.disabled(model.growthLocked)
                     .accessibilityIdentifier("gear.revision.acknowledge")
-            }.card().accessibilityIdentifier("gear.revision.card")
+            }.card()
         }
     }
 }
