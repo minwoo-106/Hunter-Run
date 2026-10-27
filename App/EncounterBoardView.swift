@@ -21,7 +21,7 @@ struct EncounterBoardView: View {
                         } else { Text("상세 공략은 연구부 Lv.3에서 분석해요.").font(.callout).foregroundStyle(Theme.muted) }
                         if FieldDiscovery.events(in: model.save.profile).contains(entry.event.id) { Label("실제 발견 기록 등록됨", systemImage: "book.closed.fill").foregroundStyle(Theme.teal) }
                         if AppModel.testHarness { Button("이 개체 모의 활동 준비") { model.prepareFieldDemo(entry); dismiss() }.buttonStyle(GameButtonStyle(primary: true)).disabled(model.growthLocked).accessibilityIdentifier("encounter.demo." + entry.id) }
-                        let gear = model.progressionCatalog?.equipment.filter { $0.requiredEvent == entry.event.id } ?? []
+                        let gear = model.progressionCatalog?.equipment.filter { $0.slot != .armor && $0.requiredEvent == entry.event.id } ?? []
                         ForEach(gear) { item in
                             NavigationLink { EquipmentDetailView(item: item) } label: {
                                 HStack { GearArtwork(item: item, size: 58); VStack(alignment: .leading) { Text(item.name); Text("발견 기록 연계 장비 · 지원부 Lv.\(item.supportLevel)").font(.caption).foregroundStyle(Theme.muted) }; Spacer(); Image(systemName: "chevron.right") }

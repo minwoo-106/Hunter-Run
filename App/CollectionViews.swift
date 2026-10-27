@@ -3,7 +3,7 @@ import SwiftUI
 struct EquipmentArchiveView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
-        ForEach(EquipmentSlot.allCases, id: \.rawValue) { slot in
+        ForEach(EquipmentSlot.playableCases, id: \.rawValue) { slot in
             Text(slot.title).font(.title2.bold()).frame(maxWidth: .infinity, alignment: .leading)
             ForEach(equipment(in: slot)) { item in
                 EquipmentArchiveRow(item: item, slot: slot)

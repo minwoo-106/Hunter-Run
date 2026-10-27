@@ -64,6 +64,18 @@ final class GrowthExperienceUITests: XCTestCase {
         reach(app.staticTexts["다음 일반 사건 대기 -8%"], app: app)
         capture("신발_실제사건대기단축", app: app)
     }
+    @MainActor func testEquipmentArchiveDoesNotOfferRetiredArmor() {
+        let app = launch("equipment")
+        reach(app.buttons["nav.4"], app: app); app.buttons["nav.4"].tap()
+        let category = app.segmentedControls.buttons["장비"]
+        reach(category, app: app); category.tap()
+        XCTAssertTrue(app.staticTexts["무기"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["신발"].exists)
+        XCTAssertTrue(app.staticTexts["유물"].exists)
+        XCTAssertFalse(app.staticTexts["방어구"].exists)
+        XCTAssertFalse(app.staticTexts["결계 코트"].exists)
+        capture("장비도감_3종장비", app: app)
+    }
     @MainActor func testAllRankCeremoniesFinishAndShowUnlocks() {
         for rank in ["D", "C", "B", "A", "S"] {
             let app = launch("rank-" + rank)

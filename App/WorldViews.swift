@@ -168,7 +168,7 @@ struct MonsterDetailView: View {
                             Label("연구부 전술 분석", systemImage: "scope").font(.headline)
                             Text(entry.tactic)
                             Text(entry.unlockHint).font(.caption).foregroundStyle(Theme.muted)
-                            ForEach(model.progressionCatalog?.equipment.filter { $0.requiredEvent == entry.id } ?? []) { item in
+                            ForEach(model.progressionCatalog?.equipment.filter { $0.slot != .armor && $0.requiredEvent == entry.id } ?? []) { item in
                                 NavigationLink(item.name) { EquipmentDetailView(item: item) }
                             }
                         }.card()
