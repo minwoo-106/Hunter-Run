@@ -17,7 +17,7 @@ public struct NarrationCatalog: Codable {
     }
     public func response(to key: String, session: RunSession) -> String {
         guard key == "success" || key == "partial", let record = session.records.last else { return key }
-        return result(record, bossID: session.boss?.definition.id, recovering: session.hp <= 0)
+        return result(record, bossID: session.boss?.definition.id, recovering: !session.usesThreeSlotEquipment && session.hp <= 0)
     }
     public func result(_ record: EventRecord, bossID: String?, recovering: Bool = false) -> String {
         // A converted pursuit or boss is an investigation, even if its catalog ID is unchanged.

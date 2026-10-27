@@ -49,6 +49,7 @@ public final class SaveRepository {
         guard save.schema == 1 else { throw Failure.incompatible }
         guard save.profile.xp >= 0, save.profile.crystals >= 0, save.profile.research >= 0 else { throw Failure.invalid }
         guard save.profile.growthEconomy?.isValid ?? true else { throw Failure.invalid }
+        guard save.profile.equipmentRevision?.isValid ?? true else { throw Failure.invalid }
         guard save.profile.equipmentJournal?.isValid ?? true,
               save.profile.runs.allSatisfy({ $0.growthReport?.isValid ?? true }) else { throw Failure.invalid }
         guard save.profile.expeditions?.isValid ?? true else { throw Failure.invalid }
@@ -89,8 +90,11 @@ public final class SaveRepository {
                   (run.activityGoal.kind != .time || run.activeSeconds <= run.activityGoal.value),
                   run.distance.isFinite, run.distance >= 0, run.hp.isFinite, run.hp >= 0 else { throw Failure.invalid }
             if let stats = run.loadout {
+                guard stats.equipmentRevision == nil || stats.equipmentRevision == 1,
+                      stats.encounterHaste.map({ $0.isFinite && (0...0.25).contains($0) }) ?? true else { throw Failure.invalid }
                 guard stats.hp.isFinite, (100...1000).contains(stats.hp), stats.attack.isFinite, (0.5...12).contains(stats.attack), stats.defense.isFinite, (0...0.8).contains(stats.defense), stats.eventBonus.isFinite, (0...0.45).contains(stats.eventBonus), (0...15).contains(stats.researchBonus) else { throw Failure.invalid }
             }
+            guard run.lastEncounterEndedAt.map({ $0.isFinite && $0 >= 0 && $0 <= run.activeSeconds }) ?? true else { throw Failure.invalid }
             if let boss = run.boss {
                 guard boss.isValid, run.mode == .gate else { throw Failure.invalid }
                 try boss.definition.validate()

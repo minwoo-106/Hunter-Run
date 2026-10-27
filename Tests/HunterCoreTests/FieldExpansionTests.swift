@@ -58,7 +58,7 @@ final class FieldExpansionTests: XCTestCase {
     }
     func testOnlyRealNonNeutralDiscoveryUnlocksEquipmentAndPersists() throws {
         var p = unlocked(); let c = try load("progression", ProgressionCatalog.self)
-        let item = c.equipment.first { $0.id == "moon-mail" }!
+        let item = c.equipment.first { $0.id == "moon-boots" }!
         var run = RunSession(targetSeconds: 300, simulated: true, allowPursuit: false)
         run.phase = .finished; run.activeSeconds = 300
         run.records = [EventRecord(id: "dark-elf-scout#2", title: "조사", outcome: .perfect, damage: 0, kind: .discovery)]
@@ -73,10 +73,10 @@ final class FieldExpansionTests: XCTestCase {
     func testDiscoveryGearCannotChargeBeforeUnlockOrTwice() throws {
         let c = try load("progression", ProgressionCatalog.self); var save = SaveState()
         save.profile = unlocked(); save.profile.crystals = 200; save.profile.research = 100
-        XCTAssertThrowsError(try Progression.buy("moon-mail", save: &save, catalog: c)); XCTAssertEqual(save.profile.crystals, 200)
+        XCTAssertThrowsError(try Progression.buy("moon-boots", save: &save, catalog: c)); XCTAssertEqual(save.profile.crystals, 200)
         save.profile.discoveredEvents = ["dark-elf-scout"]
-        try Progression.buy("moon-mail", save: &save, catalog: c); let remaining = save.profile.crystals
-        XCTAssertThrowsError(try Progression.buy("moon-mail", save: &save, catalog: c)); XCTAssertEqual(save.profile.crystals, remaining)
+        try Progression.buy("moon-boots", save: &save, catalog: c); let remaining = save.profile.crystals
+        XCTAssertThrowsError(try Progression.buy("moon-boots", save: &save, catalog: c)); XCTAssertEqual(save.profile.crystals, remaining)
     }
     func testAllDepartmentsUpgradeThroughThreeOnce() throws {
         let c = try load("progression", ProgressionCatalog.self); var save = SaveState()

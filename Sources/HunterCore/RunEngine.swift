@@ -157,7 +157,7 @@ public struct RunEngine {
             }
             end(); return cues + [.voice("run_end"), .checkpoint, .goalReached]
         }
-        if session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
+        if !session.usesThreeSlotEquipment, session.hp <= 0, session.activeSeconds >= session.recoveryUntil { session.hp = 50 }
 
         if session.gateTracking == true
             && session.patrolCycle == 0 && session.event == nil
@@ -243,9 +243,9 @@ public struct RunEngine {
                 }
                 let defense = min(0.65, max(0, session.loadout?.defense ?? 0))
                 let incoming = (session.mode == .gate ? 1.3 : 1) * (1 - defense)
-                if outcome == .partial { session.hp = max(0, session.hp - 12 * incoming) }
-                if outcome == .fail { session.hp = max(0, session.hp - 25 * incoming) }
-                if session.hp == 0 { session.withdrawn = true; session.recoveryUntil = session.activeSeconds + 120 }
+                if !session.usesThreeSlotEquipment && outcome == .partial { session.hp = max(0, session.hp - 12 * incoming) }
+                if !session.usesThreeSlotEquipment && outcome == .fail { session.hp = max(0, session.hp - 25 * incoming) }
+                if !session.usesThreeSlotEquipment && session.hp == 0 { session.withdrawn = true; session.recoveryUntil = session.activeSeconds + 120 }
                 if event.template.kind == .pursuit { session.lastIntensityAt = session.activeSeconds }
                 closeEvent(outcome)
                 cues += [.voice(outcome == .fail || outcome == .partial ? "partial" : "success"), .checkpoint]
@@ -265,20 +265,19 @@ public struct RunEngine {
             }
         }
         let cycle = pendingCycle ?? currentCycle
-        let offset = Double(cycle) * session.patrolDuration
         let candidates = RunDirector.events(patrolContent, session: session, cycle: cycle)
-        if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= offset + session.patrolDuration * $0.startFraction }) {
+        if var next = candidates.first(where: { !session.consumed.contains($0.id) && session.activeSeconds >= EncounterTiming.scheduledAt($0, session: session, cycle: cycle) }) {
             let isNormalGate = next.id.components(separatedBy: "#").first == GateTracking.eventID
-            if isNormalGate && (session.isIndoor || session.withdrawn || frame.movement != .running || frame.signal != .good
-                || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
+            if isNormalGate && (session.isIndoor || session.legacyWithdrawn || frame.movement != .running || frame.signal != .good
+                || session.legacyHealthBlocked
                 || AccelerationRules.needsEasyMovement(session)) { return cues }
             if next.id.components(separatedBy: "#").first == session.priorityEncounterID,
                !session.isIndoor && (frame.movement != .running || frame.signal != .good
-                    || session.hp <= 0 || session.activeSeconds < session.recoveryUntil
+                    || session.legacyHealthBlocked
                     || AccelerationRules.needsEasyMovement(session)) {
                 return cues
             }
-            let scheduledAt = offset + session.patrolDuration * next.startFraction
+            let scheduledAt = EncounterTiming.scheduledAt(next, session: session, cycle: cycle)
             let latestInvestigationStart = (session.activeTimeLimit ?? .greatestFiniteMagnitude)
                 - min(45, next.duration) - 30
             if !session.isIndoor && (session.mode == .contract || session.boss != nil)
@@ -298,7 +297,7 @@ public struct RunEngine {
             if next.requestsAcceleration && !AccelerationRules.canOffer(session, frame: frame) {
                 next.useSteadyAlternative()
             }
-            if (session.hp <= 0 || session.activeSeconds < session.recoveryUntil || AccelerationRules.needsEasyMovement(session) || session.withdrawn && next.kind == .boss) && next.kind != .discovery {
+            if (session.legacyHealthBlocked || AccelerationRules.needsEasyMovement(session) || session.legacyWithdrawn && next.kind == .boss) && next.kind != .discovery {
                 next.kind = .discovery; next.burstSeconds = nil; next.title = "회복 구간 흔적 조사"; next.duration = min(45, next.duration); next.audio = "investigate"
             }
             if next.kind != .discovery && !safeMotion && ((!session.isIndoor && frame.movement != .running) || frame.signal != .good) {
@@ -338,6 +337,7 @@ public struct RunEngine {
         if event.template.kind != .discovery { session.paceCooldownUntil = session.activeSeconds + 60 }
         if event.burstStarted == true { session.lastIntensityAt = session.activeSeconds }
         session.records.append(EventRecord(id: event.template.id, title: event.template.title, outcome: outcome, damage: max(0, event.startingHP - event.hp), defeated: event.startingHP > 0 && event.hp <= 0, kind: event.template.kind, accelerated: event.burstStarted, encounterKind: event.template.encounterKind, monsterID: event.battle?.monster.id, attacks: event.battle?.attacks))
+        session.lastEncounterEndedAt = session.activeSeconds
         session.event = nil
     }
 }

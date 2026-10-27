@@ -11,6 +11,7 @@ public enum RunMode: String, Codable, CaseIterable {
 }
 public enum EquipmentSlot: String, Codable, CaseIterable {
     case weapon, armor, shoes, relic
+    public static let playableCases: [EquipmentSlot] = [.weapon, .shoes, .relic]
     public var title: String { switch self { case .weapon: return "무기"; case .armor: return "방어구"; case .shoes: return "신발"; case .relic: return "유물" } }
     public var symbol: String { switch self { case .weapon: return "bolt.shield"; case .armor: return "shield.lefthalf.filled"; case .shoes: return "shoeprints.fill"; case .relic: return "sparkles" } }
 }
@@ -25,6 +26,8 @@ public struct CombatStats: Codable, Equatable {
     public var defense: Double = 0
     public var eventBonus: Double = 0
     public var researchBonus: Int = 0
+    public var equipmentRevision: Int? = nil
+    public var encounterHaste: Double? = nil
 }
 public struct GrowthState: Codable {
     public var rank = "E"
@@ -48,7 +51,7 @@ public struct EquipmentDefinition: Codable, Identifiable {
     public var discoveryHint: String? = nil
     public var requiredRank: String? = nil
     public func available(to profile: Profile) -> Bool {
-        profile.growth.level(.equipment) >= supportLevel && (requiredEvent.map { FieldDiscovery.events(in: profile).contains($0) } ?? true)
+        slot != .armor && profile.growth.level(.equipment) >= supportLevel && (requiredEvent.map { FieldDiscovery.events(in: profile).contains($0) } ?? true)
         && (requiredDefeat.map { FieldDiscovery.defeated($0, in: profile) } ?? true)
         && (requiredRank.map { (Progression.ranks.firstIndex(of: profile.growth.rank) ?? 0) >= (Progression.ranks.firstIndex(of: $0) ?? Int.max) } ?? true)
     }
@@ -71,6 +74,7 @@ public struct EquipmentDefinition: Codable, Identifiable {
     public var defense: Double
     public var eventBonus: Double
     public var researchBonus: Int
+    public var encounterHaste: Double? = nil
 }
 public struct DepartmentUpgrade: Codable, Identifiable {
     public var id: String
@@ -91,6 +95,7 @@ public struct ProgressionCatalog: Codable {
     public var equipment: [EquipmentDefinition]
     public var upgrades: [DepartmentUpgrade]
     public func validate() throws {
+        guard equipment.allSatisfy({ $0.encounterHaste.map { $0.isFinite && (0...0.25).contains($0) } ?? true }) else { throw ProgressionError.invalid }
         guard schema == 1, !equipment.isEmpty, Set(equipment.map(\.id)).count == equipment.count,
               Set(upgrades.map(\.id)).count == upgrades.count,
               equipment.allSatisfy({ !$0.id.isEmpty && $0.crystals >= 0 && $0.research >= 0 && $0.cores >= 0 && (1...3).contains($0.supportLevel) && (1...8).contains($0.tier ?? 1) && $0.hp.isFinite && (0...120).contains($0.hp) && $0.attack.isFinite && (0...1.5).contains($0.attack) && $0.defense.isFinite && (0...0.45).contains($0.defense) && $0.eventBonus.isFinite && (0...0.45).contains($0.eventBonus) && (0...15).contains($0.researchBonus) }),
@@ -105,14 +110,16 @@ public struct ProgressionCatalog: Codable {
         upgrades.contains { profile.growth.level($0.department) >= $0.level && $0.unlockActions.contains(action) }
     }
     public func stats(for profile: Profile) -> CombatStats {
+        let revised = profile.equipmentRevision != nil
         var result = CombatStats(hp: 100 + Double(min(100, profile.level - 1)) * 4, attack: profile.attack, defense: min(0.2, Double(profile.level - 1) * 0.01))
         var equipmentAttack = 0.0
-        for slot in EquipmentSlot.allCases {
+        for slot in revised ? EquipmentSlot.playableCases : EquipmentSlot.allCases {
             guard let id = profile.growth.equipped[slot.rawValue], profile.growth.owned.contains(id),
                   let item = equipment.first(where: { $0.id == id && $0.slot == slot }) else { continue }
             result.hp += item.hp; result.attack += item.attack; result.defense += item.defense
             equipmentAttack += item.attack
             result.eventBonus += item.eventBonus; result.researchBonus += item.researchBonus
+            if revised && slot == .shoes { result.encounterHaste = item.encounterHaste ?? 0 }
         }
         if let economy = profile.growthEconomy {
             result.attack = GrowthEconomy.attack(level: profile.level, gear: equipmentAttack, legacyBase: economy.legacyBaseAttack)
@@ -120,6 +127,7 @@ public struct ProgressionCatalog: Codable {
         result.attack = min(12, result.attack); result.defense = min(0.8, result.defense)
         result.eventBonus = min(0.45, result.eventBonus)
         result.hp = min(1000, result.hp); result.researchBonus = min(15, result.researchBonus)
+        if revised { result.hp = 100; result.defense = 0; result.eventBonus = 0; result.equipmentRevision = 1 }
         return result
     }
 }
@@ -184,7 +192,7 @@ public enum Progression {
     }
     public static func equip(_ id: String, save: inout SaveState, catalog: ProgressionCatalog) throws {
         guard save.active == nil else { throw ProgressionError.activeRun }
-        guard save.profile.growth.owned.contains(id), let item = catalog.equipment.first(where: { $0.id == id }) else { throw ProgressionError.unavailable }
+        guard save.profile.growth.owned.contains(id), let item = catalog.equipment.first(where: { $0.id == id }), item.slot != .armor else { throw ProgressionError.unavailable }
         var growth = save.profile.growth
         if growth.equipped[item.slot.rawValue] == id { growth.equipped.removeValue(forKey: item.slot.rawValue) }
         else { growth.equipped[item.slot.rawValue] = id }

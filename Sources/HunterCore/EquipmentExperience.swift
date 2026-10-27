@@ -99,7 +99,7 @@ public enum EquipmentExperience {
         guard save.active == nil, save.profile.defense?.active == nil else { throw ProgressionError.activeRun }
         guard let preset = save.profile.equipmentJournal?.presets.first(where: { $0.id == id }),
               preset.slots.allSatisfy({ slot, id in save.profile.growth.owned.contains(id) && catalog.equipment.contains { $0.id == id && $0.slot.rawValue == slot } }) else { throw ProgressionError.unavailable }
-        save.profile.growth.equipped = preset.slots
+        save.profile.growth.equipped = preset.slots.filter { $0.key != EquipmentSlot.armor.rawValue }
     }
     /// 정산의 활동 ID 중복 방지 안에서만 호출한다.
     public static func record(_ session: RunSession, summary: RunSummary, before: Profile, profile: inout Profile) -> ActivityGrowthReport {

@@ -101,7 +101,7 @@
       "id": "field-shoes",
       "name": "현장 기동화",
       "slot": "shoes",
-      "detail": "유지·추격 이벤트 피해 +4%",
+      "detail": "다음 일반 사건 대기 -4%",
       "crystals": 4,
       "research": 0,
       "cores": 0,
@@ -111,13 +111,14 @@
       "defense": 0,
       "eventBonus": 0.04,
       "researchBonus": 0,
-      "tier": 1
+      "tier": 1,
+      "encounterHaste": 0.04
     },
     {
       "id": "trace-shoes",
       "name": "흔적 추적화",
       "slot": "shoes",
-      "detail": "유지·추격 이벤트 피해 +8%",
+      "detail": "다음 일반 사건 대기 -8%",
       "crystals": 18,
       "research": 4,
       "cores": 0,
@@ -127,13 +128,14 @@
       "defense": 0,
       "eventBonus": 0.08,
       "researchBonus": 0,
-      "tier": 2
+      "tier": 2,
+      "encounterHaste": 0.08
     },
     {
       "id": "core-shoes",
       "name": "잔향 보행자",
       "slot": "shoes",
-      "detail": "유지·추격 이벤트 피해 +12%",
+      "detail": "다음 일반 사건 대기 -12%",
       "crystals": 35,
       "research": 6,
       "cores": 1,
@@ -143,13 +145,14 @@
       "defense": 0,
       "eventBonus": 0.12,
       "researchBonus": 0,
-      "tier": 3
+      "tier": 3,
+      "encounterHaste": 0.12
     },
     {
       "id": "field-compass",
       "name": "조사 나침반",
       "slot": "relic",
-      "detail": "발견 사건 완료 시 조사 데이터 +1",
+      "detail": "흔적 조사 완료 시 조사 데이터 +1",
       "crystals": 6,
       "research": 1,
       "cores": 0,
@@ -165,7 +168,7 @@
       "id": "archive-lens",
       "name": "기록자의 렌즈",
       "slot": "relic",
-      "detail": "발견 사건 완료 시 조사 데이터 +2",
+      "detail": "흔적 조사 완료 시 조사 데이터 +2",
       "crystals": 24,
       "research": 6,
       "cores": 0,
@@ -181,7 +184,7 @@
       "id": "core-orbit",
       "name": "경계의 궤도",
       "slot": "relic",
-      "detail": "발견 사건 완료 시 조사 데이터 +3 · HP +10",
+      "detail": "흔적 조사 완료 시 조사 데이터 +3",
       "crystals": 40,
       "research": 8,
       "cores": 1,
@@ -233,7 +236,7 @@
       "id": "moon-boots",
       "name": "은월 추적화",
       "slot": "shoes",
-      "detail": "받는 게임 피해 -3% · 유지·추격 이벤트 피해 +10%",
+      "detail": "다음 일반 사건 대기 -10%",
       "crystals": 26,
       "research": 8,
       "cores": 0,
@@ -245,13 +248,14 @@
       "defense": 0.03,
       "eventBonus": 0.1,
       "researchBonus": 0,
-      "tier": 3
+      "tier": 3,
+      "encounterHaste": 0.1
     },
     {
       "id": "moon-compass",
       "name": "월영 관측반",
       "slot": "relic",
-      "detail": "공격 보정 +0.08 · 발견 완료 조사 데이터 +3",
+      "detail": "공격 보정 +0.08 · 흔적 조사 완료 시 조사 데이터 +3",
       "crystals": 58,
       "research": 20,
       "cores": 1,
@@ -305,7 +309,7 @@
       "id": "dream-steps",
       "name": "몽환 보행화",
       "slot": "shoes",
-      "detail": "HP +8 · 유지·추격 이벤트 피해 +10%",
+      "detail": "다음 일반 사건 대기 -10%",
       "crystals": 26,
       "research": 8,
       "cores": 0,
@@ -317,13 +321,14 @@
       "defense": 0,
       "eventBonus": 0.1,
       "researchBonus": 0,
-      "tier": 3
+      "tier": 3,
+      "encounterHaste": 0.1
     },
     {
       "id": "dream-mirror",
       "name": "몽환 기록경",
       "slot": "relic",
-      "detail": "HP +16 · 받는 게임 피해 -4% · 발견 완료 조사 데이터 +3",
+      "detail": "흔적 조사 완료 시 조사 데이터 +3",
       "crystals": 58,
       "research": 20,
       "cores": 1,
@@ -360,7 +365,7 @@
       "id": "ash-mallet",
       "name": "철갑 파쇄추",
       "slot": "weapon",
-      "detail": "공격 보정 +1.28 · 게임 피해 경감 +10%",
+      "detail": "공격 보정 +1.28",
       "crystals": 115,
       "research": 35,
       "cores": 2,
@@ -379,7 +384,7 @@
       "id": "return-blade",
       "name": "귀환의 검",
       "slot": "weapon",
-      "detail": "공격 보정 +1.50",
+      "detail": "공격 보정 +1.50 · 흔적 조사 완료 시 조사 데이터 +1",
       "crystals": 150,
       "research": 50,
       "cores": 3,
@@ -455,7 +460,7 @@
       "id": "echo-striders",
       "name": "잔광 기동화",
       "slot": "shoes",
-      "detail": "HP +24 · 공격 +0.24 · 유지 공격 +22%",
+      "detail": "공격 보정 +0.24 · 다음 일반 사건 대기 -22%",
       "crystals": 80,
       "research": 20,
       "cores": 1,
@@ -468,13 +473,14 @@
       "researchBonus": 0,
       "tier": 6,
       "requiredDefeat": "mirror-witch",
-      "discoveryHint": "거울마녀 실제 토벌 필요"
+      "discoveryHint": "거울마녀 실제 토벌 필요",
+      "encounterHaste": 0.22
     },
     {
       "id": "ash-treads",
       "name": "재갑 전술화",
       "slot": "shoes",
-      "detail": "HP +40 · 공격 +0.31 · 게임 피해 경감 14% · 유지 공격 +28%",
+      "detail": "공격 보정 +0.31 · 다음 일반 사건 대기 -25%",
       "crystals": 115,
       "research": 35,
       "cores": 2,
@@ -487,13 +493,14 @@
       "researchBonus": 0,
       "tier": 7,
       "requiredDefeat": "ironclad-rhino",
-      "discoveryHint": "철갑 코뿔소 실제 토벌 필요"
+      "discoveryHint": "철갑 코뿔소 실제 토벌 필요",
+      "encounterHaste": 0.25
     },
     {
       "id": "anchor-boots",
       "name": "정착의 장화",
       "slot": "shoes",
-      "detail": "HP +58 · 공격 +0.42 · 게임 피해 경감 18% · 유지 공격 +36%",
+      "detail": "공격 보정 +0.42 · 다음 일반 사건 대기 -25%",
       "crystals": 150,
       "research": 50,
       "cores": 3,
@@ -506,13 +513,14 @@
       "researchBonus": 0,
       "tier": 8,
       "requiredDefeat": "corrupted-hunter",
-      "discoveryHint": "타락 헌터 완전 정화 필요"
+      "discoveryHint": "타락 헌터 완전 정화 필요",
+      "encounterHaste": 0.25
     },
     {
       "id": "glass-compass",
       "name": "거울 나침반",
       "slot": "relic",
-      "detail": "HP +22 · 공격 +0.18 · 유지 공격 +10% · 조사 데이터 +6",
+      "detail": "공격 보정 +0.18 · 흔적 조사 완료 시 조사 데이터 +6",
       "crystals": 80,
       "research": 20,
       "cores": 1,
@@ -531,7 +539,7 @@
       "id": "hollow-seal",
       "name": "공백 인장",
       "slot": "relic",
-      "detail": "HP +34 · 공격 +0.35 · 게임 피해 경감 16% · 조사 데이터 +8",
+      "detail": "공격 보정 +0.35 · 흔적 조사 완료 시 조사 데이터 +8",
       "crystals": 115,
       "research": 35,
       "cores": 2,
@@ -550,7 +558,7 @@
       "id": "return-badge",
       "name": "귀환의 표식",
       "slot": "relic",
-      "detail": "HP +48 · 공격 +0.50 · 게임 피해 경감 22% · 조사 데이터 +10",
+      "detail": "공격 보정 +0.50 · 흔적 조사 완료 시 조사 데이터 +10",
       "crystals": 150,
       "research": 50,
       "cores": 3,
@@ -588,7 +596,7 @@
       "id": "moon-wardboots",
       "name": "월영 방진화",
       "slot": "shoes",
-      "detail": "HP +12 · 게임 피해 경감 5% · 유지 공격 +15%",
+      "detail": "다음 일반 사건 대기 -15%",
       "crystals": 62,
       "research": 16,
       "cores": 2,
@@ -601,7 +609,8 @@
       "defense": 0.05,
       "eventBonus": 0.15,
       "researchBonus": 0,
-      "tier": 4
+      "tier": 4,
+      "encounterHaste": 0.15
     },
     {
       "id": "dream-wardcloak",
@@ -626,7 +635,7 @@
       "id": "dream-wardsteps",
       "name": "몽환 결계화",
       "slot": "shoes",
-      "detail": "HP +18 · 게임 피해 경감 8% · 유지 공격 +18%",
+      "detail": "다음 일반 사건 대기 -18%",
       "crystals": 76,
       "research": 20,
       "cores": 2,
@@ -639,7 +648,8 @@
       "defense": 0.08,
       "eventBonus": 0.18,
       "researchBonus": 0,
-      "tier": 5
+      "tier": 5,
+      "encounterHaste": 0.18
     }
   ],
   "upgrades": [

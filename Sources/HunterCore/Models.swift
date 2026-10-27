@@ -183,6 +183,7 @@ public struct RunSession: Codable, Identifiable {
     public var combatBarrierTimestamp: Double? = nil
     /// 활동 시작 시 고정. 이전 기록에는 착용 장비를 소급해서 넣지 않는다.
     public var equipmentIDs: [String]? = nil
+    public var lastEncounterEndedAt: Double? = nil
     public var calibrationSeconds: Double { activityGoal.kind == .time ? min(180, targetSeconds * 0.1) : 60 }
     public init(targetSeconds: Double, simulated: Bool, allowPursuit: Bool, mode: RunMode? = nil, loadout: CombatStats? = nil) {
         self.targetSeconds = max(60, targetSeconds); self.simulated = simulated; self.allowPursuit = allowPursuit
@@ -238,6 +239,7 @@ public struct Profile: Codable {
     public var defense: DefenseProgress? = nil
     public var growthEconomy: GrowthEconomyState? = nil
     public var equipmentJournal: EquipmentJournal? = nil
+    public var equipmentRevision: EquipmentRevisionState? = nil
     /// Nil identifies a profile that still needs its historical gate count frozen.
     public var gateProgress: GateProgress? = GateProgress()
     public var growth: GrowthState {
