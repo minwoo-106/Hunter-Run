@@ -49,13 +49,13 @@ struct LoadoutStrip: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("현재 착용 장비").font(.headline)
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                ForEach(EquipmentSlot.allCases, id: \.rawValue) { slot in
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 8) {
+                ForEach(EquipmentSlot.playableCases, id: \.rawValue) { slot in
                     let id = model.save.profile.growth.equipped[slot.rawValue]
                     let item = model.progressionCatalog?.equipment.first { $0.id == id }
                     VStack(spacing: 8) {
-                        if let item { GearArtwork(item: item, size: 80) }
-                        else { Image(systemName: slot.symbol).font(.title).foregroundStyle(Theme.muted).frame(height: 80) }
+                        if let item { GearArtwork(item: item, size: 64) }
+                        else { Image(systemName: slot.symbol).font(.title).foregroundStyle(Theme.muted).frame(height: 64) }
                         Text(item?.name ?? slot.title + " 미착용").font(.caption).lineLimit(2)
                     }.frame(maxWidth: .infinity).padding(8).background(.white.opacity(0.03), in: RoundedRectangle(cornerRadius: 16))
                 }

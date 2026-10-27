@@ -50,26 +50,26 @@ struct EquipmentView: View {
                 ResourceStrip()
                 statsCard
                 EquipmentGoalCard()
-                EquipmentPresetsView()
+                EquipmentRevisionCard()
                 slotPicker
                 Toggle("보유 장비만 보기", isOn: $ownedOnly).font(.callout)
                 equipmentList
-                Text("장비 효과는 다음 활동 시작 시 적용됩니다. 신발은 게임 피해량만 보정하며 실제 목표 속도를 바꾸지 않습니다.").font(.caption).foregroundStyle(Theme.muted)
+                Text("무기는 공격, 신발은 다음 사건까지 대기 단축, 유물은 조사 보상을 돕습니다. 효과는 다음 활동부터 적용돼요. 신발은 첫 사건·보스에 적용되지 않으며 회당 최대 30초를 줄여요.").font(.caption).foregroundStyle(Theme.muted)
             }.padding(20)
         }.labyrinthScreen().navigationTitle("장비 보관함").navigationBarTitleDisplayMode(.inline)
     }
 
     private var statsCard: some View {
         HStack {
-            metric("HP", "\(Int(model.stats.hp))"); Spacer()
             metric("공격", String(format: "×%.2f", model.stats.attack)); Spacer()
-            metric("피해 경감", "\(Int(model.stats.defense * 100))%")
+            metric("사건 대기", "-\(Int(((model.stats.encounterHaste ?? 0) * 100).rounded()))%"); Spacer()
+            metric("조사 보너스", "+\(model.stats.researchBonus)")
         }.card()
     }
 
     private var slotPicker: some View {
         Picker("장비 슬롯", selection: $slot) {
-            ForEach(EquipmentSlot.allCases, id: \.rawValue) { Text($0.title).tag($0) }
+            ForEach(EquipmentSlot.playableCases, id: \.rawValue) { Text($0.title).tag($0) }
         }.pickerStyle(.segmented)
     }
 

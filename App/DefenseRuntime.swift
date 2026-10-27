@@ -113,6 +113,7 @@ import SwiftUI
         guard let model else { return }
         var candidate = model.save; candidate.profile.defense?.active = nil
         do {
+            try model.migrateEquipment(&candidate)
             try model.repository.write(candidate); model.save = candidate
             clock = nil; session = nil; model.showDefense = false; model.refreshLobbyMusic(); model.refreshActivityDisplay()
         } catch { self.error = "종료 상태를 저장하지 못했어요. 진행 기록은 유지돼요." }
@@ -153,6 +154,7 @@ import SwiftUI
         do {
             var candidate = model.save
             try DefenseCampaign.complete(session, at: Date(), in: &candidate)
+            try model.migrateEquipment(&candidate)
             try model.repository.write(candidate); model.save = candidate
             clock = nil; self.session = nil; error = nil; caption = lines["defense_done"] ?? "작전 완료"
             voice.play("defense_done"); model.refreshActivityDisplay()

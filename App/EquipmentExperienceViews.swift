@@ -4,7 +4,7 @@ struct EquipmentGoalCard: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
         if let id = model.save.profile.equipmentJournal?.targetID,
-           let item = model.progressionCatalog?.equipment.first(where: { $0.id == id }) {
+           let item = model.progressionCatalog?.equipment.first(where: { $0.id == id && $0.slot != .armor }) {
             VStack(alignment: .leading, spacing: 12) {
                 Label("다음 목표 장비", systemImage: "scope").font(.headline).foregroundStyle(Theme.teal)
                 NavigationLink { EquipmentDetailView(item: item) } label: {
@@ -22,32 +22,18 @@ struct EquipmentGoalCard: View {
     }
 }
 
-struct EquipmentPresetsView: View {
+struct EquipmentRevisionCard: View {
     @EnvironmentObject var model: AppModel
-    @State private var replacing: Int?
     var body: some View {
-        DisclosureGroup("장비 조합 · 출발 전에 한 번에 착용") {
-            VStack(spacing: 16) {
-                ForEach(0..<3) { index in
-                    let preset = model.save.profile.equipmentJournal?.presets.first { $0.id == index }
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(["탐색용", "사냥용", "보스용"][index]).font(.headline)
-                        Text(preset.map { saved in
-                            EquipmentSlot.allCases.compactMap { slot in model.progressionCatalog?.equipment.first { $0.id == saved.slots[slot.rawValue] }?.name }.joined(separator: " · ")
-                        } ?? "저장한 조합이 없어요.").font(.caption).foregroundStyle(Theme.muted)
-                        HStack {
-                            Button("현재 장비 저장") { if preset != nil { replacing = index } else { model.storePreset(index) } }
-                                .accessibilityIdentifier("gear.preset.save.\(index)")
-                            Spacer()
-                            Button("착용") { model.applyPreset(index) }.disabled(preset == nil)
-                                .accessibilityIdentifier("gear.preset.apply.\(index)")
-                        }.font(.callout.bold()).disabled(model.growthLocked)
-                    }
-                }
-                Text("조합 이름은 구분용이에요. 자동 추천이나 추가 능력치는 없어요.").font(.caption).foregroundStyle(Theme.muted)
-            }.padding(.top, 12)
-        }.card().confirmationDialog("저장된 조합을 현재 착용 장비로 바꿀까요?", isPresented: Binding(get: { replacing != nil }, set: { if !$0 { replacing = nil } })) {
-            Button("현재 장비로 저장") { if let index = replacing { model.storePreset(index) }; replacing = nil }
+        if let revision = model.save.profile.equipmentRevision, !revision.acknowledged, !revision.retiredIDs.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("장비가 세 가지로 정리됐어요").font(.headline)
+                Text("방어구는 사용을 마쳤어요. 보유 기록은 그대로 남기고 아래 단종 보상을 지급했어요.").font(.callout)
+                Text("마정석 +\(revision.crystals) · 조사 +\(revision.research) · 코어 +\(revision.cores)").foregroundStyle(Theme.teal)
+                Text("보유 방어구의 카탈로그 가격 기준이에요. 실제 과거 구매 금액을 추정한 값은 아니에요.").font(.caption).foregroundStyle(Theme.muted)
+                Button("확인했어요") { model.acknowledgeEquipmentRevision() }.disabled(model.growthLocked)
+                    .accessibilityIdentifier("gear.revision.acknowledge")
+            }.card().accessibilityIdentifier("gear.revision.card")
         }
     }
 }
@@ -61,7 +47,10 @@ struct EquipmentComparisonCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("이 장비로 교체하면").font(.headline)
                 HStack { metric("현재 공격", String(format: "×%.2f", model.stats.attack)); Spacer(); Image(systemName: "arrow.right"); Spacer(); metric("교체 후", String(format: "×%.2f", next.attack)) }
-                Text(String(format: "최대 HP %+.0f · 피해 경감 %+.0f%%", next.hp - model.stats.hp, (next.defense - model.stats.defense) * 100)).font(.caption)
+                Text(String(format: "사건 대기 단축 %+.0f%%p · 조사 보너스 %+d", ((next.encounterHaste ?? 0) - (model.stats.encounterHaste ?? 0)) * 100, next.researchBonus - model.stats.researchBonus)).font(.caption)
+                if item.slot == .shoes {
+                    Text("대기 단축은 첫 사건·보스 제외, 회당 최대 30초예요. 공격 간격과 실제 이동거리는 바뀌지 않아요.").font(.caption).foregroundStyle(Theme.muted)
+                }
                 NavigationLink { EquipmentLabView(candidate: item) } label: {
                     Label("몬스터별 공격 횟수 비교", systemImage: "scope").font(.callout.bold())
                 }.accessibilityIdentifier("gear.lab.open")

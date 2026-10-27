@@ -39,6 +39,8 @@ for clip in workout_voice['clips']:
     assert hashlib.sha256(files[0].read_bytes()).hexdigest()==clip['sha256'],clip['file']
 combat_paths=list(app.rglob('combat-v3.json')); assert len(combat_paths)==1
 assert json.loads(combat_paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources/combat-v3.json').read_text(encoding='utf-8'))
+progression_paths=list(app.rglob('progression.json')); assert len(progression_paths)==1
+assert json.loads(progression_paths[0].read_text(encoding='utf-8'))==json.loads((root/'Resources/progression.json').read_text(encoding='utf-8'))
 stem=f'HunterRun-{version}-build{build}'
 ipa=out/(stem+'-unsigned.ipa'); install=out/(stem+'-install.zip')
 with zipfile.ZipFile(ipa,'w',zipfile.ZIP_DEFLATED) as z:

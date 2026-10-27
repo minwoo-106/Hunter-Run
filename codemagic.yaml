@@ -68,7 +68,7 @@ workflows:
       - build/portrait-checks/*.png
       - build/life-metrics*.txt
   ios-demo:
-    name: Hunter Run 1.9.0 - 장비 성장과 운동 리포트
+    name: Hunter Run 1.9.1 - 장비 3슬롯과 실제 효과 정리
     instance_type: mac_mini_m2
     max_build_duration: 45
     triggering:
@@ -109,7 +109,7 @@ workflows:
         script: |
           set -euo pipefail
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
-          python3 scripts/verify-installer.py build/HunterRun-1.9.0-build63-unsigned.ipa --version 1.9.0 --build 63 --output build/HunterRun-1.9.0-build63-verification.json
+          python3 scripts/verify-installer.py build/HunterRun-1.9.1-build64-unsigned.ipa --version 1.9.1 --build 64 --output build/HunterRun-1.9.1-build64-verification.json
       - name: Package season-one character voice previews
         script: python3 scripts/package-character-preview.py build
     artifacts:

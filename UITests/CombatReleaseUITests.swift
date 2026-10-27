@@ -25,6 +25,7 @@ final class CombatReleaseUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["activity.combat.hp"].label.contains("21 / 180"))
         XCTAssertTrue(app.staticTexts["activity.combat.hp"].label.contains("공격 1회"))
         XCTAssertTrue(app.staticTexts["activity.combat.distance"].label.contains("0 / 75 m"))
+        XCTAssertFalse(app.staticTexts["activity.player.hp"].exists)
         capture("75m 공격 후 실제 전투 화면",app:app)
     }
     @MainActor func testWalkingExplainsHeldCombatProgress() {

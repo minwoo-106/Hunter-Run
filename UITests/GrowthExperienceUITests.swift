@@ -46,14 +46,23 @@ final class GrowthExperienceUITests: XCTestCase {
         reach(app.buttons["gear.lab.play"], app: app); app.buttons["gear.lab.play"].tap()
         XCTAssertTrue(app.staticTexts["gear.lab.estimate"].exists)
     }
-    @MainActor func testEquipmentPresetsCanSaveAndApply() {
+    @MainActor func testThreeSlotsCompensationAndShoeEffects() {
         let app = launch("equipment")
         reach(app.buttons["hunter.equipment"], app: app); app.buttons["hunter.equipment"].tap()
-        let disclosure = app.buttons["장비 조합 · 출발 전에 한 번에 착용"]
-        reach(disclosure, app: app); disclosure.tap()
-        reach(app.buttons["gear.preset.save.1"], app: app); app.buttons["gear.preset.save.1"].tap()
-        XCTAssertTrue(app.buttons["gear.preset.apply.1"].isEnabled)
-        app.buttons["gear.preset.apply.1"].tap(); capture("장비조합_저장과착용", app: app)
+        reach(app.buttons["gear.revision.acknowledge"], app: app)
+        capture("장비개편_방어구단종보상", app: app)
+        app.buttons["gear.revision.acknowledge"].tap()
+        XCTAssertFalse(app.buttons["gear.revision.acknowledge"].exists)
+        XCTAssertFalse(app.buttons["장비 조합 · 출발 전에 한 번에 착용"].exists)
+        let slots = app.segmentedControls.firstMatch
+        reach(slots, app: app)
+        XCTAssertEqual(slots.buttons.count, 3)
+        XCTAssertFalse(slots.buttons["방어구"].exists)
+        slots.buttons["신발"].tap()
+        let shoes = app.buttons["gear.trace-shoes"]
+        reach(shoes, app: app); shoes.tap()
+        reach(app.staticTexts["다음 일반 사건 대기 -8%"], app: app)
+        capture("신발_실제사건대기단축", app: app)
     }
     @MainActor func testAllRankCeremoniesFinishAndShowUnlocks() {
         for rank in ["D", "C", "B", "A", "S"] {

@@ -21,6 +21,8 @@ extension AppModel {
         journal.memories["resonance-blade"] = EquipmentMemory(trackingSince: Date().addingTimeInterval(-86400 * 7))
         journal.memories["resonance-blade"]?.outdoorDistance = 12500; journal.memories["resonance-blade"]?.activities = 5
         save.profile.equipmentJournal = journal
+        save.profile.equipmentRevision = nil
+        try? EquipmentRevision.migrate(&save, catalog: catalog)
         save.profile.discoveredEvents = ["beast", "iron-guard"]
         save.profile.runs = []
         for i in 0..<7 where i != 2 && i != 5 {

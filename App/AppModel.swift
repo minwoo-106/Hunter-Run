@@ -417,6 +417,7 @@ private struct CharacterVoiceCatalog: Decodable {
                 }
             }
             save.profile.growth = equipment; try? CombatRelease.migrate(&save)
+            try? EquipmentRevision.migrate(&save, catalog: catalog)
             let template = MissionTemplate(id:"beast",title:"잔향 늑대",kind:.ambush,startFraction:0.3,duration:25,hp:180,audio:"wolf_intro")
             let mission = GameContent(schema:1,missionTitle:"전투 화면 검증",events:[template])
             var session = RunSession(targetSeconds:1800,simulated:true,allowPursuit:false,mode:.contract,loadout:stats)
@@ -433,7 +434,12 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         #endif
         if !saveBlocked {
-            do { if try CombatRelease.migrate(&save) { try repository.write(save) } }
+            do {
+                var candidate = save
+                let combatChanged = try CombatRelease.migrate(&candidate)
+                let equipmentChanged = try migrateEquipment(&candidate)
+                if combatChanged || equipmentChanged { try repository.write(candidate); save = candidate }
+            }
             catch { saveBlocked = true; isReady = false; notice = "성장 기록을 보호하기 위해 새 활동을 멈췄어요. 저장 공간을 확인해주세요." }
         }
         #if DEBUG && targetEnvironment(simulator)
@@ -574,7 +580,7 @@ private struct CharacterVoiceCatalog: Decodable {
         guard (simulated || quest?.promotion != nil || modeAllowed(mode)), requested.kind != .time || requested.value <= 1800 || unlocked("extended-contract") else { notice = "협회 성장 또는 헌터 평가가 필요한 의뢰입니다."; return }
         var mission = missions?.content(for: mode, extended: seconds >= 1200 && unlocked("extended-contract")) ?? content
         var session = RunSession(targetSeconds: seconds, simulated: simulated, allowPursuit: pursuit, mode: mode, loadout: stats)
-        session.equipmentIDs = Array(save.profile.growth.equipped.values).sorted()
+        session.equipmentIDs = EquipmentSlot.playableCases.compactMap { save.profile.growth.equipped[$0.rawValue] }.sorted()
         session.rulesVersion = 2
         session.purpose = quest?.promotion != nil ? .rankExam : .normalActivity
         session.environment = environment; session.steps = environment.isIndoor ? 0 : nil
@@ -739,7 +745,7 @@ private struct CharacterVoiceCatalog: Decodable {
         }
         candidate.active = nil
         do {
-            if !run.simulated { try CombatRelease.migrate(&candidate) }
+            if !run.simulated { try CombatRelease.migrate(&candidate); try migrateEquipment(&candidate) }
             try repository.write(candidate)
             save = candidate; lastSummary = summary
             if run.simulated { lastDemo = run }
@@ -840,22 +846,17 @@ private struct CharacterVoiceCatalog: Decodable {
     }
     func setEquipmentTarget(_ id: String?) {
         changeGrowth { save, catalog in
-            guard id == nil || catalog.equipment.contains(where: { $0.id == id }) else { throw ProgressionError.unavailable }
+            guard id == nil || catalog.equipment.contains(where: { $0.id == id && $0.slot != .armor }) else { throw ProgressionError.unavailable }
             var journal = save.profile.equipmentJournal ?? EquipmentJournal(); journal.targetID = id
             save.profile.equipmentJournal = journal; return nil
         }
     }
-    func storePreset(_ index: Int) {
-        guard (0..<3).contains(index) else { return }
-        changeGrowth { save, _ in
-            var journal = save.profile.equipmentJournal ?? EquipmentJournal()
-            journal.presets.removeAll { $0.id == index }
-            journal.presets.append(EquipmentPreset(id: index, name: ["탐색용", "사냥용", "보스용"][index], slots: save.profile.growth.equipped))
-            save.profile.equipmentJournal = journal; return nil
-        }
+    @discardableResult func migrateEquipment(_ state: inout SaveState) throws -> Bool {
+        guard let catalog = progressionCatalog else { throw ProgressionError.invalid }
+        return try EquipmentRevision.migrate(&state, catalog: catalog)
     }
-    func applyPreset(_ index: Int) {
-        changeGrowth { save, catalog in try EquipmentExperience.applyPreset(index, save: &save, catalog: catalog); return nil }
+    func acknowledgeEquipmentRevision() {
+        changeGrowth { save, _ in save.profile.equipmentRevision?.acknowledged = true; return nil }
     }
     private func playOperator(_ key: String, completion: (() -> Void)? = nil) {
         if let kilometer = playingDistanceMilestone {
@@ -966,7 +967,7 @@ private struct CharacterVoiceCatalog: Decodable {
             var imported = try JSONDecoder().decode(SaveState.self, from: Data(contentsOf: url))
             try repository.validate(imported)
             if imported.active?.simulated == true && !Self.testHarness { imported.active = nil }
-            try CombatRelease.migrate(&imported)
+            try CombatRelease.migrate(&imported); try migrateEquipment(&imported)
             narratives?.refresh(&imported.profile)
             if let cursor = imported.profile.journey?.cursor,
                narratives?.scene(cursor.sceneID)?.node(cursor.nodeID) == nil {
@@ -985,7 +986,7 @@ private struct CharacterVoiceCatalog: Decodable {
         guard save.profile.defense?.active == nil, !showDefense else { notice = "진행 중인 지부 방어 작전을 먼저 종료해주세요."; return }
         guard engine == nil, save.active == nil else { notice = "진행 중인 활동을 먼저 마쳐주세요."; return }
         do {
-            save = try repository.reset(); try CombatRelease.migrate(&save); try repository.write(save); narratives?.refresh(&save.profile)
+            save = try repository.reset(); try CombatRelease.migrate(&save); try migrateEquipment(&save); try repository.write(save); narratives?.refresh(&save.profile)
             saveBlocked = false; recoverable = false; selectedBoss = nil; selectedFieldDemo = nil
             selectedMode = .contract; lastSummary = nil; lastDemo = nil; selectedTab = 0
             showSettings = false; showWelcome = true

@@ -330,7 +330,7 @@ struct ActiveRunView: View {
                             HStack {
                                 Label(run.isIndoor ? (model.signal == .good ? "움직임 감지 중" : "움직임을 기다려요") : signalName(model.signal), systemImage: run.isIndoor ? "waveform.path" : "antenna.radiowaves.left.and.right")
                                 Spacer()
-                                Text("HP \(Int(run.hp))").monospacedDigit()
+                                if !run.usesThreeSlotEquipment { Text("HP \(Int(run.hp))").monospacedDigit().accessibilityIdentifier("activity.player.hp") }
                             }.font(.caption).foregroundStyle(Theme.muted)
                             if let notice = model.notice {
                                 Text(notice).foregroundStyle(.orange).font(.callout)
