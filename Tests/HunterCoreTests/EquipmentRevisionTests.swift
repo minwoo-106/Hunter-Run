@@ -75,7 +75,7 @@ final class EquipmentRevisionTests: XCTestCase {
         }
         let stats = catalog.stats(for: try migrated().profile)
         XCTAssertEqual(stats.attack, 2.915, accuracy: 1e-9)
-        for (id, damage, hits) in [("echo-wolf", 159.0, 2), ("iron-guard", 139.0, 3), ("signal-heart", 152.0, 2)] {
+        for (id, damage, hits) in [("echo-wolf", 159.0, 2), ("iron-guard", 139.0, 3), ("signal-heart", 152.0, 6)] {
             let monster = try XCTUnwrap(rules.monsters.first { $0.id == id })
             let estimate = CombatEstimate(stats: stats, monster: monster)
             XCTAssertEqual(estimate.damage, damage); XCTAssertEqual(estimate.hits, hits)

@@ -115,6 +115,10 @@ do {
     let base = URL(fileURLWithPath:FileManager.default.currentDirectoryPath)
     let resources = argument("--resources").map { URL(fileURLWithPath:$0) } ?? base.appendingPathComponent("Resources")
     let output = argument("--output").map { URL(fileURLWithPath:$0) } ?? base.appendingPathComponent(".build/combat-replay")
+    if arguments.contains("--balance-report") {
+        try BalanceReport.generate(resources: resources, output: output)
+        exit(0)
+    }
     let scenarios: [ReplayScenario]
     if let file = argument("--scenario") {
         let url = URL(fileURLWithPath:file)

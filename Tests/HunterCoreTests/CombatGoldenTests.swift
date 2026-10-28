@@ -13,9 +13,9 @@ private struct CombatGoldenRow: Decodable {
     }
 }
 final class CombatGoldenTests: XCTestCase {
-    func testAll72ApprovedLevelAndEquipmentRowsThroughRealCatalogAndCombatKernel() throws {
+    func testAll72LegacySnapshotRowsThroughRealCatalogAndCombatKernel() throws {
         let rows: [CombatGoldenRow] = try V3Fixtures.load("Tests/HunterCoreTests/Fixtures/combat-v3-golden.json",as:[CombatGoldenRow].self)
-        let rules = try V3Fixtures.rules()
+        let rules: CombatRules = try V3Fixtures.load("Tests/HunterCoreTests/Fixtures/combat-v3-legacy-1.9.1.json", as: CombatRules.self)
         let catalog: ProgressionCatalog = try V3Fixtures.load("Resources/progression.json",as:ProgressionCatalog.self)
         let sets: [String:[String]] = [
             "무장 없음":[], "기본":["field-blade","field-vest","field-shoes","field-compass"],

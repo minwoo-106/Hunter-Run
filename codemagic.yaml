@@ -68,7 +68,7 @@ workflows:
       - build/portrait-checks/*.png
       - build/life-metrics*.txt
   ios-demo:
-    name: Hunter Run 1.9.1 - 장비 3슬롯과 실제 효과 정리
+    name: Hunter Run 1.9.2 - 전체 몬스터 HP와 누적 보스 공략 보호
     instance_type: mac_mini_m2
     max_build_duration: 45
     triggering:
@@ -90,6 +90,8 @@ workflows:
           swift test
           swift run --skip-build HunterDebugRunner --output build/combat-replay
           python3 scripts/build-combat-replay-review.py build/combat-replay
+          swift run --skip-build HunterDebugRunner --balance-report --output build/balance-review
+          python3 scripts/build-balance-review.py build/balance-review
       - name: Generate Xcode project
         script: |
           if ! command -v xcodegen >/dev/null; then
@@ -109,7 +111,7 @@ workflows:
         script: |
           set -euo pipefail
           python3 scripts/package-ios.py build/Build/Products/Release-iphoneos/HunterRun.app build
-          python3 scripts/verify-installer.py build/HunterRun-1.9.1-build64-unsigned.ipa --version 1.9.1 --build 64 --output build/HunterRun-1.9.1-build64-verification.json
+          python3 scripts/verify-installer.py build/HunterRun-1.9.2-build65-unsigned.ipa --version 1.9.2 --build 65 --output build/HunterRun-1.9.2-build65-verification.json
       - name: Package season-one character voice previews
         script: python3 scripts/package-character-preview.py build
     artifacts:
@@ -123,6 +125,7 @@ workflows:
       - build/ui-review-small/*.png
       - build/ui-review-small/*.json
       - build/combat-replay/**
+      - build/balance-review/**
       - build-log.txt
       - build/Home-layout.png
       - build/layout-log.txt

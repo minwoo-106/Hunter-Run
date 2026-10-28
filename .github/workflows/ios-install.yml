@@ -32,7 +32,11 @@ jobs:
           python3 scripts/validate-operator-chat.py
 
       - name: Test game engine
-        run: swift test
+        run: |
+          swift test
+          swift run --skip-build HunterDebugRunner --output build/combat-replay
+          swift run --skip-build HunterDebugRunner --balance-report --output build/balance-review
+          python3 scripts/build-balance-review.py build/balance-review
 
       - name: Prepare Xcode project
         run: |
@@ -63,7 +67,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.9.1-build64-screen-review
+          name: HunterRun-1.9.2-build65-screen-review
           path: |
             build/ui-review/
             build/ui-review-small/
@@ -74,6 +78,8 @@ jobs:
             build/simulators.json
             build/runtimes.json
             build/device-types.json
+            build/balance-review/
+            build/combat-replay/
             build/life-metrics*.txt
             build/Small-warmup.png
           if-no-files-found: warn
@@ -82,10 +88,10 @@ jobs:
       - name: Upload verified installer
         uses: actions/upload-artifact@v4
         with:
-          name: HunterRun-1.9.1-build64-iPhone
+          name: HunterRun-1.9.2-build65-iPhone
           path: |
-            build/HunterRun-1.9.1-build64-unsigned.ipa
-            build/HunterRun-1.9.1-build64-manifest.json
+            build/HunterRun-1.9.2-build65-unsigned.ipa
+            build/HunterRun-1.9.2-build65-manifest.json
           if-no-files-found: error
           compression-level: 0
           retention-days: 7

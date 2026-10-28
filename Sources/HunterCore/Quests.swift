@@ -20,7 +20,7 @@ public struct QuestDefinition: Identifiable {
     public var lifetimeDefeats: Int? = nil
     public var boss: BossDefinition? {
         guard let rank = promotion, let index = Progression.ranks.firstIndex(of: rank) else { return nil }
-        let hp = [200.0, 200, 420, 650, 900, 1400][index]
+        let hp = [200.0, 800, 1300, 3200, 5000, 7000][index]
         let phase = GameContent(schema: 1, missionTitle: title, events: [
             MissionTemplate(id: "exam-observation", title: "심사 표식 확인", kind: .discovery, startFraction: 0.15, duration: 20, hp: 0, audio: "discovery"),
             MissionTemplate(id: "major-strike-exam-a", title: "감시체 외피 공략", kind: .boss, startFraction: 0.35, duration: 30, hp: 35, audio: "boss"),
