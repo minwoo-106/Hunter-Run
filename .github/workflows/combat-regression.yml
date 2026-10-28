@@ -39,6 +39,7 @@ jobs:
         run: |
           swift run --skip-build HunterDebugRunner --balance-report --output .build/combat-replay/balance
           python3 scripts/build-balance-review.py .build/combat-replay/balance
+          node scripts/check-balance-review.js .build/combat-replay/balance/index.html
       - name: 외부 연결 없는 결과 화면 생성
         run: python3 scripts/build-combat-replay-review.py .build/combat-replay
       - name: 검증 결과와 재현 입력 보관

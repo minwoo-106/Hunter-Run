@@ -37,6 +37,7 @@ jobs:
           swift run --skip-build HunterDebugRunner --output build/combat-replay
           swift run --skip-build HunterDebugRunner --balance-report --output build/balance-review
           python3 scripts/build-balance-review.py build/balance-review
+          node scripts/check-balance-review.js build/balance-review/index.html
 
       - name: Prepare Xcode project
         run: |
